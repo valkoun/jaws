@@ -1,0 +1,49 @@
+<!-- BEGIN account_recommendations -->
+<!-- BEGIN recommendation_header -->
+<div id="{gadget_id}-accountRecommendations" class="accountRecommendations wide{layout_class}">
+	<h3 class="accountNews-title"><nobr>{title}</nobr></h3>
+	<div>{entry_field}</div>
+	<div style="display: block; clear: both; float: none; font-size: 0.0001em;">&nbsp;</div>
+	<div id="{gadget_id}-recommendations-items" class="recommendations-items news-items">
+<!-- END recommendation_header -->
+<!-- BEGIN no_items -->
+	<div>&nbsp;</div>
+	<div class="simple-response-msg" style="display: block; clear: both; float: none;">{message}</div>
+	<div>&nbsp;</div>
+<!-- END no_items -->
+<!-- BEGIN recommendation_item -->
+	{thread}
+<!-- END recommendation_item -->
+<!-- BEGIN recommendation_footer -->
+	</div>
+</div>
+<script type="text/javascript">
+  var rpxJsHost = (("https:" == document.location.protocol) ? "https://" : "http://static.");
+  document.write(unescape("%3Cscript src='" + rpxJsHost + "rpxnow.com/js/lib/rpx.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+  var confirmRecommendationDelete = "{confirmCommentDelete}";
+  RPXNOW.init({appId: 'nhjhogjcjndnlhaabffd',
+	xdReceiver: '/rpx_xdcomm.html'});
+</script>
+<!-- BEGIN news_count -->
+<script type="text/javascript">
+if (typeof(recommendations_on_layout) == "undefined") {
+	var recommendations_on_layout = new Array();
+}
+if (typeof(total_recommendations) == "undefined") {
+	var total_recommendations = new Array();
+}
+if (typeof(recommendations_limit) == "undefined") {
+	var recommendations_limit = new Array();
+}
+recommendations_on_layout['{gadget}'] = '{items_on_layout}';
+total_recommendations['{gadget}'] = {count_on_layout};
+recommendations_limit['{gadget}'] = {limit};
+</script>
+<!-- BEGIN recommendation_more -->
+<div id="{gadget_id}-more-recommendations" class="more-news-items clearfix"><a href="javascript:void(0);" onclick="showMoreRecommendations('{gadget}', {public}, {id}, '{method}');">Show more</a></div>
+<!-- END recommendation_more -->
+<!-- END recommendation_count -->
+<!-- END recommendation_footer -->
+<!-- END account_recommendations -->

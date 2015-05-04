@@ -6,11 +6,21 @@
  * @package    UrlMapper
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class UrlMapperAdminHTML extends Jaws_GadgetHTML
 {
+    /**
+     * Gadget constructor
+     *
+     * @access   public
+     */
+    function UrlMapperAdminHTML()
+    {
+        $this->Init('UrlMapper');
+    }
+
     /**
      * Calls default admin action
      *
@@ -19,15 +29,16 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
      */
     function Admin()
     {
+        $this->CheckPermission('ManageUrlMapper');
         return $this->Maps();
     }
 
     /**
-     * Builds the menubar
+     * Prepares the menubar
      *
      * @access  public
-     * @param   string   $action_selected   Selected action
-     * @return  string   XHTML template content
+     * @param   string   $action_selected selected action
+     * @return  string   Template content
      */
     function MenuBar($action_selected)
     {
@@ -49,12 +60,12 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Prepares the data of maps for a certain gadget and action
+     * Prepares the data (an array) of maps for gadget action
      *
      * @access  public
-     * @param   string  $gadget  Gadget name
-     * @param   string  $action  Action name
-     * @return  array   List of maps
+     * @param   string  $gadget  gadget name
+     * @param   string  $action  action name
+     * @return  array   Data
      */
     function GetMaps($gadget, $action)
     {
@@ -70,10 +81,21 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
             $mapData['map'] = $map['map'];
             $actions = '';
             if ($this->GetPermission('EditMaps')) {
-                $link =& Piwi::CreateWidget('Link', _t('GLOBAL_EDIT'),
-                                            "javascript: editMap(this, '".$map['id']."');",
-                                            STOCK_EDIT);
-                $actions.= $link->Get().'&nbsp;';
+                if ($map['custom']) {
+                    $link =& Piwi::CreateWidget('Link', _t('GLOBAL_EDIT'),
+                                                "javascript: editMap(this, '".$map['id']."');",
+                                                STOCK_EDIT);
+                    $actions.= $link->Get().'&nbsp;';
+                    $link =& Piwi::CreateWidget('Link', _t('GLOBAL_DELETE'),
+                                                "javascript: deleteMap(this, '".$map['id']."');",
+                                                STOCK_DELETE);
+                    $actions.= $link->Get().'&nbsp;';
+                } else {
+                    $link =& Piwi::CreateWidget('Link', _t('URLMAPPER_ADD_MAP'),
+                                                "javascript: addMap(this, '".$map['id']."');",
+                                                STOCK_NEW);
+                    $actions.= $link->Get().'&nbsp;';
+                }
             }
             $mapData['actions'] = $actions;
             $newData[] = $mapData;
@@ -82,10 +104,10 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Builds maps datagrid
+     * Prepares a clean template for showing the maps
      *
      * @access  public
-     * @return  string  XHTML datagrid
+     * @return  string  XHTML of Datagrid
      */
     function MapsDatagrid()
     {
@@ -94,7 +116,7 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
 
         $datagrid->addColumn(Piwi::CreateWidget('Column', _t('URLMAPPER_MAPS'), null, false));
         $colActions = Piwi::CreateWidget('Column', _t('GLOBAL_ACTIONS'), null, false);
-        $colActions->SetStyle('width: 60px; white-space:nowrap;');
+        $colActions->SetStyle('width: 80px; white-space:nowrap;');
         $datagrid->addColumn($colActions);
 
         $datagrid->SetStyle('margin-top: 0px; width: 100%;');
@@ -102,10 +124,10 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Builds maps UI
+     * Returns the Maps UI
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function Maps()
     {
@@ -140,42 +162,26 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('lbl_maps',    _t('URLMAPPER_MAPS'));
         $tpl->SetVariable('datagrid', $this->MapsDatagrid());
 
-        // map order
-        $order =& Piwi::CreateWidget('HiddenEntry', 'map_order', '');
-        $order->SetID('map_order');
-        $tpl->SetVariable('map_order', $order->Get());
+        //route entry
+        $routeEntry =& Piwi::CreateWidget('Entry', 'map_route', '');
+        $routeEntry->SetStyle('direction: ltr; width: 200px;');
+        $routeEntry->SetEnabled(false);
+        $tpl->SetVariable('map_route', _t('URLMAPPER_MAPS_ROUTE'));
+        $tpl->SetVariable('map_route_entry', $routeEntry->Get());
 
-        // map route
-        $route =& Piwi::CreateWidget('Entry', 'map_route', '');
-        $route->SetID('map_route');
-        $route->SetStyle('direction: ltr; width: 200px;');
-        $route->SetEnabled(false);
-        $tpl->SetVariable('lbl_map_route', _t('URLMAPPER_MAPS_ROUTE'));
-        $tpl->SetVariable('map_route', $route->Get());
+        // map regexp
+        $regexpEntry =& Piwi::CreateWidget('Entry', 'map_regexp', '');
+        $regexpEntry->SetStyle('direction: ltr; width: 200px;');
+        $regexpEntry->SetEnabled(false);
+        $tpl->SetVariable('map_regexp', _t('URLMAPPER_MAPS_REGEXP'));
+        $tpl->SetVariable('map_regexp_entry', $regexpEntry->Get());
 
         // map extension
-        $ext =& Piwi::CreateWidget('Entry', 'map_ext', '');
-        $ext->SetID('map_ext');
-        $ext->SetStyle('direction: ltr; width: 200px;');
-        $ext->SetEnabled(false);
-        $tpl->SetVariable('lbl_map_ext', _t('URLMAPPER_MAPS_EXTENSION'));
-        $tpl->SetVariable('map_ext', $ext->Get());
-
-        // custom route entry
-        $custom_route =& Piwi::CreateWidget('Entry', 'custom_map_route', '');
-        $custom_route->SetID('custom_map_route');
-        $custom_route->SetStyle('direction: ltr; width: 200px;');
-        $custom_route->SetEnabled(false);
-        $tpl->SetVariable('lbl_custom_map_route', _t('URLMAPPER_MAPS_ROUTE'));
-        $tpl->SetVariable('custom_map_route', $custom_route->Get());
-
-        // custom map extension
-        $custom_ext =& Piwi::CreateWidget('Entry', 'custom_map_ext', '');
-        $custom_ext->SetID('custom_map_ext');
-        $custom_ext->SetStyle('direction: ltr; width: 200px;');
-        $custom_ext->SetEnabled(false);
-        $tpl->SetVariable('lbl_custom_map_ext', _t('URLMAPPER_MAPS_EXTENSION'));
-        $tpl->SetVariable('custom_map_ext', $custom_ext->Get());
+        $extEntry =& Piwi::CreateWidget('Entry', 'map_ext', '');
+        $extEntry->SetStyle('direction: ltr; width: 200px;');
+        $extEntry->SetEnabled(false);
+        $tpl->SetVariable('map_ext', _t('URLMAPPER_MAPS_EXTENSION'));
+        $tpl->SetVariable('map_ext_entry', $extEntry->Get());
 
         $btnCancel =& Piwi::CreateWidget('Button', 'btn_cancel', _t('GLOBAL_CANCEL'), STOCK_CANCEL);
         $btnCancel->SetEnabled(false);
@@ -196,10 +202,10 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Builds aliases UI
+     * Prepares the aliases UI
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  XHTML template
      */
     function Aliases()
     {
@@ -267,10 +273,10 @@ class UrlMapperAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Builds Properties UI
+     * Prepares the view for properties
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  XHTML template
      */
     function Properties()
     {

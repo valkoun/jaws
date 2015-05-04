@@ -5,7 +5,7 @@
  * @category   Captcha
  * @package    Policy
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class MathCaptcha
@@ -19,7 +19,7 @@ class MathCaptcha
     {
         // If not installed try to install it
         $GLOBALS['app']->Registry->LoadFile('Policy');
-        if ($GLOBALS['app']->Registry->Get('/gadgets/Policy/math_captcha') != 'ver2_installed') {
+        if ($GLOBALS['app']->Registry->Get('/gadgets/Policy/math_captcha') != 'installed') {
             $schema = JAWS_PATH . 'gadgets/Policy/captchas/MathCaptcha/schema.xml';
             if (!file_exists($schema)) {
                 Jaws_Error::Fatal($schema . " doesn't exists", __FILE__, __LINE__);
@@ -28,8 +28,7 @@ class MathCaptcha
             if (Jaws_Error::IsError($result)) {
                 Jaws_Error::Fatal("Can't install MathCaptcha schema", __FILE__, __LINE__);
             }
-            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/math_captcha', 'ver2_installed');
-            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/math_accessibility', 'false');
+            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/math_captcha', 'installed');
             $GLOBALS['app']->Registry->Commit('Policy');
         }
     }
@@ -42,44 +41,19 @@ class MathCaptcha
      */
     function Get()
     {
-        list($key, $value1, $oprt, $value2) = $this->GetKey();
-        if ($GLOBALS['app']->Registry->Get('/gadgets/Policy/math_accessibility') === 'true') {
-            switch ($oprt) {
-                case '+':
-                    $title = _t('POLICY_CAPTCHA_MATH_PLUS', $value1, $value2);
-                    break;
-
-                case '-':
-                    $title = _t('POLICY_CAPTCHA_MATH_MINUS', $value1, $value2);
-                    break;
-
-                case '*':
-                    $title = _t('POLICY_CAPTCHA_MATH_MULTIPLY', $value1, $value2);
-                    break;
-
-                default:
-                    $title = _t('GLOBAL_CAPTCHA_QUESTION');
-            }
-        } else {
-            $title = _t('GLOBAL_CAPTCHA_QUESTION');
-        }
-
-        $prefix = $this->GetPrefix();
-        $img = $this->HexEncode($GLOBALS['app']->Map->GetURLFor('Policy',
-                                                                'Captcha',
-                                                                array('key' => $prefix . $key),
-                                                                false));
         $res = array();
-        $res['label'] = _t('GLOBAL_CAPTCHA_QUESTION');
+        $key = $this->GetKey();
+        $prefix = $this->GetPrefix();
+        $img = $this->HexEncode($GLOBALS['app']->Map->GetURLFor('Policy', 'Captcha',
+                                                                array('key' => $prefix . $key), false));
+
         $res['captcha'] =& Piwi::CreateWidget('Image', '', '');
-        $res['captcha']->SetTitle($title);
+        $res['captcha']->SetTitle(_t('GLOBAL_CAPTCHA_CODE'));
         $res['captcha']->SetID('captcha_img_'.rand());
         $res['captcha']->SetSrc($img);
         $res['entry'] =& Piwi::CreateWidget('Entry', $prefix . $key, '');
         $res['entry']->SetID('captcha_'.rand());
-        $res['entry']->SetStyle('direction: ltr;');
-        $res['entry']->SetTitle(_t('GLOBAL_CAPTCHA_CASE_INSENSITIVE'));
-        $res['description'] = _t('GLOBAL_CAPTCHA_QUESTION_DESC');
+        $res['entry']->SetTitle(_t('GLOBAL_CAPTCHA_SENSITIVE'));
         return $res;
     }
 
@@ -104,7 +78,7 @@ class MathCaptcha
      * Check if a captcha key is valid
      *
      * @access  public
-     * @param   bool     Valid/Not Valid
+     * @param   boolean  Valid/Not Valid
      */
     function Check()
     {
@@ -181,6 +155,9 @@ class MathCaptcha
             WHERE [key] = {key}";
         $result = $GLOBALS['db']->queryOne($sql, $params);
         if (Jaws_Error::IsError($result) || empty($result)) {
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, $result->getMessage());
+            }
             $result = false;
         }
 
@@ -196,11 +173,10 @@ class MathCaptcha
     function GetKey()
     {
         $key = uniqid(rand(0, 99999)) . time() . floor(microtime()*1000);
-        $value = $this->GenerateRandomValue();
 
         $params = array();
         $params['key']   = $key;
-        $params['value'] = implode('', $value);
+        $params['value'] = $this->GenerateRandomValue();
         $params['createtime'] = $GLOBALS['db']->Date();
 
         $sql = "
@@ -212,11 +188,12 @@ class MathCaptcha
         $result = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($result)) {
             $key = '';
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR, $result->getMessage());
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, $result->getMessage());
+            }
         }
 
-        array_unshift($value, $key);
-        return $value;
+        return $key;
     }
 
     /**
@@ -227,27 +204,7 @@ class MathCaptcha
      */
     function GenerateRandomValue()
     {
-        $fnum = rand(1, 9);
-        $snum = rand(1, 9);
-        $oprt = rand(0, 2);
-        switch ($oprt) {
-            case 0:
-                $oprt = '+';
-                break;
-
-            case 1:
-                $oprt = '-';
-                // exchange value of variables
-                if ($fnum < $snum) {
-                    list($fnum, $snum) = array($snum, $fnum);
-                }
-                break;
-
-            case 2:
-                $oprt = '*';
-        }
-
-        return array((string)$fnum, $oprt, (string)$snum);
+        return (string)rand(1, 9) . '+' . (string) rand(1, 9);
     }
 
     /**
@@ -265,7 +222,6 @@ class MathCaptcha
 
         $bg = dirname(__FILE__) . '/MathCaptcha/bg.png';
         $im = imagecreatefrompng($bg);
-        imagecolortransparent($im, imagecolorallocate($im, 255, 255, 255));
         $value = $this->GetValue($key);
         $value .= '=?';
         // Write it in a random position..

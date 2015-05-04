@@ -1,6 +1,6 @@
 <!-- BEGIN SimpleBox -->
-<div class="gadget search search_mini">
-  <h2>{title}</h2>
+<div class="gadget simple_search">
+  <h2 id="layout_{actionName}_title">{title}</h2>
   <form name="search_form" method="get" action="{base_script}">
   <input type="hidden" name="gadget" value="Search" />
   <input type="hidden" name="action" value="Results" />
@@ -11,8 +11,8 @@
 </div>
 <!-- END SimpleBox -->
 <!-- BEGIN Box -->
-<div class="gadget search search_simple">
-  <h2>{title}</h2>
+<div class="gadget search">
+  <h2 id="layout_{actionName}_title">{title}</h2>
   <form name="search_form" method="get" action="{base_script}">
   <input type="hidden" name="gadget" value="Search" />
   <input type="hidden" name="action" value="Results" />
@@ -25,25 +25,207 @@
 </div>
 <!-- END Box -->
 <!-- BEGIN AdvancedBox -->
-<div class="gadget search search_advance">
-  <h2>{title}</h2>
+<div class="gadget advance_search">
+  <h2 id="layout_{actionName}_title">{title}</h2>
   <form name="search_form" method="get" action="{base_script}">
   <input type="hidden" name="gadget" value="Search" />
   <input type="hidden" name="action" value="Results" />
   <div class="content">
-    <fieldset>
-      <legend><span>{lbl_word_filter}</span></legend>
+      <h4>{lbl_word_filter}</h4>
       <p><label>{lbl_all}</label>{all}</p>
       <p><label>{lbl_exact}</label>{exact}</p>
       <p><label>{lbl_least}</label>{least}</p>
       <p><label>{lbl_exclude}</label>{exclude}</p>
-    </fieldset>
-    <fieldset>
-      <legend><span>{lbl_data_filter}</span></legend>
+      <h4>{lbl_data_filter}</h4>
       <p><label>{lbl_search_in}</label>{gadgets_combo}</p>
-    </fieldset>
   </div>
   <div class="actions">{btn_search}</div>
   </form> 
 </div>
 <!-- END AdvancedBox -->
+<!-- BEGIN AutoComplete -->
+	<div id="all_autocomplete_choices" class="autocomplete" style="visibility: hidden;"></div>
+	<script type="text/javascript">
+		/*
+		function Search_GetStateId(element, entry) {
+			Search_AutoCompleteHost = '{site_url}/index.php?gadget=Search&action=Results&response=li&standalone=1';
+			Search_AutoCompleteURL = "&element=all"+($('Search_gadgets') ? "&gadgets="+$('Search_gadgets').value : '')+($('Search_least') ? "&least="+$('Search_least').value : '')+($('Search_exact') ? "&exact="+$('Search_exact').value : '')+($('Search_exclude') ? "&exclude="+$('Search_exclude').value : '');
+			return entry+($('Search_gadgets') ? "&gadgets="+$('Search_gadgets').value : '')+($('Search_least') ? "&least="+$('Search_least').value : '')+($('Search_exact') ? "&exact="+$('Search_exact').value : '')+($('Search_exclude') ? "&exclude="+$('Search_exclude').value : '');
+		}
+			
+		function Search_ShowNoMatches(text, li) {
+			value = li.innerHTML;
+			if(value.indexOf("No matches") != -1 || value.indexOf("No items were found containing [") != -1){
+				text.value = 'No matches were found.';
+				$('all_autocomplete_choices').style.display = '';
+			}
+		}
+				
+		var Search_AutoCompleteHost = '';
+		var Search_AutoCompleteURL = '';
+		var Search_ShowingChoices = false;
+		var Search_ComboBox = Class.create();
+
+		Search_ComboBox.Autocompleter = Ajax.Autocompleter;
+
+		// Overload onBlur
+		Search_ComboBox.Autocompleter.prototype.onBlur = function(event) {
+			if (Element.getStyle(this.update, 'display') == 'none') { return; }
+			// Dont hide the div on "blur" if the user clicks scrollbar
+			if(event&&Element.getStyle(this.update, 'height') != ''){
+				if( Position.within( this.update , Event.pointerX(event) , Event.pointerY(event) ) ){ 
+					Event.observe(this.update, "blur", this.onBlur.bindAsEventListener(this),true); 
+					// make sure blur is still around on
+					return; 
+				}
+			}
+			// needed to make click events working
+			setTimeout(this.hide.bind(this), 250);
+			this.hasFocus = false;
+			this.active = false; 
+		}
+
+		Search_ComboBox.Autocompleter.prototype.markPrevious = function() {
+			if(this.index > 0) this.index--
+			else this.index = this.entryCount-1;
+			this.getEntry(this.index).scrollIntoView(false);
+		}
+			
+		Search_ComboBox.prototype = {
+			initialize: function(textBox, resultsElement, array, options) {
+				this.textBox = $(textBox);
+						
+				//Cache for allChoicesHtml
+				this.allChoicesHtml = null
+				
+				this.results = $(resultsElement);
+				
+				this.array = array;
+				
+				this.results.style.display 	= 'none';
+				
+				this.events = {
+					showChoices: 	this.showChoices.bindAsEventListener(this),
+					hideChoices: 	this.hideChoices.bindAsEventListener(this),
+					click:			this.click.bindAsEventListener(this),
+					keyDown:		this.keyDown.bindAsEventListener(this)
+				}
+								
+				this.autocompleter = new Search_ComboBox.Autocompleter(this.textBox, this.results, this.array, options);
+				
+				Event.observe(this.textBox, 'click', this.events.click);
+				Event.observe(this.textBox, 'keydown', this.events.keyDown);
+			},
+			
+			keyDown: function(e) {
+				if (e.keyCode == Event.KEY_DOWN && this.choicesVisible() ) {
+					this.showChoices();
+				}			
+			},
+			
+			// returns boolean indicating whether the choices are displayed
+			choicesVisible: function() { return (Element.getStyle(this.autocompleter.update, 'display') == 'none'); },
+			
+			click: function() {
+				if (this.choicesVisible() ) {
+					this.showChoices();
+				} else {
+					this.hideChoices();
+				}
+			},
+				
+			showChoices: function() {
+				this.textBox.focus();
+				this.autocompleter.changed = false;
+				this.autocompleter.hasFocus = true;
+			},
+			
+			hideChoices: function() {
+				this.autocompleter.onBlur();
+			}
+		}
+		Event.observe(window, 'load', function(e){
+			var SComboBox = new Search_ComboBox('all', 'all_autocomplete_choices', "{site_url}/index.php?gadget=Search&action=Results&response=li&standalone=1", {paramName: "all", minChars: {min_chars}, callback: Search_GetStateId, afterUpdateElement: Search_ShowNoMatches});
+		});
+		*/
+		function myEventHandler() {
+			requestNum = 0;
+			$$('.opentip .all_autocomplete').each(function(element){
+				element.update('');
+			});
+			$('all_autocomplete_choices').update('');
+			if (searchRequest !== null) {
+				searchRequest.abort();
+			}
+			/*
+			if (searchExecuter !== null) {
+				searchExecuter.stop();
+			}
+			*/
+			if ($('all').value.length > 2) {
+				//searchExecuter = new PeriodicalExecuter(function(pe) {
+					searchRequest = new Ajax.Request('index.php?gadget=Search&action=Results&num='+requestNum+'&response=li&standalone=1&all='+$('all').value+'&element=all'+($('Search_gadgets') ? "&gadgets="+$('Search_gadgets').value : '')+($('Search_least') ? "&least="+$('Search_least').value : '')+($('Search_exact') ? "&exact="+$('Search_exact').value : '')+($('Search_exclude') ? "&exclude="+$('Search_exclude').value : ''), {
+						method: 'get',
+						onSuccess: function(transport) {
+							lastResult = transport.responseText;
+							requestNum++;
+							if (lastResult.indexOf("No items were found containing") == -1 && lastResult != "<li class=\"clearfix\"></li>") {
+								//$('all_autocomplete_choices').update(lastResult);
+								search_autocomplete_found = false; 
+								$$('.opentip .all_autocomplete').each(function(element){
+									//element.update(lastResult);
+									if (!$('all').element) var tip = Tips.list.find(function(t) {return t.triggerElement === $('all')});
+									else var tip = Tips.list.find(function(t) {return t === $('all')});
+									if (tip) {
+										tip.setContent('<div class="all_autocomplete" style="max-width:'+$('all').getWidth()+'px;">'+transport.responseText+'</div>');
+										tip.show();
+									}
+									search_autocomplete_found = true;
+								});
+								if (search_autocomplete_found === false) {
+									Tips.add($('all'), '<div class="all_autocomplete" style="max-width:'+$('all').getWidth()+'px;">'+lastResult+'</div>', {
+										className: "slick",
+										showOn: "creation",
+										hideTrigger: "tip",
+										hideOn: "mouseout",
+										stem: false,
+										delay: false,
+										tipJoint: [ "center", "top" ],
+										target: $('all'),
+										showEffect: "appear",
+										offset: [ 0, ((-10)+(Prototype.Browser.IE === false && $$("html")[0].style.marginTop != '' && $$("html")[0].style.marginTop != '0px' ? parseFloat($$("html")[0].style.marginTop.replace('px', '')) : 0)) ]
+									});
+								}
+							}
+							if (Ajax.activeRequestCount < 0) {
+								Ajax.activeRequestCount = 0;
+							}
+						}
+					});
+				/*
+				if (lastResult !== null && lastResult.indexOf('pager_total') > -1) {
+						pe.stop();
+					} else {
+						oldResult = lastResult;
+					}
+				}, .75);
+				*/
+			}
+		}
+		var lastResult = null;
+		var oldResult = null;
+		var requestNum = 0;
+		//var searchExecuter = null;
+		var searchRequest = null;
+		$('all').observe('keyup', myEventHandler);
+		$('all').observe('mouseover', function(){
+			$$('.opentip .all_autocomplete').each(function(element){
+				if (!$('all').element) var tip = Tips.list.find(function(t) {return t.triggerElement === $('all')});
+				else var tip = Tips.list.find(function(t) {return t === $('all')});
+				if (tip) {
+					tip.show();
+				}
+			});
+		});
+	</script>
+<!-- END AutoComplete -->

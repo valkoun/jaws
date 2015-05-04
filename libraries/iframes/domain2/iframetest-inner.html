@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>Inner Page</title>
+    <style type="text/css">
+      html, body { margin : 0; padding : 0; border : 0; }
+      body { font-family : Verdana, sans-serif; }
+      h1 { font-family : Georgia, sans-serif; }
+      #inneriframe { position : absolute; top : 0px; left : 0px; visibility: hidden; }
+    </style>
+    <script type="text/javascript">
+      function test1() {
+        var wrapper = document.getElementById( 'wrapper' );
+        var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );
+        window.parent.updateIFrame( height );
+      }
+
+      function test2() {
+        var iframe = document.getElementById( 'inneriframe' );
+        var wrapper = document.getElementById( 'wrapper' );
+        var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );
+        iframe.src = 'http://mcknut.googlepages.com/iframetest-resize1.html?height='+height;
+      }
+
+      function test3() {
+        var wrapper = document.getElementById( 'wrapper' );
+        var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );
+        window.location.replace( 'http://mcknut.googlepages.com/iframetest-resize2.html?height='+height+'&callback='+escape(window.location.toString()) );
+      }
+      
+      function addContent( newcontent ) {
+        var wrapper = document.getElementById( 'wrapper' );
+        var newpara = document.createElement( 'p' );
+        wrapper.appendChild( newpara );
+        newpara.appendChild( document.createTextNode( newcontent ) );
+      }
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>Inner Page</h1>
+      <p>
+        <a href="javascript:test1()">test1</a> -
+        <a href="javascript:test2()">test2</a> -
+        <a href="javascript:test3()">test3</a>
+      </p>
+      <div id="content">
+        <p>This is some content.</p>
+        <p>This is some more content lower down.</p>
+        <p>This is the final bit of content.</p>
+      </div>
+      <h1>Footer</h1>
+      <iframe id="inneriframe" width="10" height="10"></iframe>
+    </div>
+  </body>
+</html>

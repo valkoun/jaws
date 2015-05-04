@@ -5,12 +5,12 @@
  * @category   Application
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 if (!Jaws::classExists('Piwi')) {
     if (!defined('PIWI_URL')) {
-        define('PIWI_URL', 'libraries/piwi/');
+        define('PIWI_URL', $GLOBALS['app']->GetJawsURL() . '/libraries/piwi/');
     }
     if (!defined('PIWI_CREATE_PIWIXML')) {
         define('PIWI_CREATE_PIWIXML', 'no');

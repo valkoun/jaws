@@ -1,0 +1,61 @@
+/* PRODUCT BROWSER */
+#productbrowser { width:800px; height:150px; margin-left: 13px; font-size:12px; line-height:18px; overflow:auto; }
+#pb-productbrowsercontainer { position:relative; width:800px; height:150px; margin:0 auto; }
+#pb-productslider { top:4px; left:0; width:3900px; height:126px; position:absolute; margin:0; padding:0; }
+#pb-productslider .pb-productimage { float:left; width:165px; height:126px; position:relative; top:0; }
+#pb-productslider .pb-productimage a:link,
+#pb-productslider .pb-productimage a:visited  { text-decoration: none; float:left; width:100%; padding-top:100px; overflow:hidden; color:#ccc; font-size:11px; text-align:center; background-position:50% 10%; background-repeat:no-repeat; }
+#pb-productslider .pb-productimage a:hover {  text-decoration:none; color:#fff; }
+#pb-productslidertrack { position:absolute; top:130px; left:18px; width:764px; height:19px; overflow:hidden; background:url(images/productbrowser_scrollbar_20070622.png) no-repeat; visibility:hidden; }
+#pb-cat1,
+#pb-cat2,
+#pb-cat3,
+#pb-cat4 { position:absolute; top:0; z-index:150; color:#fff; font-size:11px; cursor:pointer; }
+#pb-cat1 { left:57px; }
+#pb-cat2 { left:296px; }
+#pb-cat3 { left:536px; }
+#pb-cat4 { left:653px; }
+#pb-productsliderhandle { position:absolute; width:181px; height:19px; cursor:pointer; z-index:155; }
+#pb-productsliderhandleimage { position:absolute; width:181px; height:19px; background:url(images/productbrowser_scroller_20080115.png) no-repeat; behavior:url(/global/scripts/lib/iepngfix.htc); cursor:pointer; z-index:5; }
+#pb-leftarrow { position:absolute; left:17px; top:130px; width:20px; height:20px; background:transparent; z-index:150; cursor:pointer; }
+#pb-rightarrow { position:absolute; left:762px; top:130px; width:20px; height:20px; background:transparent; z-index:150; cursor:pointer; }
+#pb-iphone-leftarrow { position:absolute; left:0; top:0; height:150px; width:69px; z-index:1000; cursor:pointer; background:url(images/pb_arrows_04_left.png) no-repeat top; }
+#pb-iphone-rightarrow { position:absolute; left:730px; top:0; height:150px; width:69px; z-index:100000; cursor:pointer; background:url(images/pb_arrows_04_right.png) no-repeat top; }
+
+/* PRODUCT BROWSER SECTION COLORS */
+#pb-productbrowsercontainer .pb-catclass0 { color:#666; }
+#pb-productbrowsercontainer .pb-catclass1 { color:#777; }
+#pb-productbrowsercontainer .pb-catclass2 { color:#888; }
+#pb-productbrowsercontainer .pb-catclass3 { color:#999; }
+#pb-productbrowsercontainer .pb-catclass4 { color:#aaa; }
+#pb-productbrowsercontainer .pb-catclass5 { color:#bbb; }
+#pb-productbrowsercontainer .pb-catclass6 { color:#ccc; }
+#pb-productbrowsercontainer .pb-catclass7 { color:#ddd; }
+#pb-productbrowsercontainer .pb-catclass8 { color:#eee; }
+#pb-productbrowsercontainer .pb-catclass9 { color:#eee; }
+#pb-productbrowsercontainer .pb-catclass10 { color:#fff; }
+#pb-productbrowsercontainer .pb-catclass11 { color:#fff; }
+#pb-productbrowsercontainer #pb-cat1.pb-catclass5 { color:#fff; }
+
+/* PRODUCT BROWSER PRODUCTS 
+#pb-productslider #pb-Ads a { background-image:url(images/Ads_96.png); }
+#pb-productslider #pb-Calendar a { background-image:url(images/Calendar_96.png); }
+#pb-productslider #pb-CustomPage a { background-image:url(images/CustomPage_96.png); }
+#pb-productslider #pb-Files a { background-image:url(images/Files_96.png); }
+#pb-productslider #pb-FlashGallery a { background-image:url(images/FlashGallery_96.png); }
+#pb-productslider #pb-Forms a { background-image:url(images/Forms_96.png); }
+#pb-productslider #pb-Maps a { background-image:url(images/Maps_96.png); }
+#pb-productslider #pb-Properties a { background-image:url(images/Properties_96.png); }
+#pb-productslider #pb-Search a { background-image:url(images/Search_96.png); }
+*/
+/* PRODUCT REPOSITIONING 
+#pb-productslider #pb-Ads { margin:0 -25px 0 0px; }
+#pb-productslider #pb-Calendar { margin:0 0px 0 7px; }
+#pb-productslider #pb-CustomPage { margin:0 15px 0 -5px; }
+#pb-productslider #pb-Files { margin:0 0px; }
+#pb-productslider #pb-FlashGallery { margin:0 0px 0 7px; }
+#pb-productslider #pb-Forms { margin:0 0px 0 20px; }
+#pb-productslider #pb-Maps { margin:0 0px; }
+#pb-productslider #pb-Properties { margin:0 0px; }
+#pb-productslider #pb-Search { margin:0 16px; }
+*/

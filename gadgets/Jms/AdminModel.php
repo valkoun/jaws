@@ -7,16 +7,18 @@
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Helgi Þormar <dufuz@php.net>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class JmsAdminModel extends Jaws_Model
 {
+    var $_Name = 'Jms';
+
     /**
      * Installs the gadget
      *
-     * @access  public
-     * @return  bool    True
+     * @access       public
+     * @return       true on successful installation, Jaws_Error otherwise
      */
     function InstallGadget()
     {
@@ -28,15 +30,13 @@ class JmsAdminModel extends Jaws_Model
      * Get a list of gadgets, installed or non installed, core or not core, has layout or not,...
      *
      * @access  public
-     * @param   bool    $core_gadget accept true/false/null value
-     * @param   bool    $installed   accept true/false/null value
-     * @param   bool    $updated     accept true/false/null value
-     * @param   bool    $has_layout  accept true/false/null value
-     * @param   bool    $has_html    accept true/false/null value
+     * @param   boolean $core_gadget accept true/false/null value
+     * @param   boolean $installed   accept true/false/null value
+     * @param   boolean $updated     accept true/false/null value
+     * @param   boolean $has_layout  accept true/false/null value
      * @return  array   A list of gadgets
      */
-    function GetGadgetsList($core_gadget = null, $installed = null, $updated = null,
-                            $has_layout = null, $has_html = null)
+    function GetGadgetsList($core_gadget = null, $installed = null, $updated = null, $has_layout = null)
     {
         //TODO: implementing cache for this method
         static $gadgetsList;
@@ -46,9 +46,6 @@ class JmsAdminModel extends Jaws_Model
             if (!is_dir($gDir)) {
                 Jaws_Error::Fatal('The gadgets directory does not exists!', __FILE__, __LINE__);
             }
-
-            $coreitems = $GLOBALS['app']->Registry->Get('/gadgets/core_items');
-            $coreitems = array_filter(explode(',', $coreitems));
 
             $gadgets = scandir($gDir);
             foreach ($gadgets as $gadget) {
@@ -68,48 +65,26 @@ class JmsAdminModel extends Jaws_Model
                     $gUpdated = true;
                 }
 
-                $tName = $gInfo->GetName();
-                $index = urlencode($tName);
-                $section = strtolower($gInfo->GetSection());
-                switch ($section) {
-                    case 'general':
-                        $order = str_pad(array_search($gadget, $coreitems), 2, '0', STR_PAD_LEFT);
-                        $index = '0'. $section. $order. $index;
-                        break;
-                    case 'gadgets':
-                        $index = '2'. $section. $index;
-                        break;
-                    default:
-                        $index = '1'. $section. $index;
-                    break;
-                }
-
-                $gadgetsList[$index] = array(
-                        'section'     => $section,
-                        'realname'    => $gadget,
-                        'name'        => $tName,
-                        'core_gadget' => (bool)$gInfo->GetAttribute('core_gadget'),
-                        'description' => $gInfo->GetDescription(),
-                        'version'     => $gInfo->GetVersion(),
-                        'installed'   => (bool)$gInstalled,
-                        'updated'     => (bool)$gUpdated,
-                        'has_layout'  => file_exists($gDir . $gadget . DIRECTORY_SEPARATOR . 'LayoutHTML.php'),
-                        'has_html'    => file_exists($gDir . $gadget . DIRECTORY_SEPARATOR . 'HTML.php'),
-                );
+                $gadgetsList[$gadget] = array('realname'    => $gadget,
+                                              'name'        => $gInfo->GetName(),
+                                              'core_gadget' => (bool)$gInfo->GetAttribute('core_gadget'),
+                                              'description' => $gInfo->GetDescription(),
+                                              'version'     => $gInfo->GetVersion(),
+                                              'installed'   => (bool)$gInstalled,
+                                              'updated'     => (bool)$gUpdated,
+                                              'has_layout'  => file_exists($gDir . $gadget . DIRECTORY_SEPARATOR . 'LayoutHTML.php'),
+                                             );
             }
-
-            ksort($gadgetsList);
         }
 
         $resList = array();
-        foreach ($gadgetsList as $gadget) {
+        foreach ($gadgetsList as $name => $gadget) {
             if ((is_null($core_gadget) || $gadget['core_gadget'] == $core_gadget) &&
                 (is_null($installed) || $gadget['installed'] == $installed) &&
                 (is_null($updated) || $gadget['updated'] == $updated) &&
-                (is_null($has_layout) || $gadget['has_layout'] == $has_layout) &&
-                (is_null($has_html) || $gadget['has_html'] == $has_html))
+                (is_null($has_layout) || $gadget['has_layout'] == $has_layout))
             {
-                $resList[$gadget['realname']] = $gadget;
+                $resList[$name] = $gadget;
             }
         }
 
@@ -120,7 +95,7 @@ class JmsAdminModel extends Jaws_Model
      * Get a list of plugins, installed or non installed
      *
      * @access  public
-     * @param   bool    $installed   accept true/false/null value
+     * @param   boolean $installed   accept true/false/null value
      * @return  array   A list of plugins
      */
     function GetPluginsList($installed = null)
@@ -137,11 +112,6 @@ class JmsAdminModel extends Jaws_Model
             $plugins = scandir($pDir);
             foreach ($plugins as $plugin) {
                 if ($plugin{0} == '.' || !is_dir($pDir . $plugin)) {
-                    continue;
-                }
-
-                $pInfo = $GLOBALS['app']->LoadPlugin($plugin);
-                if (Jaws_Error::IsError($pInfo)) {
                     continue;
                 }
 
@@ -171,26 +141,52 @@ class JmsAdminModel extends Jaws_Model
      *
      * @access  public
      * @param   string  $plugin Plugin
-     * @return  mixed   Plugin information or Jaws_Error on error
+     * @return  array   Plugin information
      */
     function GetPluginInfo($plugin)
     {
-        $objPlugin = $GLOBALS['app']->LoadPlugin($plugin);
-        if (Jaws_Error::IsError($objPlugin)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetPluginInfo'), _t('JMS_NAME'));
+        $plugin_file = JAWS_PATH . '/plugins/' . $plugin . '/' . $plugin . '.php';
+        if (file_exists($plugin_file)) {
+            require_once $plugin_file;
+            $p = new $plugin();
+            $plugin = array(
+                'version'     => $p->GetVersion(),
+                'realname'    => $plugin,
+                'name'        => $plugin,
+                'friendly'    => $p->IsFriendly(),
+                'accesskey'   => $p->GetAccessKey(),
+                'example'     => $p->GetExample(),
+                'description' => _t('_PLUGINS_' . strtoupper($plugin) . '_DESCRIPTION'),
+            );
+
+            return $plugin;
         }
 
-        $plugin = array(
-            'version'     => $objPlugin->GetVersion(),
-            'realname'    => $plugin,
-            'name'        => $plugin,
-            'friendly'    => $objPlugin->IsFriendly(),
-            'accesskey'   => $objPlugin->GetAccessKey(),
-            'example'     => $objPlugin->GetExample(),
-            'description' => _t('_PLUGINS_' . strtoupper($plugin) . '_DESCRIPTION'),
-        );
+        return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetPluginInfo'), _t('JMS_NAME'));
+    }
 
-        return $plugin;
+
+    /**
+     * Get the registry keys of a gadget
+     *
+     * @access  public
+     * @param   string  $gadget  Gadget keys to fetch
+     * @return  array   Array with registry keys
+     */
+    function GetGadgetRegistryKeys($gadget)
+    {
+        $rs = array();
+        $fileKeys = $GLOBALS['app']->Registry->LoadFile($gadget, 'gadgets', true);
+        foreach ($fileKeys as $key => $value) {
+            if (!isset($rs[$key])) {
+                $rs[] = array(
+                    'name'  => $key,
+                    'value' => $value,
+                );
+            }
+        }
+
+        return $rs;
     }
 
     /**
@@ -213,5 +209,4 @@ class JmsAdminModel extends Jaws_Model
 
         return $rs;
     }
-
 }

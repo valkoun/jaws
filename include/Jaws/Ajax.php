@@ -1,11 +1,12 @@
 <?php
 /**
- * Main methods of Ajax services
+ * AJAX interface.
  *
  * @category   Ajax
+ * @category   feature
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Ajax
@@ -19,18 +20,6 @@ class Jaws_Ajax
     var $_Model;
 
     /**
-     * Constructor
-     *
-     * @access  public
-     * @param   object  $model  Jaws_Model reference
-     * @return  void
-     */
-    function Jaws_Ajax(&$model)
-    {
-        $this->_Model =& $model;
-    }
-
-    /**
      * Check the session permission:
      *
      *  - If user has privileges to execute the task
@@ -38,17 +27,14 @@ class Jaws_Ajax
      *  - If session stills active
      *
      * @access  public
-     * @param   string  $gadget     Gadget name
-     * @param   string  $task       Task name
-     * @param   bool    $together   And/Or tasks permission result, default true
+     * @param   string  $gadget  Gadget name
+     * @param   string  $task    Task name
      */
-    function CheckSession($gadget, $task, $together = true)
+    function CheckSession($gadget, $task)
     {
         $this->CheckSessionExistence();
         $this->CheckSessionLife();
-        if (!$GLOBALS['app']->Session->GetPermission($gadget, $task, $together)) {
-            trigger_error('[NOPERMISSION] - You do not have permission to execute this task', E_USER_ERROR);
-        }
+        $this->CheckSessionPermission($gadget, $task);
     }
 
     /**
@@ -59,16 +45,15 @@ class Jaws_Ajax
      *  - If session stills active
      *
      * @access  public
-     * @param   string  $gadget     Gadget name
-     * @param   string  $task       Task name
-     * @param   bool    $together   And/Or tasks permission result, default true
+     * @param   string  $gadget  Gadget name
+     * @param   string  $task    Task name
      */
-    function GetPermission($gadget, $task, $together = true)
+    function GetPermission($gadget, $task)
     {
         return (
             $this->GetSessionExistence() &&
             $this->IsSessionAlive() &&
-            $GLOBALS['app']->Session->GetPermission($gadget, $task, $together)
+            $this->GetSessionPermission($gadget, $task)
         );
     }
 
@@ -88,7 +73,7 @@ class Jaws_Ajax
      * Gets the existence of the session status
      *
      * @access   private
-     * @return  bool
+     * @return   boolean
      */
     function GetSessionExistence()
     {
@@ -111,11 +96,38 @@ class Jaws_Ajax
      * Gets the session status
      *
      * @access  private
-     * @return  bool
+     * @return  boolean
      */
     function IsSessionAlive()
     {
         return $GLOBALS['app']->Session->Logged() ? true : false;
     }
 
+    /**
+     * Check permission on a gadget/task
+     *
+     * @access  public
+     * @param   string  $gadget  Gadget name
+     * @param   string  $task    Task name
+     */
+    function CheckSessionPermission($gadget, $task)
+    {
+        if (!$GLOBALS['app']->Session->GetPermission($gadget, $task)) {
+            trigger_error('[NOPERMISSION] - You do not have permission to execute this task', E_USER_ERROR);
+        }
+    }
+
+    /**
+     * Gets the session permission status
+     *
+     * @access public
+     * @param  string $gadget   Gadget name
+     * @param  string  $task    Task name
+     * @return boolean
+     */
+    function GetSessionPermission($gadget, $task)
+    {
+        return $GLOBALS['app']->Session->GetPermission($gadget, $task) ? true : false;
+    }
 }
+?>

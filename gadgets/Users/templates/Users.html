@@ -1,0 +1,63 @@
+<!-- BEGIN Users -->
+{menubar}
+<script type="text/javascript">
+  var noGroup              = "{noGroup}";
+  var wrongPassword        = "{wrongPassword}";
+  var incompleteUserFields = "{incompleteUserFields}";
+  var permissionsMsg       = "{permissionsMsg}";
+  var confirmUserDelete    = "{confirmUserDelete}";
+  var confirmResetACL      = "{confirmResetACL}";
+</script>
+<table id="users_filter">
+  <tr>
+    <form action="" method="post" name="user_filters" onsubmit="return false;">
+	<input type="hidden" name="action" value="Admin" />
+	<input type="hidden" name="gadget" value="Users" />
+	<td style="width: 0%;"><label>{lbl_filter_search}</label><br/><nobr>{filter_search}&nbsp;{search_btn}</nobr></td>
+    <td style="width: 0%;"><label>{lbl_filter_orderBy}</label><br/>{filter_orderBy}</td>
+    <td style="width: 0%;"><label>{lbl_filter_sortDir}</label><br/>{filter_sortDir}</td>
+    <td style="width: 0%;"><label>{lbl_filter_group}</label><br/>{filter_group}</td>
+    <td style="width: 0%;"><label>{lbl_filter_type}</label><br/>{filter_type}</td>
+    <td style="width: 100%;"><label>{lbl_filter_status}</label><br/>{filter_status}</td>
+	</form>
+  </tr>
+</table>
+<table style="width: 100%; border: 1px solid #ccc; padding: 0px; border-spacing: 0.1px; height: 350px; max-height: 350px;">
+  <!-- big work area -->
+  <tr>
+    <td style="vertical-align: top;">
+      {combo_users}
+      <!-- big combo (users) -->
+    </td>
+    <!-- work area -->
+    <td id="work_area">
+    </td>
+    <td style="vertical-align: top;">
+      {right_menu}
+    </td>
+  </tr>
+</table>
+<table style="width: 100%; padding: 0px;">
+  <tr>
+    <td id="buttons">
+      <table style="empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>{reset_acl}</td>
+          <td>{cancel}</td>
+          <td>{save_acl}</td>
+          <td>{save_user}</td>
+          <td>{add_user}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<script type="text/javascript">
+if ($('users_combo')) {
+	$('users_combo').selectedIndex = -1;
+}
+<!-- BEGIN default -->
+Event.observe(window, "load",function(){editUser({id});});
+<!-- END default -->
+</script>
+<!-- END Users -->

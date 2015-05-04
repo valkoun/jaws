@@ -19,7 +19,6 @@ define('_RU_SEARCH_LAYOUT_SIMPLEBOX', "Блок простого поиска");
 define('_RU_SEARCH_LAYOUT_SIMPLEBOX_DESCRIPTION', "Показывает блок поиска без выбираемых компонентов.");
 define('_RU_SEARCH_LAYOUT_ADVANCEDBOX', "Блок расширенного поиска");
 define('_RU_SEARCH_LAYOUT_ADVANCEDBOX_DESCRIPTION', "Показывает блок расширенного поиска.");
-define('_RU_SEARCH_RESULTS', "Результаты поиска");
 define('_RU_SEARCH_RESULTS_SUBTITLE', "Найдено {0} результатов, содержащих [<span class=\"result_title\">{1}</span>]");
 define('_RU_SEARCH_RESULTS_IN_GADGETS', "Найдено {0} результатов, содержащих [<span class=\"result_title\">{1}</span>], в {2}");
 define('_RU_SEARCH_NO_RESULTS', "Не найдено результатов, содержащих [<span class=\"result_title\">{0}</span>]");

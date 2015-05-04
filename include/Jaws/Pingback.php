@@ -5,7 +5,7 @@
  * @category   Services
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_PingBack
@@ -59,7 +59,7 @@ class Jaws_PingBack
      * @access  public
      * @param   string   $source  Source URL (blog's URL post for example, a permalink)
      * @param   string   $message Message to parse
-     * @return  bool     Success/Failure
+     * @return  boolean  Success/Failure
      */
     function sendFromString($source, $message)
     {
@@ -114,8 +114,7 @@ class Jaws_PingBack
         $this->_pingBack->receive();
         $context = $this->_pingBack->getSourceContext();
         if (!is_array($context)) {
-            return new Jaws_Error('Unable to listen pingback',
-                                  __FUNCTION__);
+            return new Jaws_Error('Unable to listen pingback');
         }
 
         $response = array();
@@ -132,7 +131,7 @@ class Jaws_PingBack
      * @access  public
      * @param   string   $source   Source URL (blog's URL post for example, a permalink)
      * @param   string   $target   Target URL
-     * @return  bool     Success/Failure
+     * @return  boolean  Success/Failure
      */
     function send($source, $target)
     {

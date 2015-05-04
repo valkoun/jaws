@@ -1,0 +1,22 @@
+<!-- BEGIN unsubscribe -->
+<div class="gadget users unsubscribebox">
+  <h2>{title}</h2>
+  <!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+  <form name="unsubscribeBox" action="{base_script}?gadget=Social&action=Unsubscribed" method="post">
+  <input type="hidden" name="gadget" value="Social" />
+  <input type="hidden" name="action" value="Unsubscribe" />
+  <input type="hidden" name="email" value="{email}" />
+  <div class="content">
+    <p>
+	<span>{request_string}</span>
+    </p>
+  </div>
+  <div class="actions"><button type="submit" value="Yes">Yes</button>&nbsp;&nbsp;<button value="Cancel" onclick="location.href='{cancel_url}';">Cancel</button></div>
+  </form>
+</div>
+<!-- END unsubscribe -->
+<!-- BEGIN already_unsubscribed -->
+<div class="gadget users unsubscribebox">
+{content}
+</div>
+<!-- END already_unsubscribed -->

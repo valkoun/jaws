@@ -1,6 +1,8 @@
-<?php /* vim: se et ts=4 sw=4 sts=4 fdm=marker: */
+<?php
 /**
- * Copyright (c) 1998-2010 Manuel Lemos, Tomas V.V.Cox,
+ * PHP versions 4 and 5
+ *
+ * Copyright (c) 1998-2008 Manuel Lemos, Tomas V.V.Cox,
  * Stig. S. Bakken, Lukas Smith, Igor Feghali
  * All rights reserved.
  *
@@ -37,16 +39,20 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP version 5
+ * Author: Christian Dickmann <dickmann@php.net>
+ * Author: Igor Feghali <ifeghali@php.net>
+ *
+ * $Id: Parser.php,v 1.68 2008/11/30 03:34:00 clockwerx Exp $
  *
  * @category Database
  * @package  MDB2_Schema
  * @author   Christian Dickmann <dickmann@php.net>
  * @author   Igor Feghali <ifeghali@php.net>
  * @license  BSD http://www.opensource.org/licenses/bsd-license.php
- * @version  SVN: $Id: Parser.php 302413 2010-08-17 20:46:14Z ifeghali $
+ * @version  CVS: $Id: Parser.php,v 1.68 2008/11/30 03:34:00 clockwerx Exp $
  * @link     http://pear.php.net/packages/MDB2_Schema
  */
+
 
 require_once 'XML/Parser.php';
 require_once 'MDB2/Schema/Validate.php';
@@ -109,27 +115,22 @@ class MDB2_Schema_Parser extends XML_Parser
     var $val;
 
     function __construct($variables, $fail_on_invalid_names = true,
-        $structure = false, $valid_types = array(), $force_defaults = true,
-        $max_identifiers_length = null
-    ) {
+                         $structure = false, $valid_types = array(),
+                         $force_defaults = true)
+    {
         // force ISO-8859-1 due to different defaults for PHP4 and PHP5
         // todo: this probably needs to be investigated some more andcleaned up
         parent::XML_Parser('ISO-8859-1');
 
         $this->variables = $variables;
         $this->structure = $structure;
-        $this->val       = new MDB2_Schema_Validate(
-            $fail_on_invalid_names,
-            $valid_types,
-            $force_defaults,
-            $max_identifiers_length
-        );
+        $this->val       = new MDB2_Schema_Validate($fail_on_invalid_names, $valid_types, $force_defaults);
     }
 
     function MDB2_Schema_Parser($variables, $fail_on_invalid_names = true,
-        $structure = false, $valid_types = array(), $force_defaults = true,
-        $max_identifiers_length = null
-    ) {
+                                $structure = false, $valid_types = array(),
+                                $force_defaults = true)
+    {
         $this->__construct($variables, $fail_on_invalid_names, $structure, $valid_types, $force_defaults);
     }
 
@@ -334,6 +335,7 @@ class MDB2_Schema_Parser extends XML_Parser
                 'start' => '',
                 'description' => '',
                 'comments' => '',
+                'on' => array('table' => '', 'field' => '')
             );
             break;
         }
@@ -804,9 +806,6 @@ class MDB2_Schema_Parser extends XML_Parser
         case 'database-sequence-comments':
             $this->sequence['comments'] .= $data;
             break;
-        case 'database-sequence-on':
-            $this->sequence['on'] = array('table' => '', 'field' => '');
-            break;
         case 'database-sequence-on-table':
             $this->sequence['on']['table'] .= $data;
             break;
@@ -816,3 +815,5 @@ class MDB2_Schema_Parser extends XML_Parser
         }
     }
 }
+
+?>

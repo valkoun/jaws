@@ -1,0 +1,33 @@
+html, body {
+	font-size: x-large;
+	font-family: sans-serif;
+	background: #fff;
+	padding: 3px;
+	color: #000;
+	margin: 0;
+}
+
+.horizontal_carousel, .carousel_navigation {
+	display: none;
+}
+
+input, select, textarea, button {
+	font-size: xx-large;
+	display: block;
+	clear: both;
+	float: none;
+	width: 100%;
+	min-width: 100%;
+}
+
+.syntacts_special {
+	visibility: hidden;
+	width: 2px;
+	height: 2px;
+}
+
+input[type="checkbox"], input[type="radio"], #login_remember {
+	height: 45px;
+	width: 45px;
+	min-width: 45px;
+}

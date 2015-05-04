@@ -1,0 +1,233 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+		var msgbox=$('msgbox_{msg-id}');if((msgbox.className!='error-message')&&(msgbox.className!='warning-message')&&(window.hideResponseBox)){hideResponseBox(msgbox);};
+	</script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN theme_preview -->
+   <div id="demo-button">
+		<a href="#">
+			<img height="138" width="138" border="0" src="{JAWS_URL}gadgets/Tms/images/demo_get_started.png" alt="Click here to get started now!" title="Click here to get started now!" />
+		</a>
+	</div>
+
+<div id="demo-holder" class="gadget tms">
+	<div id="demo-top">
+		<div id="demo-logo">
+			<a href="{site_url}">
+				<img height="71" width="318" border="0" src="{JAWS_URL}images/blank.gif" alt="{site_title}" title="{site_title}" />
+			</a>
+		</div>
+
+<!-- BEGIN carousel -->
+		<div class="horizontal_carousel" id="horizontal_carousel">
+		  <script>
+			$('horizontal_carousel').style.visibility = 'hidden';
+		  </script>
+		  <div class="previous_button" id="previous_button"></div>  
+		  <div class="carousel_container" id="carousel_container">
+			<div class="carousel_holder" id="carousel_holder">
+<!-- BEGIN item -->
+				<div class="carousel_item" id="carousel_item{num}" style="background: url({image}) no-repeat scroll 0 0;"><a href="javascript:void(0);" onclick="if ($('demo-iframe')) {$('demo-iframe').src = '{url}';};"><img id="carousel_item{num}Image" class="carousel_itemImage" border="0" src="{JAWS_URL}gadgets/Tms/images/demo_top_overlay.png" alt="{name}" title="{name}" /></a><p class="carousel_itemLabel" style="text-align: center;" align="center"><a href="javascript:void(0);" onclick="if ($('demo-iframe')) {$('demo-iframe').src = '{url}';};">{name}</a></p></div>
+<!-- END item -->
+			</div>
+		  </div>
+		  <div class="next_button" id="next_button"></div>
+		</div>
+		<script type="text/javascript">
+		// <![CDATA[
+		var n = 0;
+		var hCarousel = null;
+		var x = null;
+		var button_widths = 0;
+		document.observe("dom:loaded", function(){
+			// ADDED: Try to hide any iframes in child elements...
+			var holder = $('carousel_holder');
+			var thisChild = holder.firstChild;
+			var prev_button_width = parseInt($("previous_button").offsetWidth, 10);
+			var next_button_width = parseInt($("next_button").offsetWidth, 10);
+			button_widths = (prev_button_width + next_button_width)+30;
+			//$('carousel_navigation').innerHTML = '<img src="images/carousel_nav_left.png" border="0"/>';
+			while (thisChild != holder.lastChild) {
+				if (thisChild.nodeType == 1) {
+					//theItems[n] = thisChild;
+					//$('carousel_navigation').innerHTML = $('carousel_navigation').innerHTML + '<a id="carousel_nav'+n+'" href="javascript: void(0);" onclick="hCarousel.scrollTo('+n+');" style="text-decoration: none;"><img src="images/carousel_nav_off.png" border="0"/></a>';
+					/*
+					if (thisChild.id != 'carousel_item1') {
+						thisChild.style.visibility = 'hidden';
+					}
+					*/
+					n++;
+
+				}
+				thisChild = thisChild.nextSibling;
+			}
+			//$('carousel_navigation').innerHTML += '<img src="images/carousel_nav_left.png" border="0" /><a id="carousel_nav0" href="javascript: void(0);" onclick="hCarousel.scrollTo(0);" style="text-decoration: none;"><img src="images/carousel_nav_on.png" border="0" /></a><img src="images/carousel_nav_right.png" border="0" />';
+		});
+
+		function startscroll() {
+		   x = window.setInterval(function scroll() {
+			var nextItem = hCarousel.currentIndex() + 1;
+			if (nextItem == n) {
+				hCarousel.scrollTo(0);
+			} else {
+				hCarousel.scrollTo(nextItem);
+			};
+		   },5000);
+		}
+
+		function stopscroll() {
+		   window.clearInterval(x);
+		}
+
+		function runTest() {
+			$('horizontal_carousel').style.visibility = 'visible';
+			updateCarouselSize();
+			hCarousel = new UI.Carousel("horizontal_carousel", {container: ".carousel_container", scrollInc: "auto"});
+			//$('carousel_nav0').innerHTML = '<img src="images/carousel_nav_on.png" border="0"/>';
+			startscroll();
+			$('horizontal_carousel').observe('mouseover', stopscroll);
+			$('horizontal_carousel').observe('mouseout', startscroll);
+			
+			new UI.Carousel('horizontal_carousel').observe('scroll:ended', function() {
+				//var currentIndex = event.memo.hCarousel.currentIndex();
+				var holder = $('carousel_holder');
+				var thisChild = holder.firstChild;
+				//$('carousel_nav_select').style.visibility = 'hidden';
+				for (t=0; t<n+1; t++) {
+					if (t!=hCarousel.currentIndex()) {
+						//$('carousel_nav_select_image').innerHTML = '<img src="images/carousel_nav_select'+t+'_off.png" border="0"/>';
+						if ($('carousel_nav'+t)) {
+							//$('carousel_nav'+t).src = 'images/carousel_nav_off.png';
+							$('carousel_nav'+t).childNodes[0].src = "images/carousel_nav_off.png";
+						}
+					} else {
+						//$('carousel_nav_select_image').innerHTML = '<img src="images/carousel_nav_select'+t+'_off.png" border="0"/>';
+						//$('carousel_nav_select_image').src = 'images/carousel_nav_select'+t+'_off.png';
+						if ($('carousel_nav'+t)) {
+							//$('carousel_nav'+t).src = 'images/carousel_nav_on.png';
+							$('carousel_nav'+t).childNodes[0].src = "images/carousel_nav_on.png";
+						}
+					}
+				}
+				/*
+				while (thisChild != holder.lastChild) {
+					if (thisChild.nodeType == 1) {
+						if (thisChild.id == 'carousel_item'+(hCarousel.currentIndex()+1)) {
+							thisChild.style.visibility = 'visible';
+						} else {
+							thisChild.style.visibility = 'hidden';
+						}
+					}
+					thisChild = thisChild.nextSibling;
+				}
+				*/
+			});
+			
+			new UI.Carousel('horizontal_carousel').observe('scroll:started', function() {
+				/*
+				var holder = $('carousel_holder');
+				var thisChild = holder.firstChild;
+				while (thisChild != holder.lastChild) {
+					if (thisChild.nodeType == 1) {
+						thisChild.style.visibility = 'visible';
+					}
+					thisChild = thisChild.nextSibling;
+				}
+				*/
+			});
+			{scrollTo}
+
+		}
+
+		function resized() {
+			updateCarouselSize();  
+			if (hCarousel)
+			hCarousel.updateSize();
+		}
+
+	  function updateCarouselSize() {
+		if ($('horizontal_carousel').parentNode) {
+			var dim = parseInt($('horizontal_carousel').parentNode.offsetWidth, 10);
+		} else {
+			var dim = document.viewport.getDimensions(); 
+			dim = dim.width;
+		}
+		//dim -= 20;                             
+		$("horizontal_carousel").style.width = dim + "px";
+		$$("#horizontal_carousel .carousel_container").first().style.width = (dim - button_widths) + "px";
+		var height = parseInt($("horizontal_carousel").offsetHeight, 10);
+		$("carousel_container").style.height = height+'px';
+		if ($$(".carousel_itemImage")) {
+			$$(".carousel_itemImage").each(function(item) {
+				item.style.height = height+'px';
+			});
+		}
+		var holder = $('carousel_holder');
+		var thisChild = holder.firstChild;
+		while (thisChild != holder.lastChild) {
+			if (thisChild.nodeType == 1) {
+				//thisChild.width = (dim - button_widths);
+				//thisChild.style.width = (dim - button_widths) + "px";
+				thisChild.height = height;
+				thisChild.style.height = height+'px';
+				thisChild.style.minHeight = height+'px';
+				secondChild = thisChild.firstChild;
+				while (secondChild != thisChild.lastChild) {
+					if (secondChild.nodeType == 1) {
+						//secondChild.width = (dim - button_widths);
+						//secondChild.style.width = (dim - button_widths) + "px";
+						secondChild.height = height;
+						secondChild.style.height = height+'px';
+						secondChild.style.minHeight = height+'px';
+					}
+					secondChild = secondChild.nextSibling;
+				}
+			}
+			thisChild = thisChild.nextSibling;
+		}
+	  }
+
+		//function heightToSection1(target) {
+		//    $(target).style.height = parseInt($("horizontal_carousel").offsetHeight, 10)+"px";
+		//}
+
+		Event.observe(window, "load", runTest);
+		Event.observe(window, "resize", resized);
+		// ]]>
+		</script>
+<!-- END carousel -->
+	</div>
+	<div id="demo-content">
+<!-- BEGIN frame -->
+		<iframe id='demo-iframe' name='demo-iframe' style='background: transparent url(); border-right: 0pt; border-top: 0pt; border-left: 0pt; border-bottom: 0pt; height: 10000px; width: 100%;' height='10000' src='{url}' frameborder='0' allowTransparency='true' scrolling='no'></iframe>
+<!-- END frame -->
+<!-- BEGIN no_items -->
+		<div id="demo-no-items">
+			<p id="demo-no-items-msg">{message}</p>
+		</div>
+<!-- END no_items -->
+	</div>
+</div>
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Ads_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END theme_preview -->

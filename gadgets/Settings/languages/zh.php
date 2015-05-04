@@ -41,7 +41,7 @@ define('_ZH_SETTINGS_USE_GRAVATAR', "使用gravatar");
 define('_ZH_SETTINGS_SAVED', "你的设被保存.");
 define('_ZH_SETTINGS_EDITOR', "编辑器");
 define('_ZH_SETTINGS_EDITOR_CLASSIC', "一流的Jaws编辑器");
-define('_ZH_SETTINGS_EDITOR_TINYMCE', "类似于Word/OpenWriter的编辑器");
+define('_ZH_SETTINGS_EDITOR_FRIENDLY', "类似于Word/OpenWriter的编辑器");
 define('_ZH_SETTINGS_SHOW_VIEWSITE', "显示站点图标");
 define('_ZH_SETTINGS_BASIC_SETTINGS', "基础设置");
 define('_ZH_SETTINGS_ADVANCED_SETTINGS', "高级设置");

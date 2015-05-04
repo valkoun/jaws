@@ -1,0 +1,137 @@
+<!-- BEGIN your_profile -->
+<div id="msgbox-wrapper">
+</div>
+<div class="gadget users profilebox">
+  <h2>{title}</h2>
+  <!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+  <form name="profileBox" action="{base_script}" method="post"{form_target}>
+  <input type="hidden" name="gadget" value="Users" />
+  <input type="hidden" name="action" value="UpdateAccount" />
+  <input type="hidden" name="redirect_to" value="{redirect_to}" />
+  {form_style}
+  <div class="content">
+    <div id="p_realname">
+	<p><label for="profile_realname">{realname}:</label>
+       <input name="realname" id="profile_realname" value="{realname_value}" type="text" />
+    </p>
+    </div>
+    <div id="p_email">
+	<p><label for="profile_email">{email}:</label>
+       <input name="email" id="profile_email" value="{email_value}" type="text" disabled="disabled" />
+    </p>
+	</div>
+    <div id="p_password">
+    <p><label for="profile_password">{password}:</label>
+       <input name="password" id="profile_password" type="password" value="" />
+       <span>{emptypassword}</span>
+    <p><label for="profile_chkpasswd">{checkpassword}:</label>
+       <input name="password_check" id="profile_chkpasswd" type="password" value="" />
+    </p>
+    </p>
+	</div>
+    <p>&nbsp;</p>
+    <div id="p_website">
+    <p><label for="profile_website">{website}:</label>
+       <input name="website" id="profile_website" value="{website_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_company">
+    <p><label for="profile_company">{company}:</label>
+       <input name="company" id="profile_company" value="{company_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_company_type">
+    <p><label for="profile_company_type">{company_type}:</label>
+		<select name="company_type" id="profile_company_type">
+			{company_type_options}
+		</select>
+	</p>
+	</div>
+    <div id="p_logo">
+	{logo}
+	</div>
+    <div id="p_address">
+    <p><label for="profile_address">{address}:</label>
+       <input name="address" id="profile_address" value="{address_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_address2">
+    <p><label for="profile_address2">{address2}:</label>
+       <input name="address2" id="profile_address2" value="{address2_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_city">
+    <p><label for="profile_city">{city}:</label>
+       <input name="city" id="profile_city" value="{city_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_country">
+	<p><label for="profile_country">{country}:</label>
+		<select name="country" id="profile_country">
+			{country_options}
+		</select></p>
+	</div>
+    <div id="p_region">
+    <p><label for="profile_region">{region}:</label>
+       <select name="region" id="profile_region">
+			{region_options}
+		</select></p>
+	</div>
+    <div id="p_postal">
+	<p><label for="profile_postal">{postal}:</label>
+       <input size="10" name="postal" id="profile_postal" value="{postal_value}" type="text" />
+    </p>
+	</div>
+    <p>&nbsp;</p>
+    <div id="p_phone">
+	<p><label for="profile_phone">{phone}:</label>
+       <input name="phone" id="profile_phone" value="{phone_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_office">
+	<p><label for="profile_office">{office}:</label>
+       <input name="office" id="profile_office" value="{office_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_tollfree">
+	<p><label for="profile_tollfree">{tollfree}:</label>
+       <input name="tollfree" id="profile_tollfree" value="{tollfree_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_fax">
+	<p><label for="profile_fax">{fax}:</label>
+       <input name="fax" id="profile_fax" value="{fax_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_merchant_id">
+	<p><label for="profile_merchant_id">{merchant_id}:</label>
+       <input name="merchant_id" id="profile_merchant_id" value="{merchant_id_value}" type="text" />
+    </p>
+	</div>
+    <div id="p_notification">
+	<p><label for="notification">{notification}:</label>
+       {notification_options}
+    </p>
+	</div>
+    <div id="p_allow_comments">
+	<p><label for="allow_comments">{allow_comments}:</label>
+       {allow_comments_options}
+    </p>
+	</div>
+    <p>&nbsp;</p>
+    <div id="p_description">
+	<p><label for="profile_description">{description}:</label>
+		<textarea rows="7" cols="20" name="description" id="profile_description">{description_value}</textarea>
+	</p>
+	</div>
+    <div id="p_keywords">
+	<p><label for="profile_keywords">{keywords}:</label>
+		<textarea rows="7" cols="20" name="keywords" id="profile_keywords">{keywords_value}</textarea>
+	</p>
+	</div>
+
+	</div>
+  <div class="actions"><button type="submit" value="{update}">{update}</button></div>
+  </form>
+</div>
+<!-- END your_profile -->

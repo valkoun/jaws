@@ -1,11 +1,52 @@
 <!-- BEGIN sidebar -->
 <div id="sidebar">
- <!-- BEGIN notifications -->
+ <!-- BEGIN news_notifications -->
  <div class="notify-box">
-  <h1>{notify-title}</h1>
+	{notify-title}
+	<div class="notify-items news-items" style="overflow: auto; max-height: 188px;">
+     <div class="notify-desc">{notify_desc}</div>
+     <!-- BEGIN news_item -->
+	 <div class="news-item news-{type}" id="news-{id}">
+		<div class="news-image">{image}</div>
+		<div class="news-body">
+			<div class="news-title">{title}</div>
+			<div class="news-info"{news_info_style}><span class="news-name"><a href="{link}">{name}{activity}</a></span>
+			<span class="news-preview" id="news-preview-{id}"{preview_style}>{message_preview}</span>
+			<span class="news-message" id="news-full-{id}"{full_style}>{message}</span></div>
+			<div class="news-created news-timestamp"{news_info_style}>{created}</div>
+			<div class="news-comments" id="news-comments-{id}">
+				{view_replies}
+				<!-- BEGIN comment -->
+				<div class="comment{class}" id="comment-{id}">
+					{image}<div class="comment-body"><a href="{link}" class="comment-name">{name}</a>&nbsp;
+					<span class="comment-message" id="comment-preview-{id}"{preview_style}>{message_preview}</span>
+					<span class="comment-message" id="comment-full-{id}"{full_style}>{message}</span>
+					</div>
+					<div class="comment-created news-timestamp">{created}</div>
+				</div>
+				<!-- END comment -->
+			</div>
+			<div class="comments-form">
+				<div class="comment-holder" id="comment-holder-{id}">
+				<input class="comment-click" id="comment-click-{id}" value="Reply to this..." onclick="showCommentForm({id});" />
+				</div>
+				<div class="comment-area" id="comment-area-{id}">
+				<textarea class="comment-entry" id="comment-entry-{id}" onblur="if (this.value == '') {hideCommentForm({id});};"></textarea>
+				</div>
+				<div class="comment-buttons" id="comment-buttons-{id}">{comment_submit}</div>
+			</div>
+		</div>
+	 </div>
+     <!-- END news_item -->
+	</div>
+ </div>
+ <!-- END news_notifications -->
+ <!-- BEGIN gadget_notifications -->
+ <div class="notify-box">
+  {notify-title}
   <div class="notify-items" style="overflow: auto; max-height: 188px;">
-   <table class="notify-items_tbl">
-     <tr><td class="notify-desc" colspan="2">{notify_desc}</td></tr>
+   <table class="notify-items_tbl" border="0" cellpadding="0" cellspacing="0">
+     <tr><td class="notify-desc" colspan="2" style="width: 310px;">{notify_desc}</td></tr>
      <!-- BEGIN item -->
      <tr>
       <td class="item"><img title="{title}" alt="{name}" src="{icon}" />{name}</td>
@@ -15,7 +56,7 @@
    </table>
   </div>
  </div>
- <!-- END notifications -->
+ <!-- END gadget_notifications -->
  </div>
 <!-- END sidebar -->
 <div id="body">
@@ -24,11 +65,23 @@
   <div class="main-menu">
   <h1 class="main-menu-header">{title}</h1>
    <!-- BEGIN item -->
-   <a class="main-item" href= "{url}" title="{desc}" <!-- BEGIN target -->target="_blank"<!-- END target -->>
+   <a class="main-item" href= "{url}" title="{desc}">
     <img class="main-item-icon" src="{icon}" title="{desc}" alt="{name}" />
     {name}
    </a>
    <!-- END item -->
+   <!-- BEGIN email -->
+	<div style="position: relative;" class="main-item" onclick="window.open('{email_link}');">
+		<p class="date email-item-icon"></p>
+	   <!-- BEGIN email_count -->
+		<div class="commentscloud">
+			<div style="float: left; padding: 3px 0pt 0pt 8px; background: url({DPATH}images/number_badge_bkgnd.png) no-repeat scroll 0pt 0pt transparent; height: 24px;">{messages}</div>
+			<div style="float: left;"><img border="0" align="right" style="height: 20px; margin-top: 0px;" src="{DPATH}images/number_badge_right.png"></div><div style="float: none; clear: both; display: block;"></div>
+		</div>
+	   <!-- END email_count -->
+		<p style="text-align: center;">Email</p> 
+	</div>
+   <!-- END email -->
   </div>
  <!-- END main -->
 </div>

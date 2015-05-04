@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<title>phpJobScheduler - Schedule Jobs </title>
+<link rel="stylesheet" type="text/css" href="../pjs.css">
+<script src="functions.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+<div align="center">
+  <center>
+
+<table cellSpacing="3" cellPadding="0" border="0" width="800">
+<TBODY>
+  <tr bgColor="#334873">
+    <td width="200" align="middle" bgcolor="#FFFFFF"><p align="center">
+<br><small>You are running Version: <?php echo $phpJobScheduler_version; ?></small> 
+</td>
+    <td align="middle" bgcolor="#FFFFFF" width="500"><small>Released under <a href="http://www.gnu.org/licenses/licenses.html#GPL">GPL License</a> That means its free to use!&nbsp; Enjoy&nbsp; ;-)<br><br>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+  <input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="encrypted"
+  value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">To help ensure future updates please do consider to<br>
+  <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" border="0"
+  name="submit" alt="Make payments with PayPal - it's fast, free and secure!"> <img alt
+  border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1"> </p>
+  </center></div>
+</form>
+</td>
+  </tr>
+</TBODY>
+</table>
+<br>
+&gt;&gt;
+<a href="scheduler.php">Scheduled tasks</a> &gt;&gt;<a href="scheduler.php?action=add">Add a NEW schedule</a> &gt;&gt;<a href="scheduler.php?action=error-logs">View error-logs</a><br>
+  <br>
+  </center>
+</div>
+

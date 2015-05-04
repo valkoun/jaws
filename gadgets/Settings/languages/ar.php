@@ -32,7 +32,7 @@ define('_AR_SETTINGS_USE_GRAVATAR', "Use gravatar");
 define('_AR_SETTINGS_SAVED', "تم حفظ الأعدادات.");
 define('_AR_SETTINGS_EDITOR', "المحرر");
 define('_AR_SETTINGS_EDITOR_CLASSIC', "محرر Jaws التقليدي");
-define('_AR_SETTINGS_EDITOR_TINYMCE', "محرر متقدم وبه خصائص متقدمة");
+define('_AR_SETTINGS_EDITOR_FRIENDLY', "محرر متقدم وبه خصائص متقدمة");
 define('_AR_SETTINGS_SHOW_VIEWSITE', "Show view site icon");
 define('_AR_SETTINGS_BASIC_SETTINGS', "الأعدادات الأساسية");
 define('_AR_SETTINGS_ADVANCED_SETTINGS', "الأعدادات المتقدمة");

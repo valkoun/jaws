@@ -1,6 +1,8 @@
-<?php /* vim: se et ts=4 sw=4 sts=4 fdm=marker: */
+<?php
 /**
- * Copyright (c) 1998-2010 Manuel Lemos, Tomas V.V.Cox,
+ * PHP versions 4 and 5
+ *
+ * Copyright (c) 1998-2008 Manuel Lemos, Tomas V.V.Cox,
  * Stig. S. Bakken, Lukas Smith, Igor Feghali
  * All rights reserved.
  *
@@ -37,14 +39,15 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP version 5
+ * Author: Lukas Smith <smith@pooteeweet.org>
+ * Author: Igor Feghali <ifeghali@php.net>
  *
  * @category Database
  * @package  MDB2_Schema
  * @author   Lukas Smith <smith@pooteeweet.org>
  * @author   Igor Feghali <ifeghali@php.net>
  * @license  BSD http://www.opensource.org/licenses/bsd-license.php
- * @version  SVN: $Id: Writer.php 302413 2010-08-17 20:46:14Z ifeghali $
+ * @version  CVS: $Id: Writer.php,v 1.40 2008/11/30 03:34:00 clockwerx Exp $
  * @link     http://pear.php.net/packages/MDB2_Schema
  */
 
@@ -575,3 +578,4 @@ class MDB2_Schema_Writer
 
     // }}}
 }
+?>

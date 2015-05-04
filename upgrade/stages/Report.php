@@ -7,7 +7,7 @@
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Upgrader_Report extends JawsUpgraderStage
@@ -25,34 +25,95 @@ class Upgrader_Report extends JawsUpgraderStage
 
         require_once JAWS_PATH . 'include/Jaws.php';
         $GLOBALS['app'] = new Jaws();
-        $GLOBALS['app']->loadClass('Registry', 'Jaws_Registry');
-        $GLOBALS['app']->Registry->Init();
+        $GLOBALS['app']->create();
         $JawsInstalledVersion = $GLOBALS['app']->Registry->Get('/version');
+        $GLOBALS['app']->OverwriteDefaults(array('language' => $_SESSION['upgrade']['language']));
+		$GLOBALS['app']->RebuildJawsCache(false);
 
         $supportedversions = array(
                                    array(
-                                         'version'   => '0.8.18',
+                                         'version'   => '0.8.14',
+                                         'stage'     => '18',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.13',
+                                         'stage'     => '17',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.12',
+                                         'stage'     => '16',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.11',
+                                         'stage'     => '15',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.10',
+                                         'stage'     => '14',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.9',
+                                         'stage'     => '13',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.8',
+                                         'stage'     => '12',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.7',
+                                         'stage'     => '11',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.6',
+                                         'stage'     => '10',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.5',
+                                         'stage'     => '9',
+                                         ),
+                                   array(
+                                         'version'   => '0.8.4',
                                          'stage'     => '8',
                                          ),
                                    array(
-                                         'version'   => '0.8.17',
+                                         'version'   => '0.8.3',
                                          'stage'     => '7',
                                          ),
                                    array(
-                                         'version'   => '0.8.16',
+                                         'version'   => '0.8.2',
+                                         'stage'     => null,
+                                         ),
+                                   array(
+                                         'version'   => '0.8.1',
                                          'stage'     => '6',
                                          ),
                                    array(
-                                         'version'   => '0.8.15',
+                                         'version'   => '0.8.0',
                                          'stage'     => '5',
                                          ),
                                    array(
-                                         'version'   => '0.8.14',
+                                         'version'   => '0.7.4',
                                          'stage'     => null,
                                          ),
+                                   array(
+                                         'version'   => '0.7.3',
+                                         'stage'     => null,
+                                         ),
+                                   array(
+                                         'version'   => '0.7.2',
+                                         'stage'     => null,
+                                         ),
+                                   array(
+                                         'version'   => '0.7.1',
+                                         'stage'     => null,
+                                         ),
+                                   array(
+                                         'version'   => '0.7.0',
+                                         'stage'     => null,
+                                         )
                                    );
 
-        _log(JAWS_LOG_DEBUG,"Checking/Reporting previous missed installations");
+        log_upgrade("Checking/Reporting previous missed installations");
         $tpl = new Jaws_Template(UPGRADE_PATH . 'stages/Report/templates/');
         $tpl->Load('display.html', false, false);
         $tpl->SetBlock('Report');
@@ -78,17 +139,17 @@ class Upgrader_Report extends JawsUpgraderStage
             if (version_compare($supported['version'], $JawsInstalledVersion, '<=')) {
                 if ($supported['version'] == JAWS_VERSION) {
                     $tpl->SetVariable('status', _t('UPGRADE_REPORT_NO_NEED_CURRENT'));
-                    _log(JAWS_LOG_DEBUG,$supported['version']." does not requires upgrade(is current)");
+                    log_upgrade($supported['version']." does not requires upgrade(is current)");
                 } else {
                     $tpl->SetVariable('status', _t('UPGRADE_REPORT_NO_NEED'));
-                    _log(JAWS_LOG_DEBUG,$supported['version']." does not requires upgrade");
+                    log_upgrade($supported['version']." does not requires upgrade");
                 }
                 $_SESSION['upgrade']['versions'][$supported['version']]['status'] = true;
             } else {
                 $tpl->SetVariable('status', _t('UPGRADE_REPORT_NEED'));
                 $_SESSION['upgrade']['versions'][$supported['version']]['status'] = false;
                 $versions_to_upgrade++;
-                _log(JAWS_LOG_DEBUG,$supported['version']." requires upgrade");
+                log_upgrade($supported['version']." requires upgrade");
                 $_SESSION['upgrade']['versions'][$supported['version']]['status'] = false;
             }
 
@@ -107,11 +168,11 @@ class Upgrader_Report extends JawsUpgraderStage
         /**
          * Are we maitaining the last version? the current JAWS_VERSION?
          */
-        _log(JAWS_LOG_DEBUG,"Checking if current version (".JAWS_VERSION.") really requires an upgrade");
+        log_upgrade("Checking if current version (".JAWS_VERSION.") really requires an upgrade");
         $lastSupportedVersion = $supportedversions[0]['version'];
         if ($lastSupportedVersion != JAWS_VERSION) {
             if (version_compare($lastSupportedVersion, JAWS_VERSION) === -1) {
-                _log(JAWS_LOG_DEBUG,"Current version (".JAWS_VERSION.") does not require an upgrade");
+                log_upgrade("Current version (".JAWS_VERSION.") does not require an upgrade");
                 $_SESSION['upgrade']['upgradeLast'] = true;
             }
         }
@@ -127,57 +188,6 @@ class Upgrader_Report extends JawsUpgraderStage
      */
     function Run()
     {
-        if (is_dir(JAWS_DATA. "languages")) {
-            // transform customized translated files
-            $rootfiles = array('Global.php', 'Date.php', 'Install.php', 'Upgrade.php');
-            $languages = scandir(JAWS_DATA. 'languages');
-            foreach ($languages as $lang) {
-                if($lang == '.' || $lang == '..') {
-                    continue;
-                }
-
-                $ostr = "define('_".strtoupper($lang).'_';
-                $nstr = "define('_".strtoupper($lang).'_DATA_';
-
-                // gadgets
-                if (is_dir(JAWS_DATA. "languages/$lang/gadgets")) {
-                    $lGadgets = scandir(JAWS_DATA. "languages/$lang/gadgets");
-                    foreach ($lGadgets as $lGadget) {
-                        if($lGadget == '.' || $lGadget == '..') {
-                            continue;
-                        }
-
-                        $fstring = @file_get_contents(JAWS_DATA. "languages/$lang/gadgets/$lGadget");
-                        $fstring = strtr($fstring, array($nstr => $nstr, $ostr => $nstr));
-                        @file_put_contents(JAWS_DATA. "languages/$lang/gadgets/$lGadget", $fstring);
-                    }
-                }
-
-                // plugins
-                if (is_dir(JAWS_DATA. "languages/$lang/plugins")) {
-                    $lPlugins = scandir(JAWS_DATA. "languages/$lang/plugins");
-                    foreach ($lPlugins as $lPlugin) {
-                        if($lPlugin == '.' || $lPlugin == '..') {
-                            continue;
-                        }
-
-                        $fstring = @file_get_contents(JAWS_DATA. "languages/$lang/plugins/$lPlugin");
-                        $fstring = strtr($fstring, array($nstr => $nstr, $ostr => $nstr));
-                        @file_put_contents(JAWS_DATA. "languages/$lang/plugins/$lPlugin", $fstring);
-                    }
-                }
-            }
-
-            // others
-            foreach ($rootfiles as $rfile) {
-                if (file_exists(JAWS_DATA. "languages/$lang/$rfile")) {
-                    $fstring = @file_get_contents(JAWS_DATA. "languages/$lang/$rfile");
-                    $fstring = strtr($fstring, array($nstr => $nstr, $ostr => $nstr));
-                    @file_put_contents(JAWS_DATA. "languages/$lang/$rfile", $fstring);
-                }
-            }
-        }
-
         foreach($_SESSION['upgrade']['stagedVersions'] as $stagedVersion) {
             if (!$_SESSION['upgrade']['versions'][$stagedVersion]['status']) {
                 if ($_SESSION['upgrade']['stage'] < $_SESSION['upgrade']['versions'][$stagedVersion]['stage']) {
@@ -189,8 +199,6 @@ class Upgrader_Report extends JawsUpgraderStage
                 $_SESSION['upgrade']['stage']++;
             }
         }
-
         return true;
     }
-
 }

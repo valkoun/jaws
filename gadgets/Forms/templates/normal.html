@@ -1,0 +1,52 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+        var msgbox = $('msgbox_{msg-id}');
+        if((msgbox.className != 'error-message') && (msgbox.className != 'warning-message') && (window.hideResponseBox)) {
+            hideResponseBox(msgbox);
+        }
+    </script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN form -->
+<div class="gadget forms">
+<!-- BEGIN content -->
+	<div class="content">
+		{content}
+	</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+<!-- END not_found -->
+</div>
+<!-- END form -->
+
+<!-- BEGIN index -->
+<div class="gadget form_index">
+  <h2><a href="{link}">{title}</a></h2>
+  <div class="content">
+    <ul>
+    <!-- BEGIN item -->
+      <li><a href="{link}">{title}</a></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-forms-{id}-head" class="layout_head">
+<h2 id="layout_{actionName}_title"><a href="{link}">{layout_title}</a></h2>
+</div>
+<div id="layout-forms-{id}-body" class="layout_body">
+<!-- BEGIN formlayout -->
+	{content}
+<!-- END formlayout -->
+</div>
+<!-- END layout -->

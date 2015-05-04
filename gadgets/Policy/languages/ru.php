@@ -18,17 +18,15 @@ define('_RU_POLICY_ACL_MANAGEIPS', "Добавление/Изменение/Уд
 define('_RU_POLICY_ACL_AGENTBLOCKING', "Блокирование агентов");
 define('_RU_POLICY_ACL_MANAGEAGENTS', "Добавление/Изменение/Удаление агентов");
 define('_RU_POLICY_ACL_ENCRYPTION', "Управление шифрованием");
-define('_RU_POLICY_ACL_MANAGEENCRYPTIONKEY', "Управление ключами шифрования");
 define('_RU_POLICY_ACL_ANTISPAM', "Управление АнтиСпамом");
 define('_RU_POLICY_ACL_ADVANCEDPOLICIES', "Управление дополнительными настройками");
-define('_RU_POLICY_BLOCKED', "Заблокировано");
 define('_RU_POLICY_IP_BLOCKING', "Блокирование IP");
 define('_RU_POLICY_IP_ADDRESS', "IP адрес");
 define('_RU_POLICY_IP_RANGE', "IP диапазон");
-define('_RU_POLICY_IP_BLOCK_UNDEFINED', "Блокировать неопределенные IP");
+define('_RU_POLICY_IP_ENABLE_BLOCKING', "Разрешить блокирование IP");
 define('_RU_POLICY_AGENT_BLOCKING', "Блокирование агентов");
 define('_RU_POLICY_AGENT', "Агент");
-define('_RU_POLICY_AGENT_BLOCK_UNDEFINED', "Блокировать неопределенных агентов");
+define('_RU_POLICY_AGENT_ENABLE_BLOCKING', "Разрешить блокирование агентов");
 define('_RU_POLICY_ENCRYPTION', "Шифрование");
 define('_RU_POLICY_ENCRYPTION_KEY_AGE', "Период ключа");
 define('_RU_POLICY_ENCRYPTION_KEY_LEN', "Длина ключа");
@@ -41,8 +39,6 @@ define('_RU_POLICY_ENCRYPTION_KEY_START_DATE', "Дата старта ключа
 define('_RU_POLICY_ANTISPAM', "АнтиСпам");
 define('_RU_POLICY_ANTISPAM_ALLOWDUPLICATE', "Разрешить дублирование сообщений");
 define('_RU_POLICY_ANTISPAM_CAPTCHA', "Captcha");
-define('_RU_POLICY_ANTISPAM_CAPTCHA_ALWAYS', "Всегда");
-define('_RU_POLICY_ANTISPAM_CAPTCHA_ANONYMOUS', "Только анонимные пользователи");
 define('_RU_POLICY_ANTISPAM_FILTER', "Спам-фильтр");
 define('_RU_POLICY_ANTISPAM_PROTECTEMAIL', "Защита адресов электронной почты");
 define('_RU_POLICY_ADVANCED_POLICIES', "Дополнительные правила");

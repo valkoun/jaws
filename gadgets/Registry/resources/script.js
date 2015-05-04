@@ -4,7 +4,7 @@
  * @category   Ajax
  * @package    Registry
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 /**
@@ -42,7 +42,7 @@ function convertToTree(keys, title)
         var parentKey = '';           
         for(var i=0; i<itemSplit.length; i++) {
             var current  = itemSplit[i];
-            if (!current.blank()) {
+            if (jawsTrim(current) != '') {
                 var keyName  = parentKey + '/' + current + '_key';
                 var lastKey  = parentKey + '_key';
                 if (treeStructure[keyName] == undefined) {

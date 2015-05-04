@@ -6,8 +6,7 @@
  * @author     Jonathan Hernandez <ion@gluch.org.mx>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @author     Mohsen Khahani <mohsen@khahani.com>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 /**
@@ -86,7 +85,7 @@ function AddNewMenuItem(gid, pid, mid, rank)
 function saveMenus()
 {
     if (currentAction == 'Groups') {
-        if ($('title').value.blank()) {
+        if ((jawsTrim($('title').value) == '')) {
             alert(incompleteFields);
             return false;
         }
@@ -97,7 +96,8 @@ function saveMenus()
                                     $('title_view').value,
                                     $('visible').value);
             if (response[0]['css'] == 'notice-message') {
-                var gid = response[0]['data'];
+                var gid = response[0]['message'].substr(0, response[0]['message'].indexOf('%%'));
+                response[0]['message'] = response[0]['message'].substr(response[0]['message'].indexOf('%%')+2);
                 AddNewMenuGroup(gid);
                 stopAction();
             }
@@ -110,7 +110,7 @@ function saveMenus()
                                 $('visible').value);
         }
     } else {
-        if ($('title').value.blank() || ($('references').selectedIndex == -1)) {
+        if ((jawsTrim($('title').value) == '') || ($('references').selectedIndex == -1)) {
             alert(incompleteFields);
             return false;
         }
@@ -120,11 +120,10 @@ function saveMenus()
                                     $('gid').value,
                                     $('type').value,
                                     $('title').value,
-                                    encodeURI($('url').value),
+                                    $('url').value,
                                     $('url_target').value,
                                     $('rank').value,
-                                    $('visible').value,
-                                    $('imagename').value);
+                                    $('visible').value);
             if (response[0]['css'] == 'notice-message') {
                 var mid = response[0]['message'].substr(0, response[0]['message'].indexOf('%%'));
                 response[0]['message'] = response[0]['message'].substr(response[0]['message'].indexOf('%%')+2);
@@ -139,11 +138,10 @@ function saveMenus()
                                     $('gid').value,
                                     $('type').value,
                                     $('title').value,
-                                    encodeURI($('url').value),
+                                    $('url').value,
                                     $('url_target').value,
                                     $('rank').value,
-                                    $('visible').value,
-                                    $('imagename').value);
+                                    $('visible').value);
             if (response[0]['css'] == 'notice-message') {
                 $('menu_'+$('mid').value).getElementsByTagName('a')[0].innerHTML = $('title').value;
                 if ($('pid').value == 0) {
@@ -296,7 +294,7 @@ function editGroup(gid)
     var groupInfo = menuSync.getgroups(selectedGroup);
 
     $('gid').value         = groupInfo['id'];
-    $('title').value       = groupInfo['title'].defilter();
+    $('title').value       = groupInfo['title'];
     $('title_view').value  = groupInfo['title_view'];
     $('visible').value     = groupInfo['visible'];
 }
@@ -338,8 +336,8 @@ function editMenu(mid)
     $('pid').value         = menuInfo['pid'];
     $('gid').value         = menuInfo['gid'];
     $('type').value        = menuInfo['menu_type'];
-    $('title').value       = menuInfo['title'].defilter();
-    $('url').value         = decodeURI(menuInfo['url']);
+    $('title').value       = menuInfo['title'];
+    $('url').value         = menuInfo['url'];
     $('url_target').value  = menuInfo['url_target'];
 
     setRanksCombo($('gid').value, $('pid').value);
@@ -347,17 +345,7 @@ function editMenu(mid)
 
     $('visible').value     = menuInfo['visible'];
     getReferences($('type').value);
-    $('references').value = menuInfo['url'];
-    if ($('type').value == 'url' && $('references').selectedIndex == -1) {
-        $('references').selectedIndex = 0;
-    }
-
-    $('imagename').value  = 'true';
-    if (menuInfo['image'] === null) {
-        $('image').src = 'gadgets/Menu/images/no-image.png?' + (new Date()).getTime();
-    } else {
-        $('image').src = base_script + '?gadget=Menu&action=LoadImage&id=' + menuInfo['id'] + '&' + (new Date()).getTime();;
-    }
+    $('references').value = $('url').value;
 }
 
 /**
@@ -453,7 +441,7 @@ function changeReferences() {
     }
 
     if ($('references').value !='') {
-        $('url').value = decodeURI($('references').value);
+        $('url').value = $('references').value;
     }
 }
 
@@ -477,41 +465,6 @@ function stopAction()
     currentAction = null;
     $('menus_edit').innerHTML = '';
     $('edit_area').getElementsByTagName('span')[0].innerHTML = '';
-}
-
-/**
- * Uploads the image
- */
-function upload() {
-    showWorkingNotification();
-    var iframe = new Element('iframe', {id:'ifrm_upload', name:'ifrm_upload'});
-    $('menus_edit').insert(iframe);
-    $('frm_image').submit();
-}
-
-/**
- * Loads and sets the uploaded image
- */
-function onUpload(response) {
-    hideWorkingNotification();
-    if (response.type === 'error') {
-        alert(response.message);
-        $('frm_image').reset();
-    } else {
-        var filename = encodeURIComponent(response.message) + '&' + (new Date()).getTime();
-        $('image').src = base_script + '?gadget=Menu&action=LoadImage&file=' + filename;
-        $('imagename').value = response.message;
-    }
-    $('ifrm_upload').remove();
-}
-
-/**
- * Removes the image
- */
-function removeImage() {
-    $('imagename').value = '';
-    $('frm_image').reset();
-    $('image').src = 'gadgets/Menu/images/no-image.png?' + (new Date()).getTime();
 }
 
 var menuAsync = new menuadminajax(MenuCallback);

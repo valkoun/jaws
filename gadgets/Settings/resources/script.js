@@ -6,7 +6,7 @@
  * @author     Jonathan Hernandez <ion@gluch.org.mx>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 /**
@@ -41,10 +41,9 @@ var SettingsCallback = {
 /**
  * Update basic settings
  */
-function submitBasicForm()
+function submitBasicForm(form)
 {
-    var form = $('settingsForm'),
-        settingsArray = new Array();
+    var settingsArray = new Object;
     for (i=0; i<form.elements.length; i++) {
         settingsArray[form.elements[i].name] = form.elements[i].value;
     }
@@ -54,10 +53,9 @@ function submitBasicForm()
 /**
  * Update advanced settings
  */
-function submitAdvancedForm()
+function submitAdvancedForm(form)
 {
-    var form = $('settingsForm'),
-        settingsArray = new Array();
+    var settingsArray = new Object;
     for (i=0; i<form.elements.length; i++) {
         settingsArray[form.elements[i].name] = form.elements[i].value;
     }
@@ -65,53 +63,23 @@ function submitAdvancedForm()
 }
 
 /**
- * Adds new custom meta
- */
-function addCustomMeta()
-{
-    var div = new Element('div', {'class':'fields'}),
-        label = new Element('label').update(custom_meta),
-        inputName  = new Element('input', {type:'text', title:'Meta Name', 'class':'meta-name'}),
-        inputValue = new Element('input', {type:'text', title:'Meta Content', 'class':'meta-value'});
-
-    div.insert(label);
-    div.insert(inputName);
-    div.insert(inputValue);
-    $('customMeta').insert(div);
-}
-
-/**
  * Update meta
  */
-function submitMetaForm()
+function submitMetaForm(form)
 {
-    var form = $('settingsForm'),
-        settingsArray = new Array();
-
+    var settingsArray = new Object;
     for (i=0; i<form.elements.length; i++) {
         settingsArray[form.elements[i].name] = form.elements[i].value;
     }
-
-    var customMeta   = new Array(),
-        customInputs = $('customMeta').select('input.meta-name');
-    customInputs.each(function(input) {
-        if (input.value.blank()) {
-            input.up().remove();
-            return;
-        }
-        customMeta.push([input.value, input.next().value]);
-    });
-
-    settings.updatemetasettings(settingsArray, customMeta);
+    settings.updatemetasettings(settingsArray);
 }
 
 /**
  * Update mailserver settings
  */
-function submitMailSettingsForm()
+function submitMailSettingsForm(form)
 {
-    var form = $('settingsForm'),
-        settingsArray = new Array();
+    var settingsArray = new Object;
     for (i=0; i<form.elements.length; i++) {
         settingsArray[form.elements[i].name] = form.elements[i].value;
     }
@@ -121,10 +89,9 @@ function submitMailSettingsForm()
 /**
  * Update ftpserver settings
  */
-function submitFTPSettingsForm()
+function submitFTPSettingsForm(form)
 {
-    var form = $('settingsForm'),
-        settingsArray = new Array();
+    var settingsArray = new Object;
     for (i=0; i<form.elements.length; i++) {
         settingsArray[form.elements[i].name] = form.elements[i].value;
     }
@@ -134,10 +101,9 @@ function submitFTPSettingsForm()
 /**
  * Update proxy settings
  */
-function submitProxySettingsForm()
+function submitProxySettingsForm(form)
 {
-    var form = $('settingsForm'),
-        settingsArray = new Array();
+    var settingsArray = new Object;
     for (i=0; i<form.elements.length; i++) {
         settingsArray[form.elements[i].name] = form.elements[i].value;
     }
@@ -157,8 +123,8 @@ function changeMailer()
 {
     switch($('mailer').value) {
     case 'DISABLED':
-        $('gate_email').disabled = true;
-        $('gate_title').disabled = true;
+        $('from_email').disabled = true;
+        $('from_name').disabled  = true;
         $('sendmail_path').disabled = true;
         $('smtp_host').disabled  = true;
         $('smtp_port').disabled  = true;
@@ -167,8 +133,8 @@ function changeMailer()
         $('smtp_pass').disabled  = true;
         break;
     case 'phpmail':
-        $('gate_email').disabled = false;
-        $('gate_title').disabled = false;
+        $('from_email').disabled = false;
+        $('from_name').disabled  = false;
         $('sendmail_path').disabled = true;
         $('smtp_host').disabled  = true;
         $('smtp_port').disabled  = true;
@@ -177,8 +143,8 @@ function changeMailer()
         $('smtp_pass').disabled  = true;
         break;
     case 'sendmail':
-        $('gate_email').disabled = false;
-        $('gate_title').disabled = false;
+        $('from_email').disabled = false;
+        $('from_name').disabled  = false;
         $('sendmail_path').disabled = false;
         $('smtp_host').disabled  = true;
         $('smtp_port').disabled  = true;
@@ -187,8 +153,8 @@ function changeMailer()
         $('smtp_pass').disabled  = true;
         break;
     case 'smtp':
-        $('gate_email').disabled = false;
-        $('gate_title').disabled = false;
+        $('from_email').disabled = false;
+        $('from_name').disabled  = false;
         $('sendmail_path').disabled = true;
         $('smtp_host').disabled  = false;
         $('smtp_port').disabled  = false;

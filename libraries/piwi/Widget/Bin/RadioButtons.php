@@ -170,41 +170,39 @@ class RadioButtons extends Bin
     function buildXHTML()
     {
         $this->_XHTML = '';
-        $baseName = $this->_name;
-        $this->_name .= "[]";
 
-        foreach ($this->_options as $value => $option) {
-            $item = '<input type="radio"';
+        if (count($this->_options) > 0) {
+            foreach ($this->_options as $option) {
+                $item = '<input type="radio"';
 
-            $this->_id = $option->getID();
-            if (empty($this->_id)) {
-                $this->_id = $baseName . '_' . $value;
-            }
+                $value = $option->getValue();
+                $this->_id = $this->_name . '_' . $value;
+                $this->_value = $value;
+                $item .= $this->buildBasicXHTML();
+                $item .= $this->buildJSEvents();
+                $this->_value = '';
 
-            $this->_value = $value;
-            $item .= $this->buildBasicXHTML();
-            $item .= $this->buildJSEvents();
-            $this->_value = '';
+                $disabled = $option->isDisabled();
+                if ($disabled) {
+                    $item .= ' disabled="disabled"';
+                }
 
-            $disabled = $option->isDisabled();
-            if ($disabled) {
-                $item .= ' disabled="disabled"';
-            }
+                $selected = $option->isSelected();
+                if ($selected) {
+                    $item .= ' checked="checked"';
+                }
+                $item .= '/> ';
 
-            if ($option->isSelected()) {
-                $item .= ' checked="checked"';
-            }
-            $item .= '/> ';
+                $this->_XHTML .= '<label for="' . $this->_name . '_' . $value . '">';
+                $this->_XHTML .= $item . $option->getText() . '</label>';
 
-            $this->_XHTML .= '<label for="' . $this->_name . '_' . $value . '">';
-            $this->_XHTML .= $item . $option->getText() . '</label>';
-
-            if ($this->_direction == 'vertical') {
-                $this->_XHTML .= "<br />\n";
-            } else {
-                $this->_XHTML .= "\n";
+                if ($this->_direction == 'vertical') {
+                    $this->_XHTML .= "<br />\n";
+                } else {
+                    $this->_XHTML .= "\n";
+                }
             }
         }
     }
-
 }
+?>

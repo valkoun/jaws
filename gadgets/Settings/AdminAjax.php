@@ -6,101 +6,107 @@
  * @package    Settings
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class SettingsAdminAjax extends Jaws_Ajax
 {
     /**
-     * Updates basic settings
+     * Constructor
+     *
+     * @access  public
+     */
+    function SettingsAdminAjax(&$model)
+    {
+        $this->_Model =& $model;
+    }
+
+    /**
+     * Update basic settings
      *
      * @access  public
      * @param   array   $settings  Basic settings array. Should have the same
      *                             format as the SaveBasicSettings model's method
-     * @return  array   Response array (notice or error)
+     * @return  array   Success/Failure
      */
     function UpdateBasicSettings($settings)
     {
-        $this->CheckSession('Settings', 'BasicSettings');
+        $this->CheckSession('Settings', 'ManageSettings');
         $this->_Model->SaveBasicSettings($settings);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Updates advanced settings
+     * Update advanced settings
      *
      * @access  public
      * @param   array   $settings  Advanced settings array. Should have the same
      *                             format as the SaveBasicSettings model's method
-     * @return  array   Response array (notice or error)
+     * @return  array   Success/Failure
      */
     function UpdateAdvancedSettings($settings)
     {
-        $this->CheckSession('Settings', 'AdvancedSettings');
+        $this->CheckSession('Settings', 'ManageSettings');
         $this->_Model->SaveAdvancedSettings($settings);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Updates META settings
+     * Update META settings
      *
      * @access  public
-     * @param   array   $settings  META settings array. Should have the same
-     *                             format as the SaveBasicSettings model's method
-     * @param   array   $customMeta User defined META
-     * @return  array   Response array (notice or error)
+     * @param   array   $settings  
+     * @return  array   Success/Failure
      */
-    function UpdateMetaSettings($settings, $customMeta)
+    function UpdateMetaSettings($settings)
     {
-        $this->CheckSession('Settings', 'MetaSettings');
-        $settings['custom_meta'] = serialize($customMeta);
+        $this->CheckSession('Settings', 'ManageSettings');
         $this->_Model->SaveMetaSettings($settings);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Updates mail settings
+     * Update mail settings
      *
      * @access  public
      * @param   array   $settings  Mail settings array. Should have the same
      *                             format as the SaveBasicSettings model's method
-     * @return  array   Response array (notice or error)
+     * @return  array   Success/Failure
      */
     function UpdateMailSettings($settings)
     {
-        $this->CheckSession('Settings', 'MailSettings');
+        $this->CheckSession('Settings', 'ManageSettings');
         $this->_Model->UpdateMailSettings($settings);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Updates FTP settings
+     * Update ftp settings
      *
      * @access  public
      * @param   array   $settings  FTP settings array. Should have the same
      *                             format as the SaveBasicSettings model's method
-     * @return  array   Response array (notice or error)
+     * @return  array   Success/Failure
      */
     function UpdateFTPSettings($settings)
     {
-        $this->CheckSession('Settings', 'FTPSettings');
+        $this->CheckSession('Settings', 'ManageSettings');
         $this->_Model->UpdateFTPSettings($settings);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Updates proxy settings
+     * Update proxy settings
      *
      * @access  public
      * @param   array   $settings  Proxy settings array. Should have the same
      *                             format as the SaveBasicSettings model's method
-     * @return  array   Response array (notice or error)
+     * @return  array   Success/Failure
      */
     function UpdateProxySettings($settings)
     {
-        $this->CheckSession('Settings', 'ProxySettings');
+        $this->CheckSession('Settings', 'ManageSettings');
         $this->_Model->UpdateProxySettings($settings);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
-
 }

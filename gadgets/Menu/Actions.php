@@ -1,16 +1,13 @@
 <?php
 /**
  * Menu Actions file
- *
- * @category    GadgetActions
- * @package     Menu
- * @author      Mohsen Khahani <mohsen@khahani.com>
- * @copyright   2012 Jaws Development Group
- * @license     http://www.gnu.org/copyleft/gpl.html
+ * *
+ * @category   GadgetActions
+ * @package    Menu
+ * @author     Alan Valkoun <valkoun@gmail.com>
+ * @copyright  2008 Alan Valkoun
  */
-
 $actions = array();
 
-/* Standalone actions */
-$actions['UploadImage'] = array('StandaloneAdminAction');
-$actions['LoadImage']   = array('StandaloneAdminAction,StandaloneAction');
+$actions['TinyMCEMenus']  		= array('StandaloneAdminAction');
+?>

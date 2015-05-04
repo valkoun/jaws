@@ -1,0 +1,23 @@
+<!-- BEGIN group_access -->
+<div class="gadget users requestfriendbox">
+  <h2>{title}</h2>
+  <!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+  <form name="requestfriendBox" action="{base_script}?user/friend/requested.html" method="post">
+  <input type="hidden" name="gadget" value="Users" />
+  <input type="hidden" name="action" value="RequestedFriend" />
+  <input type="hidden" name="redirect_to" value="{redirect_to}" />
+  <input type="hidden" name="friend_id" value="{friend_id}" />
+  <div class="content">
+    <p>
+	<span>{request_string}</span>
+    </p>
+  </div>
+  <div class="actions"><button type="submit" value="Yes">Yes</button>&nbsp;&nbsp;<a href="{cancel_url}">Cancel</a></div>
+  </form>
+</div>
+<!-- END group_access -->
+<!-- BEGIN already_in_group -->
+<div class="gadget users requestfriendbox">
+{content}
+</div>
+<!-- END already_in_group -->

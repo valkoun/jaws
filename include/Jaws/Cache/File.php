@@ -5,27 +5,27 @@
  * @category   Cache
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2008-2012 Jaws Development Group
+ * @copyright  2008-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Cache_File extends Jaws_Cache
 {
     /**
      * Cache path
-     * @access  private
+     * @access private
      */
     var $_path = '';
 
     /**
      * Constructor
      *
-     * @access  public
+     * @access public
      * @return Null
      */
     function Jaws_Cache_File()
     {
         // initializing driver
-        $this->_path = JAWS_CACHE;
+        $this->_path = JAWS_DATA . 'cache' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -49,10 +49,6 @@ class Jaws_Cache_File extends Jaws_Cache
      * Get cached data of given component/section
      *
      * @access  public
-     * @param   string  $component
-     * @param   string  $section
-     * @param   string  $params
-     * @return  string
      */
     function get($component, $section, $params = null)
     {
@@ -71,10 +67,6 @@ class Jaws_Cache_File extends Jaws_Cache
      * Delete cached data of given component/section
      *
      * @access  public
-     * @param   string  $component
-     * @param   string  $section
-     * @param   string  $params
-     * @return  bool
      */
     function delete($component = null, $section = null, $params = null)
     {

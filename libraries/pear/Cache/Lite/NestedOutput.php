@@ -5,6 +5,7 @@
 * It supports nesting of caches
 *
 * @package Cache_Lite
+* @version $Id: NestedOutput.php,v 1.1 2009/05/01 13:19:25 tacker Exp $
 * @author Markus Tacker <tacker@php.net>
 */
 

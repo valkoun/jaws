@@ -1,0 +1,60 @@
+<style>
+	#image-container{id}{float:left;margin-right:20px;position:relative;margin-bottom:1.6em;width:{slideshow_width}px;height:{slideshow_height}px;background:{slideshow_bkgnd};} 
+    #image-container{id} #slide-caption{id}{position:absolute;bottom:10px;left:0;z-index:1000;background:url(../../../images/transparent.png) 0 0;padding:10px 80px 10px 10px;width:{slideshow_width}px;color:#D3E2C1;} 
+    .fade-box{width:620px;position:absolute;text-align:center;z-index:900;} 
+    .fade-box span{display:none;} 
+    #show-controls{id}{position:absolute;bottom:22px;right:10px;z-index:1100; list-style: none;} 
+    #show-controls{id} li{float:left;} 
+    #show-controls{id} li a:link,#show-controls{id} li a:visited{display:block;width:16px;height:16px;background-repeat:no-repeat;background-position:0 0;} 
+    #show-controls{id} li a span{position:absolute;left:-9999px;} 
+    #show-controls{id} li#PauseButton{id}{position:absolute;top:-260px;right:10px;} 
+    #show-controls{id} li#PauseButton{id} a:link,#show-controls li#PauseButton a:visited{font-size:.9em;color:#ccc;} 
+    #show-controls{id} li#PauseButton{id} a span{position:static;left:0;} 
+    /*
+	#show-controls{id} li#PreviousButton{id} a{background-image:url(icons/silk_set/resultset_previous.png);} 
+    #show-controls{id} li#NextButton{id} a{background-image:url(icons/silk_set/resultset_next.png);} 	
+	*/
+</style>
+<div id="image-container{id}" style="background-image: url(/images/loading.gif);">
+	<div style="position:relative;z-index:10;">
+	<script type="text/javascript">var slideshow{id}_slides = new Array();</script>
+	<ul id="show-controls{id}" style="list-style: none;">
+		<li id="PlayButton{id}">
+			<a href="javascript:oHomePageSlides{id}.startSlideShow();"><span>Play</span></a>
+		</li>
+		<li id="PauseButton{id}" style="">
+			<a href="javascript:oHomePageSlides{id}.stop();"><span>[stop]</span></a>
+		</li>
+		<!--<li class="png-fix" id="PreviousButton"><a class="png-fix" href="javascript:oHomePageSlides.goPrevious();"><span>Previous</span></a></li>
+		<li id="NextButton"><a class="png-fix" href="javascript:oHomePageSlides.goNext();"><span>Next</span></a></li>-->
+	</ul>
+
+	<p id="slide-counter{id}">1 of {slideshow_total}</p>
+	<p id="slide-caption{id}">&nbsp;</p>
+	<script type="text/javascript">
+	{slideshow_dimensions}
+	Event.observe(window,"load",function(){
+	if($("image-container{id}")){
+	oHomePageSlides{id}=new iSlideShow({
+	autostart:{slideshow_load_immediately},
+	start:0,
+	wait:{slideshow_timer},
+	slides:slideshow{id}_slides,
+	counter:"slide-counter{id}",
+	caption:"slide-caption{id}",
+	playButton	: 'PlayButton{id}',
+	pauseButton	: 'PauseButton{id}',
+	});
+	$$("div.fade-box a").each(function(a){Event.observe(a,"click",function(b){Event.stop(b);oHomePageSlides{id}.goNext()})})}});
+	</script>
+<!-- BEGIN image -->
+		<div {image_style} id="image-{image_id}" class="fade-box">
+			<a href="javascript:oHomePageSlides{id}.goNext();">
+				<img src="http://www.traditionalboundaries.com/images/slideshow/slide_2.jpg" alt="" />
+				<span class="image-caption">{image_caption}</span>
+			</a>
+		</div>
+		<script type="text/javascript">slideshow{id}_slides[] = "image-{image_id}";</script>
+<!-- END image -->
+	</div>
+</div>

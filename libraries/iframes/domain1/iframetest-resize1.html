@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Loading...</title>
+    <script type="text/javascript">
+      function onLoad() {
+        var params = window.location.search.substring( 1 ).split( '&' );
+        var height;
+		var object;
+        var resize;
+		for( var i = 0, l = params.length; i < l; ++i ) {
+          var parts = params[i].split( '=' );
+		  //alert(parts[0]+' = '+parts[1]);
+		  switch( parts[0] ) {
+          case 'height':
+			height = parseInt( parts[1] );
+            //break;
+          case 'object':
+			object = parts[1];
+			//break;
+          case 'resize':
+			resize = parseInt( parts[1] );
+			//break;
+		  }		 
+        }
+        if( typeof( height ) == 'number' && object.length > 0 ) {
+			//alert("window.top.updateIFrame(" + height + ", " + object + ", " + resize + ");");
+			window.top.updateIFrame(height, object, resize);
+        }
+      }
+
+    window.onload = onLoad;
+    </script>
+  </head>
+  <body>
+    <p>Loading...</p>
+  </body>
+</html>

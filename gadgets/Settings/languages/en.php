@@ -14,23 +14,23 @@ define('_EN_SETTINGS_NAME', "Settings");
 define('_EN_SETTINGS_DESCRIPTION', "The Jaws settings.");
 
 /* ACLs */
-define('_EN_SETTINGS_ACL_BASICSETTINGS',    "Basic settings");
-define('_EN_SETTINGS_ACL_ADVANCEDSETTINGS', "Advanced settings");
-define('_EN_SETTINGS_ACL_METASETTINGS',     "META settings");
-define('_EN_SETTINGS_ACL_MAILSETTINGS',     "Mail settings");
-define('_EN_SETTINGS_ACL_FTPSETTINGS',      "FTP settings");
-define('_EN_SETTINGS_ACL_PROXYSETTINGS',    "Proxy settings");
+define('_EN_SETTINGS_ACL_MANAGESETTINGS', "General settings");
 
 /* Site Settings */
 define('_EN_SETTINGS', "Settings");
 define('_EN_SETTINGS_SITE_STATUS', "Site Status");
 define('_EN_SETTINGS_SITE_NAME', "Site Name");
-define('_EN_SETTINGS_SITE_SLOGAN', "Site Slogan");
 define('_EN_SETTINGS_SITE_COMMENT', "Site Comment");
+define('_EN_SETTINGS_SITE_URL', "Site URL");
+define('_EN_SETTINGS_SITE_SSL_URL', "Site SSL URL");
+define('_EN_SETTINGS_SITE_SLOGAN', "Site Slogan");
 define('_EN_SETTINGS_DEFAULT_THEME', "Default Theme");
 define('_EN_SETTINGS_DEFAULT_SITE_LANGUAGE', "Default Site Language");
 define('_EN_SETTINGS_ADMIN_LANGUAGE', "Admin Area Language");
 define('_EN_SETTINGS_MAIN_GADGET', "Default Gadget");
+define('_EN_SETTINGS_HOME_PAGE', "Default Page");
+define('_EN_SETTINGS_OWNER_NAME', "Owner Name");
+define('_EN_SETTINGS_OWNER_EMAIL', "Owner E-Mail");
 define('_EN_SETTINGS_DATE_FORMAT', "Date Format");
 define('_EN_SETTINGS_ALLOW_COMMENTS', "Allow comments site-wide");
 define('_EN_SETTINGS_ALLOW_COMMENTS_RESTRICTED', "Restricted");
@@ -42,9 +42,8 @@ define('_EN_SETTINGS_GRAVATAR_X', "X: Hardcore sexual imagery, or intense violen
 define('_EN_SETTINGS_USE_GRAVATAR', "Use gravatar");
 define('_EN_SETTINGS_SAVED', "Your settings have been saved.");
 define('_EN_SETTINGS_EDITOR', "Editor");
-define('_EN_SETTINGS_EDITOR_CLASSIC', "Classic");
-define('_EN_SETTINGS_EDITOR_TINYMCE', "TinyMCE");
-define('_EN_SETTINGS_EDITOR_CKEDITOR', "CKEditor");
+define('_EN_SETTINGS_EDITOR_CLASSIC', "The classic Jaws Editor");
+define('_EN_SETTINGS_EDITOR_FRIENDLY', "A friendly editor similar to Word / OpenWriter");
 define('_EN_SETTINGS_SHOW_VIEWSITE', "Show view site icon");
 define('_EN_SETTINGS_BASIC_SETTINGS', "Basic settings");
 define('_EN_SETTINGS_ADVANCED_SETTINGS', "Advanced settings");
@@ -56,6 +55,7 @@ define('_EN_SETTINGS_TITLE_SEPARATOR_DOUBLECOLON', "Double colon (::)");
 define('_EN_SETTINGS_DEFAULT_TITLE_AS_SITEDESC', "Site description ({0})");
 define('_EN_SETTINGS_CALENDAR_TYPE', "Calendar Type");
 define('_EN_SETTINGS_CALENDAR_LANGUAGE', "Calendar Language");
+define('_EN_SETTINGS_STATISTICS', "Statistics/Script Code");
 
 /* META Settings */
 define('_EN_SETTINGS_META_SETTINGS', "META settings");
@@ -64,14 +64,12 @@ define('_EN_SETTINGS_SITE_KEYWORDS', "Site Keywords");
 define('_EN_SETTINGS_SITE_AUTHOR', "Site Author");
 define('_EN_SETTINGS_SITE_LICENSE', "Site License");
 define('_EN_SETTINGS_COPYRIGHT', "Copyright");
-define('_EN_SETTINGS_META_CUSTOM', "Custom Meta");
-define('_EN_SETTINGS_META_ADD_CUSTOM', "Add Custom Meta");
 
 /* Mail Settings */
 define('_EN_SETTINGS_MAIL_SETTINGS', "Mail settings");
 define('_EN_SETTINGS_MAIL_MAILER', "Mailer");
-define('_EN_SETTINGS_MAIL_GATE_EMAIL', "From Email");
-define('_EN_SETTINGS_MAIL_GATE_TITLE', "From Name");
+define('_EN_SETTINGS_MAIL_SITE_EMAIL', "From Email");
+define('_EN_SETTINGS_MAIL_EMAIL_NAME', "From Name");
 define('_EN_SETTINGS_MAIL_SMTP_VRFY', "SMTP + Verification");
 define('_EN_SETTINGS_MAIL_SENDMAIL_PATH', "Sendmail Path");
 define('_EN_SETTINGS_MAIL_SMTP_HOST', "SMTP Host");

@@ -107,7 +107,7 @@ if (extension_loaded('mbstring') && (2 & ini_get('mbstring.func_overload'))) {
  *
  * Simple example (fetches yahoo.com and displays it):
  * <code>
- * $a = new HTTP_Request('http://www.yahoo.com/');
+ * $a = &new HTTP_Request('http://www.yahoo.com/');
  * $a->sendRequest();
  * echo $a->getResponseBody();
  * </code>
@@ -758,11 +758,7 @@ class HTTP_Request
                                   && strtolower($this->_response->_headers['transfer-encoding']) == 'chunked'));
                 if ($keepAlive) {
                     if (isset($this->_response->_headers['connection'])) {
-                        if (is_array($this->_response->_headers['connection'])) {
-                            $keepAlive = in_array('keep-alive', array_map('strtolower', $this->_response->_headers['connection']));
-                        } else {
-                            $keepAlive = strtolower($this->_response->_headers['connection']) == 'keep-alive';
-                        }
+                        $keepAlive = strtolower($this->_response->_headers['connection']) == 'keep-alive';
                     } else {
                         $keepAlive = 'HTTP/'.HTTP_REQUEST_HTTP_VER_1_1 == $this->_response->_protocol;
                     }
@@ -1267,9 +1263,6 @@ class HTTP_Response
                     $data = $this->_sock->read(4096);
                 } else {
                     $data = $this->_sock->read(min(4096, $this->_toRead));
-                    if (PEAR::isError($data)) {
-                        return $data;
-                    }
                     $this->_toRead -= HTTP_REQUEST_MBSTRING? mb_strlen($data, 'iso-8859-1'): strlen($data);
                 }
                 if ('' == $data && (!$this->_chunkLength || $this->_sock->eof())) {
@@ -1316,18 +1309,13 @@ class HTTP_Response
         $headername  = strtolower($headername);
         $headervalue = ltrim($headervalue);
 
-        if (isset($this->_headers[$headername])) {
-            if (is_array($this->_headers[$headername])) {
-                $this->_headers[$headername][] = $headervalue;
+        if ('set-cookie' != $headername) {
+            if (isset($this->_headers[$headername])) {
+                $this->_headers[$headername] .= ',' . $headervalue;
             } else {
-                $this->_headers[$headername] = array($this->_headers[$headername]);
-                $this->_headers[$headername][] = $headervalue;
+                $this->_headers[$headername]  = $headervalue;
             }
         } else {
-            $this->_headers[$headername] = $headervalue;
-        }
-
-        if ('set-cookie' == $headername) {
             $this->_parseCookie($headervalue);
         }
     }
@@ -1342,11 +1330,10 @@ class HTTP_Response
     function _parseCookie($headervalue)
     {
         $cookie = array(
-            'expires'  => null,
-            'domain'   => null,
-            'path'     => null,
-            'secure'   => false,
-            'httponly' => false
+            'expires' => null,
+            'domain'  => null,
+            'path'    => null,
+            'secure'  => false
         );
 
         // Only a name=value pair
@@ -1370,8 +1357,8 @@ class HTTP_Response
                     list ($elName, $elValue) = array_map('trim', explode('=', $elements[$i]));
                 }
                 $elName = strtolower($elName);
-                if ('secure' == $elName || 'httponly' == $elName) {
-                    $cookie[$elName] = true;
+                if ('secure' == $elName) {
+                    $cookie['secure'] = true;
                 } elseif ('expires' == $elName) {
                     $cookie['expires'] = str_replace('"', '', $elValue);
                 } elseif ('path' == $elName || 'domain' == $elName) {
@@ -1531,3 +1518,4 @@ class HTTP_Response
         return $unpacked;
     }
 } // End class HTTP_Response
+?>

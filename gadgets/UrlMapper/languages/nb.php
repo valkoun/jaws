@@ -24,7 +24,6 @@ define('_NB_URLMAPPER_MAPS_ADD_TITLE', "Legg til kobling");
 define('_NB_URLMAPPER_MAPS_EDIT_TITLE', "Rediger kobling");
 define('_NB_URLMAPPER_MAPS_ROUTE', "Koblingsrute");
 define('_NB_URLMAPPER_MAPS_REGEXP', "Vanlig uttrykk");
-define('_NB_URLMAPPER_MAPS_EXTENSION', "Utvidelse");
 define('_NB_URLMAPPER_MAPS_PARAM_NAME', "Navn");
 define('_NB_URLMAPPER_MAPS_PARAM_TYPE', "Type");
 define('_NB_URLMAPPER_MAPS_PARAM_LENGTH', "Lengde");

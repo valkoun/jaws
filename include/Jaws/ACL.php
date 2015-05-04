@@ -1,17 +1,24 @@
 <?php
 /**
- * Manage Access control lists
+ * Manage user Access Control Lists.
+ *
  *
  * @category   ACL
+ * @category   feature
  * @package    Core
  * @author     Ivan Chavero <imcsk8@gluch.org.mx>
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
-class Jaws_ACL
+class Jaws_ACL extends Jaws_Registry
 {
+    /**
+     * ACL Priority
+     * @access private
+     */
+    var $_Priority;
+
     /**
      * Loaded users/groups so we don't query the DB each
      * time we need a value of them
@@ -22,29 +29,15 @@ class Jaws_ACL
     var $_LoadedTargets;
 
     /**
-     * Has the registry
-     *
-     * @var     array
-     * @access  private
-     * @see    GetSimpleArray()
-     */
-    var $_Registry = array();
-
-    /**
-     * Array that has a *registry* of files that have been called
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_LoadedFiles = array();
-
-    /**
      * Constructor
      *
-     * @access  public
+     * @access public
      */
     function Jaws_ACL()
     {
+        $this->SetTable('acl');
+        $this->Init();
+        $this->setPriority($this->GetFromTable('/priority'));
         $this->_LoadedTargets = array(
             'users'  => array(),
             'groups' => array()
@@ -52,19 +45,26 @@ class Jaws_ACL
     }
 
     /**
-     * Checks if the key exists
+     * Sets the priority for ACLs
+     *
+     * @param $priority string What the ACLs priorities should be
+     * @access  public
+     * @return  string  The ACL priority
+     */
+    function setPriority($priority)
+    {
+        $this->_Priority = $priority;
+    }
+
+    /**
+     * Get the priority configured by ACL
      *
      * @access  public
-     * @param   string  $name  The key
-     * @return  bool    true when the key was found, else false
+     * @return  string  The ACL priority
      */
-    function KeyExists($name)
+    function GetPriority()
     {
-        if (array_key_exists($name, $this->_Registry)) {
-            return true;
-        }
-
-        return false;
+        return $this->_Priority;
     }
 
     /**
@@ -72,229 +72,20 @@ class Jaws_ACL
      *
      * @access      private
      * @param   string  $name   Key to find
-     * @return  bool     The value of the key, if not key found must return null
+     * @return  boolean  The value of the key, if not key found must return null
      */
     function Get($name)
     {
-        $value = $this->KeyExists($name) ? $this->_Registry[$name] : null;
+        $value = parent::Get($name);
         if ($value == 'true') {
             return true;
         }
 
         if ($value === null) {
-            return null;
+			return null;
         }
 
         return false;
-    }
-
-    /**
-     * Updates the value of a key
-     *
-     * @access  public
-     * @param   string  $name  The key
-     * @param   string  $value The value
-     */
-    function Set($name, $value)
-    {
-        if (!$this->KeyExists($name)) {
-            return false;
-        }
-
-        $xss   = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
-        $value = $xss->parse($value);
-
-        $this->_Registry[$name] = $value;
-
-        $params          = array();
-        $params['name']  = $name;
-        $params['value'] = $value;
-
-        $sql = "
-        UPDATE [[acl]] SET
-            [key_value] = {value}
-        WHERE [key_name] = {name}";
-
-        $result = $GLOBALS['db']->query($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Search for a key in the setted registry table
-     *
-     * @access  public
-     * @param   string  Key to find
-     * @return  string  The value of the key
-     */
-    function GetFromTable($name)
-    {
-        $params         = array();
-        $params['name'] = $name;
-
-        $sql = "
-            SELECT
-                [key_value]
-            FROM [[acl]]
-            WHERE [key_name] = {name}
-            ORDER BY [key_name]";
-
-        $value = $GLOBALS['db']->queryOne($sql, $params);
-        if (Jaws_Error::IsError($value)) {
-            return null;
-        }
-
-        if (!empty($value)) {
-            // lets update the internal array just in case
-            $this->_Registry[$name] = $value;
-            return $value;
-        }
-
-        return null;
-    }
-
-    /**
-     * Creates a new key
-     *
-     * @access  public
-     * @param   string  $name  The key
-     * @param   string  $value The value
-     */
-    function NewKey($name, $value)
-    {
-        if ($this->KeyExists($name)) {
-            return false; //already exists
-        }
-
-        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
-
-        $params = array();
-        $params['name']  = $name;
-        $params['value'] = $xss->parse($value);
-        $params['now']   = $GLOBALS['db']->Date();
-
-        $sql = "
-            INSERT INTO [[acl]]
-                ([key_name], [key_value], [updatetime])
-            VALUES
-                ({name}, {value}, {now})";
-
-        $result = $GLOBALS['db']->query($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return false;
-        }
-
-        $this->_Registry[$name] = $value;
-        return true;
-    }
-
-    /**
-     * Creates a array of new keys
-     *
-     * @access  public
-     */
-    function NewKeyEx()
-    {
-        $sqls = '';
-        $params = array();
-        $reg_keys = func_get_args();
-
-        // for support array of keys array
-        if (isset($reg_keys[0][0]) && is_array($reg_keys[0][0])) {
-            $reg_keys = $reg_keys[0];
-        }
-
-        if (empty($reg_keys) || empty($reg_keys[0])) {
-            return true;
-        }
-
-        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
-        $dbDriver  = $GLOBALS['db']->getDriver();
-        $dbVersion = $GLOBALS['db']->getDBVersion();
-        foreach ($reg_keys as $idx => $reg_key) {
-            if ($this->KeyExists($reg_key[0])) {
-                unset($reg_keys[$idx]);
-            } else {
-                $params["name_$idx"]  = $reg_key[0];
-                $params["value_$idx"] = $xss->parse($reg_key[1]);
-                // Ugly hack to support all databases
-                switch ($dbDriver) {
-                    case 'oci8':
-                        $sqls .= (empty($sqls)? '' : "\n UNION ALL") . "\n SELECT {name_$idx}, {value_$idx}, {now} FROM DUAL";
-                        break;
-                    case 'ibase':
-                        $sqls[] = " VALUES ({name_$idx}, {value_$idx}, {now})";
-                        break;
-                    case 'pgsql':
-                        if (version_compare($dbVersion, '8.2.0', '>=')) {
-                            $sqls .= (empty($sqls)? "\n VALUES" : ",") . "\n ({name_$idx}, {value_$idx}, {now})";
-                        } else {
-                            $sqls[] = " VALUES ({name_$idx}, {value_$idx}, {now})";
-                        }
-                        break;
-                    default:
-                        $sqls .= (empty($sqls)? '' : "\n UNION ALL") . "\n SELECT {name_$idx}, {value_$idx}, {now}";
-                        break;
-                }
-            }
-        }
-
-        if (empty($sqls)) {
-            return false;
-        }
-
-        $params['now'] = $GLOBALS['db']->Date();
-
-        if (is_array($sqls)) {
-            foreach ($sqls as $sql) {
-                $qsql = " INSERT INTO [[acl]]([key_name], [key_value], [updatetime])" . $sql;
-                $result = $GLOBALS['db']->query($qsql, $params);
-                if (Jaws_Error::IsError($result)) {
-                    return $result;
-                }
-            }
-        } else {
-            $qsql = " INSERT INTO [[acl]]([key_name], [key_value], [updatetime])" . $sqls;
-            $result = $GLOBALS['db']->query($qsql, $params);
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
-        }
-
-        foreach ($reg_keys as $idx => $reg_key) {
-            if (empty($reg_keys[$idx])) continue;
-            $this->_Registry[$reg_key[0]] = $reg_key[1];
-        }
-
-        return true;
-    }
-
-    /**
-     * Deletes a key
-     *
-     * @access  public
-     * @param   string  $name  The key
-     */
-    function DeleteKey($name)
-    {
-        if ($this->KeyExists($name)) {
-            unset($this->_Registry[$name]);
-        }
-
-        $params         = array();
-        $params['name'] = $name;
-
-        $sql = "DELETE FROM [[acl]] WHERE [key_name] = {name}";
-
-        $result = $GLOBALS['db']->query($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -306,59 +97,104 @@ class Jaws_ACL
      * @param   int      $groups array of group's ID or empty string
      * @param   string   $gadget Gadget to use
      * @param   string   $task   Task to use
-     * @param   bool     $is_super_admin
-     * @return  bool     Permission value: Granted (true) or Denied (false)
+     * @return  boolean  Permission value: Granted (true) or Denied (false)
      */
-    function GetFullPermission($user, $groups, $gadget, $task, $is_super_admin = false)
+    function GetFullPermission($user, $groups, $gadget, $task)
     {
-        // is in forbidden acls?
-        if (defined('JAWS_FORBIDDEN_ACLS')) {
-            static $forbidden_acls;
-            if (!isset($forbidden_acls)) {
-                $forbidden_acls = array_filter(array_map('trim', explode(',', strtolower(JAWS_FORBIDDEN_ACLS))));
-            }
-
-            if (in_array(strtolower("$gadget:$task"), $forbidden_acls)) {
-                return false;
-            }
-        }
-
-        if ($is_super_admin === true) {
-            return true;
-        }
-
-        $this->LoadFile($gadget);
+		
+		$this->LoadFile($gadget);
         $this->LoadKeysOf($user, 'users');
 
         // 1. Check for user permission
         $perm['user'] = $this->Get('/ACL/users/'.$user.'/gadgets/'.$gadget.'/'.$task);
-        if (!is_null($perm['user'])) {
-            return (bool)$perm['user'];
-        }
 
+		/*
+		echo '<br />';
+		var_dump($gadget);
+		echo ':';
+		var_dump($task);
+		echo '<br />user => '.var_export($perm['user'], true);
+		*/
+		
         // 2. Check for groups permission
-        $perm['groups'] = null;
-        if (!empty($groups)) {
+		if (!empty($groups)) {
+            $perm['groups'] = null;
             foreach ($groups as $group) {
-                $gPerm = $this->GetGroupPermission($group, $gadget, $task);
+				$gPerm = $this->GetGroupPermission($group['group_id'], $gadget, $task);
+                //echo '<br />'.var_export($group, true).' => '.var_export($gPerm, true);
                 if (!is_null($gPerm)) {
                     $perm['groups'] = is_null($perm['groups'])? $gPerm : ($perm['groups'] || $gPerm);
                 }
             }
         }
 
-        if (!is_null($perm['groups'])) {
-            return (bool)$perm['groups'];
-        }
-
         // 3. Check for default
         // If there is no key then it must return false
-        $perm['default'] = false;
-        if (!is_null($this->Get('/ACL/gadgets/'.$gadget.'/'.$task))) {
+        if ($this->Get('/ACL/gadgets/'.$gadget.'/'.$task) === null) {
+            $perm['default'] = false;
+        } else {
+            $perm['default'] = $this->Get('/ACL/gadgets/'.$gadget.'/'.$task);
+        }
+		/*
+		echo '<br />';
+		var_dump($perm);
+		echo '<br />';
+		var_dump($this->_Priority);
+		*/
+		
+		foreach (explode(',', $this->_Priority) as $p) {
+            $p = trim($p);
+            if (isset($perm[$p]) && $perm[$p] !== null) {
+                return $perm[$p];
+            }
+        }
+        // If not were a valid perm
+        return false;
+    }
+
+    /**
+     * Get a permission to a given Gadget -> Task/Method
+     *
+     * @access  public
+     * @param   string  $user           Username
+     * @param   string  $gadget         Gadget name
+     * @param   string  $task           Task or method name
+     * @param   boolean $checkPriority  Check the values using priorities (default,user,group)
+     * @return  boolean True if permission is granted
+     */
+    function GetPermission($user, $gadget, $task, $checkPriority = true)
+    {
+        $this->LoadFile($gadget);
+        $this->LoadKeysOf($user, 'users');
+        // 1. Check for user permission
+        $perm['user'] = $this->Get('/ACL/users/'.$user.'/gadgets/'.$gadget.'/'.$task);
+
+        if ($checkPriority === false) {
+            return $perm['user'];
+        }
+
+        // FIXME: 2.Check for each user groups
+        // $perm['groups'] = true;
+
+        // FIXME: 3. Check for hosts, maybe host string is a regexp(e.g. 10.0.0.*)
+        // $perm['hosts'] = true;
+
+        // 4. Check for default
+        // If there is no key then it must return true
+        if ($this->Get('/ACL/gadgets/'.$gadget.'/'.$task) === null) {
+            $perm['default'] = false;
+        } else {
             $perm['default'] = $this->Get('/ACL/gadgets/'.$gadget.'/'.$task);
         }
 
-        return (bool)$perm['default'];
+        foreach (explode(',', $this->getPriority()) as $p) {
+            $p = trim($p);
+            if (isset($perm[$p]) && $perm[$p] !== null) {
+                return $perm[$p];
+            }
+        }
+        // If not were a valid perm
+        return false;
     }
 
     /**
@@ -368,7 +204,8 @@ class Jaws_ACL
      * @param   string  $group          Group's ID
      * @param   string  $gadget         Gadget name
      * @param   string  $task           Task or method name
-     * @return  bool    True if permission is granted
+     * @param   boolean $checkPriority  Check the values using priorities (default,user,group)
+     * @return  boolean True if permission is granted
      */
     function GetGroupPermission($group, $gadget, $task)
     {
@@ -379,13 +216,43 @@ class Jaws_ACL
     }
 
     /**
+     * Check permission on a given gadget/task
+     * Use it if you want to produce a Jaws_Error::Fatal
+     * else use getPermission
+     *
+     * @param   string $user Username
+     * @param   string $gadget Gadget name
+     * @param   string $task Task or method name
+     * @param   string $errorMessage Error message to return
+     *
+     * @see getPermission()
+     *
+     * @return  boolean True if granted, else throws an Exception(Jaws_Error::Fatal)
+     */
+    function CheckPermission($user, $gadget, $task, $errorMessage = '')
+    {
+        if ($this->GetPermission($user, $gadget, $task)) {
+            return true;
+        }
+
+        ///FIXME seems kinda wrong doing this.
+        if (empty($errorMessage)) {
+            $errorMessage = 'User '.$user.' doesn\'t have permission to execute '.$gadget.'::'.$task;
+        }
+
+        Jaws_Error::Fatal($errorMessage, __FILE__, __LINE__);
+    }
+
+    /**
      * Get ACL permissions for a given user(name)
      *
      * @access  public
      * @param   string  $user Username
+     * @param   boolean $checkByPriority  Check the permissions by their priority (usefull when we
+     *                                    just want to know the real values)
      * @return  array   Struct that contains all needed info about the ACL of a given user.
      */
-    function GetAclPermissions($user)
+    function GetAclPermissions($user, $checkByPriority = true)
     {
         $this->LoadAllFiles();
         $this->LoadKeysOf($user, 'users');
@@ -399,7 +266,11 @@ class Jaws_ACL
                 $gadget = preg_replace("@\/ACL/gadgets\/(\w+)\/(\w+)@", "\$1", $r['name']);
                 $task = str_replace('/ACL/users/'.$user.'/gadgets/'.$gadget.'/', '', $item['name']);
 
-                $item['value'] = $this->Get($item['name']);
+                if ($this->Get($item['name']) === null) {
+                    $item['value'] = $this->Get($r['name']);
+                } else {
+                    $item['value'] = $this->GetPermission($user, $gadget, $task, $checkByPriority);
+                }
                 $item['default'] = false;
                 $perms[$gadget][] = $item;
             }
@@ -438,6 +309,8 @@ class Jaws_ACL
      *
      * @access  public
      * @param   string  $id               Group's ID
+     * @param   boolean $checkByPriority  Check the permissions by their priority (usefull when we
+     *                                    just want to know the real values)
      * @return  array Struct that contains all needed info about the ACL for a given user.
      */
     function GetGroupAclPermissions($id)
@@ -453,7 +326,12 @@ class Jaws_ACL
                 $gadgetName = preg_replace("@\/ACL/gadgets\/(\w+)\/(\w+)@", "\$1", $r['name']);
                 $task = str_replace('/ACL/groups/'.$id.'/gadgets/'.$gadgetName.'/', '', $item['name']);
 
-                $item['value'] = $this->Get($item['name']);
+                if ($this->Get($item['name']) === null) {
+                    $item['value'] = $this->Get($r['name']);
+                } else {
+                    $item['value'] = $this->GetGroupPermission($id, $gadgetName, $task);
+                }
+
                 $item['default'] = false;
                 $perms[$gadgetName][] = $item;
             }
@@ -479,7 +357,7 @@ class Jaws_ACL
 
         $aclGroups = array();
         foreach ($groups as $group) {
-            $acls = $this->GetGroupAclPermissions($group);
+            $acls = $this->GetGroupAclPermissions($group['id']);
             if (!Jaws_Error::IsError($acls)) {
                 $aclGroups = $acls;
             }
@@ -501,8 +379,7 @@ class Jaws_ACL
 
         $sql = 'DELETE FROM [[acl]] WHERE [key_name] LIKE {name}';
         $GLOBALS['db']->query($sql, $params);
-
-        return true;
+        $this->UpdateLastUpdate();
     }
 
     /**
@@ -518,174 +395,21 @@ class Jaws_ACL
 
         $sql = 'DELETE FROM [[acl]] WHERE [key_name] LIKE {name}';
         $GLOBALS['db']->query($sql, $params);
-
-        return true;
+        $this->UpdateLastUpdate();
     }
 
     /**
-     * Get the simple array
+     * Saves the key array file in JAWS_DATA . '/cache/acl(gadgets|plugins)' . $component
      *
-     * @access  public
-     * @return  array   Returns the SimpleArray
-     */
-    function GetSimpleArray()
-    {
-        return $this->_Registry;
-    }
-
-    /**
-     * Creates the JAWS_CACHE . 'registry|acl' . directory to store keys
-     *
-     * @access  public
-     */
-    function CreateCacheDirectory()
-    {
-        $new_dirs = array();
-        $new_dirs[] = JAWS_CACHE;
-        $new_dirs[] = JAWS_CACHE. 'acl';
-        $new_dirs[] = JAWS_CACHE. 'acl'. DIRECTORY_SEPARATOR. 'gadgets';
-        $new_dirs[] = JAWS_CACHE. 'acl'. DIRECTORY_SEPARATOR. 'plugins';
-        foreach ($new_dirs as $new_dir) {
-            if (!Jaws_Utils::mkdir($new_dir)) {
-                return new Jaws_Error(_t('GLOBAL_ERROR_REGISTRY_CACHEDIR_NOT_WRITABLE', $new_dir),
-                                      __FUNCTION__);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Deletes the cache file of a certain component
-     *
-     * @acess   public
-     * @access  protected
-     * @param   string     $name       Component name
-     * @param   string     $type       Type of component (gadget or plugin)
-     * @return  bool       Success/Failure
-     */
-    function deleteCacheFile($name, $type = 'gadgets')
-    {
-        $type = strtolower($type);
-        if (empty($name) || !in_array($type, array('gadgets', 'plugins'))) {
-            return false;
-        }
-
-        $file = JAWS_CACHE . "acl/$type/$name.php";
-        if (file_exists($file)) {
-            unlink($file);
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Saves the key array file in JAWS_CACHE . 'acl(gadgets|plugins)' . $component
-     *
-     * @access  public
-     * @param   string Component's name
-     * @param   string The type of the component, (plugin or a gadget) only
+     * @access public
+     * @param string Component's name
+     * @param string The type of the component, (plugin or a gadget) only
      *               if the component name is not empty
      */
-    function Commit($comp, $type = 'gadgets', $regexp = '')
+    function Commit($comp, $type = 'gadgets')
     {
-        //We don't accept full commits
-        if (empty($comp)) {
-            return false;
-        }
-
-        $res = $this->CreateCacheDirectory();
-        if (Jaws_Error::isError($res)) {
-            return false;
-        }
-
-        $search = '/' . $comp . '/';
-        $type = strtolower($type);
-        if (!in_array($type, array('gadgets', 'plugins'))) {
-            return false;
-        }
-
-        $result = "\$registry = array();\n";
-        foreach ($this->_Registry as $key => $value) {
-            if (strpos($key, $search) === false) {
-                continue;
-            }
-
-            /**
-             * Since we don't add /enabled and /version keys to cache files we should
-             * check it for them
-             */
-            $exclude = substr($key, -8);
-            if ($exclude == '/enabled' || $exclude == '/version') {
-                continue;
-            }
-
-            $result .= "\$registry['".$key."'] = '".addslashes($value)."';\n";
-
-        }
-
-        $this->CommitWriteFile($result, $comp, $type);
-        return true;
-    }
-
-    /**
-     * Commits an string of registry-keys to a cache file
-     *
-     * @access  private
-     * @param   string An string of registry-keys
-     * @param   string Component that is being added
-     * @param   string What kind of registry-keys does $data has?
-     *                   Possible values are:
-     *                    - gadgets
-     *                    - plugins
-     */
-    function CommitWriteFile($data, $comp, $type)
-    {
-        $type = strtolower($type);
-        $file  = JAWS_CACHE . "acl/$type/$comp.php";
-        $content = "<?php\n" . $data;
-        $fp = file_put_contents($file, $content);
-        if ($fp !== false) {
-            Jaws_Utils::chmod($file);
-        }
-    }
-
-    /**
-     * Loads the keys of a component and optionally it returns the keys found in the file
-     *
-     * @access  public
-     * @param   string  $component Component's name
-     */
-    function LoadFile($component, $type = 'gadgets', $return = false)
-    {
-        $type = strtolower($type);
-        $file = JAWS_CACHE . "acl/$type/$component.php";
-        $exists = file_exists($file);
-        if ($exists) {
-            require $file;
-            $this->_LoadedFiles[$component] = $component;
-            // $registry comes from the file loaded
-            if (isset($registry) && is_array($registry)) {
-                foreach ($registry as $key => $value) {
-                    if (!$this->KeyExists($key)) {
-                        $this->_Registry[$key] = stripslashes($value);
-                    }
-                }
-
-                if ($return) {
-                    return $registry;
-                }
-            }
-
-            return true;
-        } else {
-            // Cache file doesn't exist, lets generate it
-            $res = $this->_regenerateInternalRegistry($component, $type);
-            if (!$res) {
-                return;
-            }
-            $this->commit($component, $type);
-            return $this->loadFile($component, $type, $return);
-        }
+        $return = parent::Commit($comp, $type, '#^/ACL/(.*?)/(.*?)/(.*?)#i');
+        return $return;
     }
 
     /**
@@ -695,12 +419,18 @@ class Jaws_ACL
      */
     function LoadAllFiles()
     {
-        $gs = array_filter(explode(',', $GLOBALS['app']->Registry->Get('/gadgets/enabled_items')));
+        $gs = explode(',', $GLOBALS['app']->Registry->Get('/gadgets/enabled_items'));
+        $ci = explode(',', $GLOBALS['app']->Registry->Get('/gadgets/core_items'));
+
+        $ci = str_replace(' ', '', $ci);
+
+        // load the core
+        $this->LoadFile('core');
+
         foreach ($gs as $gadget) {
             $this->LoadFile($gadget);
         }
 
-        $ci = array_filter(explode(',', $GLOBALS['app']->Registry->Get('/gadgets/core_items')));
         foreach ($ci as $gadget) {
             $this->LoadFile($gadget);
         }
@@ -744,7 +474,7 @@ class Jaws_ACL
         }
         $sql = "SELECT [key_name], [key_value] FROM [[acl]] WHERE [key_name] LIKE '/ACL/".$where."/".$target."/%'";
         $result = $GLOBALS['db']->queryAll($sql, array(), null, null, true);
-        if (Jaws_Error::isError($result)) {
+		if (Jaws_Error::isError($result)) {
             return false;
         }
         $this->_LoadedTargets[$where][$target] = $target;
@@ -757,7 +487,7 @@ class Jaws_ACL
      * @access  protected
      * @param   string     $component  Component name
      * @param   string     $type       Type of component (gadget or plugin)
-     * @return  bool       Success/Failure
+     * @return  boolean    Success/Failure
      */
     function _regenerateInternalRegistry($component, $type = 'gadgets')
     {
@@ -766,11 +496,13 @@ class Jaws_ACL
             return false;
         }
 
-        $sql = "
-            SELECT [key_name], [key_value]
-            FROM [[acl]]
-            WHERE [key_name] LIKE '/ACL/$type/$component/%'
-            ORDER BY [id]";
+        if ($component == 'core') {
+            $sql = "
+                SELECT [key_name], [key_value] FROM [[acl]]
+                WHERE [key_name] IN('/last_updated', '/priority')";
+        } else {
+            $sql = "SELECT [key_name], [key_value] FROM [[acl]] WHERE [key_name] LIKE '/ACL/$type/$component/%'";
+        }
 
         $result = $GLOBALS['db']->queryAll($sql, array(), null, null, true);
         if (Jaws_Error::isError($result)) {
@@ -780,5 +512,4 @@ class Jaws_ACL
         $this->_Registry = $result + $this->_Registry;
         return true;
     }
-
 }

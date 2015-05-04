@@ -57,9 +57,6 @@ class HBox extends Box
     {
         $this->_XHTML  = "<table cellpadding=\"0\"";
         $this->_XHTML .= $this->buildBasicXHTML();
-        if (!empty($this->_Width)) {
-            $this->_XHTML .= " width = \"{$this->_Width}\"";
-        }
         $this->_XHTML .= ">\n";
         $this->_XHTML .= "<tr>\n";
 
@@ -104,5 +101,5 @@ class HBox extends Box
         $this->_XHTML .= "</tr>\n";
         $this->_XHTML .= "</table>";
     }
-
 }
+?>

@@ -1,0 +1,23 @@
+<!-- BEGIN group_access -->
+<div class="gadget users requestgroupaccessbox">
+  <h2>{title}</h2>
+  <!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+  <form name="requestgroupaccessBox" action="{base_script}?group/requested/confirm.html" method="post">
+  <input type="hidden" name="gadget" value="Users" />
+  <input type="hidden" name="action" value="RequestedGroupAccess" />
+  <input type="hidden" name="redirect_to" value="{redirect_to}" />
+  <input type="hidden" name="group" value="{group}" />
+  <div class="content">
+    <p>
+	<span>{request_string}</span>
+    </p>
+  </div>
+  <div class="actions"><button type="submit" value="Yes">Yes</button>&nbsp;&nbsp;<a href="{cancel_url}">Cancel</a></div>
+  </form>
+</div>
+<!-- END group_access -->
+<!-- BEGIN already_in_group -->
+<div class="gadget users requestgroupaccessbox">
+{content}
+</div>
+<!-- END already_in_group -->

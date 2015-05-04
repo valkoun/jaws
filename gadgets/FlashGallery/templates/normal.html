@@ -1,0 +1,345 @@
+<!-- BEGIN gallery2 -->
+<div class="gadget flash_gallery">
+<!-- BEGIN content -->
+	<div class="content">
+		{content}
+	</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+<!-- END not_found -->
+</div>
+<!-- END gallery2 -->
+
+<!-- BEGIN index -->
+<div class="gadget flashgallery_index">
+  <h2><a href="{link}">{title}</a></h2>
+  <div class="content">
+    <ul>
+    <!-- BEGIN item -->
+      <li><a href="{link}">{title}</a></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-flashgallery-head" class="gadget layout_head layout-flashgallery-head">
+<h2 id="layout_{actionName}_title" class="layout-flashgallery-title">{layout_title}</h2>
+</div>
+<div class="gadget layout_body layout-flashgallery-body">
+<!-- BEGIN gallery -->
+	<div id="flash-gallery-{id}" class="flash-gallery" style="background: {gallery_background_color} {gallery_loading_image};">
+		<div class="carousel_navigation" id="carousel_navigation{id}" style="padding-bottom: 6px; font-size: 1.2em; font-weight: bold; text-align: center"></div>
+		<div class="horizontal_carousel" id="horizontal_carousel{id}" style="visibility: hidden;">
+		  <div class="previous_button" id="previous_button{id}"></div>  
+		  <div class="carousel_container" id="carousel_container{id}" style="background: url({gallery_overlay_image});">
+			<div class="carousel_holder" id="carousel_holder{id}">
+<!-- BEGIN item -->
+				<div class="carousel_item" id="carousel_{gallery_id}item{image_id}">
+<!-- BEGIN image -->
+					<div class="gallery_img">
+						<div style="background: url({image_src}) no-repeat center center transparent;">
+							<a id="link_{gallery_id}item{image_id}" href="{image_url}" target="{image_target}"><img id="{gallery_id}item{image_id}" src="../../../images/blank.gif" alt="{image_alt}" title="{image_caption}" /></a>
+						</div>
+					</div>
+<!-- END image -->
+				</div>
+<!-- END item -->
+			</div>
+		  </div>
+
+		  <div class="next_button" id="next_button{id}"></div>
+		</div>
+	</div>
+<script type="text/javascript">
+	//<![CDATA[
+	var gz{id} = 0;
+	var gmaxHeight{id} = 0; 
+	var gmaxWidth{id} = 0; 
+	var gthumbHeight{id} = 0; 
+	var gthumbWidth{id} = 0; 
+	var glastItem{id} = null; 
+	//var gcols{id} = {gallery_columns}; 
+	//var gpage{id} = {gallery_page}; 
+	//var totalLeft{id} = 0; 
+	//var gfirstOffset{id} = 0; 
+		
+	var gn{id}= 0;
+	var ghCarousel{id}= null;
+	var gx{id}= null;
+	var gbutton_widths{id}= 0;
+	document.observe("dom:loaded",function(){
+		{gallery_dimensions}
+		gthumbHeight{id} = Math.floor(gmaxHeight{id})-10; 
+		gthumbWidth{id} = gthumbHeight{id};
+		if (gthumbHeight{id} > 150) {
+			gthumbHeight{id} = 150; 
+			gthumbWidth{id} = 150;
+		}
+		var prev_button_width=parseInt($("previous_button{id}").offsetWidth);
+		var next_button_width=parseInt($("next_button{id}").offsetWidth);
+		gbutton_widths{id}=(prev_button_width+next_button_width)+30;
+		$("horizontal_carousel{id}").style.height = gmaxHeight{id} + 'px';
+		$("carousel_holder{id}").style.height = gmaxHeight{id}+'px';
+		$("carousel_container{id}").style.height = gmaxHeight{id}+"px";
+		$("horizontal_carousel{id}").style.width=gmaxWidth{id}+"px";
+		$$("#horizontal_carousel{id} .carousel_container").first().style.width=(gmaxWidth{id}-gbutton_widths{id})+"px";
+		$$("#carousel_holder{id} .carousel_item").each(function(element){$(element).style.width = gthumbWidth{id}+"px";});
+		//$$("#carousel_holder{id} .carousel_item .gallery_img").each(function(element){$(element).style.height = gthumbHeight{id} + 'px';});
+		$("next_button{id}").onmouseover = function(){
+			gstopscroll{id}();
+		};
+		$("next_button{id}").onmouseout = function(){
+			gx{id}=setInterval("gstartscroll{id}()", {gallery_timer});
+		};
+		$("previous_button{id}").onmouseover = function(){
+			gstopscroll{id}();
+		};
+		$("previous_button{id}").onmouseout = function(){
+			gx{id}=setInterval("gstartscroll{id}()", {gallery_timer});
+		};
+		var children = $A($("carousel_holder{id}").childNodes);
+		children.each(function(thisChild) {
+			if(thisChild.nodeType==1){
+				var secondChildren = $A(thisChild.childNodes);
+				secondChildren.each(function(secondChild) {
+				//while(secondChild!=thisChild.lastChild){
+					if(secondChild.nodeType==1){
+						secondChild.onmouseover = function(){
+							gstopscroll{id}();
+						};
+						secondChild.onmouseout = function(){
+							gx{id}=setInterval("gstartscroll{id}()", {gallery_timer});
+						};
+					};
+					//secondChild=secondChild.nextSibling;
+				});
+				gn{id}++
+			};
+		});
+		//$("carousel_navigation{id}").innerHTML+='<img src="images/carousel_nav_left.png" border="0" /><a id="carousel_{id}nav0" href="javascript: void(0);" onclick="ghCarousel{id}.scrollTo(0);" style="text-decoration: none;"><img src="images/carousel_nav_on.png" border="0" /></a><a id="carousel_{id}nav1" href="javascript: void(0);" onclick="ghCarousel{id}.scrollTo(1);" style="text-decoration: none;"><img src="images/carousel_nav_off.png" border="0" /></a><img src="images/carousel_nav_right.png" border="0" />';
+	});
+	function gstartscroll{id}(){
+		var nextItem = ghCarousel{id}.currentIndex() + 1;
+		if(nextItem>=gn{id}){
+			//alert('next: '+0+' total: '+gn{id});
+			ghCarousel{id}.scrollTo(0);
+		}else{
+			//alert('next: '+nextItem+' total: '+gn{id});
+			ghCarousel{id}.scrollTo(nextItem);
+		};
+	};
+	function gstopscroll{id}(){
+		clearInterval(gx{id});
+	};
+	function grunTest{id}(){
+		$("horizontal_carousel{id}").style.visibility="visible";
+		//gupdateCarouselSize{id}();
+		ghCarousel{id}=new UI.Carousel("horizontal_carousel{id}",{container:".carousel_container",scrollInc:"auto"});
+		gx{id}=setInterval("gstartscroll{id}()", {gallery_timer});
+		new UI.Carousel("horizontal_carousel{id}").observe("scroll:started",function(){
+			var children = $A($("carousel_holder{id}").childNodes);
+			children.each(function(thisChild) {
+				if(thisChild.nodeType==1){
+					thisChild.style.visibility="visible";
+				};
+			});
+		});
+		new UI.Carousel("horizontal_carousel{id}").observe("scroll:ended",function(){
+			for(t=0;t<gn{id}+1;t++){
+				if(t!=ghCarousel{id}.currentIndex()){
+					if($("carousel_{id}nav"+t)){
+						$("carousel_{id}nav"+t).src="images/carousel_nav"+t+"_off.gif";
+					};
+				}else{
+					if ($("carousel_{id}item"+(t+1))){
+						$("carousel_{id}item"+(t+1)).style.visibility="visible";
+					};
+					if($("carousel_{id}nav"+t)){
+						$("carousel_{id}nav"+t).src="images/carousel_nav"+t+"_on.gif";
+					};
+				};
+			};
+		});
+	};
+	function gresized{id}(){
+		if(ghCarousel{id}){
+			ghCarousel{id}.updateSize();
+		}
+	};
+	/*
+	function gupdateCarouselSize{id}(){
+		$("horizontal_carousel{id}").style.width=gmaxWidth{id}+"px";
+		$("horizontal_carousel{id}").style.height = gmaxHeight{id} + 'px';
+		$$("#horizontal_carousel{id} .carousel_container").first().style.width=(gmaxWidth{id}-gbutton_widths{id})+"px";
+		$("carousel_holder{id}").style.height = gmaxHeight{id}+'px';
+		$("carousel_container{id}").style.height = gmaxHeight{id}+"px";
+		$$("#carousel_holder{id} .carousel_item").each(function(element){$(element).style.width = (gmaxWidth{id}-gbutton_widths{id})+"px"});
+	};
+	*/
+	Event.observe(window,"load", function() {
+		z=$$('#carousel_holder{id} .carousel_item .gallery_img div a img');
+		
+		z.each(function(n) {
+			var ratio = $(n).getHeight() / $(n).getWidth(); 
+			var thisHeight = gthumbHeight{id};
+			var thisWidth = Math.floor(thisHeight/ratio);
+			thisWidth = Math.floor(thisWidth);
+			thisHeight = Math.floor(thisHeight);
+			$(n).up('.gallery_img').style.padding = '5px';
+			$(n).up('.gallery_img').style.cssFloat = 'left';
+			$(n).style.width = thisWidth+'px';
+			$(n).style.height = thisHeight+'px';
+			gz{id}++;
+		});
+		grunTest{id}();
+	});
+	//Event.observe(window,"resize",gresized{id});
+	// ]]>
+	</script>
+<!-- END gallery -->
+<!-- BEGIN slideshow -->
+<style>
+	#flash-slideshow-{id}{float:left;position:relative;width:950px;height:317px;overflow:hidden;} 
+    #flash-slideshow-{id} #slide-caption{id}{position:absolute;bottom:10px;left:0;z-index:1000;background:{slideshow_textbar_bkgnd};padding:10px 80px 10px 10px;width:950px;color:#D3E2C1;cursor:pointer;pointer:hand;} 
+    .fade-box{width:950px;position:absolute;text-align:center;z-index:900;} 
+    .fade-box div{display:none;} 
+    #slideshow_overlay{id}{height:317px;width:950px;position:absolute;top:0px;left:0px;z-index:800;background:{slideshow_overlay_image} no-repeat;list-style:none;cursor:pointer;pointer:hand;} 
+    #show-controls{id}{position:absolute;bottom:22px;right:10px;z-index:1100; list-style: none;} 
+    #show-controls{id} li{float:left;} 
+    #show-controls{id} li a:link,#show-controls{id} li a:visited{display:block;width:16px;height:16px;background-repeat:no-repeat;background-position:0 0;} 
+    #show-controls{id} li a span{position:absolute;left:-9999px;} 
+    #show-controls{id} li#PauseButton{id}{position:absolute;right:30px;} 
+    #show-controls{id} li#PauseButton{id} a:link,#show-controls{id} li#PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #show-controls{id} li#PauseButton{id} a span{position:static;left:0;} 
+    #show-controls{id} li#PlayButton{id}{position:absolute;right:30px;} 
+    #show-controls{id} li#PlayButton{id} a:link,#show-controls{id} li#PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #show-controls{id} li#PlayButton{id} a span{position:static;left:0;} 
+    /*
+	#show-controls{id} li#PreviousButton{id} a{background-image:url(icons/silk_set/resultset_previous.png);} 
+    #show-controls{id} li#NextButton{id} a{background-image:url(icons/silk_set/resultset_next.png);} 	
+	*/
+</style>
+<noscript>
+	<style type="text/css">.img-{id} { display: none; }</style>
+</noscript>
+<div id="flash-slideshow-{id}" class="flash-slideshow" style="background: {slideshow_background_color};">
+	<div class="flash-slideshow-images" style="position:relative;z-index:10;">
+	<script type="text/javascript">var slideshow{id}_slides = new Array();var slideshow{id}_srcs = new Array();</script>
+<!-- BEGIN image -->
+		<div{image_style} id="image-{image_linkid}_{image_id}" class="fade-box">
+			<!-- <a href="javascript:oHomePageSlides{image_linkid}.goNext();"> -->
+				<img id="img-{image_linkid}_{image_id}" class="img-{image_linkid} flash-slideshow-img" src="{replace_image}" alt="{image_alt}" style="{image_height}" />
+				<noscript>
+					<img id="img2-{image_linkid}_{image_id}" class="img2-{image_linkid} flash-slideshow-img2" src="{image_src}" alt="{image_alt}" style="{image_height}" />
+				</noscript>
+				<div class="image-caption">{image_caption}</div>
+			<!-- </a> -->
+		</div>
+		<input type="hidden" id="image-{image_linkid}_{image_count}_href" value="{image_url}">
+		<input type="hidden" id="image-{image_linkid}_{image_count}_target" value="{image_target}">
+		<script type="text/javascript">
+		slideshow{image_linkid}_slides.push("image-{image_linkid}_{image_id}");
+		slideshow{image_linkid}_srcs.push("{image_src}");
+		</script>
+<!-- END image -->
+	</div>
+	<ul id="show-controls{id}" class="show-controls flash-slideshow-controls">
+		<li id="PlayButton{id}" class="flash-slideshow-play" style="display: none;">
+			<a href="javascript:oHomePageSlides{id}.startSlideShow();"><span>[play]</span></a>
+		</li>
+		<li id="PauseButton{id}" class="flash-slideshow-pause" style="display: none;">
+			<a href="javascript:oHomePageSlides{id}.stop();"><span>[stop]</span></a>
+		</li>
+		<!--<li class="png-fix" id="PreviousButton"><a class="png-fix" href="javascript:oHomePageSlides.goPrevious();"><span>Previous</span></a></li>
+		<li id="NextButton"><a class="png-fix" href="javascript:oHomePageSlides.goNext();"><span>Next</span></a></li>-->
+	</ul>
+	<div id="slideshow_overlay{id}" class="flash-slideshow-overlay">&nbsp;</div>
+	<p id="slide-counter{id}" style="display: none;" class="flash-slideshow-counter">1 of {slideshow_total}</p>
+	<div id="slide-caption{id}" class="flash-slideshow-caption">&nbsp;</div>
+	<script type="text/javascript">
+	{slideshow_dimensions}
+	function sresized{id}() {
+		if ($('flash-slideshow-{id}').parentNode) {
+			flash_slideshow_{id}_width = parseInt($('flash-slideshow-{id}').parentNode.offsetWidth);
+		}
+		if (flash_slideshow_{id}_width == 0) {
+			flash_slideshow_{id}_width = 950;
+		}
+		$('flash-slideshow-{id}').style.width = (flash_slideshow_{id}_width == 950 ? '100%' : flash_slideshow_{id}_width + 'px');
+		$('slideshow_overlay{id}').style.width = (flash_slideshow_{id}_width == 950 ? '100%' : flash_slideshow_{id}_width + 'px');
+		$('slide-caption{id}').style.width = (flash_slideshow_{id}_width == 950 ? '98%' : (flash_slideshow_{id}_width-90) + 'px');
+		$$('#flash-slideshow-{id} .fade-box').each(function(element){element.setStyle({width: (flash_slideshow_{id}_width == 950 ? '100%' : flash_slideshow_{id}_width + 'px')});});
+	}	
+	Event.observe(document,"dom:loaded",function(){
+		if($("flash-slideshow-{id}")){
+			//$("flash-slideshow-{id}").style.display = "";
+			oHomePageSlides{id}=new iSlideShow({
+			autostart:false,
+			start:0,
+			wait:{slideshow_timer},
+			slides:slideshow{id}_slides,
+			srcs:slideshow{id}_srcs,
+			counter:"slide-counter{id}",
+			caption:"slide-caption{id}",
+			playButton	: "PlayButton{id}",
+			pauseButton	: "PauseButton{id}"
+			});
+			if ($('image-{id}_'+oHomePageSlides{id}.iImageId+'_href').value.length && $('image-{id}_'+oHomePageSlides{id}.iImageId+'_target').value.length) {
+				if ($('image-{id}_'+oHomePageSlides{id}.iImageId+'_target').value == '_blank') {
+					Event.observe("slideshow_overlay{id}","click",function(b){Event.stop(b);window.open($('image-{id}_'+oHomePageSlides{id}.iImageId+'_href').value);});
+				} else {
+					Event.observe("slideshow_overlay{id}","click",function(b){Event.stop(b);location.href = $('image-{id}_'+oHomePageSlides{id}.iImageId+'_href').value;});
+					Event.observe("slide-caption{id}","click",function(b){Event.stop(b);location.href = $('image-{id}_'+oHomePageSlides{id}.iImageId+'_href').value;});
+				}
+			} else {
+				Event.observe("slideshow_overlay{id}","click",function(b){Event.stop(b);oHomePageSlides{id}.goNext();});
+				Event.observe("slide-caption{id}","click",function(b){Event.stop(b);oHomePageSlides{id}.goNext();});
+			}
+		}
+		Event.observe(window,"load",function(){
+			oHomePageSlides{id}.startSlideShow();
+			<!-- BEGIN stop -->
+			setTimeout("oHomePageSlides{id}.stop()", {slideshow_timer});
+			$("show-controls{id}").style.display = 'none';
+			<!-- END stop -->
+		});
+	});
+	Event.observe(window,"resize",sresized{id});
+	</script>
+</div>
+<!-- END slideshow -->
+<!-- BEGIN single -->
+<div id="flash-single-{id}" class="flash-single">
+{layout_content}
+</div>
+<!-- END single -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=FlashGallery_iframe_{id}&resize={bool_resize}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+</div>
+<!-- END layout -->

@@ -1,0 +1,18 @@
+<!-- BEGIN menu -->
+<div class="gadget menu ym-hlist" id="gmenu_{gid}">
+  <!-- BEGIN group_title --><h2 id="layout_{actionName)_title">{title}</h2><!-- END group_title -->
+  <div class="content">
+    {menus_tree}
+  </div>
+</div>
+<!-- END menu -->
+<!-- BEGIN levels -->
+<ul{ul_class}>
+<!-- BEGIN menu_item -->
+  <li id="menu_{mid}"<!-- BEGIN class --> class="menu_li_item<!-- BEGIN current --> menu_current<!-- END current --><!-- BEGIN super --> menu_super<!-- END super --><!-- BEGIN first --> menu_first<!-- END first --><!-- BEGIN last --> menu_last<!-- END last -->"<!-- END class -->>
+	<a href="{url}" target="{target}"{a_class}>{title}<!--[if gt IE 6]><!--></a><!--<![endif]-->
+    <!--[if lte IE 6]><table><tr><td><![endif]-->{sub_menu}<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+  </li>
+<!-- END menu_item -->
+</ul>
+<!-- END levels -->

@@ -6,7 +6,7 @@
  * @package    Layout
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 $actions = array();
@@ -21,3 +21,5 @@ $actions['EditElementAction']     = array('StandaloneAdminAction');
 $actions['ChangeDisplayWhen']     = array('StandaloneAdminAction');
 $actions['AddLayoutElement']      = array('StandaloneAdminAction');
 $actions['SaveAddLayoutElement']  = array('AdminAction');
+$actions['EditCSS']      		  = array('StandaloneAdminAction');
+$actions['SaveCSS']      		  = array('StandaloneAdminAction');

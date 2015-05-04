@@ -25,14 +25,6 @@ class ComboGroup extends Bin
     var $_groups;
 
     /**
-     * Is multiple
-     * @var    boolean $_multiple
-     * @access private
-     * @see setMultiple()
-     */
-    var $_multiple;
-
-    /**
      * Odd/Even row color
      *
      * @var     array  $_colors
@@ -54,7 +46,6 @@ class ComboGroup extends Bin
         $this->_name   = $name;
         $this->_title  = $title;
         $this->_groups = array();
-        $this->_multiple = false;
 
         $oddColor = Piwi::getVarConf('COLOR_ODD');
         if (empty($oddColor)) {
@@ -68,7 +59,7 @@ class ComboGroup extends Bin
         }
         $this->setEvenColor($evenColor);
 
-        $this->_availableEvents = array("onchange", "onclick", "ondblclick", "onmousedown",
+        $this->_availableEvents = array("onclick", "ondblclick", "onmousedown",
                                         "onmouseup", "onmouseover", "onmousemove",
                                         "onmouseout", "onkeypress", "onkeydown", "onkeyup");
         parent::init();
@@ -100,7 +91,6 @@ class ComboGroup extends Bin
      * Add a new Group to the combo group
      *
      * @param   string $group The name of the group
-     * @param   string $title The title of the group
      * @param   array  $options The Options of this group
      * @param   boolean $isdisabled Sometimes a option can be disabled by default
      * @param   string $class The class of the option
@@ -108,84 +98,42 @@ class ComboGroup extends Bin
      *
      * @access  public
      */
-    function addGroup($name, $title, $options = null, $isdisabled = false, $class = '', $style = '')
+    function addGroup($group, &$options, $isdisabled = false, $class = '', $style = '')
     {
-        if (isset($this->_groups[$name])) {
-            return;
+        if (is_array($options) && is_object($options[0])) {
+            if ($options[0]->getClassName() == 'combooption')
+                $this->_groups[$group] = array('options'     => $options,
+                                               'name'        => $group,
+                                               'is_disabled' => $isdisabled,
+                                               'class'       => $class,
+                                               'style'       => $style);
+        } else {
+            die("Sorry, in ComboGroup to add a group you need to give the name of the group and a array of ComboOptions");
         }
-
-        $this->_groups[$name] = array('options'     => array(),
-                                      'name'        => $title,
-                                      'is_disabled' => $isdisabled,
-                                      'class'       => $class,
-                                      'style'       => $style);
-        if (is_array($options) && is_object($options[0]) && $options[0]->getClassName() == 'combooption') {
-            $this->_groups[$group]['options'] = $options;
-        }
-    }
-
-    /**
-     * Add a new Option to the combo
-     *
-     * @param   string $group The name of the group
-     * @param   string $text  The text of the option
-     * @param   string $value The value of the option
-     * @param   boolean $isdisabled Sometimes a option can be disabled by default
-     * @param   string $class The class of the option
-     * @param   string $style The style of the option
-     *
-     * @access  public
-     */
-    function addOption($group, $text, $value, $isdisabled = false, $class = '', $style = '')
-    {
-        $this->_groups[$group]['options'][] = new ComboOption($value,
-                                                              $text,
-                                                              null,
-                                                              false,
-                                                              $isdisabled,
-                                                              $class,
-                                                              $style);
     }
 
     /**
      * Set a key as the selected one
      *
+     * @param   string $group   The group where you think the option is
      * @param   string $default The option that should be marked as selected
      * @access  public
      */
-    function setDefault($key)
+    function setDefault($group, $key)
     {
-        if (!is_array($key)) {
-            foreach ($this->_groups as $gname => $group) {
-                if (count($group['options']) > 0) {
-                    foreach ($group['options'] as $option_id => $option) {
-                        if ($option->getValue() == $key) {
-                            $this->_groups[$gname]['options'][$option_id]->select();
-                        } else {
-                            $this->_groups[$gname]['options'][$option_id]->select(false);
-                        }
+        if (isset ($this->_groups[$group])) {
+            $option_id = 0;
+            if (count($this->_groups[$group]['options']) > 0) {
+                foreach ($this->_groups[$group]['options'] as $group_name => $option) {
+                    if ($option->getValue() == $key || $option->getText() == $key) {
+                        $this->_groups[$group]['options'][$option_id]->select();
+                    } else {
+                        $this->_groups[$group]['options'][$option_id]->select(false);
                     }
-                }
-            }
-        } else {
-            // Is an array
-            if (($this->_multiple) && (count($key) > 0)) {
-                foreach ($key as $k) {
-                    $this->setDefault($k);
+                    $option_id++;
                 }
             }
         }
-    }
-
-    /**
-     * Set multiple flag
-     *
-     * @param   boolean $flag
-     * @access  public
-     */
-    function setMultiple($flag)
-    {
-        $this->_multiple = $flag;
     }
 
     /**
@@ -199,10 +147,6 @@ class ComboGroup extends Bin
 
         if (count($this->_groups) > 0) {
             foreach ($this->_groups as $group) {
-                if (empty($group['options'])) {
-                    continue;
-                }
-
                 $this->_PiwiXML->openElement('group');
                 $this->_PiwiXML->addAttribute('label', $group['name']);
 
@@ -276,25 +220,9 @@ class ComboGroup extends Bin
             $this->_XHTML.= $this->buildBasicXHTML();
             $this->_XHTML.= $this->buildJSEvents();
 
-            if ($this->_multiple) {
-                $this->_XHTML .= ' multiple="multiple"';
-            }
-
-            if (!empty($this->_size)) {
-                $this->_XHTML .= " size=\"".$this->_size."\"";
-            }
-
-            if (!$this->_isEnabled) {
-                $this->_XHTML .= " disabled=\"disabled\"";
-            }
-
             $this->_XHTML.= ">\n";
 
             foreach ($this->_groups as $group) {
-                if (empty($group['options'])) {
-                    continue;
-                }
-
                 $this->_XHTML.= "<optgroup label=\"".$group['name']."\"";
 
                 if (!empty($group['class'])) {
@@ -334,7 +262,8 @@ class ComboGroup extends Bin
                         $this->_XHTML.= " disabled=\"disabled\"";
                     }
 
-                    if ($option->isSelected()) {
+                    $selected = $option->isSelected();
+                    if ($selected) {
                         $this->_XHTML.= " selected=\"selected\"";
                     }
 

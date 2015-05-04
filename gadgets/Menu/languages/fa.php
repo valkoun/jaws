@@ -39,11 +39,11 @@ define('_FA_MENU_CONFIRM_DELETE_GROUP', "آیا شما قصد دارید گرو�
 define('_FA_MENU_CONFIRM_DELETE_MENU', "آیا می‌خواهید منو (%s%) و تمام زیر منوهایش را حذف کنید؟");
 define('_FA_MENU_INCOMPLETE_FIELDS', "برخی از فیلدها به درستی کامل نشده‌اند.");
 define('_FA_MENU_NOTICE_GROUP_CREATED', "گروه جدید ایجاد شد.");
-define('_FA_MENU_NOTICE_GROUP_UPDATED', "گروه دلخواه شما ویرایش شد.");
-define('_FA_MENU_NOTICE_GROUP_DELETED', "گروه دلخواه شما حذف شد.");
+define('_FA_MENU_NOTICE_GROUP_UPDATED', "گروه مورد نظر ویرایش شد.");
+define('_FA_MENU_NOTICE_GROUP_DELETED', "گروه مورد نظر حذف شد.");
 define('_FA_MENU_NOTICE_MENU_CREATED', "منوی جدید ایجاد شد.");
-define('_FA_MENU_NOTICE_MENU_UPDATED', "منوی دلخواه شما ویرایش شد.");
-define('_FA_MENU_NOTICE_MENU_DELETED', "منوی دلخواه شما حذف شد.");
+define('_FA_MENU_NOTICE_MENU_UPDATED', "منوی مورد نظر ویرایش شد.");
+define('_FA_MENU_NOTICE_MENU_DELETED', "منوی مورد نظر حذف شد.");
 define('_FA_MENU_NOTICE_MENU_MOVED', "منو جابجا شد.");
 define('_FA_MENU_NOTICE_GADGETMENUS_DELETED', "منوهایی که به این ابزار مرتبط بودند، حذف شدند.");
 define('_FA_MENU_ERROR_GET_GROUPS', "خطا هنگام دریافت گروههای مربوط به منوها");

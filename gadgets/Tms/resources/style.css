@@ -1,0 +1,131 @@
+#demo-logo  {
+  background:transparent url(../images/demo_top_logo.png) no-repeat scroll 0 0; 
+  width: 318px;
+  height: 71px;
+  float: left;  
+}
+#demo-holder  {
+}
+#demo-button  {
+  position: fixed;
+  right: 0px;
+  top: -5px;
+  z-index: 100;
+}
+#demo-top  {
+	background: url("../images/demo_top_bkgnd.jpg") repeat-x scroll center top transparent;
+    height: 71px;
+    min-width: 950px;
+    position: fixed;
+    width: 100%;
+}     
+
+#demo-top #horizontal_carousel {
+  float: left;  
+  width: 632px;
+  height: 71px;
+  max-width:632px;
+}
+
+#demo-top #horizontal_carousel .carousel_container {
+  width: 570px;
+  max-width:570px;
+}
+
+#demo-top #horizontal_carousel div.carousel_holder {
+  height: 71px;
+}                      
+
+#demo-top #horizontal_carousel div.carousel_holder div.carousel_item {
+  background:transparent url(../images/demo_top_overlay.png) no-repeat scroll 0 0;  
+  width: 98px;
+  height: 71px;
+  max-width:98px;
+}
+
+#demo-top #carousel_navigation {
+  display: none;
+}
+
+#demo-top #horizontal_carousel div.previous_button {
+  background:transparent url(../images/demo_top_left.png) no-repeat scroll center 5px;  
+  height: 71px;
+  width: 31px;
+}     
+
+#demo-top #horizontal_carousel div.previous_button_over {
+  background:transparent url(../images/demo_top_left_over.png) no-repeat scroll center 5px;  
+}     
+
+#demo-top #horizontal_carousel div.previous_button_disabled {
+  background:transparent url(../../../images/blank.gif) no-repeat scroll center 5px;
+}
+
+#demo-top #horizontal_carousel div.next_button {
+  background:transparent url(../images/demo_top_right.png) no-repeat scroll center 5px;  
+  height: 71px;
+  width: 31px;
+}    
+
+#demo-top #horizontal_carousel div.next_button_over {
+  background:transparent url(../images/demo_top_right_over.png) no-repeat scroll center 5px;  
+}     
+
+#demo-top #horizontal_carousel div.next_button_disabled {
+  background:transparent url(../../../images/blank.gif) no-repeat scroll center 5px;
+}
+
+#demo-content {
+  float: none;
+  clear: both;
+}
+
+#demo-content #demo-iframe {
+	margin-top: 71px; 
+	background: transparent url(); 
+	border-right: 0pt; 
+	border-top: 0pt; 
+	border-left: 0pt; 
+	border-bottom: 0pt; 
+	height: 10000px; 
+	width: 100%;
+}
+
+#themes_info {
+    text-align: left;
+}
+
+#themes_info th {
+    color: #3465a4;
+}
+
+#search_div {
+    float: left;
+}
+
+#buttons_area {
+    padding: 0px;
+    border-spacing: 0px;
+    float: right;
+}
+
+#themes_list_area {
+    width: 250px;
+    height: 250px;
+}
+
+#themes_info_area {
+    width: 500px;
+}
+
+#theme_area {
+    width: 100%;
+    height: 350px;
+    max-height: 350px;
+    overflow: auto;
+    border: 1px solid #ccc;
+}
+
+#extra_options {
+    height: 100px;
+}

@@ -64,7 +64,7 @@ class ComboOption
      * @see     select(), isSelected()
      * @access  private
      */
-    var $_isSelected;
+    var $_IsSelected;
 
     /**
      * The disabled status of the option
@@ -105,7 +105,7 @@ class ComboOption
         $this->_isDisabled = $isdisabled;
         $this->_class      = $class;
         $this->_style      = $style;
-        $this->_title      = null;
+        $this->_title      = $text;
     }
 
     /**

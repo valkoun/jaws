@@ -1,0 +1,53 @@
+<!-- BEGIN Groups -->
+{menubar}
+<script type="text/javascript">
+  var incompleteGroupFields = "{incompleteGroupFields}";
+  var permissionsMsg        = "{permissionsMsg}";
+  var users                 = "{users}";
+  var confirmGroupDelete    = "{confirmGroupDelete}";
+  var confirmResetACL       = "{confirmResetACL}";
+</script>
+<table style="width: 100%; border: 1px solid #ccc; padding: 0px; border-spacing: 0.1px; height: 350px; max-height: 350px;">
+  <!-- big work area -->
+  <tr>
+    <td valign="top">
+      {combo_groups}
+      <!-- big combo (groups) -->
+    </td>
+    <td style="width: 100%; vertical-align: top;">
+      <!-- work area -->
+      <div id="work_area">
+      </div>
+    </td>
+    <td style="vertical-align: top;">
+     {right_menu}
+    </td>
+  </tr>
+</table>
+<table style="width: 100%; padding: 0px;">
+  <tr>
+    <td id="buttons">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>{reset_acl}</td>
+          <td>{cancel}</td>
+          <td>{save_acl}</td>
+          <td>{save_group}</td>
+          <td>{add_group}</td>
+        </tr>
+        </table>
+    </td>
+  </tr>
+</table>
+<script type="text/javascript">
+if ($('groups_combo')) {
+	$('groups_combo').selectedIndex = -1;
+}
+<!-- BEGIN default -->
+Event.observe(window, "load",function(){editGroup({id});});
+<!-- END default -->
+<!-- BEGIN addgroup -->
+Event.observe(window, "load",function(){addGroup();});
+<!-- END addgroup -->
+</script>
+<!-- END Groups -->

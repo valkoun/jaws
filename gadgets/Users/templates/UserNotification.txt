@@ -12,7 +12,7 @@
 <!-- END Password -->
 
 <!-- BEGIN Activation -->
-{lbl_activation_link}: {activation_link}
+{lbl_activation_link}: <a href="{activation_link}">{activation_link}</a>
 <!-- END Activation -->
 
 {thanks},

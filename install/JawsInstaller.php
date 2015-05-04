@@ -7,7 +7,7 @@
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Helgi Þormar Þorbjörnsson <dufuz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class JawsInstaller
@@ -41,10 +41,23 @@ class JawsInstaller
     function JawsInstaller($config = null)
     {
         $this->_stage_config = $config;
-        if (file_exists('data.ini')) {
-            $this->_predefined = parse_ini_file('data.ini', true);
-            $this->_isPredefined = true;
-        }
+		$files = array();
+		if ($handle = opendir(INSTALL_PATH)) { 
+			while (false!== ($file = readdir($handle))) { 
+				//find the predefined data ini file
+				if ($file != "." && $file != ".." && $file != "example-external-data.ini" && $file != "example-internal-data.ini" && strtolower(strrchr($file,".")) == '.ini'){  
+					$files[] = $file;
+				} 
+			} 
+			closedir($handle); 
+		}
+		if (isset($files[0])) {
+			if (file_exists($files[0])) {
+				$this->_predefined = parse_ini_file($files[0], true);
+				$this->_isPredefined = true;
+			}
+		}
+
     }
 
     function hasPredefined()
@@ -74,8 +87,8 @@ class JawsInstaller
      */
     function LoadStage($stage, $instance = true)
     {
-        $file = 'stages/' . $stage['file'] . '.php';
-        if (!file_exists($file)) {
+        $file = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'install/stages/' . $stage['file'] . '.php';
+		if (!file_exists($file)) {
             Jaws_Error::Fatal('The ' . $stage['name'] . " stage couldn't be loaded, because " . $stage['file'] . ".php doesn't exist.", __FILE__, __LINE__);
         }
 

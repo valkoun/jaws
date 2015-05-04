@@ -24,8 +24,6 @@ define('_RU_LAYOUT_NEW', "Добавить компонент");
 define('_RU_LAYOUT_BACK', "Вернуться к Панели Управления");
 define('_RU_LAYOUT_CHANGE_DW', "Когда показывать этот компонент");
 define('_RU_LAYOUT_THEME', "Тема");
-define('_RU_LAYOUT_THEME_LOCAL', "Локальные темы");
-define('_RU_LAYOUT_THEME_REMOTE', "Удаленные темы");
 define('_RU_LAYOUT_THEME_CHANGED', "Тема изменена");
 define('_RU_LAYOUT_CONFIRM_DELETE', "Вы уверены, что хотите удалить компонент?");
 define('_RU_LAYOUT_REQUESTED_GADGET', "Запрошенный компонент");

@@ -7,7 +7,7 @@
  * @category   Shared
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Shared
@@ -18,7 +18,7 @@ class Jaws_Shared
      * @access  public
      * @param   string   $gadget  Gadget name that has the shared method
      * @param   string   $method  Shared method
-     * @return  bool     True(Success) or Jaws_Error(Failure)
+     * @return  boolean  True(Success) or Jaws_Error(Failure)
      */
     function AddNewMethod($gadget, $method)
     {
@@ -37,8 +37,7 @@ class Jaws_Shared
 
         $howmany = $GLOBALS['db']->queryOne($sql, $params);
         if (PEAR::isError($howmany) || $howmany > '0') {
-            return new Jaws_Error(_t('SHARED_METHOD_NOT_ADDED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_NOT_ADDED'), 'CORE');
         }
 
         $sql = "
@@ -49,8 +48,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('SHARED_METHOD_NOT_ADDED'),
-                                  __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_NOT_ADDED'), 'CORE');
         }
 
         return true;
@@ -62,14 +60,13 @@ class Jaws_Shared
      * @access  public
      * @param   string   $gadget  Gadget name that has the shared method
      * @param   string   $method  Shared method
-     * @return  bool     True(Success) or Jaws_Error(Failure)
+     * @return  boolean  True(Success) or Jaws_Error(Failure)
      */
     function DeleteMethod($gadget, $method)
     {
         $result = $this->DeleteAllMethodAccess($gadget, $method);
         if (Jaws_Error::isError($result)) {
-            return new Jaws_Error(_t('SHARED_METHOD_NOT_DELETED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_NOT_DELETED'), 'CORE');
         }
 
         $params           = array();
@@ -85,8 +82,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('SHARED_METHOD_NOT_DELETED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_NOT_DELETED'), 'CORE');
         }
 
         return true;
@@ -107,8 +103,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryAll($sql);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetSharedMethods'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetSharedMethods'), 'CORE');
         }
 
         return $res;
@@ -134,8 +129,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryAll($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetSharedMethodsOfGadget'),
-                                  __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetSharedMethodsOfGadget'), 'CORE');
         }
 
         return $res;
@@ -145,7 +139,7 @@ class Jaws_Shared
      * Gets information of a shared method by giving its shared method ID
      *
      * @access  public
-     * @param   int      $id  id of method
+     * @param   integer  $id  id of method
      * @return  array    Properties of a shared method
      */
     function GetSharedMethodByID($id)
@@ -161,8 +155,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryAll($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetSharedMethodByID'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetSharedMethodByID'), 'CORE');
         }
 
         return $res;
@@ -194,14 +187,13 @@ class Jaws_Shared
      * @param   int      $shared   ID of shared method
      * @param   string   $source   Source to accept, drop or reject
      * @param   string   $type     Type of rule (ACCEPT, DROP or REJECT)
-     * @return  bool     True(Success) or Jaws_Error(Failure)
+     * @return  boolean  True(Success) or Jaws_Error(Failure)
      */
     function AddNewAccess($shared, $source = '*', $type = 'ACCEPT')
     {
         $allowedTypes = array('ACCEPT', 'DROP', 'REJECT');
         if (!in_array($type, $allowedTypes)) {
-            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_ADDED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_ADDED'), 'CORE');
         }
 
         $params = array();
@@ -223,8 +215,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_ADDED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_ADDED'), 'CORE');
         }
 
         return true;
@@ -238,14 +229,13 @@ class Jaws_Shared
      * @param   int      $shared   Shared method
      * @param   string   $source   Source to accept, drop or reject
      * @param   string   $type     Type of rule (ACCEPT, DROP or REJECT)
-     * @return  bool     True(Success) or Jaws_Error(Failure)
+     * @return  boolean  True(Success) or Jaws_Error(Failure)
      */
     function UpdateAccess($rule, $shared, $source = '*', $type = 'ACCEPT')
     {
         $allowedTypes = array('ACCEPT', 'DROP', 'REJECT');
         if (!in_array($type, $allowedTypes)) {
-            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_ADDED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_ADDED'), 'CORE');
         }
 
         $params = array();
@@ -270,8 +260,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_UPDATED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_UPDATED'), 'CORE');
         }
 
         return true;
@@ -282,7 +271,7 @@ class Jaws_Shared
      *
      * @access  public
      * @param   string   $id      Shared method rule
-     * @return  bool     True(Success) or Jaws_Error(Failure)
+     * @return  boolean  True(Success) or Jaws_Error(Failure)
      */
     function DeleteAccess($id)
     {
@@ -296,8 +285,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_DELETED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_DELETED'), 'CORE');
         }
 
         return true;
@@ -309,7 +297,7 @@ class Jaws_Shared
      * @access  public
      * @param   string   $gadget  Gadget name that has the shared method
      * @param   string   $method  Shared method
-     * @return  bool     True(Success) or Jaws_Error(Failure)
+     * @return  boolean  True(Success) or Jaws_Error(Failure)
      */
     function DeleteAllMethodAccess($gadget, $method)
     {
@@ -325,15 +313,13 @@ class Jaws_Shared
 
             $res = $GLOBALS['db']->query($sql, $params);
             if (Jaws_Error::IsError($res)) {
-                return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_DELETED'),
-                                      __FUNCTION__);
+                return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_DELETED'), 'CORE');
             }
 
             return true;
         }
 
-        return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_DELETED'),
-                                 __FUNCTION__);
+        return new Jaws_Error(_t('SHARED_METHOD_RULE_NOT_DELETED'), 'CORE');
     }
 
     /**
@@ -355,8 +341,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryRow($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRules'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRules'), 'CORE');
         }
 
         return $res;
@@ -377,8 +362,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryAll($sql);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRules'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRules'), 'CORE');
         }
 
         return $res;
@@ -404,8 +388,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryAll($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRulesByID'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRulesByID'), 'CORE');
         }
 
         return $res;
@@ -499,8 +482,7 @@ class Jaws_Shared
 
         $res = $GLOBALS['db']->queryAll($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRulesByID'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetAccessRulesByID'), 'CORE');
         }
 
         return $res;
@@ -532,7 +514,7 @@ class Jaws_Shared
      * @param   string   $method  Shared method
      * @param   string   $md5     MD5Key. It should be the URL on the other side but in MD5.
      * @param   string   $type    Type of access (by default uses the one in registry)
-     * @return  bool     True if user can use the method
+     * @return  boolean  True if user can use the method
      */
     function HasAccess($gadget, $method, $md5, $type = '')
     {
@@ -587,8 +569,7 @@ class Jaws_Shared
                     break;
                 case 'REJECT':
                     //REJECT is like DROP but returns an error with a message
-                    return new Jaws_Error(_t('SHARED_METHOD_NOT_GRANTED'),
-                                             __FUNCTION__);
+                    return new Jaws_Error(_t('SHARED_METHOD_NOT_GRANTED'), 'CORE');
                     break;
                 default:
                     return false;
@@ -603,8 +584,7 @@ class Jaws_Shared
                 return false;
             }
 
-            return new Jaws_Error(_t('SHARED_METHOD_NOT_GRANTED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('SHARED_METHOD_NOT_GRANTED'), 'CORE');
         }
     }
 
@@ -634,8 +614,7 @@ class Jaws_Shared
             return $id;
         }
 
-        return new Jaws_Error(_t('SHARED_METHOD_NOT_EXISTS'),
-                                 __FUNCTION__);
+        return new Jaws_Error(_t('SHARED_METHOD_NOT_EXISTS'), 'CORE');
     }
-
 }
+?>

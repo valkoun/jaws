@@ -8,7 +8,7 @@
  * @category   AntiSpamFilters
  * @package    AntiSpam
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class HttpBl 
@@ -37,7 +37,7 @@ class HttpBl
      *  - If ApiKey isn't empty
      *  - Requesting httpbl returns true if key is valid
      *
-     * @access  private
+     * @access private
      */
     var $IsKeyValid;
     
@@ -52,8 +52,10 @@ class HttpBl
         $this->Version = '0.1';
         if (!$this->VerifyKey()) {
             $this->IsKeyValid = false;
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR, 'Invalid ProjectHoneyPot Key, please check your Registry: '.
-                                 '/gadgets/Policy/prjhoneypot_key');
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, 'Invalid ProjectHoneyPot Key, please check your Registry: '.
+                                     '/gadgets/Policy/prjhoneypot_key');
+            }
         } else {
             $this->IsKeyValid = true;
         }
@@ -63,31 +65,31 @@ class HttpBl
      * Verify if key exists, and if it exists if it's not empty
      *
      * @access  private
-     * @return  bool    Is key valid?
+     * @return  boolean Is key valid?
      */
     function VerifyKey()
     {
-        if (!$GLOBALS['app']->Registry->KeyExists('/gadgets/Policy/prjhoneypot_key')) {
-            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/prjhoneypot_key', 'UNDEFINED');
-            $GLOBALS['app']->Registry->Commit('Policy');
+        if (!$GLOBALS['app']->Registry->KeyExists('/gadgets/AntiSpam/prjhoneypot_key')) {
+            $GLOBALS['app']->Registry->NewKey('/gadgets/AntiSpam/prjhoneypot_key', 'UNDEFINED');
+            $GLOBALS['app']->Registry->Commit('AntiSpam');
         } 
-        $value = $GLOBALS['app']->Registry->Get('/gadgets/Policy/prjhoneypot_key');
+        $value = $GLOBALS['app']->Registry->Get('/gadgets/AntiSpam/prjhoneypot_key');
         return (!empty($value) && $value !== 'UNDEFINED');
     }
     
     /**
      * Checks if user IP is marked as spam at HttpBl
      *
-     * @param   string $permalink  Permalink of post
-     * @param   string $type       Component's name
-     * @param   string $name       Author's name
-     * @param   string $email      Author's email
-     * @param   string $message    Author's message
+     * @param string $permalink  Permalink of post
+     * @param string $type       Component's name
+     * @param string $name       Author's name
+     * @param string $email      Author's email
+     * @param string $message    Author's message
      *
      * As a note: Any of the params are really taken since
      * we need the user's IP
      *
-     * @return  bool    Is it spam returns true otherwise we return false
+     * @return boolean Is it spam returns true otherwise we return false
      */
     function IsSpam($permalink, $type, $author, $author_email, $author_url, $content)
     {
@@ -119,11 +121,11 @@ class HttpBl
      * Since there's no real 'server' way to tell HttpBl a comment was a 
      * spam then we do nothing in this one
      *
-     * @param   string $permalink  Permalink of post
-     * @param   string $type       Component's name
-     * @param   string $name       Author's name
-     * @param   string $email      Author's email
-     * @param   string $message    Author's message
+     * @param string $permalink  Permalink of post
+     * @param string $type       Component's name
+     * @param string $name       Author's name
+     * @param string $email      Author's email
+     * @param string $message    Author's message
      *
      * @access  public
      */
@@ -136,11 +138,11 @@ class HttpBl
      * Since there's no real 'server' way to tell HttpBl a comment was ham
      * then we do nothing in this one
      *
-     * @param   string $permalink  Permalink of post
-     * @param   string $type       Component's name
-     * @param   string $name       Author's name
-     * @param   string $email      Author's email
-     * @param   string $message    Author's message
+     * @param string $permalink  Permalink of post
+     * @param string $type       Component's name
+     * @param string $name       Author's name
+     * @param string $email      Author's email
+     * @param string $message    Author's message
      *
      * @access  public
      */
@@ -148,5 +150,5 @@ class HttpBl
     {
         return true;
     }
-
 }
+?>

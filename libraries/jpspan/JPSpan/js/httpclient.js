@@ -70,6 +70,7 @@ JPSpan_HttpClient.prototype = {
 
         request.type = 'sync';
         request.prepare(this.xmlhttp);
+        this.xmlhttp.setRequestHeader('Accept-Charset','UTF-8');
         request.send();
         
         if ( this.xmlhttp.status == 200 ) {
@@ -117,6 +118,7 @@ JPSpan_HttpClient.prototype = {
         
         request.type = 'async';
         request.prepare(this.xmlhttp);
+        this.xmlhttp.setRequestHeader('Accept-Charset','UTF-8');
 
         var self = this;
 

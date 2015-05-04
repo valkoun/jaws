@@ -24,7 +24,6 @@ define('_TR_URLMAPPER_MAPS_ADD_TITLE', "Harita ekle");
 define('_TR_URLMAPPER_MAPS_EDIT_TITLE', "Haritayı Düzenle");
 define('_TR_URLMAPPER_MAPS_ROUTE', "Harita yönlendirme");
 define('_TR_URLMAPPER_MAPS_REGEXP', "Düzenli ifade");
-define('_TR_URLMAPPER_MAPS_EXTENSION', "Eklenti");
 define('_TR_URLMAPPER_MAPS_PARAM_NAME', "İsim");
 define('_TR_URLMAPPER_MAPS_PARAM_TYPE', "Tür");
 define('_TR_URLMAPPER_MAPS_PARAM_LENGTH', "Uzunluk");

@@ -38,7 +38,7 @@
 $('{combo_name}').selectedIndex = -1;
 if ($('{combo_name}').options.length == 0) { //No installed components, lets check uninstalled
   $('only_show').selectedIndex = 1;
-  updateView();
+  Event.observe(window, "load",function(){updateView();});
 } else {
   $('only_show').selectedIndex = 0;
 }

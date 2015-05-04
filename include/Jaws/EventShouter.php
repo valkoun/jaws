@@ -1,14 +1,12 @@
 <?php
 /**
- * Class that takes care of 'shouting' events to the Jaws environment so
- * other gadgets can 'hear' it. The event stuff can be something like
- * Tarzan, where EventShouter (this class) is Tarzan and the EventListener
- * are his monkey friends...
+ * Event Listeners/Shouters. Built-in and custom event management so gadgets can subscribe/broadcast when certain actions occur. 
  *
  * @category   Event
+ * @category   feature
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_EventShouter
@@ -19,7 +17,7 @@ class Jaws_EventShouter
      * @access  public
      * @param   string  $gadget  Gadget name that shouts
      * @param   string  $call    Call name
-     * @return  bool    True if shouter was added, otherwise returns Jaws_Error
+     * @return  boolean True if shouter was added, otherwise returns Jaws_Error
      */
     function NewShouter($gadget, $call)
     {
@@ -35,8 +33,7 @@ class Jaws_EventShouter
 
         $rs = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($rs)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_NOT_ADDED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_NOT_ADDED'), 'CORE');
         }
 
         return true;
@@ -48,7 +45,7 @@ class Jaws_EventShouter
      * @access  public
      * @param   string  $gadget  Gadget name
      * @param   string  $call    Call name
-     * @return  bool    True if shouter was deleted, otherwise returns Jaws_Error
+     * @return  boolean True if shouter was deleted, otherwise returns Jaws_Error
      */
     function DeleteShouter($gadget, $call)
     {
@@ -65,8 +62,7 @@ class Jaws_EventShouter
 
         $rs = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($rs)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_NOT_DELETED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_NOT_DELETED'), 'CORE');
         }
 
         return true;
@@ -79,18 +75,46 @@ class Jaws_EventShouter
      * @param   string  $gadget  Gadget name
      * @param   mixed   $param   Param that is send to the listener, can be a
      *                           string, int, array, object, etc.
-     * @return  bool    True if shouter didn't returned a Jaws_Error, otherwise returns Jaws_Error
+     * @return  boolean True if shouter didn't returned a Jaws_Error, otherwise returns Jaws_Error
      */
     function Shout($call, $param)
     {
         $GLOBALS['app']->loadClass('Listener', 'Jaws_EventListener');
         $res = $GLOBALS['app']->Listener->Listen($call, $param);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'), 'CORE');
         }
-
-        return $res;
+		
+		// Content updated? Update the site's last_update registry key.
+		if (
+			substr(strtolower($call), 0, 5) == 'onadd' || 
+			substr(strtolower($call), 0, 8) == 'onupdate' || 
+			substr(strtolower($call), 0, 8) == 'ondelete' || 
+			substr(strtolower($call), 0, 8) == 'onremove'
+		) {
+			if (!isset($GLOBALS['app']->Registry)) {
+				$GLOBALS['app']->loadClass('Registry', 'Jaws_Registry');
+			}
+			$GLOBALS['app']->Registry->UpdateLastUpdate();
+		}
+		
+		// Call custom hook?
+		if (JAWS_SCRIPT != 'rest' && JAWS_SCRIPT != 'xmlrpc' && JAWS_SCRIPT != 'install') {
+			if (file_exists(JAWS_DATA . 'hooks' . DIRECTORY_SEPARATOR . 'Shout.php')) {
+				include_once JAWS_DATA . 'hooks' . DIRECTORY_SEPARATOR . 'Shout.php';
+				$hook = new ShoutHook;
+				if (method_exists($hook, $call)) {
+					$res = $hook->$call($param);
+					if ($res === false || Jaws_Error::IsError($res)) {
+						//return $res;
+						return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'), 'CORE');
+					} else if (isset($res['return'])) {
+						return $res['return'];
+					}
+				}
+			}
+		}
+        return true;
     }
 
     /**
@@ -110,8 +134,7 @@ class Jaws_EventShouter
 
         $res = $GLOBALS['db']->queryAll($sql, array('id' => $id));
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetShouter'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetShouter'), 'CORE');
         }
 
         return $res;
@@ -132,8 +155,7 @@ class Jaws_EventShouter
 
         $res = $GLOBALS['db']->queryRow($sql);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetShouters'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetShouters'), 'CORE');
         }
 
         return $res;

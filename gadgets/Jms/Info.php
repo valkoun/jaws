@@ -6,36 +6,30 @@
  * @package    JMS
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Helgi þormar <dufuz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class JmsInfo extends Jaws_GadgetInfo
 {
     /**
-     * Gadget version
+     * Sets info about Users gadget
      *
-     * @var     string
-     * @access  private
+     * @access  public
      */
-    var $_Version = '0.2.0';
+    function JmsInfo()
+    {
+        parent::Init('Jms');
+        $this->GadgetName(_t('JMS_NAME'));
+        $this->GadgetDescription(_t('JMS_DESCRIPTION'));
+        $this->GadgetVersion('0.2.0');
+        //$this->Doc('gadgets/Jms');
+        $this->SetAttribute('core_gadget', true);
 
-    /**
-     * Is this gadget core gadget?
-     *
-     * @var    boolean
-     * @access  private
-     */
-    var $_IsCore = true;
-
-    /**
-     * Gadget ACLs
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_ACLs = array(
-        'ManageGadgets',
-        'ManagePlugins',
-    );
-
+        $acls = array(
+            'ManageJms',
+            'ManageGadgets',
+            'ManagePlugins',
+        );
+        $this->PopulateACLs($acls);
+    }
 }

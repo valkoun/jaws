@@ -4,7 +4,7 @@
  * @category   Ajax
  * @package    Search
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 /**
@@ -24,7 +24,7 @@ function saveChanges(form)
     var useWith = form.elements['use_with'].value;
     if (useWith == 'selected') {
         var pattern = /^gadgets\[\]/;
-        var gadgets = [];
+        var gadgets = new Object();
         var option  = null;
         var counter = 0;
         for(i=0; i<form.elements.length; i++) {

@@ -20,17 +20,26 @@ define('_EN_CONTROLPANEL_ACL_BACKUP', "Backup");
 /* Component Names */
 define('_EN_CONTROLPANEL_GENERAL', "General");
 define('_EN_CONTROLPANEL_GENERAL_BACKUP', "Backup");
+define('_EN_CONTROLPANEL_GENERAL_STATISTICS', "Statistics");
 define('_EN_CONTROLPANEL_GENERAL_VIEWSITE', "View Site");
 define('_EN_CONTROLPANEL_GADGETS', "Gadgets");
 
 /* Login Form */
 define('_EN_CONTROLPANEL_LOGIN_BAD_AUTH', "You entered the wrong username and/or password.");
 define('_EN_CONTROLPANEL_LOGIN_LOST_PASSWORD', "Lost your password?");
-define('_EN_CONTROLPANEL_AUTH_METHOD', "Authentication Method");
 define('_EN_CONTROLPANEL_LOGIN_BACK_TO_SITE', "Back to site");
 define('_EN_CONTROLPANEL_LOGIN_TITLE', "Login");
+define('_EN_CONTROLPANEL_LOGIN_SECURE', "Secure login");
 
 /* Layout strings */
 define('_EN_CONTROLPANEL_LOGGED_IN_AS', "Logged in as");
 define('_EN_CONTROLPANEL_UNSAVED_CHANGES', "You have unsaved changes in this page");
 define('_EN_CONTROLPANEL_OFFLINE_WARNING', "Warning: website is offline!");
+define('_EN_CONTROLPANEL_BACKUP_CREATED', "Database Backup successfully finished");
+define('_EN_CONTROLPANEL_BACKUP_RESTORED', "Database Backup successfully restored");
+
+/* Error strings */
+define('_EN_CONTROLPANEL_ERROR_BACKUP_NOTCREATED', "Database Backup could not be created");
+define('_EN_CONTROLPANEL_ERROR_CANT_READ_BACKUP_DIR', "The Backup directory could not be found. A directory in 'data/db' should be created.");
+define('_EN_CONTROLPANEL_ERROR_BACKUP_NOT_FOUND', "The data directory could not be found");
+define('_EN_CONTROLPANEL_ERROR_BACKUP_NOTRESTORED', "Database Backup could not be restored");

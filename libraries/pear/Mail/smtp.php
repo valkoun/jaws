@@ -40,7 +40,7 @@
  * @author      Chuck Hagenbuch <chuck@horde.org>
  * @copyright   2010 Chuck Hagenbuch
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: smtp.php 307488 2011-01-14 19:00:54Z alec $
+ * @version     CVS: $Id: smtp.php 294747 2010-02-08 08:18:33Z clockwerx $
  * @link        http://pear.php.net/package/Mail/
  */
 
@@ -69,7 +69,7 @@ define('PEAR_MAIL_SMTP_ERROR_DATA', 10006);
  * SMTP implementation of the PEAR Mail interface. Requires the Net_SMTP class.
  * @access public
  * @package Mail
- * @version $Revision: 307488 $
+ * @version $Revision: 294747 $
  */
 class Mail_smtp extends Mail {
 
@@ -304,7 +304,7 @@ class Mail_smtp extends Mail {
         }
 
         /* Send the message's headers and the body as SMTP data. */
-        $res = $this->_smtp->data($body, $textHeaders);
+        $res = $this->_smtp->data($textHeaders . "\r\n\r\n" . $body);
         list(,$args) = $this->_smtp->getResponse();
 
         if (preg_match("/Ok: queued as (.*)/", $args, $queued)) {
@@ -346,10 +346,9 @@ class Mail_smtp extends Mail {
         }
 
         include_once 'Net/SMTP.php';
-        $this->_smtp = new Net_SMTP($this->host,
+        $this->_smtp = &new Net_SMTP($this->host,
                                      $this->port,
-                                     $this->localhost,
-                                     $this->pipelining);
+                                     $this->localhost);
 
         /* If we still don't have an SMTP object at this point, fail. */
         if (is_object($this->_smtp) === false) {

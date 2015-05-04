@@ -1,12 +1,13 @@
 <?php
 /**
- * Class that deals like a wrapper between Jaws and pear/Mail
+ * Mail sending support. A wrapper between Jaws and pear/Mail
  *
  * @category   Mail
+ * @category   developer_feature
  * @package    Core
  * @author     David Coallier <davidc@agoraproduction.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Mail
@@ -14,54 +15,54 @@ class Jaws_Mail
     // {{{ Variables
     /**
      * The mailer type
-     * @param   string $mailer The mailer type
+     * @param string $mailer The mailer type
      */
     var $mailer = '';
 
     // {{{ Variables
     /**
      * Send email via this email
-     * @param   string $gate_email The default site email address
+     * @param string $site_email The default site email address
      */
-    var $gate_email = '';
+    var $site_email = '';
 
     // {{{ Variables
     /**
      * From name
-     * @param   string $gate_title The default site email name
+     * @param string $email_name The default site email name
      */
-    var $gate_title = '';
+    var $email_name = '';
 
     /**
      * SMTP email verification?
-     * @param   bool    $smtp_vrfy SMTP email verification?
+     * @param boolean $smtp_vrfy SMTP email verification?
      */
     var $smtp_vrfy = false;
 
     // {{{ Variables
     /**
      * The server infos (host,login,pass)
-     * @param   array $server The server infos
+     * @param array $server The server infos
      */
     var $params = array();
 
     /**
      * The email recipients.
-     * @param   array $recipients The recipients.
+     * @param array $recipients The recipients.
      */
     var $recipient = array();
 
     /**
      * The email headers
      *
-     * @param   array string $headers The headers of the mail.
+     * @param array string $headers The headers of the mail.
      */
     var $headers = array();
 
     /**
      * The crlf character(s)
      *
-     * @param   string $crlf
+     * @param string $crlf
      */
     var $crlf = "\n";
 
@@ -83,8 +84,9 @@ class Jaws_Mail
     {
         require_once 'Mail.php';
         require_once 'Mail/mime.php';
+        require_once JAWS_PATH . 'include/Jaws/UTF8.php';
         $this->mail_mime = new Mail_Mime($this->crlf);
-        $this->headers['Subject'] = '';
+
         if ($init) {
             $this->Init();
         }
@@ -94,19 +96,18 @@ class Jaws_Mail
      * This function loads the mail settings from
      * the registry.
      *
-     * @access  public
+     * @access public
      */
     function Init()
     {
         if (!isset($GLOBALS['app'])) {
-            return new Jaws_Error('$GLOBALS[\'app\'] not available',
-                                  __FUNCTION__);
+            return new Jaws_Error('$GLOBALS[\'app\'] not available', 'MAIL', JAWS_ERROR_ERROR);
         }
 
         // Get the Mail settings data from Registry
         $this->mailer     = $GLOBALS['app']->Registry->Get('/network/mailer');
-        $this->gate_email = $GLOBALS['app']->Registry->Get('/network/gate_email');
-        $this->gate_title = $GLOBALS['app']->Registry->Get('/network/gate_title');
+        $this->site_email = $GLOBALS['app']->Registry->Get('/network/site_email');
+        $this->email_name = $GLOBALS['app']->Registry->Get('/network/email_name');
         $this->smtp_vrfy  = $GLOBALS['app']->Registry->Get('/network/smtp_vrfy') == 'true';
 
         $params = array();
@@ -126,82 +127,80 @@ class Jaws_Mail
     /**
      * This adds a recipient to the mail to send.
      *
-     * @param   string $recipient     The recipient to add.
-     * @param   string $inform_type   Inform type(To, Bcc, Cc)
-     * @access  public
-     * @return  string recipients
+     * @param string $recipient  The recipient to add.
+     * @param string $valid      Do we validate the email ?
+     * @param bool $checkdns   Do we check the MX record ?
+     * @access public
+     * @return string recipients
      */
-    function AddRecipient($recipient = '', $inform_type = 'To')
+    function AddRecipient($recipient, $valid = true, $checkdns = false)
     {
-        if (empty($recipient)) {
-            $recipient = $this->gate_email;
-            if (!empty($this->gate_title)) {
-               $recipient = $this->gate_title . ' <'. $recipient. '>';
+        if (trim($recipient) !== '') {
+            if ($valid) {
+                require_once 'Validate.php';
+                if (!Validate::email($recipient, $checkdns)) {
+                    return false;
+                }
             }
+
+            $this->recipient[] = $recipient;
+            return true;
         }
 
-        switch (strtolower($inform_type)) {
-            case 'to':
-                $this->headers['To'] = (array_key_exists('To', $this->headers)? ($this->headers['To']. ', ') : ''). $recipient;
-                break;
-            case 'cc':
-                $this->headers['Cc'] = (array_key_exists('Cc', $this->headers)? ($this->headers['Cc']. ', ') : ''). $recipient;
-                break;
-        }
-
-        if (substr($recipient, -1) == '>' && substr($recipient, 0, 1) != '<') {
-            $parts = array_filter(explode('<', $recipient));
-            $parts[0] = Jaws_UTF8::encode_mimeheader(Jaws_UTF8::trim($parts[0]));
-            $recipient = implode('<', $parts);
-        }
-
-        $this->recipient[] = $recipient;
-        return true;
+        return false;
     }
 
     /**
-     * This function sets the subject of the email to send.
+     * This function sets the headers of the email to send.
      *
-     * @param   string $subject       Subject of the email.
-     * @access  public
-     * @return  void
+     * @param string $to       Send to.
+     * @param string $from     Who the email is from.
+     * @param string $subject  Subject of the email.
+     * @access protected
+     * @return array string headers
      */
-    function SetSubject($subject = '')
-    {
-        $this->headers['Subject'] = $subject;
-    }
-
-    /**
-     * This function sets the from of the email to send.
-     *
-     * @param   string $from_email    Who the email is from(E-mail address).
-     * @param   string $from_name     Who the email is from(name).
-     * @access  public
-     * @return  voild
-     */
-    function SetFrom($from_email = '', $from_name = '')
+    function SetHeaders($to = '', $from_name = '', $from_email = '', $subject = '')
     {
         if ($this->smtp_vrfy) {
-            $replyTo    = $from_name . ' <'.$from_email.'>';
-            $from_name  = $this->gate_title;
-            $from_email = $this->gate_email;
+            $subject    = $from_name . ' <' . $from_email . '> : ' . $subject;
+            $from_name  = $this->email_name;
+            $from_email = $this->site_email;
         } else {
-            $from_name  = empty($from_email)? $this->gate_title : $from_name;
-            $from_email = empty($from_email)? $this->gate_email : $from_email;
+            $from_name  = empty($from_name)? $this->email_name : $from_name;
+            $from_email = empty($from_email)? $this->site_email : $from_email;
         }
 
-        $this->headers['From'] = $from_name . ' <'.$from_email.'>';
-        $this->headers['Reply-To'] = isset($replyTo)? $replyTo : $this->headers['From'];
+        $params = array();
+        $params['To'] = empty($to)? $this->site_email : $to;
+        $params['Subject'] = $subject;
+        if ($this->mailer == 'phpmail') {
+            $params['From'] = $from_email;
+        } else {
+            $params['From'] = Jaws_UTF8::encode_mimeheader($from_name) . ' <'.$from_email.'>';
+        }
+
+        return $this->headers = $params;
+    }
+
+    /**
+     * This function returns the set headers.
+     *
+     * @access public
+     * @return $this->headers
+     */
+    function GetHeaders()
+    {
+        return $this->headers;
     }
 
     /**
      * This function sets the body, the structure
      * of the email, what's in it..
      *
-     * @param   string $body   The body of the email
-     * @param   string $format The format to use.
-     * @access  protected
-     * @return  string $body
+     * @param string $body   The body of the email
+     * @param string $format The format to use.
+     * @access protected
+     * @return string $body
      */
     function SetBody($body, $format = 'html')
     {
@@ -232,8 +231,11 @@ class Jaws_Mail
     /**
      * This function sends the email
      *
-     * @access  public
-     * @return  mixed
+     * @param array string recipients The recipients
+     * @param array string headers    The email headers
+     * @param       string from       The email sender
+     * @param       string body       The email body
+     * @access public
      */
     function send()
     {
@@ -253,23 +255,37 @@ class Jaws_Mail
         }
 
         $realbody = $this->mail_mime->get(array('html_encoding' => '8bit',
-                                                'text_encoding' => '8bit',
-                                                'head_encoding' => 'base64',
-                                                'html_charset'  => 'utf-8',
-                                                'text_charset'  => 'utf-8',
-                                                'head_charset'  => 'utf-8',
-                                                ));
-
-        if (empty($this->recipient)) {
-            $this->AddRecipient();
-        }
+                                     'text_encoding' => '8bit',
+                                     'head_encoding' => 'base64',
+                                     'html_charset'  => 'utf-8',
+                                     'text_charset'  => 'utf-8',
+                                     'head_charset'  => 'utf-8',
+                                    ));
 
         $headers  = $this->mail_mime->headers($this->headers);
-        $res = $mail->send($this->recipient, $headers, $realbody);
-        if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+        if (empty($this->recipient)) {
+            $this->recipient[] = $this->site_email;
         }
+
+		if (!isset($GLOBALS['log'])) {
+			require_once JAWS_PATH . 'include/Jaws/Log.php';
+			$GLOBALS['log'] = new Jaws_Log();
+		}
+        
+		$log_opts = array();
+        $log_opts['file'] = JAWS_DATA ."logs/mail.log";
+        $log_opts['maxlines'] = 20000;
+        $log_opts['rotatelimit'] = 1;
+        
+		$e = $mail->send($this->recipient, $headers, $realbody);
+        if (PEAR::isError($e)) {
+			$GLOBALS['log']->Log(JAWS_LOG_INFO, '[mail_failure]: '. $e->getMessage() .': '. var_export(array('headers' => $headers, 'recipient' => $this->recipient, 'body' => $realbody), true), $log_opts);
+            return new Jaws_Error($e->getMessage());
+        } else {
+			$GLOBALS['log']->Log(JAWS_LOG_INFO, '[mail_sent]: '. var_export(array('headers' => $headers, 'recipient' => $this->recipient, 'body' => $realbody), true), $log_opts);
+		}
+        
+
 
         return true;
     }
@@ -281,9 +297,7 @@ class Jaws_Mail
      */
     function ResetValues()
     {
-        $this->headers = array();
-        $this->headers['Subject'] = '';
-
+        $this->headers   = array();
         $this->recipient = array();
         unset($this->mail_mime);
         $this->mail_mime = new Mail_Mime($this->crlf);

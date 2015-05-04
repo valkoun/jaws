@@ -1,0 +1,3170 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<database>
+
+ <name><variable>database</variable></name>
+
+ <table>
+  <name><variable>table_prefix</variable>propertyparent</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Residential - Houses</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Residential---Houses</value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>1</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Residential - Land</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Residential---Land</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>2</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Commercial</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Commercial</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>3</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Commercial - Land</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Commercial---Land</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>4</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>By Owner - Houses</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>By-Owner---Houses</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>5</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>By Owner - Land</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>By-Owner---Land</value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>6</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>By Owner - Commercial</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>By-Owner---Commercial</value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>7</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>New Construction</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>New-Construction</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>8</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Vacation Rentals</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Vaction-Rentals</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>9</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Cabins</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Cabins</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>10</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Bed and Breakfasts</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Bed-and-Breakfasts</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>11</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Hotels</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Hotels</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>12</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Lodges</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Lodges</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>13</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Condominiums</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Condominiums</value>
+      </field>
+   </insert>
+   <insert>
+      <field>
+        <name>propertyparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>propertyparentsort_order</name>
+        <value>14</value>
+      </field>
+
+     <field>
+        <name>propertyparentcategory_name</name>
+        <value>Other</value>
+      </field>
+
+	  <field>
+        <name>propertyparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>propertyparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>propertyparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>propertyparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+	  
+	  <field>
+        <name>propertyparentfast_url</name>
+        <value>Other</value>
+      </field>
+   </insert>
+   </initialization>
+
+ </table>
+
+   <table>
+  <name><variable>table_prefix</variable>resdates</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>datename</name>
+        <value>Low Season Rates</value>
+      </field>
+
+     <field>
+        <name>startdate</name>
+        <value>2009-01-07 00:00:00</value>
+      </field>
+
+	  <field>
+        <name>enddate</name>
+        <value>2009-04-01 00:00:00</value>
+      </field>
+
+      <field>
+        <name>description</name>
+        <value>These are the rates for our Low Season.</value>
+      </field>
+
+      <field>
+        <name>featured</name>
+        <value>N</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+   <insert>
+      <field>
+        <name>datename</name>
+        <value>Mid Season Rates</value>
+      </field>
+
+     <field>
+        <name>startdate</name>
+        <value>2009-04-02 00:00:00</value>
+      </field>
+
+	  <field>
+        <name>enddate</name>
+        <value>2009-06-01 00:00:00</value>
+      </field>
+
+      <field>
+        <name>description</name>
+        <value>These are the rates for our Mid Season.</value>
+      </field>
+
+      <field>
+        <name>featured</name>
+        <value>N</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+   <insert>
+      <field>
+        <name>datename</name>
+        <value>Peak Season Rates</value>
+      </field>
+
+     <field>
+        <name>startdate</name>
+        <value>2009-06-02 00:00:00</value>
+      </field>
+
+	  <field>
+        <name>enddate</name>
+        <value>2009-10-01 00:00:00</value>
+      </field>
+
+      <field>
+        <name>description</name>
+        <value>These are the rates for our Peak Season.</value>
+      </field>
+
+      <field>
+        <name>featured</name>
+        <value>N</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+   <insert>
+      <field>
+        <name>datename</name>
+        <value>Holiday Season Rates</value>
+      </field>
+
+     <field>
+        <name>startdate</name>
+        <value>2009-10-02 00:00:00</value>
+      </field>
+
+	  <field>
+        <name>enddate</name>
+        <value>2010-01-06 00:00:00</value>
+      </field>
+
+      <field>
+        <name>description</name>
+        <value>These are the rates for our Holiday Season.</value>
+      </field>
+
+      <field>
+        <name>featured</name>
+        <value>N</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+  </initialization>
+
+ </table>
+
+   <table>
+  <name><variable>table_prefix</variable>resrates</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>propid</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>datesid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>rentday</name>
+        <value>125.00</value>
+      </field>
+
+      <field>
+        <name>rentweek</name>
+        <value>750.00</value>
+      </field>
+
+      <field>
+        <name>rentmonth</name>
+        <value>2875.00</value>
+     </field>
+
+      <field>
+        <name>deposit</name>
+        <value>62.50</value>
+     </field>
+
+      <field>
+        <name>bookpercent</name>
+        <value>50</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+   <insert>
+      <field>
+        <name>propid</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>datesid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>rentday</name>
+        <value>125.00</value>
+      </field>
+
+      <field>
+        <name>rentweek</name>
+        <value>750.00</value>
+      </field>
+
+      <field>
+        <name>rentmonth</name>
+        <value>2875.00</value>
+     </field>
+
+      <field>
+        <name>deposit</name>
+        <value>62.50</value>
+     </field>
+
+      <field>
+        <name>bookpercent</name>
+        <value>50</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+   <insert>
+      <field>
+        <name>propid</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>datesid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>rentday</name>
+        <value>135.00</value>
+      </field>
+
+      <field>
+        <name>rentweek</name>
+        <value>810.00</value>
+      </field>
+
+      <field>
+        <name>rentmonth</name>
+        <value>3105.00</value>
+     </field>
+
+      <field>
+        <name>deposit</name>
+        <value>67.50</value>
+     </field>
+
+      <field>
+        <name>bookpercent</name>
+        <value>50</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+   <insert>
+      <field>
+        <name>propid</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>datesid</name>
+        <value>4</value>
+      </field>
+
+	  <field>
+        <name>rentday</name>
+        <value>145.00</value>
+      </field>
+
+      <field>
+        <name>rentweek</name>
+        <value>870.00</value>
+      </field>
+
+      <field>
+        <name>rentmonth</name>
+        <value>3335.00</value>
+     </field>
+
+      <field>
+        <name>deposit</name>
+        <value>72.50</value>
+     </field>
+
+      <field>
+        <name>bookpercent</name>
+        <value>50</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+  </initialization>
+
+ </table>
+
+ <table>
+  <name><variable>table_prefix</variable>propertyamenity</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Water Front</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Beach Front</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Lake Front</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>River Front</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Creek Front</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Mountain Property</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Ocean View</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Lake View</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>River View</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Mountain View</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Balcony View</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Community Pool</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Private Pool</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>All Inclusive</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Pet Friendly</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Internet Access</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>WiFi Internet Access</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Telephone</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Maid Service</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Linens Provided</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Washer/Dryer</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Air Conditioning</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Heat</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Central Heat</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Satellite TV</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Cable TV</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Gated Community</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Dish Washer</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Microwave</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>BBQ Grill</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Self Catering</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Hot Tub</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Handicap Accessible</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Tennis</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Surfing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Water Skiing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Wind Surfing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Fresh Water Fishing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Deep Sea Fishing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Scuba Diving</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Snorkeling</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Botanical Garden</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Sailing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Golfing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Eco-tourism</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Rain Forest</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Fitness Center</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Marina</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>White Water Rafting</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Fly Fishing</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Shopping</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Duty-Free Shops</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Casinos</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Zoo / Animal Preserve</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>3</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Rafting - Class I</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Rafting - Class II</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Rafting - Class III</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Rafting - Class IV+</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>2</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Massage Therapist</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>4</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Yoga</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>4</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Babysitting / Daycare</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>4</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>feature</name>
+        <value>Room Service</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>4</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   </initialization>
+
+ </table>
+
+  <table>
+  <name><variable>table_prefix</variable>amenity_types</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>title</name>
+        <value>Property</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>title</name>
+        <value>Area Activities</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>title</name>
+        <value>Other Interests</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+      <field>
+        <name>title</name>
+        <value>Optional Services</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+   </initialization>
+
+ </table>
+
+</database>

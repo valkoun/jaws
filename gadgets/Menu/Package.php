@@ -5,7 +5,7 @@
  * @category   PackageConfig
  * @package    Menu
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 $info = array(           
@@ -16,7 +16,7 @@ $info = array(
                                  array('developer', 'dufuz', 'Helgi Thormar', 'dufuz@php.net'),
                                  array('developer', 'imcks8', 'Ivan Chavero', 'imcks8@gluch.org.mx'),
                                  array('developer', 'amir', 'Amir Mohammad Saied', 'amir@php.net'),
-                                 array('developer', 'mkh', 'Mohsen Khahani', 'mohsen@khahani.com'),
                                  ),
               'deps'    => array(),
               );
+?>

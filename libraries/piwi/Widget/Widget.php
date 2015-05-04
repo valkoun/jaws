@@ -3,10 +3,11 @@
  * Widget.php - Main Class for all widgets
  *
  * @version  $Id $
+ * @category   Widget
+ * @package   Piwi
  * @author   Pablo Fischer <pablo@pablo.com.mx>
- *
- * <c> Pablo Fischer 2004
- * <c> Piwi
+ * @copyright  2004 Pablo Fischer
+ * @copyright  2004 Piwi
  */
 class Widget
 {
@@ -174,7 +175,13 @@ class Widget
         if (empty($this->_id)) {
             $useNameAsId = Piwi::getVarConf('PIWI_NAME_AS_ID');
             if ($useNameAsId === true && !empty($this->_name)) {
-                $this->setId($this->_name);
+                if (!Piwi::idExists($this->_name)) {
+                    $this->setId($this->_name);
+                } else {
+                    $this->setId(Piwi::generateId($this->_name));
+                }
+            } else {
+                $this->setId(Piwi::generateId($this->_name));
             }
         }
     }
@@ -393,8 +400,11 @@ class Widget
     function buildBasicXHTML()
     {
         $xhtml = '';
-        if (!empty($this->_name)) {
-            $xhtml .= " name=\"".$this->getName()."\"";
+        //Just bin widgets can have a 'name'
+        if ($this->_familyWidget == 'bin') {
+            if (!empty($this->_name)) {
+                $xhtml .= " name=\"".$this->getName()."\"";
+            }
         }
 
         if (!empty($this->_id)) {

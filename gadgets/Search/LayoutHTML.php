@@ -6,7 +6,7 @@
  * @package    Search
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class SearchLayoutHTML
@@ -14,8 +14,7 @@ class SearchLayoutHTML
     /**
      * Loads layout actions
      *
-     * @access  private
-     * @retrun  array   List of actions
+     * @access private
      */
     function LoadLayoutActions()
     {
@@ -40,22 +39,28 @@ class SearchLayoutHTML
     }
 
     /**
-     * Builds the search box
+     * Display a search box
      *
      * @access  public
-     * @param   bool    $gadgets_combo  Display gadgets combo (optional, default true)
-     * @return  string  XHTML search box
+     * @var     boolean $gadgets_combo  Display gadgets combo (optional, default true)
+     * @return  string  Searchable box
      */
     function Box($gadgets_combo = true)
     {
+        $model = $GLOBALS['app']->LoadGadget('Search', 'Model');
         $request =& Jaws_Request::getInstance();
         $post = $request->get(array('all', 'exact', 'least', 'exclude', 'gadgets', 'date'), 'get');
 
+        $GLOBALS['app']->Layout->AddHeadLink('libraries/autocomplete/autocomplete.css', 'stylesheet', 'text/css');
+        $GLOBALS['app']->Layout->AddHeadLink('gadgets/Search/resources/style.css', 'stylesheet', 'text/css');
+		
         // Clean searchdata
         $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $post = array_map(array($xss, 'filter'), $post);
-
-        $tpl = new Jaws_Template('gadgets/Search/templates/');
+		$post = $model->implodeSearch($post);
+        $wordAllData = (!empty($post) ? $post : _t('SEARCH_INPUT_TEXT'));
+        
+		$tpl = new Jaws_Template('gadgets/Search/templates/');
         $tpl->Load('Search.html');
         if ($gadgets_combo) {
             $block = 'Box';
@@ -63,13 +68,13 @@ class SearchLayoutHTML
             $block = 'SimpleBox';
         }
         $tpl->SetBlock("$block");
-        $tpl->SetVariable('base_script', BASE_SCRIPT);
+		$tpl->SetVariable('actionName', str_replace(' ', '-', _t('SEARCH_LAYOUT_'.strtoupper($block))));
+		$tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('title', _t('SEARCH_NAME'));
 
-        $model = $GLOBALS['app']->LoadGadget('Search', 'Model');
-        $wordAll =& Piwi::CreateWidget('Entry', 'all', $model->implodeSearch($post));
-        $wordAll->SetTitle(_t('SEARCH_WORD_FILTER_ALL'));
-        $tpl->SetVariable('lbl_all', _t('SEARCH_WORD_FILTER_ALL'));
+		$wordAll =& Piwi::CreateWidget('Entry', 'all', $wordAllData);
+        $wordAll->AddEvent(ON_BLUR, "if(this.defaultValue==this.value){this.value='';this.style.color='#000000';}else if(this.value==''){this.value=this.defaultValue;this.style.color='#999999';}");
+        $wordAll->AddEvent(ON_FOCUS, "if(this.defaultValue==this.value){this.value='';this.style.color='#000000';}else if(this.value==''){this.value=this.defaultValue;this.style.color='#999999';}");
         $tpl->SetVariable('all', $wordAll->Get());
 
         // Create Select box.
@@ -79,6 +84,7 @@ class SearchLayoutHTML
             $searchableGadgets = ($gSearchable=='*')? array_keys($gadgetList) : explode(', ', $gSearchable);
 
             $gchk =& Piwi::CreateWidget('Combo', 'gadgets');
+            $gchk->setID('Search_gadgets');
             $gchk->addOption(_t('GLOBAL_ALL'), '');
             foreach ($searchableGadgets as $gadget) {
                 $info = $GLOBALS['app']->LoadGadget($gadget, 'Info');
@@ -98,15 +104,22 @@ class SearchLayoutHTML
         $btnSearch->SetSubmit(true);
         $tpl->SetVariable('btn_search', $btnSearch->Get());
         $tpl->ParseBlock("$block");
+		
+		$tpl->SetBlock("AutoComplete");
+		$tpl->SetVariable('JAWS_URL', $GLOBALS['app']->GetJawsURL() . "/");
+		//$tpl->SetVariable('base_url', JAWS_DPATH);
+		$tpl->SetVariable('site_url', $GLOBALS['app']->getSiteURL());
+		$tpl->SetVariable('min_chars', $GLOBALS['app']->Registry->Get('/gadgets/Search/min_key_len'));
+        $tpl->ParseBlock("AutoComplete");
 
         return $tpl->Get();
     }
 
     /**
-     * Builds the simple search box
+     * Display a simple search box
      *
      * @access  public
-     * @return  string  XHTML search box
+     * @return  string Searchable box
      */
     function SimpleBox()
     {
@@ -114,10 +127,10 @@ class SearchLayoutHTML
     }
 
     /**
-     * Builds the advanced search box
+     * Display the advanced search box
      *
      * @access  public
-     * @return  string  XHTML search box
+     * @return  string  Advanced search box (XHTML output)
      */
     function AdvancedBox()
     {
@@ -127,8 +140,8 @@ class SearchLayoutHTML
         // Clean searchdata
         $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $post = array_map(array($xss, 'filter'), $post);
-
-        $tpl = new Jaws_Template('gadgets/Search/templates/');
+       
+		$tpl = new Jaws_Template('gadgets/Search/templates/');
         $tpl->Load('Search.html');
         $tpl->SetBlock('AdvancedBox');
 
@@ -142,13 +155,25 @@ class SearchLayoutHTML
         $tpl->SetVariable('lbl_data_filter', _t('SEARCH_DATA_FILTER'));
         $tpl->SetVariable('lbl_search_in', _t('SEARCH_SEARCH_IN'));
 
-        $model = $GLOBALS['app']->LoadGadget('Search', 'Model');
-        $options = $model->parseSearch($post, $searchable);
+        $model 			 = $GLOBALS['app']->LoadGadget('Search', 'Model');
+        $options 		 = $model->parseSearch($post, $searchable);
+        $wordAllData     = implode(' ', $options['all']);
+		$wordAllData	 = (!empty($wordAllData) ? $wordAllData : _t('SEARCH_INPUT_TEXT_ADVANCED'));
+        $wordExactData   = implode(' ', $options['exact']);
+ 		$wordExactData	 = (!empty($wordExactData) ? $wordExactData : '');
+        $wordLeastData   = implode(' ', $options['least']);
+ 		$wordLeastData	 = (!empty($wordLeastData) ? $wordLeastData : '');
+        $wordExcludeData = implode(' ', $options['exclude']);
+ 		$wordExcludeData = (!empty($wordExcludeData) ? $wordExcludeData : '');
 
-        $wordAll =& Piwi::CreateWidget('Entry', 'all', implode(' ', $options['all']));
-        $wordExact =& Piwi::CreateWidget('Entry', 'exact', implode(' ', $options['exact']));
-        $wordLeast =& Piwi::CreateWidget('Entry', 'least', implode(' ', $options['least']));
-        $wordExclude =& Piwi::CreateWidget('Entry', 'exclude', implode(' ', $options['exclude']));
+        $wordAll =& Piwi::CreateWidget('Entry', 'all', $wordAllData);
+        $wordExact->setID('all');
+        $wordExact =& Piwi::CreateWidget('Entry', 'exact', $wordExactData);
+        $wordExact->setID('Search_exact');
+        $wordLeast =& Piwi::CreateWidget('Entry', 'least', $wordLeastData);
+        $wordLeast->setID('Search_least');
+        $wordExclude =& Piwi::CreateWidget('Entry', 'exclude', $wordExcludeData);
+        $wordExclude->setID('Search_exclude');
         $tpl->SetVariable('all', $wordAll->Get());
         $tpl->SetVariable('exclude', $wordExclude->Get());
         $tpl->SetVariable('least', $wordLeast->Get());

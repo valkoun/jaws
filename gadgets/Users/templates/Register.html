@@ -5,9 +5,14 @@
   <form name="registerBox" action="{base_script}" method="post">
   <input type="hidden" name="gadget" value="Users" />
   <input type="hidden" name="action" value="DoRegister" />
+  <input type="hidden" name="group" value="{group}" />
+  <input type="hidden" name="redirect_to" value="{redirect_to}" />
+  <div class="actions">
+	  <div>{rpx-register}</div>
+  </div>
   <div class="content">
     <fieldset>
-      <legend><span>{lbl_account_info}</span></legend>
+      <legend>{lbl_account_info}</legend>
       <p><label for="register_username">{lbl_username}:</label>
         <input name="username" id="register_username" maxlength="80" value="{username}" type="text" style="direction: ltr;" />
         <span><small>{validusernames}</small></span>
@@ -18,16 +23,43 @@
       <p><label for="register_nickname">{lbl_nickname}:</label>
         <input name="nickname" id="register_nickname" value="{nickname}" type="text" />
       </p>
-      <p><label for="register_password">{lbl_password}:</label>
-        <input name="password" id="register_password" type="password" value="" style="direction: ltr;" />
-        <span><small>{sendpassword}</small></span>
+	<!-- BEGIN password -->
+      <p>
+		<label for="register_password">{password}:</label>
+		<input name="password" id="register_password" type="password" value="" />
+       <span>{sendpassword}</span>
       </p>
-      <p><label for="register_chkpasswd">{lbl_checkpassword}:</label>
-        <input name="password_check" id="register_chkpasswd" type="password" value="" style="direction: ltr;" />
+      <p>
+		<label for="register_chkpasswd">{checkpassword}:</label>
+       	<input name="password_check" id="register_chkpasswd" type="password" value="" />
       </p>
+	<!-- END password -->
+    <!-- BEGIN address -->
+    <p><label for="register_address">{address}:</label>
+       <input name="address" id="register_address" value="{address_value}" type="text" />
+    </p>
+    <p><label for="register_address2">{address2}:</label>
+       <input name="address2" id="register_address2" value="{address2_value}" type="text" />
+    </p>
+    <p><label for="register_city">{city}:</label>
+       <input name="city" id="register_city" value="{city_value}" type="text" />
+    </p>
+	<p><label for="register_country">{country}:</label>
+		<select name="country" id="register_country">
+			{country_options}
+		</select></p>
+    <p><label for="register_region">{region}:</label>
+       <select name="region" id="register_region">
+			{region_options}
+		</select></p>
+	<p><label for="register_postal">{postal}:</label>
+       <input size="10" name="postal" id="register_postal" value="{postal_value}" type="text" />
+    </p>
+    <!-- END address -->
     </fieldset>
+    <!-- BEGIN personal -->
     <fieldset>
-      <legend><span>{lbl_personal_info}</span></legend>
+      <legend>{lbl_personal_info}</legend>
       <p><label for="register_fname">{lbl_fname}:</label>
         <input name="fname" id="register_fname" value="{fname}" type="text" />
       </p>
@@ -36,9 +68,8 @@
       </p>
       <p><label for="register_gender">{lbl_gender}:</label>
         <select name="gender" id="register_gender">
-          <option value="0" {selected_gender_0}>{gender_0}</option>
-          <option value="1" {selected_gender_1}>{gender_1}</option>
-          <option value="2" {selected_gender_2}>{gender_2}</option>
+          <option value="0" {selected_gender_0}>{gender_male}</option>
+          <option value="1" {selected_gender_1}>{gender_female}</option>
         </select>
       </p>
       <p id="register_dob">
@@ -51,12 +82,18 @@
       <p><label for="register_url">{lbl_url}:</label>
         <input name="url" id="register_url" value="{url}" type="text" style="direction: ltr;" />
       </p>
-      <!-- BEGIN captcha -->
-      <p><label>{lbl_captcha}:</label><br /><span>{captcha}<br /><small>{captcha_msg}</small></span><br />{captchavalue}</p>
-      <!-- END captcha -->
     </fieldset>
+    <!-- END personal -->
+    <!-- BEGIN captcha -->
+      <p><label>{lbl_captcha}:</label><span>{captcha}<small>{captcha_msg}</small></span>{captchavalue}</p>
+    <!-- END captcha -->
   </div>
   <div class="actions"><button type="submit" value="{register}">{register}</button></div>
   </form>
 </div>
 <!-- END register -->
+<!-- BEGIN already_registered -->
+<div class="gadget users registerbox">
+{content}
+</div>
+<!-- END already_registered -->

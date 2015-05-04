@@ -1,0 +1,90 @@
+/* tinysimpleblue */
+
+/* Reset */
+.tinysimpleblue, .tinysimpleblue div, .tinysimpleblue span, .tinysimpleblue a {vertical-align:baseline; text-align:left; position:absolute; border:0; padding:0; margin:0; background:transparent; font-family:Arial,Verdana; font-size:11px; color:#000; text-decoration:none; font-weight:normal; width:auto; height:auto; overflow:hidden; display:block}
+
+/* General */
+.tinysimpleblue {position:absolute; direction:ltr}
+.tinysimpleblue .mceWrapper {position:static}
+.mceEventBlocker {position:fixed; left:0; top:0; background:url(img/horizontal.gif) no-repeat 0 -75px; width:100%; height:100%}
+.tinysimpleblue .mcePlaceHolder {border:1px solid #000; background:#888; top:0; left:0; opacity:0.5; -ms-filter:'alpha(opacity=50)'; filter:alpha(opacity=50)}
+.tinysimpleblue_modalBlocker {position:fixed; left:0; top:0; width:100%; height:100%; background:#FFF; opacity:0.6; -ms-filter:'alpha(opacity=60)'; filter:alpha(opacity=60); display:none}
+
+/* Top */
+.tinysimpleblue .mceTop, .tinysimpleblue .mceTop div {top:0; width:100%; height:23px}
+.tinysimpleblue .mceTop .mceLeft {width:6px; background:url(img/corners.gif)}
+.tinysimpleblue .mceTop .mceCenter {right:6px; width:100%; height:23px; background:url(img/horizontal.gif) 12px 0; clip:rect(auto auto auto 12px)}
+.tinysimpleblue .mceTop .mceRight {right:0; width:6px; height:23px; background:url(img/corners.gif) -12px 0}
+.tinysimpleblue .mceTop span {width:100%; text-align:center; vertical-align:middle; line-height:23px; font-weight:bold}
+.tinysimpleblue .mceFocus .mceTop .mceLeft {background:url(img/corners.gif) -6px 0}
+.tinysimpleblue .mceFocus .mceTop .mceCenter {background:url(img/horizontal.gif) 0 -23px}
+.tinysimpleblue .mceFocus .mceTop .mceRight {background:url(img/corners.gif) -18px 0}
+.tinysimpleblue .mceFocus .mceTop span {color:#FFF}
+
+/* Middle */
+.tinysimpleblue .mceMiddle, .tinysimpleblue .mceMiddle div {top:0}
+.tinysimpleblue .mceMiddle {width:100%; height:100%; clip:rect(23px auto auto auto)}
+.tinysimpleblue .mceMiddle .mceLeft {left:0; width:5px; height:100%; background:url(img/vertical.gif) -5px 0}
+.tinysimpleblue .mceMiddle span {top:23px; left:5px; width:100%; height:100%; background:#FFF}
+.tinysimpleblue .mceMiddle .mceRight {right:0; width:5px; height:100%; background:url(img/vertical.gif)}
+
+/* Bottom */
+.tinysimpleblue .mceBottom, .tinysimpleblue .mceBottom div {height:6px}
+.tinysimpleblue .mceBottom {left:0; bottom:0; width:100%}
+.tinysimpleblue .mceBottom div {top:0}
+.tinysimpleblue .mceBottom .mceLeft {left:0; width:5px; background:url(img/corners.gif) -34px -6px}
+.tinysimpleblue .mceBottom .mceCenter {left:5px; width:100%; background:url(img/horizontal.gif) 0 -46px}
+.tinysimpleblue .mceBottom .mceRight {right:0; width:5px; background: url(img/corners.gif) -34px 0}
+.tinysimpleblue .mceBottom span {display:none}
+.tinysimpleblue .mceStatusbar .mceBottom, .tinysimpleblue .mceStatusbar .mceBottom div {height:23px}
+.tinysimpleblue .mceStatusbar .mceBottom .mceLeft {background:url(img/corners.gif) -29px 0}
+.tinysimpleblue .mceStatusbar .mceBottom .mceCenter {background:url(img/horizontal.gif) 0 -52px}
+.tinysimpleblue .mceStatusbar .mceBottom .mceRight {background:url(img/corners.gif) -24px 0}
+.tinysimpleblue .mceStatusbar .mceBottom span {display:block; left:7px; font-family:Arial, Verdana; font-size:11px; line-height:23px}
+
+/* Actions */
+.tinysimpleblue a {width:29px; height:16px; top:3px;}
+.tinysimpleblue .mceClose {right:6px; background:url(img/buttons.gif) -87px 0}
+.tinysimpleblue .mceMin {display:none; right:68px; background:url(img/buttons.gif) 0 0}
+.tinysimpleblue .mceMed {display:none; right:37px; background:url(img/buttons.gif) -29px 0}
+.tinysimpleblue .mceMax {display:none; right:37px; background:url(img/buttons.gif) -58px 0}
+.tinysimpleblue .mceMove {display:none;width:100%;cursor:move;background:url(img/corners.gif) no-repeat -100px -100px}
+.tinysimpleblue .mceMovable .mceMove {display:block}
+.tinysimpleblue .mceFocus .mceClose {right:6px; background:url(img/buttons.gif) -87px -16px}
+.tinysimpleblue .mceFocus .mceMin {right:68px; background:url(img/buttons.gif) 0 -16px}
+.tinysimpleblue .mceFocus .mceMed {right:37px; background:url(img/buttons.gif) -29px -16px}
+.tinysimpleblue .mceFocus .mceMax {right:37px; background:url(img/buttons.gif) -58px -16px}
+.tinysimpleblue .mceFocus .mceClose:hover {right:6px; background:url(img/buttons.gif) -87px -32px}
+.tinysimpleblue .mceFocus .mceClose:hover {right:6px; background:url(img/buttons.gif) -87px -32px}
+.tinysimpleblue .mceFocus .mceMin:hover {right:68px; background:url(img/buttons.gif) 0 -32px}
+.tinysimpleblue .mceFocus .mceMed:hover {right:37px; background:url(img/buttons.gif) -29px -32px}
+.tinysimpleblue .mceFocus .mceMax:hover {right:37px; background:url(img/buttons.gif) -58px -32px}
+
+/* Resize */
+.tinysimpleblue .mceResize {top:auto; left:auto; display:none; width:5px; height:5px; background:url(img/horizontal.gif) no-repeat 0 -75px}
+.tinysimpleblue .mceResizable .mceResize {display:block}
+.tinysimpleblue .mceResizable .mceMin, .tinysimpleblue .mceMax {display:none}
+.tinysimpleblue .mceMinimizable .mceMin {display:block}
+.tinysimpleblue .mceMaximizable .mceMax {display:block}
+.tinysimpleblue .mceMaximized .mceMed {display:block}
+.tinysimpleblue .mceMaximized .mceMax {display:none}
+.tinysimpleblue a.mceResizeN {top:0; left:0; width:100%; cursor:n-resize}
+.tinysimpleblue a.mceResizeNW {top:0; left:0; cursor:nw-resize}
+.tinysimpleblue a.mceResizeNE {top:0; right:0; cursor:ne-resize}
+.tinysimpleblue a.mceResizeW {top:0; left:0; height:100%; cursor:w-resize;}
+.tinysimpleblue a.mceResizeE {top:0; right:0; height:100%; cursor:e-resize}
+.tinysimpleblue a.mceResizeS {bottom:0; left:0; width:100%; cursor:s-resize}
+.tinysimpleblue a.mceResizeSW {bottom:0; left:0; cursor:sw-resize}
+.tinysimpleblue a.mceResizeSE {bottom:0; right:0; cursor:se-resize}
+
+/* Alert/Confirm */
+.tinysimpleblue .mceButton {font-weight:bold; bottom:10px; width:80px; height:30px; background:url(img/button.gif); line-height:30px; vertical-align:middle; text-align:center; outline:0}
+.tinysimpleblue .mceMiddle .mceIcon {left:15px; top:35px; width:32px; height:32px}
+.tinysimpleblue .mceAlert .mceMiddle span, .tinysimpleblue .mceConfirm .mceMiddle span {background:transparent;left:60px; top:35px; width:320px; height:50px; font-weight:bold; overflow:auto; white-space:normal}
+.tinysimpleblue a:hover {font-weight:bold;}
+.tinysimpleblue .mceAlert .mceMiddle, .tinysimpleblue .mceConfirm .mceMiddle {background:#D6D7D5}
+.tinysimpleblue .mceAlert .mceOk {left:50%; top:auto; margin-left: -40px}
+.tinysimpleblue .mceAlert .mceIcon {background:url(img/alert.gif)}
+.tinysimpleblue .mceConfirm .mceOk {left:50%; top:auto; margin-left: -90px}
+.tinysimpleblue .mceConfirm .mceCancel {left:50%; top:auto}
+.tinysimpleblue .mceConfirm .mceIcon {background:url(img/confirm.gif)}

@@ -114,20 +114,23 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
     function errorInfo($error = null, $connection = null)
     {
         if (null === $connection) {
+            if (!$this->connection) {
+                $this->connect();
+            }
             $connection = $this->connection;
         }
 
         $native_code = null;
         $native_msg  = null;
         if ($connection) {
-            $retErrors = sqlsrv_errors(SQLSRV_ERR_ALL);
+            $retErrors = sqlsrv_errors(SQLSRV_ERR_ALL);  
             if ($retErrors !== null) {
                 foreach ($retErrors as $arrError) {
-                    $native_msg .= "SQLState: ".$arrError[ 'SQLSTATE']."\n";
-                    $native_msg .= "Error Code: ".$arrError[ 'code']."\n";
-                    $native_msg .= "Message: ".$arrError[ 'message']."\n";
+                    $native_msg .= "SQLState: ".$arrError[ 'SQLSTATE']."\n";  
+                    $native_msg .= "Error Code: ".$arrError[ 'code']."\n";  
+                    $native_msg .= "Message: ".$arrError[ 'message']."\n";  
                     $native_code = $arrError[ 'code'];
-                }
+                }  
             }
         }
         if (null === $error) {
@@ -235,8 +238,9 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
             $this->destructor_registered = true;
             register_shutdown_function('MDB2_closeOpenTransactions');
         }
-        if (PEAR::isError(sqlsrv_begin_transaction($this->connection))) {
-            return MDB2_ERROR;
+        $result =& $this->_doQuery('BEGIN TRANSACTION', true);
+        if (PEAR::isError($result)) {
+            return $result;
         }
         $this->in_transaction = true;
         return MDB2_OK;
@@ -251,9 +255,9 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
      * auto-committing is disabled, otherwise it will fail. Therefore, a new
      * transaction is implicitly started after committing the pending changes.
      *
-     * @param   string  name of a savepoint to release
-     * @return  mixed   MDB2_OK on success, a MDB2 error on failure
+     * @param string $savepoint name of a savepoint to release
      *
+     * @return mixed MDB2_OK on success, a MDB2 error on failure
      * @access  public
      */
     function commit($savepoint = null)
@@ -267,8 +271,9 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
             return MDB2_OK;
         }
 
-        if (PEAR::isError(sqlsrv_commit($this->connection))) {
-            return MDB2_ERROR;
+        $result =& $this->_doQuery('COMMIT TRANSACTION', true);
+        if (PEAR::isError($result)) {
+            return $result;
         }
         $this->in_transaction = false;
         return MDB2_OK;
@@ -283,10 +288,10 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
      * auto-committing is disabled, otherwise it will fail. Therefore, a new
      * transaction is implicitly started after canceling the pending changes.
      *
-     * @param   string  name of a savepoint to rollback to
-     * @return  mixed   MDB2_OK on success, a MDB2 error on failure
+     * @param string $savepoint name of a savepoint to rollback to
      *
-     * @access  public
+     * @return mixed MDB2_OK on success, a MDB2 error on failure
+     * @access public
      */
     function rollback($savepoint = null)
     {
@@ -300,8 +305,9 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
             return $this->_doQuery($query, true);
         }
 
-        if (PEAR::isError(sqlsrv_rollback($this->connection))) {
-            return MDB2_ERROR;
+        $result =& $this->_doQuery('ROLLBACK TRANSACTION', true);
+        if (PEAR::isError($result)) {
+            return $result;
         }
         $this->in_transaction = false;
         return MDB2_OK;
@@ -473,7 +479,7 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
 
         $query = $this->_modifyQuery($query, $is_manip, $this->limit, $this->offset);
         $this->offset = $this->limit = 0;
-
+        
         $result = $this->_doQuery($query, $is_manip, $connection);
         if (!PEAR::isError($result)) {
             $result = $this->_affectedRows($connection, $result);
@@ -530,8 +536,8 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
             $this->connected_database_name = $database_name;
         }
 
-    $query = preg_replace('/DATE_FORMAT\((MIN\()?([\w|.]*)(\))?\\Q, \'%Y-%m-%d\')\E/i','CONVERT(varchar(10),$1$2$3,120)',$query);
-    $query = preg_replace('/DATE_FORMAT\(([\w|.]*)\, \'\%Y\-\%m\-\%d %H\:00\:00\'\)/i','CONVERT(varchar(13),$1,120)+\':00:00\'',$query);
+    $query = preg_replace('/DATE_FORMAT\((MIN\()?([\w|.]*)(\))?\\Q, \'%Y-%m-%d\')\E/i','CONVERT(varchar(10),$1$2$3,120)',$query); 
+    $query = preg_replace('/DATE_FORMAT\(([\w|.]*)\, \'\%Y\-\%m\-\%d %H\:00\:00\'\)/i','CONVERT(varchar(13),$1,120)+\':00:00\'',$query); 
         $result = @sqlsrv_query($connection,$query);
         if (!$result) {
             $err = $this->raiseError(null, null, null,
@@ -650,7 +656,7 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
             }
             return false;
         }
-        if (@sqlsrv_fetch($tableExists)) {
+        if (@sqlsrv_fetch($tableExits)) {
             return true;
         }
         return false;
@@ -676,7 +682,7 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
         $seqcol_name = $this->quoteIdentifier($this->options['seqcol_name'], true);
         $this->pushErrorHandling(PEAR_ERROR_RETURN);
         $this->expectError(MDB2_ERROR_NOSUCHTABLE);
-
+        
         $seq_val = $this->_checkSequence($sequence_name);
 
         if ($seq_val) {
@@ -703,7 +709,7 @@ class MDB2_Driver_sqlsrv extends MDB2_Driver_Common
                      * exists, then we get the last inserted id if it does.
                      *
                      * In theory, $seq_name should be created otherwise there would
-                     * have been an error thrown somewhere up there..
+                     * have been an error thrown somewhere up there.. 
                      *
                      * @todo confirm
                      */
@@ -834,7 +840,7 @@ class MDB2_Result_sqlsrv extends MDB2_Result_Common
             }
         }
         return $obj;
-    }
+    } 
     // {{{ fetchRow()
 
     /**
@@ -863,7 +869,6 @@ class MDB2_Result_sqlsrv extends MDB2_Result_Common
         if ($fetchmode == MDB2_FETCHMODE_DEFAULT) {
             $fetchmode = $this->db->fetchmode;
         }
-
         $row = false;
         $arrNum = array();
         if ($fetchmode == MDB2_FETCHMODE_ORDERED) {
@@ -887,7 +892,7 @@ class MDB2_Result_sqlsrv extends MDB2_Result_Common
             break;
         } 
         $this->cursor++;
-
+        
         /*
         if ($fetchmode == MDB2_FETCHMODE_OBJECT) {
             $row = sqlsrv_fetch_object($this->result,$this->db->options['fetch_class']);
@@ -895,8 +900,8 @@ class MDB2_Result_sqlsrv extends MDB2_Result_Common
         switch($fetchmode) {
             case MDB2_FETCHMODE_ASSOC: $fetchmode = SQLSRV_FETCH_ASSOC; break;
             case MDB2_FETCHMODE_ORDERED: $fetchmode = SQLSRV_FETCH_NUMERIC; break;
-            case MDB2_FETCHMODE_DEFAULT:
-            default:
+            case MDB2_FETCHMODE_DEFAULT: 
+            default: 
                 $fetchmode = SQLSRV_FETCH_BOTH;
         }
             $row = sqlsrv_fetch_array($this->result,$fetchmode);
@@ -906,7 +911,7 @@ class MDB2_Result_sqlsrv extends MDB2_Result_Common
                 $row[$key] = $value->format("Y-m-d H:i:s");
             }
         }*/
-
+        
         /*if ($fetchmode == MDB2_FETCHMODE_DEFAULT) {
             $fetchmode = $this->db->fetchmode;
         }*/

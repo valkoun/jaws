@@ -6,7 +6,7 @@
  * @package    UpgradeStage
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Upgrader_Authentication extends JawsUpgraderStage
@@ -35,10 +35,12 @@ class Upgrader_Authentication extends JawsUpgraderStage
         $request =& Jaws_Request::getInstance();
         $use_log = $request->get('use_log', 'post');
         //Set main session-log vars
-        if (isset($use_log)) {
-            $_SESSION['use_log'] = $use_log === 'yes'? JAWS_LOG_DEBUG : false;
+        if (isset($use_log) && $use_log == 'yes') {
+            $_SESSION['use_log'] = 'yes';
+        } else {
+            $_SESSION['use_log'] = 'no';
         }
-        _log(JAWS_LOG_DEBUG,"Generating new installation key");
+        log_upgrade("Generating new installation key");
 
         $tpl = new Jaws_Template(UPGRADE_PATH . 'stages/Authentication/templates/');
         $tpl->Load('display.html', false, false);
@@ -96,13 +98,13 @@ class Upgrader_Authentication extends JawsUpgraderStage
         if (file_exists($key_file)) {
             $key = trim(file_get_contents($key_file));
             if ($key === $_SESSION['upgrade']['Authentication']['key']) {
-                _log(JAWS_LOG_DEBUG,"Input log and session key match");
+                log_upgrade("Input log and session key match");
                 return true;
             }
-            _log(JAWS_LOG_DEBUG,"The key found doesn't match the one below, please check that you entered the key correctly.");
+            log_upgrade("The key found doesn't match the one below, please check that you entered the key correctly.");
             return new Jaws_Error(_t('UPGRADE_AUTH_ERROR_KEY_MATCH', 'key.txt'), 0, JAWS_ERROR_WARNING);
         }
-        _log(JAWS_LOG_DEBUG,"Your key file was not found, please make sure you created it, and the web server is able to read it.");
+        log_upgrade("Your key file was not found, please make sure you created it, and the web server is able to read it.");
         return new Jaws_Error(_t('UPGRADE_AUTH_ERROR_KEY_FILE', 'key.txt'), 0, JAWS_ERROR_WARNING);
     }
 }

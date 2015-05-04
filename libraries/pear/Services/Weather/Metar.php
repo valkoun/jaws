@@ -7,7 +7,7 @@
  * PHP versions 4 and 5
  *
  * <LICENSE>
- * Copyright (c) 2005-2011, Alexander Wirtz
+ * Copyright (c) 2005-2009, Alexander Wirtz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     CVS: $Id: Metar.php 314012 2011-08-01 11:04:57Z eru $
+ * @version     CVS: $Id: Metar.php 290193 2009-11-03 23:34:06Z eru $
  * @link        http://pear.php.net/package/Services_Weather
  * @link        http://weather.noaa.gov/weather/metar.shtml
  * @link        http://weather.noaa.gov/weather/taf.shtml
@@ -82,9 +82,9 @@ require_once "DB.php";
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     Release: 1.4.6
+ * @version     Release: 1.4.5
  * @link        http://pear.php.net/package/Services_Weather
  * @link        http://weather.noaa.gov/weather/metar.shtml
  * @link        http://weather.noaa.gov/weather/taf.shtml
@@ -354,7 +354,7 @@ class Services_Weather_Metar extends Services_Weather_Common
                 // HTTP used, acquire request object and fetch data from webserver. Return body of reply
                 include_once "HTTP/Request.php";
 
-                $request = new HTTP_Request($this->{"_sourcePath".ucfirst($dataType)}."/".$id.".TXT", $this->_httpOptions);
+                $request = &new HTTP_Request($this->{"_sourcePath".ucfirst($dataType)}."/".$id.".TXT", $this->_httpOptions);
                 $status = $request->sendRequest();
                 if (Services_Weather::isError($status) || (int) $request->getResponseCode() <> 200) {
                     return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_WRONG_SERVER_DATA, __FILE__, __LINE__);
@@ -381,7 +381,7 @@ class Services_Weather_Metar extends Services_Weather_Common
                 }
 
                 // Instantiate object and connect to server
-                $ftp = new Net_FTP($server["host"], $server["port"], $this->_httpOptions["timeout"]);
+                $ftp = &new Net_FTP($server["host"], $server["port"], $this->_httpOptions["timeout"]);
                 $status = $ftp->connect();
                 if (Services_Weather::isError($status)) {
                     return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_WRONG_SERVER_DATA, __FILE__, __LINE__);
@@ -1418,15 +1418,15 @@ class Services_Weather_Metar extends Services_Weather_Common
                         case "wind":
                         case "windGust":
                         case "windshear":
-                            $newVal = round($this->convertSpeed($val, "mph", $units["wind"]), 2);
+                            $newVal = $this->convertSpeed($val, "mph", $units["wind"]);
                             break;
                         case "visibility":
-                            $newVal = round($this->convertDistance($val, "sm", $units["vis"], 2));
+                            $newVal = $this->convertDistance($val, "sm", $units["vis"]);
                             break;
                         case "height":
                         case "windshearHeight":
                             if (is_numeric($val)) {
-                                $newVal = round($this->convertDistance($val, "ft", $units["height"]), 2);
+                                $newVal = $this->convertDistance($val, "ft", $units["height"]);
                             } else {
                                 $newVal = $val;
                             }
@@ -1436,18 +1436,18 @@ class Services_Weather_Metar extends Services_Weather_Common
                         case "temperatureLow":
                         case "dewPoint":
                         case "feltTemperature":
-                            $newVal = round($this->convertTemperature($val, "f", $units["temp"]), 2);
+                            $newVal = $this->convertTemperature($val, "f", $units["temp"]);
                             break;
                         case "pressure":
                         case "seapressure":
                         case "presschng":
-                            $newVal = round($this->convertPressure($val, "in", $units["pres"]), 2);
+                            $newVal = $this->convertPressure($val, "in", $units["pres"]);
                             break;
                         case "amount":
                         case "snowdepth":
                         case "snowequiv":
                             if (is_numeric($val)) {
-                                $newVal = round($this->convertPressure($val, "in", $units["rain"]), 2);
+                                $newVal = $this->convertPressure($val, "in", $units["rain"]);
                             } else {
                                 $newVal = $val;
                             }
@@ -1458,10 +1458,7 @@ class Services_Weather_Metar extends Services_Weather_Common
                         case "6hmintemp":
                         case "24hmaxtemp":
                         case "24hmintemp":
-                            $newVal = round($this->convertTemperature($val, "f", $units["temp"]), 2);
-                            break;
-                        case "humidity":
-                            $newVal = round($val, 1);
+                            $newVal = $this->convertTemperature($val, "f", $units["temp"]);
                             break;
                         default:
                             continue 2;
@@ -1727,7 +1724,7 @@ class Services_Weather_Metar extends Services_Weather_Common
 
         $locationReturn = array();
 
-        if ($this->_cacheEnabled && ($location = $this->_getCache("METAR-".$id, "location"))) {
+        if ($this->_cacheEnabled && ($location = $this->_cache->get("METAR-".$id, "location"))) {
             // Grab stuff from cache
             $this->_location = $location;
             $locationReturn["cache"] = "HIT";
@@ -1747,7 +1744,8 @@ class Services_Weather_Metar extends Services_Weather_Common
 
             if ($this->_cacheEnabled) {
                 // ...and cache it
-                $this->_saveCache("METAR-".$id, $this->_location, "", "location");
+                $expire = constant("SERVICES_WEATHER_EXPIRES_LOCATION");
+                $this->_cache->extSave("METAR-".$id, $this->_location, "", $expire, "location");
             }
 
             $locationReturn["cache"] = "MISS";
@@ -1807,7 +1805,7 @@ class Services_Weather_Metar extends Services_Weather_Common
             return $location;
         }
 
-        if ($this->_cacheEnabled && ($weather = $this->_getCache("METAR-".$id, "weather"))) {
+        if ($this->_cacheEnabled && ($weather = $this->_cache->get("METAR-".$id, "weather"))) {
             // Wee... it was cached, let's have it...
             $weatherReturn  = $weather;
             $this->_weather = $weatherReturn;
@@ -1838,16 +1836,12 @@ class Services_Weather_Metar extends Services_Weather_Common
             $longitude   = isset($location["longitude"])        ? $location["longitude"]        :                     -360;
 
             // Get the icon
-            $weatherReturn["conditionIcon"] = $this->getWeatherIcon($condition, $clouds, $wind, $temperature, $latitude, $longitude, strtotime($weatherData["updateRaw"]." GMT"));
-
-            // Calculate the moon phase and age
-            $moon = $this->calculateMoonPhase(strtotime($weatherData["updateRaw"]." GMT"));
-            $weatherReturn["moon"]     = $moon["phase"];
-            $weatherReturn["moonIcon"] = $moon["icon"];
+            $weatherReturn["conditionIcon"] = $this->getWeatherIcon($condition, $clouds, $wind, $temperature, $latitude, $longitude);
 
             if ($this->_cacheEnabled) {
                 // Cache weather
-                $this->_saveCache("METAR-".$id, $weatherReturn, $unitsFormat, "weather");
+                $expire = constant("SERVICES_WEATHER_EXPIRES_WEATHER");
+                $this->_cache->extSave("METAR-".$id, $weatherReturn, $unitsFormat, $expire, "weather");
             }
             $this->_weather = $weatherReturn;
             $weatherReturn["cache"] = "MISS";
@@ -1888,7 +1882,7 @@ class Services_Weather_Metar extends Services_Weather_Common
             return $location;
         }
 
-        if ($this->_cacheEnabled && ($forecast = $this->_getCache("METAR-".$id, "forecast"))) {
+        if ($this->_cacheEnabled && ($forecast = $this->_cache->get("METAR-".$id, "forecast"))) {
             // Wee... it was cached, let's have it...
             $forecastReturn  = $forecast;
             $this->_forecast = $forecastReturn;
@@ -1910,7 +1904,8 @@ class Services_Weather_Metar extends Services_Weather_Common
             }
             if ($this->_cacheEnabled) {
                 // Cache weather
-                $this->_saveCache("METAR-".$id, $forecastReturn, $unitsFormat, "forecast");
+                $expire = constant("SERVICES_WEATHER_EXPIRES_FORECAST");
+                $this->_cache->extSave("METAR-".$id, $forecastReturn, $unitsFormat, $expire, "forecast");
             }
             $this->_forecast = $forecastReturn;
             $forecastReturn["cache"] = "MISS";

@@ -1,0 +1,128 @@
+<!-- BEGIN admin_posts -->
+<!--
+<form METHOD="POST" action="admin.php?gadget=Blog&action=A_form_post&fuseaction=DeletePost" onsubmit="validate2(this);" name="GLOBALform">
+-->
+	<INPUT TYPE="hidden" NAME="idarray" VALUE="">
+	<div valign="top">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">  
+			<tbody>
+				<tr>
+					<td width="0%" style="padding: 3px;"><nobr><b>Added to this entry:</b></nobr></td>
+					<td width="100%" colspan="3" style="padding: 3px;" align="right">
+					  <nobr>
+					  &nbsp;&nbsp;{add_button}
+					  </nobr>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div valign="top">
+	  <table width="100%" border="0" cellspacing="0" cellpadding="3" id="syntactsCategories" class="syntactsCategories">
+		<tbody>
+			<tr noDrop="true" noDrag="true" id="syntactsCategories_head">
+				<TD WIDTH="2%" class="color_bkgnd_primary" ALIGN="center" style="padding: 3px;"><b>Type</b></TD>
+				<TD WIDTH="93%" class="color_bkgnd_primary" style="padding: 3px;"><b>Title</b></TD>					
+				<TD WIDTH="5%" colspan="2" class="color_bkgnd_primary" ALIGN="center" style="padding: 3px;"><b>Actions</b></TD>
+			</tr>
+			<!-- BEGIN posts -->
+			<!-- BEGIN post -->
+			<tr id="syntactsCategory_{post_id}">
+				<td style="{background}text-align: center;" class="syntacts-form-row">
+					<img border="0" src="{post_icon}" />
+				</td>
+				<td id="gadget-ea{post_id}" style="{background}padding: 5px;" class="syntacts-form-row">
+					<p align="{post_align}">
+						<!-- BEGIN thumb -->
+						<img border="0" src="{post_thumb}" width="80" align="left" style="padding: 5px;">
+						<!-- END thumb -->
+						<!-- BEGIN title -->
+						<b>{post_title}</b><br />
+						<!-- END title -->
+						<!-- BEGIN gadget -->
+						<a href="javascript:void(0);" onclick="{edit_onclick}">{gadget_description}</a>: 
+						<!-- END gadget -->
+						{post_description}
+						&nbsp;
+					</p>
+				</td>
+				<td style="{background}text-align: center;" class="syntacts-form-row">
+					<a href="javascript:void(0);" onclick="{post_onclick}">EDIT</a>&nbsp;
+				</td>	
+				<td style="{background}text-align: center;" class="syntacts-form-row">
+					<noscript>
+					<INPUT TYPE="checkbox" NAME="ID" VALUE="{post_id}">
+					</noscript>
+					<script>document.write('<a href="javascript:void(0);" onClick="deletePost({post_id});" title="Delete this Post">DELETE</a>');</script>
+				</td>
+			</tr>
+			<!-- END post -->
+			<tr id="syntactsCategories_no_items" style="display: none;" noDrop="true" noDrag="true"><td>&nbsp;</td><td style="text-align:left"><i>Nothing has been added, yet.</i></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+			<!-- END posts -->
+
+			<!-- BEGIN no_posts -->
+			<style>
+			#syntactsCategories_head {
+				display: none;
+			}
+			</style>
+			<tr id="syntactsCategories_no_items" noDrop="true" noDrag="true"><td>&nbsp;</td><td style="text-align:left"><i>Nothing has been added, yet.</i></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+			<!-- END no_posts -->
+
+		</tbody>
+	</table>
+	<script type="text/javascript">
+		Event.observe(window, "load",function(){
+			var table = document.getElementById('syntactsCategories');
+			var tableDnD = new BlogTableDnD();
+			tableDnD.init(table);
+		});
+	</script>
+	<table width="100%" border="0" cellspacing="0" cellpadding="3">
+	<thead>
+	</thead>
+	<tbody>
+	  <tr>
+		<TD WIDTH="100%">&nbsp;</TD>					
+		<TD WIDTH="0%"><noscript><INPUT TYPE="Submit" VALUE="Delete" NAME="Delete"></noscript></TD>
+	  </tr>
+	</tbody>
+	</table>
+	</div>
+<!--
+</form>
+-->
+<script type="text/javascript">
+function validate2(form) {
+	// only used for delete
+	var c_value = "";
+	for (var i=0; i < form.ID.length; i++) {
+	   if (form.ID[i].checked) {
+			if (c_value == "") {
+				c_value = c_value + form.ID[i].value;
+			} else {
+				c_value = c_value + "," + form.ID[i].value;
+			}
+	   }
+	}
+	if (c_value == "") {
+		alert("You must check 'Delete' for items you wish to Delete.");
+		return false;
+	};
+
+	//alert(c_value);
+	form.idarray.value = c_value;
+
+	if (!confirm('Are you sure?')) {
+		return false;
+	}
+
+	return true;
+} //end of function
+
+var confirmPostDelete    = "{confirmPostDelete}";
+var confirmRssHide    = "{confirmRssHide}";
+var noItemsMsg       = "{empty_section}";
+var actionsTitle     = "{actionsTitle}";
+</script>
+<!-- END admin_posts -->

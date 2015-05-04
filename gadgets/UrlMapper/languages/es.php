@@ -24,7 +24,6 @@ define('_ES_URLMAPPER_MAPS_ADD_TITLE', "Agregar un mapa");
 define('_ES_URLMAPPER_MAPS_EDIT_TITLE', "Editar mapa");
 define('_ES_URLMAPPER_MAPS_ROUTE', "Ruta del mapa");
 define('_ES_URLMAPPER_MAPS_REGEXP', "Expresión regular");
-define('_ES_URLMAPPER_MAPS_EXTENSION', "Extensión");
 define('_ES_URLMAPPER_MAPS_PARAM_NAME', "Nombre");
 define('_ES_URLMAPPER_MAPS_PARAM_TYPE', "Tipo");
 define('_ES_URLMAPPER_MAPS_PARAM_LENGTH', "Longitud");

@@ -1,6 +1,8 @@
-<?php /* vim: se et ts=4 sw=4 sts=4 fdm=marker: */
+<?php
 /**
- * Copyright (c) 1998-2010 Manuel Lemos, Tomas V.V.Cox,
+ * PHP version 4, 5
+ *
+ * Copyright (c) 1998-2008 Manuel Lemos, Tomas V.V.Cox,
  * Stig. S. Bakken, Lukas Smith, Igor Feghali
  * All rights reserved.
  *
@@ -37,14 +39,15 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP version 5
+ * Author: Lukas Smith <smith@pooteeweet.org>
+ * Author: Igor Feghali <ifeghali@php.net>
  *
  * @category Database
  * @package  MDB2_Schema
  * @author   Lukas Smith <smith@pooteeweet.org>
  * @author   Igor Feghali <ifeghali@php.net>
  * @license  BSD http://www.opensource.org/licenses/bsd-license.php
- * @version  SVN: $Id: Schema.php 302413 2010-08-17 20:46:14Z ifeghali $
+ * @version  CVS: $Id: Schema.php,v 1.132 2009/02/22 21:43:22 ifeghali Exp $
  * @link     http://pear.php.net/packages/MDB2_Schema
  */
 
@@ -93,7 +96,7 @@ class MDB2_Schema extends PEAR
         'parser'                => 'MDB2_Schema_Parser',
         'writer'                => 'MDB2_Schema_Writer',
         'validate'              => 'MDB2_Schema_Validate',
-        'drop_obsolete_objects' => false
+        'drop_missing_tables'   => false
     );
 
     // }}}
@@ -279,6 +282,7 @@ class MDB2_Schema extends PEAR
             }
         }
 
+        $this->disconnect();
         if (!MDB2::isConnection($db)) {
             $db =& MDB2::factory($db, $db_options);
         }
@@ -388,18 +392,9 @@ class MDB2_Schema extends PEAR
         if (PEAR::isError($result)) {
             return $result;
         }
-
-        $max_identifiers_length = null;
-        if (isset($this->db->options['max_identifiers_length'])) {
-            $max_identifiers_length = $this->db->options['max_identifiers_length'];
-        }
-
-        $parser = new $class_name($variables, $fail_on_invalid_names, $structure,
-            $this->options['valid_types'], $this->options['force_defaults'],
-            $max_identifiers_length
-        );
-
-        $result = $parser->setInputString(file_get_contents($input_file));
+				
+        $parser = new $class_name($variables, $fail_on_invalid_names, $structure, $this->options['valid_types'], $this->options['force_defaults']);
+        $result = $parser->setInputFile($input_file);
         if (PEAR::isError($result)) {
             return $result;
         }
@@ -441,17 +436,7 @@ class MDB2_Schema extends PEAR
             return $result;
         }
 
-        $max_identifiers_length = null;
-        if (isset($this->db->options['max_identifiers_length'])) {
-            $max_identifiers_length = $this->db->options['max_identifiers_length'];
-        }
-
-        $val = new $class_name(
-            $this->options['fail_on_invalid_names'],
-            $this->options['valid_types'],
-            $this->options['force_defaults'],
-            $max_identifiers_length
-        );
+        $val = new $class_name($this->options['fail_on_invalid_names'], $this->options['valid_types'], $this->options['force_defaults']);
 
         $database_definition = array(
             'name' => $database,
@@ -725,7 +710,6 @@ class MDB2_Schema extends PEAR
             } else {
                 $current_indexes = $this->db->manager->listTableIndexes($table_name);
             }
-
             $this->db->popExpect();
             if (PEAR::isError($current_indexes)) {
                 if (!MDB2::isError($current_indexes, $errorcodes)) {
@@ -1314,7 +1298,13 @@ class MDB2_Schema extends PEAR
         $create    = (isset($database_definition['create']) && $database_definition['create']);
         $overwrite = (isset($database_definition['overwrite']) && $database_definition['overwrite']);
 
-        $previous_database_name = $this->db->getDatabase();
+        /**
+         *
+         * We need to clean up database name before any query to prevent
+         * database driver from using a inexistent database
+         *
+         */
+        $previous_database_name = $this->db->setDatabase('');
 
         // Lower / Upper case the db name if the portability deems so.
         if ($this->db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
@@ -1326,11 +1316,6 @@ class MDB2_Schema extends PEAR
         }
 
         if ($create) {
-            /**
-             * We need to clean up database name before any query to prevent
-             * database driver from using a inexistent database
-             */
-            $this->db->setDatabase('');
 
             $dbExists = $this->db->databaseExists($db_name);
             if (PEAR::isError($dbExists)) {
@@ -1469,17 +1454,16 @@ class MDB2_Schema extends PEAR
                     $changes['tables'] = MDB2_Schema::arrayMergeClobber($changes['tables'], $change);
                 }
             }
-        }
-        if (!empty($previous_definition['tables'])
-            && is_array($previous_definition['tables'])
-        ) {
-            foreach ($previous_definition['tables'] as $table_name => $table) {
-                if (empty($defined_tables[$table_name])) {
-                    $changes['tables']['remove'][$table_name] = true;
+
+            if (!empty($previous_definition['tables'])
+                && is_array($previous_definition['tables'])) {
+                foreach ($previous_definition['tables'] as $table_name => $table) {
+                    if (empty($defined_tables[$table_name])) {
+                        $changes['tables']['remove'][$table_name] = true;
+                    }
                 }
             }
         }
-
         if (!empty($current_definition['sequences']) && is_array($current_definition['sequences'])) {
             $changes['sequences'] = $defined_sequences = array();
             foreach ($current_definition['sequences'] as $sequence_name => $sequence) {
@@ -1499,17 +1483,14 @@ class MDB2_Schema extends PEAR
                     $changes['sequences'] = MDB2_Schema::arrayMergeClobber($changes['sequences'], $change);
                 }
             }
-        }
-        if (!empty($previous_definition['sequences'])
-            && is_array($previous_definition['sequences'])
-        ) {
-            foreach ($previous_definition['sequences'] as $sequence_name => $sequence) {
-                if (empty($defined_sequences[$sequence_name])) {
-                    $changes['sequences']['remove'][$sequence_name] = true;
+            if (!empty($previous_definition['sequences']) && is_array($previous_definition['sequences'])) {
+                foreach ($previous_definition['sequences'] as $sequence_name => $sequence) {
+                    if (empty($defined_sequences[$sequence_name])) {
+                        $changes['sequences']['remove'][$sequence_name] = true;
+                    }
                 }
             }
         }
-
         return $changes;
     }
 
@@ -1562,7 +1543,14 @@ class MDB2_Schema extends PEAR
                     }
 
                     if (!empty($change)) {
+                        if (array_key_exists('default', $change)
+                            && $change['default']
+                            && !array_key_exists('default', $field)) {
+                                $field['default'] = null;
+                        }
+
                         $change['definition'] = $field;
+
                         $changes['change'][$field_name] = $change;
                     }
                 } else {
@@ -1965,15 +1953,11 @@ class MDB2_Schema extends PEAR
                  */
                 if (in_array($index_name, $this->db->manager->listTableIndexes($table_name))) {
                     $result = $this->db->manager->dropIndex($table_name, $index_name);
-                    if (!empty($result) && PEAR::isError($result)) {
-                        return $result;
-                    }
-                }
-                if (in_array($index_name, $this->db->manager->listTableConstraints($table_name))) {
+                } elseif (in_array($index_name, $this->db->manager->listTableConstraints($table_name))) {
                     $result = $this->db->manager->dropConstraint($table_name, $index_name);
-                    if (!empty($result) && PEAR::isError($result)) {
-                        return $result;
-                    }
+                }
+                if (!empty($result) && PEAR::isError($result)) {
+                    return $result;
                 }
 
                 if (!empty($index['primary']) || !empty($index['unique'])) {
@@ -2037,10 +2021,9 @@ class MDB2_Schema extends PEAR
             }
         }
  
-        if ($this->options['drop_obsolete_objects']
+        if ($this->options['drop_missing_tables']
             && !empty($changes['remove'])
-            && is_array($changes['remove'])
-        ) {
+            && is_array($changes['remove'])) {
             foreach ($changes['remove'] as $table_name => $table) {
                 $result = $this->db->manager->dropTable($table_name);
                 if (PEAR::isError($result)) {
@@ -2049,7 +2032,7 @@ class MDB2_Schema extends PEAR
                 $alterations++;
             }
         }
-
+		
         if (!empty($changes['change']) && is_array($changes['change'])) {
             foreach ($changes['change'] as $table_name => $table) {
                 $indexes = array();
@@ -2248,7 +2231,7 @@ class MDB2_Schema extends PEAR
             }
 
             if (!empty($changes['tables']['remove']) && is_array($changes['tables']['remove'])) {
-                if ($this->options['drop_obsolete_objects']) {
+                if ($this->options['drop_missing_tables']) {
                     foreach ($changes['tables']['remove'] as $table_name => $table) {
                         $this->db->debug("$table_name:", __FUNCTION__);
                         $this->db->debug("\tRemoved table '$table_name'", __FUNCTION__);
@@ -2354,15 +2337,9 @@ class MDB2_Schema extends PEAR
                 }
             }
             if (!empty($changes['sequences']['remove']) && is_array($changes['sequences']['remove'])) {
-                if ($this->options['drop_obsolete_objects']) {
-                    foreach ($changes['sequences']['remove'] as $sequence_name => $sequence) {
-                        $this->db->debug("$sequence_name:", __FUNCTION__);
-                        $this->db->debug("\tRemoved sequence '$sequence_name'", __FUNCTION__);
-                    }
-                } else {
-                    foreach ($changes['sequences']['remove'] as $sequence_name => $sequence) {
-                        $this->db->debug("\tObsolete sequence '$sequence_name' left as is", __FUNCTION__);
-                    }
+                foreach ($changes['sequences']['remove'] as $sequence_name => $sequence) {
+                    $this->db->debug("$sequence_name:", __FUNCTION__);
+                    $this->db->debug("\tAdded sequence '$sequence_name'", __FUNCTION__);
                 }
             }
             if (!empty($changes['sequences']['change']) && is_array($changes['sequences']['change'])) {
@@ -2617,7 +2594,7 @@ class MDB2_Schema extends PEAR
             if (PEAR::isError($changes)) {
                 return $changes;
             }
-
+			
             if (is_array($changes)) {
                 $this->db->setOption('disable_query', $disable_query);
                 $result = $this->alterDatabase($current_definition, $previous_definition, $changes);
@@ -2786,3 +2763,4 @@ class MDB2_Schema_Error extends PEAR_Error
             $mode, $level, $debuginfo);
     }
 }
+?>

@@ -5,7 +5,7 @@
  * @category   JawsType
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_WSServer
@@ -13,7 +13,7 @@ class Jaws_WSServer
     /**
      * Return true or false if the webservice($GLOBALS['server'] flag) is running
      *
-     * @return  bool     True if server is running, false if not.
+     * @return  boolean  True if server is running, false if not.
      * @access  public
      */
     function IsActive()
@@ -57,5 +57,5 @@ class Jaws_WSServer
 
         return false;
     }
-
 }
+?>

@@ -1,0 +1,34 @@
+<!-- BEGIN comment -->
+	<p style="padding-top: 6px; padding-bottom: 6px;">
+	<!-- BEGIN logo -->
+		<span style="display: inline;"><a href="{order_url}"><img align="left" border="0" src="{logo}" style="padding-right: 5px; padding-bottom: 40px;" /></a></span>
+	<!-- END logo -->
+		<span style="display: inline; padding-top: 6px; padding-bottom: 6px;">
+		<span style="display: inline; line-height: 20px; font-size: 11px; color: gray;">Order from {owner_link_start}{owner_name}{owner_link_end}</span><br />
+	<!-- BEGIN status_note -->
+		<br />{status_note}<br /><br />
+	<!-- END status_note -->
+		Order number: <a href="{order_url}">{orderno}</a><br />
+	<!-- BEGIN status -->
+		<!-- BEGIN status_changed_start -->
+			<strong>
+		<!-- END status_changed_start -->
+			Order status: {order_status}
+		<!-- BEGIN status_changed_end -->
+			</strong>
+		<!-- END status_changed_end -->
+			<br />
+	<!-- END status -->
+		Order total: {order_total}<br />
+	<!-- BEGIN items -->
+		Product(s): 
+	<!-- BEGIN item -->
+		{comma}<a href="{item_link}">{item_title}</a>&nbsp;({item_qty})
+	<!-- END item -->
+	<!-- END items -->
+		</span>
+		<span style="padding-top: 6px; padding-bottom: 6px; float: none; clear: both; display: block;">
+		<a href="{order_url}">Click here to view it</a>
+		</span>
+	</p>
+<!-- END comment -->

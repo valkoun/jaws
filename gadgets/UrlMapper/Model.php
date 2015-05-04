@@ -5,56 +5,54 @@
  * @category   GadgetModel
  * @package    UrlMapper
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2008-2012 Jaws Development Group
+ * @copyright  2008-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class UrlMapperModel extends Jaws_Model
 {
-
     /**
-     * Checks if map already exists or not
+     * Adds a new custom map
      *
      * @access   public
-     * @param    string    $gadget      Gadget name (FS name)
-     * @param    string    $action      Gadget action to use
+     * @param    string    $gadget      Gadget's name (FS name)
+     * @param    string    $action      Gadget's action to use
      * @param    string    $map         Map to use (foo/bar/{param}/{param2}...)
      * @param    string    $extension   Extension of map
-     * @return   bool      Exists/Doesn't exists
+     * @return   boolean   Success/Failure
      */
-    function MapExists($gadget, $action, $map, $extension = '')
+    function AddMap($gadget, $action, $map, $regexp, $extension = '', $custom = true)
     {
+        if (!empty($extension) && $extension{0} != '.') {
+            $extension = '.'.$extension;
+        }
+
         $params = array();
         $params['gadget']    = $gadget;
         $params['action']    = $action;
+        $params['regexp']    = $regexp;
         $params['extension'] = $extension;
-        $params['map']       = $map;
+        $params['custom']    = $custom;
+        $params['map']       = $map; // this item must be at end of array
 
         $sql = '
-            SELECT
-                COUNT([id])
-            FROM [[url_maps]]
-            WHERE
-                [gadget] = {gadget}
-              AND
-                [action] = {action}
-              AND
-                [map] = {map}
-              AND
-                [extension] = {extension}';
+            INSERT INTO [[url_maps]]
+                ([gadget], [action], [map], [regexp], [extension], [custom])
+            VALUES
+                ({gadget}, {action}, {map}, {regexp}, {extension}, {custom})';
 
-        $result = $GLOBALS['db']->queryOne($sql, $params);
+        $result = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($result)) {
-            return $result;
+            return new Jaws_Error(_t('URLMAPPER_ERROR_MAP_NOT_ADDED'), _t('URLMAPPER_NAME'));
         }
 
-        return ($result == '0') ? false : true;
+        return true;
     }
 
     /**
-     * Returns all aliases stored in DB
+     * Returns all aliases stored in the DB
      *
      * @access  public
-     * @return  array   List of URL aliases
+     * @return  array   Array of URL aliases
      */
     function GetAliases()
     {
@@ -98,11 +96,11 @@ class UrlMapperModel extends Jaws_Model
     }
 
     /**
-     * Checks if hash already exists or not
+     * Returns true if hash already exists
      *
      * @access   public
-     * @param    string $hash   Alias HASH value
-     * @return   bool   Exists/Doesn't exists
+     * @param    string    $hash    Alias HASH value
+     * @return   boolean   Exists/Doesn't exists
      */
     function AliasExists($hash)
     {
@@ -117,28 +115,38 @@ class UrlMapperModel extends Jaws_Model
 
         $result = $GLOBALS['db']->queryOne($sql, $params);
         if (Jaws_Error::IsError($result)) {
-            return $result;
+            return true;
         }
 
         return ($result == '0') ? false : true;
     }
 
     /**
-     * Returns maps stored in DB
+     * Returns the maps of a certain gadget/action stored in the DB
      *
      * @access  public
-     * @return  array   List of maps
+     * @param   boolean $base   Include base map
+     * @param   boolean $custom Include custom map
+     * @return  array   Array of maps
      */
-    function GetMaps()
+    function GetMaps($base = true, $custom = false)
     {
+        $params = array();
+        $params['base']   = !$base;
+        $params['custom'] = $custom;
+
         $sql = '
             SELECT
-                [gadget], [action], [map], [regexp], [extension],
-                [custom_map], [custom_regexp], [custom_extension]
+                [id], [gadget], [action], [map], [regexp], [extension], [custom]
             FROM [[url_maps]]
-            ORDER BY [gadget], [order] ASC';
+            WHERE
+                [custom] = {base}
+              OR
+                [custom] = {custom}
+            ORDER BY [id] ASC';
 
-        $result = $GLOBALS['db']->queryAll($sql);
+        $types = array('integer', 'text', 'text', 'text', 'text', 'text', 'boolean');
+        $result = $GLOBALS['db']->queryAll($sql, $params, $types);
         if (Jaws_Error::IsError($result)) {
             return array();
         }
@@ -147,12 +155,72 @@ class UrlMapperModel extends Jaws_Model
     }
 
     /**
-     * Returns the real path of an alias(given path), if no alias is found
+     * Returns the maps of a certain gadget/action stored in the DB
+     *
+     * @access  public
+     * @param   string  $gadget   Gadget's name (FS name)
+     * @param   string  $action   Gadget's action to use
+     * @return  array   Array of custom maps
+     */
+    function GetActionMaps($gadget, $action)
+    {
+        $params = array();
+        $params['gadget'] = $gadget;
+        $params['action'] = $action;
+
+        $sql = '
+            SELECT
+                [id], [map], [extension], [custom]
+            FROM [[url_maps]]
+            WHERE
+                [gadget] = {gadget}
+              AND
+                [action] = {action}
+            ORDER BY [id] ASC';
+
+        $types = array('integer', 'text', 'text', 'boolean');
+        $result = $GLOBALS['db']->queryAll($sql, $params, $types);
+        if (Jaws_Error::IsError($result)) {
+            return array();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns only the map route of a certain map (by its ID)
+     *
+     * @access  public
+     * @param   int      $id       Map's ID
+     * @return  string   Map route
+     */
+    function GetMapRoute($id)
+    {
+        $params = array();
+        $params['id'] = $id;
+
+        $sql = '
+            SELECT
+                [map], [regexp], [extension], [custom]
+            FROM [[url_maps]]
+            WHERE [id] = {id}';
+
+        $types = array('text', 'text', 'text', 'boolean');
+        $result = $GLOBALS['db']->queryRow($sql, $params);
+        if (Jaws_Error::IsError($result)) {
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the real path of an alias (given path), if no alias is found
      * it returns false
      *
      * @access  public
      * @param   string  $alias  Alias
-     * @return  mixed   Real path(URL) or false
+     * @return  mixed   Real path (URL) or false
      */
     function GetAliasPath($alias)
     {

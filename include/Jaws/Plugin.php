@@ -1,12 +1,13 @@
 <?php
 /**
- * Class parent of all plugins, features that each gadget can have
- * to print nice text/images
+ * Plugin platform. Features that can manipulate all rendered output,  
+ * to print nice text/images, etc.
  *
  * @category   Plugins
+ * @category   developer_feature
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Plugin
@@ -34,7 +35,7 @@ class Jaws_Plugin
 
     /**
      * @access  private
-     * @var     bool
+     * @var     boolean
      * @see     function  IsFriendly
      */
     var $_IsFriendly;
@@ -90,7 +91,7 @@ class Jaws_Plugin
      * Get the friendly state of the plugin, friendly or non-friendly
      *
      * @access  public
-     * @return  bool    value of $_IsFriendly
+     * @return  boolean value of $_IsFriendly
      */
     function IsFriendly()
     {
@@ -145,18 +146,21 @@ class Jaws_Plugin
     }
 
     /**
-     * Deprecated method
+     * Initializes the translation files
+     *
+     * @access  public
+     * @return  string
      */
     function LoadTranslation()
     {
-        return true;
+        $GLOBALS['app']->Translate->LoadTranslation($this->_Name, JAWS_PLUGIN);
     }
 
     /**
      * Enable the plugin (creates the registry keys)
      *
      * @access  public
-     * @return  bool     True if everything is OK or Jaws_Error on failure
+     * @return  boolean  True if everything is OK or Jaws_Error on failure
      */
     function EnablePlugin($plugin = null)
     {
@@ -172,14 +176,12 @@ class Jaws_Plugin
         }
 
         if (strtolower($plugin) === 'core') {
-            return new Jaws_Error(_t('_JMS_PLUGINS_PLUGIN_CANT_HAVE_NAME_CORE', $plugin),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('_JMS_PLUGINS_PLUGIN_CANT_HAVE_NAME_CORE', $plugin), $plugin);
         }
 
         $file = JAWS_PATH . 'plugins/' . $plugin . '/' . $plugin . '.php';
         if (!file_exists($file)) {
-            return new Jaws_Error(_t('_JMS_PLUGINS_PLUGIN_DOESNT_EXISTS', $plugin),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('_JMS_PLUGINS_PLUGIN_DOESNT_EXISTS', $plugin), $plugin);
         }
 
         $pluginkey   = '/plugins/parse_text/' . $plugin . '/enabled';
@@ -190,8 +192,7 @@ class Jaws_Plugin
             !$GLOBALS['app']->Registry->NewKey($pluginkey, 'true') ||
             !$GLOBALS['app']->Registry->NewKey($pluginusein, '*')
         ) {
-            return new Jaws_Error(_t('JMS_PLUGINS_ENABLED_FAILURE', $plugin),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('JMS_PLUGINS_ENABLED_FAILURE', $plugin), $plugin);
         }
 
         // Put it in the enabled plugin record
@@ -204,8 +205,7 @@ class Jaws_Plugin
         $pluginObj = new $plugin;
         $result = $pluginObj->InstallPlugin();
         if (Jaws_Error::IsError($result)) {
-            return new Jaws_Error(_t('JMS_PLUGINS_ENABLED_FAILURE', $plugin),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('JMS_PLUGINS_ENABLED_FAILURE', $plugin), $plugin);
         }
 
         $GLOBALS['app']->Registry->Commit($plugin, 'plugins');
@@ -244,8 +244,8 @@ class Jaws_Plugin
 
     /**
      * This function disables a plugin
-     * @param   string $plugin The name of the plugin to disable
-     * @access  public
+     * @param string $plugin The name of the plugin to disable
+     * @access public
      */
     function DisablePlugin($plugin = null)
     {
@@ -262,8 +262,7 @@ class Jaws_Plugin
 
         $file = JAWS_PATH . 'plugins/' . $plugin . '/' . $plugin . '.php';
         if (!file_exists($file)) {
-            return new Jaws_Error(_t('_GLOBAL_PLUGINS_PLUGIN_DOES_NOT_EXISTS', $plugin),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('_GLOBAL_PLUGINS_PLUGIN_DOES_NOT_EXISTS', $plugin), $plugin);
         }
 
 
@@ -278,8 +277,7 @@ class Jaws_Plugin
         $pluginObj = new $plugin;
         $result = $pluginObj->UninstallPlugin();
         if (Jaws_Error::IsError($result)) {
-            return new Jaws_Error(_t('JMS_PLUGINS_DISABLE_FAILURE', $plugin),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('JMS_PLUGINS_DISABLE_FAILURE', $plugin), $plugin);
         }
         $GLOBALS['app']->Registry->Commit($plugin, 'plugins');
         $GLOBALS['app']->Registry->Commit('core');

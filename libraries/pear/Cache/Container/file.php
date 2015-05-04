@@ -16,7 +16,7 @@
 // |          Sebastian Bergmann <sb@sebastian-bergmann.de>               |
 // +----------------------------------------------------------------------+
 //
-// $Id: file.php 293864 2010-01-23 03:49:21Z clockwerx $
+// $Id: file.php,v 1.18 2006/01/31 13:40:00 bate Exp $
 
 require_once 'Cache/Container.php';
 
@@ -24,7 +24,7 @@ require_once 'Cache/Container.php';
 * Stores cache contents in a file.
 *
 * @author   Ulf Wendel  <ulf.wendel@phpdoc.de>
-* @version  $Id: file.php 293864 2010-01-23 03:49:21Z clockwerx $
+* @version  $Id: file.php,v 1.18 2006/01/31 13:40:00 bate Exp $
 */
 class Cache_Container_file extends Cache_Container
 {
@@ -66,18 +66,18 @@ class Cache_Container_file extends Cache_Container
     * @var  string
     */
     var $filename_prefix = '';
-
-
+    
+    
     /**
     * List of cache entries, used within a gc run
-    *
+    * 
     * @var array
     */
     var $entries;
-
+    
     /**
     * Total number of bytes required by all cache entries, used within a gc run.
-    *
+    * 
     * @var  int
     */
     var $total_size = 0;
@@ -86,7 +86,7 @@ class Cache_Container_file extends Cache_Container
     /**
     * Max Line Length of userdata
     *
-    * If set to 0, it will take the default
+    * If set to 0, it will take the default 
     * ( 1024 in php 4.2, unlimited in php 4.3)
     * see http://ch.php.net/manual/en/function.fgets.php
     * for details
@@ -100,8 +100,8 @@ class Cache_Container_file extends Cache_Container
     *
     * @param    array   Config options: ["cache_dir" => ..., "filename_prefix" => ...]
     */
-    function Cache_Container_file($options = '')
-    {
+     function Cache_Container_file($options = '')
+     {
         if (is_array($options)) {
             $this->setOptions($options, array_merge($this->allowed_options, array('cache_dir', 'filename_prefix', 'max_userdata_linelength')));
         }
@@ -114,14 +114,14 @@ class Cache_Container_file extends Cache_Container
 
             // check if a trailing slash is in cache_dir
             if ($this->cache_dir{strlen($this->cache_dir)-1} != DIRECTORY_SEPARATOR)
-                $this->cache_dir .= '/';
+                 $this->cache_dir .= '/';
 
             if  (!file_exists($this->cache_dir) || !is_dir($this->cache_dir))
                 mkdir($this->cache_dir, 0755);
-       }
-       $this->entries = array();
-       $this->group_dirs = array();
-
+        }
+        $this->entries = array();
+        $this->group_dirs = array();
+                    
     } // end func contructor
 
     function fetch($id, $group)
@@ -207,7 +207,7 @@ class Cache_Container_file extends Cache_Container
         fclose($fh);
 
         // I'm not sure if we need this
-    // i don't think we need this (chregu)
+	// i don't think we need this (chregu)
         // touch($file);
 
         return true;
@@ -269,12 +269,12 @@ class Cache_Container_file extends Cache_Container
 
         $ok = $this->doGarbageCollection($maxlifetime, $this->cache_dir);
 
-        // check the space used by the cache entries
+        // check the space used by the cache entries        
         if ($this->total_size > $this->highwater) {
-
+        
             krsort($this->entries);
             reset($this->entries);
-
+            
             while ($this->total_size > $this->lowwater && list($lastmod, $entry) = each($this->entries)) {
                 if (@unlink($entry['file'])) {
                     $this->total_size -= $entry['size'];
@@ -282,15 +282,15 @@ class Cache_Container_file extends Cache_Container
                     new CacheError("Can't delete {$entry['file']}. Check the permissions.");
                 }
             }
-
+            
         }
-
+        
         $this->entries = array();
         $this->total_size = 0;
-
+        
         return $ok;
     } // end func garbageCollection
-
+    
     /**
     * Does the recursive gc procedure, protected.
     *
@@ -324,10 +324,10 @@ class Cache_Container_file extends Cache_Container
             $expire = fgets($fh, 11);
             fclose($fh);
             $lastused = filemtime($file);
-
+            
             $this->entries[$lastused] = array('file' => $file, 'size' => filesize($file));
             $this->total_size += filesize($file);
-
+            
             // remove if expired
             if (( ($expire && $expire <= time()) || ($lastused <= (time() - $maxlifetime)) ) && !unlink($file)) {
                 new Cache_Error("Can't unlink cache file '$file', skipping. Check permissions and path.", __FILE__, __LINE__);
@@ -358,7 +358,7 @@ class Cache_Container_file extends Cache_Container
         $dir = $this->cache_dir . $group . '/';
         if (is_writeable($this->cache_dir)) {
             if (!file_exists($dir)) {
-                mkdir($dir, 0755, true);
+                mkdir($dir, 0755);
                 clearstatcache();
             }
         } else {

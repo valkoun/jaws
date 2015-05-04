@@ -1,97 +1,95 @@
 <?php
-require_once JAWS_PATH . 'libraries/piwi/Widget/Bin/Bin.php';
-
 /**
- * Buttons with text and some stuff in them. Will be represented as a 'div'
+ * Widget that works as button with a image(as background) and with some text and actions
  *
  * @category   Widget
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
+require_once JAWS_PATH . 'libraries/piwi/Widget/Bin/Bin.php';
+
 class Jaws_Widgets_ImageButton extends Bin
 {
     /**
      * Image SRC. Will be used for the background
      *
-     * @access  private
-     * @var     string
-     * @see     SetImageSRC
+     * @access   private
+     * @var      string
+     * @see      SetImageSRC
      */
     var $_ImageSRC;
 
     /**
      * Text to display
      *
-     * @access  private
-     * @var     string
-     * @see     SetText
+     * @access   private
+     * @var      string
+     * @see      SetText
      */
     var $_Text;
 
     /**
      * Button's style to use
      *
-     * @access  private
-     * @var     string
-     * @see     SetButtonStyle(), GetButtonStyle()
+     * @access   private
+     * @var      string
+     * @see      SetButtonStyle(), GetButtonStyle()
      */
     var $_ButtonStyle;
 
     /**
      * Button's class to use
      *
-     * @access  private
-     * @var     string
-     * @see     SetButtonClass(), GetButtonClass()
+     * @access   private
+     * @var      string
+     * @see      SetButtonClass(), GetButtonClass()
      */
     var $_ButtonClass;
 
     /**
      * Text's style to use
      *
-     * @access  private
-     * @var     string
-     * @see     SetTextStyle(), GetTextStyle()
+     * @access   private
+     * @var      string
+     * @see      SetTextStyle(), GetTextStyle()
      */
     var $_TextStyle;
 
     /**
      * Text's class to use
      *
-     * @access  private
-     * @var     string
-     * @see     SetTextClass(), GetTextClass()
+     * @access   private
+     * @var      string
+     * @see      SetTextClass(), GetTextClass()
      */
     var $_TextClass;
 
     /**
      * Default action to use
      *
-     * @access  private
-     * @var     string
-     * @see     SetAction()
+     * @access   private
+     * @var      string
+     * @see      SetAction()
      */
     var $_Action;
 
     /**
      * ExtrActions that imagebutton will show bellow(as comments)
      *
-     * @access  private
-     * @var     array
-     * @see     AddAction
+     * @access   private
+     * @var      array
+     * @see      AddAction
      */
     var $_ExtraActions;
 
     /**
      * Constructor
      *
-     * @access  public
-     * @param   string  $text   Text of ImageButton
-     * @param   string  $img    Image to display
-     * @param   string  $action
-     * @return  void
+     * @access    public
+     * @param     string   $text  Text of ImageButton
+     * @param     string   $img   Image to display
      */
     function Jaws_Widgets_ImageButton($text, $img, $action = '')
     {
@@ -108,9 +106,8 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the default action
      *
-     * @access  public
-     * @param   string   $action  Action to use
-     * @return  void
+     * @access     public
+     * @param      string   $action  Action to use
      */
     function SetAction($action)
     {
@@ -120,9 +117,8 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the button style
      *
-     * @access  public
-     * @param   string  $style  Button Style to use
-     * @return  void
+     * @access     public
+     * @param      string   $style  Button Style to use
      */
     function ButtonStyle($style)
     {
@@ -132,9 +128,8 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the button class
      *
-     * @access  public
-     * @param   string  $class  Button Class to use
-     * @return  void
+     * @access     public
+     * @param      string   $class  Button Class to use
      */
     function SetButtonClass($class)
     {
@@ -144,9 +139,8 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the text style
      *
-     * @access  public
-     * @param   string   $style  Text Style to use
-     * @return  void
+     * @access     public
+     * @param      string   $style  Text Style to use
      */
     function TextStyle($style)
     {
@@ -156,9 +150,8 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the text class
      *
-     * @access  public
-     * @param   string   $class  Text Class to use
-     * @return  void
+     * @access     public
+     * @param      string   $class  Text Class to use
      */
     function SetTextClass($class)
     {
@@ -168,9 +161,8 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the text
      *
-     * @access  public
-     * @param   string   $text   Text of ImageButton
-     * @return  void
+     * @access      public
+     * @param       string   $text   Text of ImageButton
      */
     function SetText($text)
     {
@@ -180,22 +172,21 @@ class Jaws_Widgets_ImageButton extends Bin
     /**
      * Set the image src
      *
-     * @access  public
-     * @param   string  $img    Image to use as background
-     * @return  void
+     * @access      public
+     * @param       string   $img   Image to use as background
      */
     function SetImageSRC($img)
     {
         $this->_ImageSRC = $img;
     }
 
+
     /**
      * Adds a new extra action(that will be printed bellow the image)
      *
-     * @access  public
-     * @param   string  $text   Text of the link
-     * @param   string  $action URL of action or javascript
-     * @return  void
+     * @access      public
+     * @param       string    $text   Text of the link
+     * @param       string    $action URL of action or javascript
      */
     function AddExtraAction($text, $action)
     {
@@ -203,11 +194,12 @@ class Jaws_Widgets_ImageButton extends Bin
                                        'action' => $action);
     }
 
+
     /**
      * Build the widget and returns its xhtml
      *
-     * @access  public
-     * @return  string  XHTML of the Widget
+     * @access       public
+     * @return       string  XHTML of the Widget
      */
     function BuildXHTML()
     {
@@ -270,5 +262,4 @@ class Jaws_Widgets_ImageButton extends Bin
         //      }
         $this->_XHTML.= "</div>\n";
     }
-
 }

@@ -1,0 +1,551 @@
+<!-- BEGIN fullcalendar -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>Calendar</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" media="screen" type="text/css" href="{themeHREF}/style.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}/gadgets/ControlPanel/resources/public.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}/libraries/fullcalendar/fullcalendar.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}/gadgets/Calendar/resources/style.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}/libraries/greybox/gb_styles.css" />
+		<link rel="stylesheet" media="screen" type="text/css" href="{css}" />
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+		<script type="text/javascript" src="{JAWS_URL}/libraries/fullcalendar/jquery-ui-custom.js"></script>
+		<script type="text/javascript" src="{JAWS_URL}/libraries/fullcalendar/fullcalendar.min.js"></script>
+		<script type="text/javascript" src="{site_url}/index.php?gadget=Calendar&amp;action=Ajax&amp;client=all&amp;stub=CalendarAjax"></script>
+		<script type="text/javascript" src="{site_url}/index.php?gadget=Calendar&amp;action=AjaxCommonFiles"></script>
+		<script type="text/javascript" src="{site_url}/index.php?gadget=CustomPage&action=account_SetGBRoot"></script>
+		<script type="text/javascript" src="{JAWS_URL}/libraries/greybox/AJS.js"></script>
+		<script type="text/javascript" src="{JAWS_URL}/libraries/greybox/AJS_fx.js"></script>
+		<script type="text/javascript" src="{JAWS_URL}/libraries/greybox/gb_scripts.js"></script>
+		<script type="text/javascript" src="{JAWS_URL}/libraries/js/global2.js"></script>
+		<script type="text/javascript">
+		/**
+		 * Show the response
+		 */
+		function showResponse(message)
+		{
+			$('#msgbox-wrapper').css('width', '100%');
+			$('#msgbox-wrapper').css('overflow', 'visible');
+			$('#msgbox-wrapper').html('');
+			for(var i = 0; i < message.length; i++) {
+				var messageDiv = document.createElement('div');
+				messageDiv.innerHTML = message[i]['message'];
+				messageDiv.className = message[i]['css'];
+				messageDiv.id = 'msgbox_'+i;
+				//positionIt('msgbox-wrapper');
+				$('#'+messageDiv.id).css('display', '');
+				$('#msgbox-wrapper').append(messageDiv);
+				hideResponseBox(messageDiv);
+			}
+		}
+
+		function getScrollXY() {
+		  var scrOfX = 0, scrOfY = 0;
+		  if( typeof( window.pageYOffset ) == 'number' ) {
+			//Netscape compliant
+			scrOfY = window.pageYOffset;
+			scrOfX = window.pageXOffset;
+		  } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+			//DOM compliant
+			scrOfY = document.body.scrollTop;
+			scrOfX = document.body.scrollLeft;
+		  } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+			//IE6 standards compliant mode
+			scrOfY = document.documentElement.scrollTop;
+			scrOfX = document.documentElement.scrollLeft;
+		  }
+		  return scrOfY;
+		}
+
+		/**
+		 * Hide response boxes - Fast Code
+		 */
+		function hideResponseBox(name, timehide)
+		{
+			if (typeof(timehide) == 'undefined') {
+				timehide = '3000';
+			}
+
+			setTimeout('hideResponseBoxCallback("' + name.id + '")', timehide);
+		}
+
+		/**
+		 * Hide response boxes - JS Action (callback)
+		 */
+		function hideResponseBoxCallback(name)
+		{
+			$('#'+name).css('display', 'none');
+			$('#msgbox-wrapper').css('width', '0%'); 
+			$('#msgbox-wrapper').css('overflow', 'hidden');
+		}
+
+		/**
+		 * Show working notification.
+		 */
+		function showWorkingNotification(msg)
+		{
+			if (!msg) {
+				if(typeof loading_message=="undefined"){
+					msg = 'Loading...';
+				} else {
+					msg = loading_message;
+				}
+			}
+			if ($('#working_notification')) {
+				$('#working_notification').html(msg);
+				var scrollY = getScrollXY();
+				if (scrollY > 0) {
+					$('#working_notification').css('top', scrollY + 'px');
+				}
+				$('#working_notification').css('visibility', 'visible');
+			}
+		}
+
+		/**
+		 * Hide working notification
+		 */
+		function hideWorkingNotification()
+		{
+			if ($('#working_notification')) {
+				$('#working_notification').css('visibility', 'hidden');
+			}
+		}
+		
+		/**
+		 * Update agendaList View with events
+		 */
+		function updateLayoutList(element, allEvents)
+		{
+			showWorkingNotification();
+			var id_string = '';
+			$(''+element).html('');
+			$.each(allEvents, function(index, value) {
+				id_string = id_string+(id_string != '' ? ',' : '')+value['id'];
+				/*
+				var div = document.createElement('div');
+				div.appendChild(document.createTextNode(value['id']));
+				$('#'+element).append(div);
+				var div1 = document.createElement('div');
+				div1.appendChild(document.createTextNode(value['title']));
+				$('#'+element).append(div1);
+				var div2 = document.createElement('div');
+				div2.appendChild(document.createTextNode(value['start']));
+				$('#'+element).append(div2);
+				var div3 = document.createElement('div');
+				div3.appendChild(document.createTextNode(value['end']));
+				$('#'+element).append(div3);
+				var div4 = document.createElement('div');
+				div4.appendChild(document.createTextNode(value['clickUrl']));
+				$('#'+element).append(div4);
+				var div5 = document.createElement('div');
+				div5.appendChild(document.createTextNode(value['deleteBtn']));
+				$('#'+element).append(div5);
+				var div6 = document.createElement('div');
+				div6.appendChild(document.createTextNode(value['allDay']));
+				$('#'+element).append(div6);
+				var div7 = document.createElement('div');
+				div7.appendChild(document.createTextNode(value['isTentative']));
+				$('#'+element).append(div7);
+				if (value['title'] == 'Reserved' && value['start']<=end && value['end']>=start) {
+					return true;
+				}
+				*/
+			});
+			ifrm = document.createElement("IFRAME");
+			ifrm.setAttribute('id', 'show_comments');
+			ifrm.setAttribute('name', 'show_comments');
+			ifrm.setAttribute("src", '{site_url}/index.php?gadget=Users&action=ShowRawComments&fusegadget=Calendar&id='+id_string+'&h=false&p=true&i=false');
+			ifrm.style.width = "100%";
+			ifrm.style.height = "1000px";
+			ifrm.style.borderWidth = 0+"px";
+			ifrm.setAttribute('frameborder', '0');
+			//ifrm.setAttribute('scrolling', 'no');
+			ifrm.setAttribute('allowtransparency', 'true');
+			ifrm.frameBorder = "0";
+			//ifrm.scrolling = "no";
+			$(ifrm).load(function() {
+				hideWorkingNotification();
+			});
+			$(''+element).append(ifrm);
+		}
+		
+		var calendar{cid};
+		var changedView{cid} = false;
+		</script>
+		<script type="text/javascript" src="{JAWS_URL}/gadgets/Calendar/resources/client_script.js"></script>
+		<script type='text/javascript'>
+			$(document).ready(function() {
+				var date = new Date();
+				var d = date.getDate();
+				var m = date.getMonth();
+				var y = date.getFullYear();
+				
+				calendar{cid} = $('#fullcalendar{cid}').fullCalendar({
+				<!-- BEGIN simple_header -->
+					header: {
+						left: '',
+						center: 'title',
+						right: 'prev,next today'
+					},
+				<!-- END simple_header -->
+				<!-- BEGIN advanced_header -->
+					header: {
+						left: 'prev,next today',
+						center: 'title',
+						right: 'month,agendaWeek,agendaDay'
+					},
+				<!-- END advanced_header -->
+				
+				<!-- BEGIN event_select -->
+					selectable: true,
+					selectHelper: true,
+					select: function(start, end, allDay) {
+						var startdate = $.fullCalendar.formatDate( start, 'MM/dd/yyyy' );
+						var enddate = $.fullCalendar.formatDate( end, 'MM/dd/yyyy' );
+						var readstart = $.fullCalendar.formatDate( start, 'MMMM dS' );
+						var readend = $.fullCalendar.formatDate( end, 'MMMM dS' );
+						
+						<!-- BEGIN event -->
+						var title = prompt('Event Title:');
+						if (title) {
+						<!-- END event -->
+						
+						<!-- BEGIN reservation -->
+						var allEvents = calendar{cid}.fullCalendar( 'clientEvents' );
+						var eventOnDay = false;
+						$.each(allEvents, function(index, value) {
+							if (value['title'] == 'Reserved' && value['start']<=end && value['end']>=start) {
+								eventOnDay = true;
+								return true;
+							}
+						});
+						<!-- END reservation -->
+						
+						<!-- BEGIN admin_reservation -->
+						if (eventOnDay === false) {
+							var title = 'Tentative';
+							var confirmed = confirm('Click "OK" if date(s) are Reserved or "Cancel" if they are only Tentative');
+							if (confirmed) {
+								title = 'Reserved';
+							}
+						<!-- END admin_reservation -->
+						
+						<!-- BEGIN public_reservation_start -->
+						var now = new Date();
+						var today = new Date($.fullCalendar.formatDate( now, 'MM/dd/yyyy' ));
+						if (today<=start && eventOnDay === false) {
+						var startdate = $.fullCalendar.formatDate( start, 'MM/dd/yyyy' );
+						var enddate = $.fullCalendar.formatDate( end, 'MM/dd/yyyy' );
+						if (enddate != startdate) {
+							var answer = confirm('Do you want to reserve '+readstart+' to '+readend+'?');
+						} else {
+							var answer = confirm('Do you want to reserve '+readstart+'?');
+						}
+						if (answer) {
+						<!-- END public_reservation_start -->
+							
+							//alert('startdate = ' + startdate + ' ::: start = ' + start + ' ::: enddate = ' + enddate + ' ::: end = ' + end + ' ::: allDay = ' + allDay);
+							if (allDay) {
+								addEvent({cid}, title, startdate, enddate);
+							} else {
+								var iTimeHr = $.fullCalendar.formatDate( start, 'h' );
+								var iTimeMin = $.fullCalendar.formatDate( start, 'mm' );
+								var iTimeSuffix = $.fullCalendar.formatDate( start, 'TT' );
+								var eTimeHr = $.fullCalendar.formatDate( end, 'h' );
+								var eTimeMin = $.fullCalendar.formatDate( end, 'mm' );
+								var eTimeSuffix = $.fullCalendar.formatDate( end, 'TT' );
+								addEvent({cid}, title, startdate, enddate, iTimeHr, iTimeMin, iTimeSuffix, eTimeHr, eTimeMin, eTimeSuffix);
+							}
+							
+						<!-- BEGIN public_reservation_end -->
+							document.forms[0].elements['Arrival Date__REQUIRED__'].value = startdate;
+							if (enddate != startdate) {
+								document.forms[0].elements['Departure Date'].value = enddate;
+							}
+							document.getElementById('calendarInfo').style.display = 'block'; 
+						}
+						<!-- END public_reservation_end -->
+						
+						} 
+						calendar{cid}.fullCalendar('unselect');
+					},
+					editable: true,
+				<!-- END event_select -->
+				
+				<!-- BEGIN eventClick -->
+					eventClick: function(event) {
+						if (event.clickUrl) {
+							GB_showCenter('', event.clickUrl, 550, 700);
+							//window.open(event.clickUrl);
+							return false;
+						}
+					},
+				<!-- END eventClick -->
+				<!-- BEGIN eventDrop -->
+					eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+						if (dayDelta == 0 && minuteDelta == 0) {
+						} else {
+							updateEventDelta(event.id, dayDelta, minuteDelta, 0, 0, allDay);
+							/*
+							alert( event.title + " was moved " + dayDelta + " days and " + minuteDelta + " minutes.");
+							if (allDay) {alert("Event is now all-day");} else {alert("Event has a time-of-day");}
+							if (!confirm("Are you sure about this change?")) {revertFunc();}
+							*/
+						}
+					},
+				<!-- END eventDrop -->
+				<!-- BEGIN eventResize -->
+					eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
+						if (dayDelta == 0 && minuteDelta == 0) {
+						} else {
+							updateEventDelta(event.id, 0, 0, dayDelta, minuteDelta);
+							/*
+							alert("The end date of " + event.title + " has been moved " + dayDelta + " days and " + minuteDelta + " minutes.");
+							if (!confirm("is this okay?")) { revertFunc(); }
+							*/
+						}	
+					},
+				<!-- END eventResize -->
+					eventRender: function( event, element, view ) {
+						<!-- BEGIN event_tentative -->
+							if (event.isTentative) {
+								element.css('display', 'none');
+							}						
+						<!-- END event_tentative -->
+						<!-- BEGIN eventRender -->
+						if (event.clickUrl) {
+							/*
+							element.children("a").click(function() {
+								if (event.clickUrl.indexOf('account_A_form') > -1) {
+									GB_showCenter('Event', event.clickUrl, 550, 700);
+								} else {
+									window.open(event.clickUrl);
+								}
+								GB_showCenter('', event.clickUrl, 550, 700);
+							});
+							*/
+						}
+						if (event.deleteBtn) {
+							element.children("a").css('width', '75%');
+							element.children("a").css('float', 'left');
+							$('&nbsp;' + event.deleteBtn).insertAfter(element.children("a"));
+						}
+						<!-- END eventRender -->
+					},
+					eventSources: [
+						'{json_events_url}'
+					],
+					loading: function(bool) {
+						if (bool) {
+							showWorkingNotification();
+						} else {
+							updateLayoutList('.fc-view-agendaList', calendar{cid}.fullCalendar( 'clientEvents' ));
+							hideWorkingNotification();
+						}
+					}
+				});
+				/*
+				calendar{cid}.fullCalendar( 'changeView', 'month' );
+				calendar{cid}.fullCalendar( 'next' );
+				calendar{cid}.fullCalendar( 'prev' );
+				*/
+			});
+		</script>
+		
+		<style type="text/css">
+			#layout_Display_Form__title {
+				display: none;
+			}
+		</style>
+	</head>
+	<body id="fullcalendar{cid}_body" class="Calendar-fullcalendar Calendar-fullcalendar-{cid} Calendar-fullcalendar-{actionName}" style="height: 100%; background: transparent none;">
+		<!-- Working Notification -->  
+		<div id="working_notification"></div>
+		  <script type="text/javascript">
+		   var loading_message = 'Loading...';
+		   var navigate_away_message = 'You have unsaved changes in this page';
+		  </script>
+		<!-- /Working Notification -->
+		<script type="text/javascript">
+			showWorkingNotification();
+			$(window).load(function () {
+				hideWorkingNotification();
+			});			
+		</script>
+		
+		<!-- BEGIN list_view -->
+		<div id="fc-agendaList-{cid}" style="display: none;">
+		</div>	
+		<!-- END list_view -->
+		
+		<div id="layout-calendar-head" class="gadget layout_head">
+		<h2 id="layout_{actionName}_title">{layout_title}</h2>
+		</div>
+
+		<div id="layout-calendar-body" class="gadget layout_body">
+			<script type="text/javascript">
+			  var confirmCalendarDelete    = "{CALENDAR_CATEGORY_CONFIRM_DELETE}";
+			  var confirmEventDelete      = "{CALENDAR_EVENT_CONFIRM_DELETE}";
+			</script>
+			<!-- BEGIN gadget_reservation_form -->
+			<div id="calendarInfo" style="display: none; background:#FFFFFF url({JAWS_URL}/gadgets/Calendar/images/right_menu_bg.png) repeat-x scroll left top; border:1px solid #BABDB6; margin:1em 150px; padding:15px; width:450px;">
+				<div style="text-align: right;">
+					<a href="javascript:void(0);" onclick="document.getElementById('calendarInfo').style.display = 'none';">Cancel</a>
+				</div>
+				{gadget_reservation_form}
+			</div>
+			<!-- END gadget_reservation_form -->
+			<div style="clear: both;">&nbsp;</div>
+			<!-- BEGIN calendar_text -->
+				<div style="text-align: center; padding: 10px;">
+					All blank dates below are available. You can <b>Click and Drag</b> on the dates below to "tentatively" book them, 
+					but there is no guarantee that you will reserve those dates. 
+					<!-- BEGIN link -->
+					<a href="javascript:void(0);" onclick="if (parent.document.getElementById('propnav_save')) {if (parent.document.getElementById('propnav_save').className.indexOf('disabled') == -1) {if (parent.document.getElementById('tour')) {parent.document.getElementById('tour').style.display = 'none';}; if (parent.document.getElementById('media_map')) {parent.document.getElementById('media_map').style.display = 'none';}; if (parent.document.getElementById('calendar')) {parent.document.getElementById('calendar').style.display = 'none';}; if (parent.document.getElementById('email')) {parent.document.getElementById('email').style.display = 'none';}; if (parent.document.getElementById('save')) {var target = parent.document.getElementById('save'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};} else {window.open('{site_url}/index.php?forms/1.html');};">
+					Contact us for more information
+					</a>
+					<!-- END link -->
+					</div>
+			<!-- END calendar_text -->
+			<div id="fullcalendar{cid}"></div>
+		</div>
+		<!-- BEGIN list_view_script -->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.fc-header-right tr').append('<td><div class="fc-button-agendaList fc-state-default fc-corner-right"><a><span>list</span></a></div></td>');
+				$('.fc-header-right .fc-button-agendaDay').removeClass('fc-corner-right').addClass('fc-no-right');
+				$('.fc-button-agendaDay').click(function() {
+					//calendar{cid}.fullCalendar( 'changeView', 'month' );
+					calendar{cid}.fullCalendar( 'changeView', 'agendaDay' );
+					if (changedView{cid} === false) {
+						calendar{cid}.fullCalendar( 'refetchEvents' );
+						changedView{cid} = true;
+					}
+					$('.fc-view-agendaList').remove();
+					$('.fc-button-agendaList').removeClass('fc-state-active');
+					$('.fc-view-agendaDay').css({'display': 'block'});
+					$('.fc-button-agendaDay').addClass('fc-state-active');
+				});
+				$('.fc-button-agendaWeek').click(function() {
+					//calendar{cid}.fullCalendar( 'changeView', 'agendaDay' );
+					calendar{cid}.fullCalendar( 'changeView', 'agendaWeek' );
+					if (changedView{cid} === false) {
+						calendar{cid}.fullCalendar( 'refetchEvents' );
+						changedView{cid} = true;
+					}
+					$('.fc-view-agendaList').remove();
+					$('.fc-button-agendaList').removeClass('fc-state-active');
+					$('.fc-view-agendaWeek').css({'display': 'block'});
+					$('.fc-button-agendaWeek').addClass('fc-state-active');
+				});
+				$('.fc-button-month').click(function() {
+					/*
+					//calendar{cid}.fullCalendar( 'changeView', 'agendaDay' );
+					calendar{cid}.fullCalendar( 'changeView', 'month' );
+					if (changedView{cid} === false) {
+						calendar{cid}.fullCalendar( 'refetchEvents' );
+						changedView{cid} = true;
+					}
+					$('.fc-view-agendaList').remove();
+					$('.fc-button-agendaList').removeClass('fc-state-active');
+					$('.fc-view-month').css({'display': 'block'});
+					$('.fc-button-month').addClass('fc-state-active');
+					*/
+					window.location.reload();
+				});
+				$('.fc-button-agendaList').click(function() {
+					calendar{cid}.fullCalendar( 'changeView', 'month' );
+					if (changedView{cid} === false) {
+						calendar{cid}.fullCalendar( 'refetchEvents' );
+						changedView{cid} = true;
+					}
+					$('.fc-view-month').css({'display': 'none'});
+					$('.fc-button-month').removeClass('fc-state-active');
+					$('.fc-view-agendaWeek').css({'display': 'none'});
+					$('.fc-button-agendaWeek').removeClass('fc-state-active');
+					$('.fc-view-agendaDay').css({'display': 'none'});
+					$('.fc-button-agendaDay').removeClass('fc-state-active');
+					$('.fc-header-right div.fc-button-agendaList','#fullcalendar{cid}').addClass('fc-state-active');
+					$('.fc-header-title').html('Upcoming events');
+					if(!$(".fc-view-agendaList")[0]){
+						$('.fc-content').append('<div class="fc-view-agendaList"></div>');
+					}
+					updateLayoutList('.fc-view-agendaList', calendar{cid}.fullCalendar( 'clientEvents' ));
+				});
+			});
+			$(window).load(function() {
+			<!-- BEGIN day -->
+				//calendar{cid}.fullCalendar( 'changeView', 'month' );
+				calendar{cid}.fullCalendar( 'changeView', 'agendaDay' );
+				$('.fc-view-agendaList').remove();
+				$('.fc-button-agendaList').removeClass('fc-state-active');
+				$('.fc-view-agendaDay').css({'display': 'block'});
+				$('.fc-button-agendaDay').addClass('fc-state-active');
+			<!-- END day -->
+			<!-- BEGIN week -->
+				//calendar{cid}.fullCalendar( 'changeView', 'agendaDay' );
+				calendar{cid}.fullCalendar( 'changeView', 'agendaWeek' );
+				$('.fc-view-agendaList').remove();
+				$('.fc-button-agendaList').removeClass('fc-state-active');
+				$('.fc-view-agendaWeek').css({'display': 'block'});
+				$('.fc-button-agendaWeek').addClass('fc-state-active');
+			<!-- END week -->
+			<!-- BEGIN list -->
+				//calendar{cid}.fullCalendar( 'changeView', 'month' );
+				$('.fc-view-month').css({'display': 'none'});
+				$('.fc-button-month').removeClass('fc-state-active');
+				$('.fc-view-agendaWeek').css({'display': 'none'});
+				$('.fc-button-agendaWeek').removeClass('fc-state-active');
+				$('.fc-view-agendaDay').css({'display': 'none'});
+				$('.fc-button-agendaDay').removeClass('fc-state-active');
+				$('.fc-header-right div.fc-button-agendaList','#fullcalendar{cid}').addClass('fc-state-active');
+				$('.fc-header-title').html('Upcoming events');
+				if(!$(".fc-view-agendaList")[0]){
+					$('.fc-content').append('<div class="fc-view-agendaList"></div>');
+				}
+			<!-- END list -->
+			<!-- BEGIN month -->
+				//calendar{cid}.fullCalendar( 'changeView', 'agendaDay' );
+				calendar{cid}.fullCalendar( 'changeView', 'month' );
+				$('.fc-view-agendaList').remove();
+				$('.fc-button-agendaList').removeClass('fc-state-active');
+				$('.fc-view-month').css({'display': 'block'});
+				$('.fc-button-month').addClass('fc-state-active');
+			<!-- END month -->
+			});
+		</script>
+		<!-- END list_view_script -->
+		<script>
+			$(window).load(function() {
+				var goDate = $.fullCalendar.parseDate( '{startdate}' );
+				calendar{cid}.fullCalendar( 'gotoDate', goDate );
+				calendar{cid}.fullCalendar( 'refetchEvents' );
+				updateLayoutList('.fc-view-agendaList', calendar{cid}.fullCalendar( 'clientEvents' ));
+			});
+		</script>
+		<!-- BEGIN embedded -->
+		<script>
+		function sizeFrame{id}() {
+			var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+			var fr{id} = document.createElement("IFRAME");  
+			fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Calendar_iframe_{id}"); 
+			fr{id}.setAttribute("name", "inneriframe{id}");
+			fr{id}.setAttribute("id", "inneriframe{id}");
+			fr{id}.style.width = 1+"px";  
+			fr{id}.style.height = 1+"px";
+			fr{id}.style.display = "none";
+			document.body.appendChild(fr{id});	
+		}
+		</script>
+		<!-- END embedded -->
+		<!-- BEGIN not_embedded -->
+		<script>
+		function sizeFrame{id}() {
+			return true;
+		}
+		</script>
+		<!-- END not_embedded -->
+	</body>
+</html>
+<!-- END fullcalendar -->

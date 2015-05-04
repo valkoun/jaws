@@ -1,0 +1,69 @@
+<?php
+/**
+ * Maps - Search gadget hook
+ *
+ * @category   GadgetHook
+ * @package    Maps
+ * @author     Alan Valkoun <valkoun@gmail.com>
+ * @copyright  2008 Alan Valkoun
+ */
+class MapsSearchHook
+{
+    /**
+     * Gets the gadget's search fields
+     */
+    function GetSearchFields() {
+        return array(
+                    array('[title]', '[description]', '[map_type]'),
+                    );
+    }
+
+    /**
+     * Returns an array with the results of a search
+     *
+     * @access  public
+     * @param   string  $pSql  Prepared search (WHERE) SQL
+     * @return  array   An array of entries that matches a certain pattern
+     */
+    function Hook($pSql = '')
+    {
+        $params = array('Active' => 'Y');
+
+        $sql = '
+            SELECT
+               [id], [title], [description], [custom_height],  
+				[ownerid], [active], [created], [updated], [map_type]
+            FROM [[maps]] 
+            WHERE [active] = {Active}
+            ';
+
+        $sql .= $pSql;
+        $sql .= ' ORDER BY [id] DESC';
+
+        $types = array('integer', 'text', 'text', 'integer', 'integer', 'text', 
+			'timestamp', 'timestamp', 'text');
+
+        $result = $GLOBALS['db']->queryAll($sql, $params, $types);
+        if (Jaws_Error::IsError($result)) {
+            return array();
+        }
+
+        $date  = $GLOBALS['app']->loadDate();
+        $pages = array();
+        foreach ($result as $p) {
+            $page = array();
+            $page['title'] = $p['title'];
+			$url = $GLOBALS['app']->Map->GetURLFor('Maps', 'Map', array('id' => $p['id']));
+
+            $page['url']     = $url;
+            $page['image']   = $GLOBALS['app']->GetJawsURL() . '/gadgets/Maps/images/logo.png';
+			$page['snippet'] = (strlen(strip_tags($p['description'])) > 247 ? substr(strip_tags($p['description']),0,247) : strip_tags($p['description']));
+            $page['date']    = $date->ToISO($p['updated']);
+
+            $stamp           = str_replace(array('-', ':', ' '), '', $p['updated']);
+            $pages[$stamp]   = $page;
+        }
+
+        return $pages;
+    }
+}

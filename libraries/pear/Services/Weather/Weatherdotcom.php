@@ -7,7 +7,7 @@
  * PHP versions 4 and 5
  *
  * <LICENSE>
- * Copyright (c) 2005-2011, Alexander Wirtz
+ * Copyright (c) 2005-2009, Alexander Wirtz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     CVS: $Id: Weatherdotcom.php 313789 2011-07-27 16:25:15Z eru $
+ * @version     CVS: $Id: Weatherdotcom.php 277074 2009-03-12 23:16:41Z eru $
  * @link        http://pear.php.net/package/Services_Weather
  * @link        http://www.weather.com/services/xmloap.html
  * @example     examples/weather.com-basic.php      weather.com-basic.php
@@ -73,9 +73,9 @@ require_once "Services/Weather/Common.php";
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     Release: 1.4.6
+ * @version     Release: 1.4.5
  * @link        http://pear.php.net/package/Services_Weather
  * @link        http://www.weather.com/services/xmloap.html
  * @example     examples/weather.com-basic.php      weather.com-basic.php
@@ -115,30 +115,6 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
      * @access  private
      */
     var $_links;
-
-    /**
-     * Object containing the location
-     *
-     * @var     object stdClass             $_location
-     * @access  private
-     */
-    var $_location;
-
-    /**
-     * Object containing the weather
-     *
-     * @var     object stdClass             $_weather
-     * @access  private
-     */
-    var $_weather;
-
-    /**
-     * Object containing the forecast
-     *
-     * @var     object stdClass             $_forecast
-     * @access  private
-     */
-    var $_forecast;
 
     /**
      * XML_Unserializer, used for processing the xml
@@ -181,7 +157,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
         }
 
         include_once "XML/Unserializer.php";
-        $unserializer = new XML_Unserializer(array("tagAsClass" => false,
+        $unserializer = &new XML_Unserializer(array("tagAsClass" => false,
                                                     "complexType" => "object",
                                                     "keyAttribute" => "type"));
         if (Services_Weather::isError($unserializer)) {
@@ -190,12 +166,6 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
         } else {
             $this->_unserializer = $unserializer;
         }
-
-        // Initialize the properties containing the data from the server
-        $this->_links    = null;
-        $this->_location = null;
-        $this->_weather  = null;
-        $this->_forecast = null;
 
         // Can't acquire an object here, has to be clean on every request
         include_once "HTTP/Request.php";
@@ -295,7 +265,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
         }
 
         // Get data from URL...
-        $request = new HTTP_Request($url, $this->_httpOptions);
+        $request = &new HTTP_Request($url, $this->_httpOptions);
         $status = $request->sendRequest();
         if (Services_Weather::isError($status) || (int) $request->getResponseCode() <> 200) {
             return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_WRONG_SERVER_DATA, __FILE__, __LINE__);
@@ -320,7 +290,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
                 return Services_Weather::raiseError($errno, __FILE__, __LINE__);
             } else {
                 // Valid data, lets get started
-                // Loop through the different sub-parts of the data for processing
+                // Loop through the different sub-parts of the data fro processing
                 foreach (get_object_vars($data) as $key => $val) {
                     switch ($key) {
                         case "head":
@@ -342,7 +312,8 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
                     $this->{"_".$varname} = $val;
                     if ($this->_cacheEnabled) {
                         // ...and cache if possible
-                        $this->_saveCache($id, $val, "", $varname);
+                        $expire = constant("SERVICES_WEATHER_EXPIRES_".strtoupper($varname));
+                        $this->_cache->extSave($id, $val, "", $expire, $varname);
                     }
                 }
             }
@@ -370,11 +341,11 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
         $locLow   = strtolower($location);
         
         // Check on cached data: MD5-hash of location has to be correct and the userdata has to be the same as the given location 
-        if ($this->_cacheEnabled && $locLow == $this->_getUserCache(md5($locLow), "search")) {
-            $search = $this->_getCache(md5($locLow), "search");
+        if ($this->_cacheEnabled && $locLow == $this->_cache->getUserData(md5($locLow), "search")) {
+            $search = $this->_cache->get(md5($locLow), "search");
         } else {
             // Get search data from server and unserialize
-            $request = new HTTP_Request("http://xoap.weather.com/search/search?where=".urlencode($location), $this->_httpOptions);
+            $request = &new HTTP_Request("http://xoap.weather.com/search/search?where=".urlencode($location), $this->_httpOptions);
             $status = $request->sendRequest();
             if (Services_Weather::isError($status) || (int) $request->getResponseCode() <> 200) {
                 return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_WRONG_SERVER_DATA, __FILE__, __LINE__);
@@ -399,7 +370,8 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
 
             if ($this->_cacheEnabled) {
                 // ...and cache if possible
-                $this->_saveCache(md5($locLow), $search, $locLow, "search");
+                $expire = constant("SERVICES_WEATHER_EXPIRES_SEARCH");
+                $this->_cache->extSave(md5($locLow), $search, $locLow, $expire, "search");
             }
         }
 
@@ -450,9 +422,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
 
         $linksReturn = array();
 
-        if (is_object($this->_links)) {
-            $linksReturn["cache"] = "MEM";
-        } elseif ($this->_cacheEnabled && ($links = $this->_getCache($id, "links"))) {
+        if ($this->_cacheEnabled && ($links = $this->_cache->get($id, "links"))) {
             // Get data from cache
             $this->_links = $links;
             $linksReturn["cache"] = "HIT";
@@ -498,9 +468,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
 
         $locationReturn = array();
 
-        if (is_object($this->_location)) {
-            $locationReturn["cache"] = "MEM";
-        } elseif ($this->_cacheEnabled && ($location = $this->_getCache($id, "location"))) {
+        if ($this->_cacheEnabled && ($location = $this->_cache->get($id, "location"))) {
             // Get data from cache
             $this->_location = $location;
             $locationReturn["cache"] = "HIT";
@@ -549,9 +517,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
 
         $weatherReturn = array();
 
-        if (is_object($this->_weather)) {
-            $weatherReturn["cache"] = "MEM";
-        } elseif ($this->_cacheEnabled && ($weather = $this->_getCache($id, "weather"))) {
+        if ($this->_cacheEnabled && ($weather = $this->_cache->get($id, "weather"))) {
             // Same procedure...
             $this->_weather = $weather;
             $weatherReturn["cache"] = "HIT";
@@ -563,11 +529,6 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
                 return $status;
             }
             $weatherReturn["cache"] = "MISS";
-        }
-
-        // Make sure the location object has been loaded
-        if (!is_object($this->_location)) {
-            $this->getLocation($id);
         }
 
         // Some explanation for the next two lines:
@@ -582,27 +543,25 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
         $weatherReturn["update"]            = gmdate(trim($this->_dateFormat." ".$this->_timeFormat), strtotime($update) - $adjustTZ);
         $weatherReturn["updateRaw"]         = $this->_weather->lsup;
         $weatherReturn["station"]           = $this->_weather->obst;
-        $weatherReturn["temperature"]       = round($this->convertTemperature($this->_weather->tmp, "f", $units["temp"]), 2);
-        $weatherReturn["feltTemperature"]   = round($this->convertTemperature($this->_weather->flik, "f", $units["temp"], 2));
+        $weatherReturn["temperature"]       = $this->convertTemperature($this->_weather->tmp, "f", $units["temp"]);
+        $weatherReturn["feltTemperature"]   = $this->convertTemperature($this->_weather->flik, "f", $units["temp"]);
         $weatherReturn["condition"]         = $this->_weather->t;
         $weatherReturn["conditionIcon"]     = $this->_weather->icon;
-        $weatherReturn["pressure"]          = round($this->convertPressure($this->_weather->bar->r, "in", $units["pres"]), 2);
+        $weatherReturn["pressure"]          = $this->convertPressure($this->_weather->bar->r, "in", $units["pres"]);
         $weatherReturn["pressureTrend"]     = $this->_weather->bar->d;
-        $weatherReturn["wind"]              = round($this->convertSpeed($this->_weather->wind->s, "mph", $units["wind"]), 2);
-        $weatherReturn["windGust"]          = round($this->convertSpeed($this->_weather->wind->gust, "mph", $units["wind"]), 2);
+        $weatherReturn["wind"]              = $this->convertSpeed($this->_weather->wind->s, "mph", $units["wind"]);
+        $weatherReturn["windGust"]          = $this->convertSpeed($this->_weather->wind->gust, "mph", $units["wind"]);
         $weatherReturn["windDegrees"]       = $this->_weather->wind->d;
         $weatherReturn["windDirection"]     = $this->_weather->wind->t;
-        $weatherReturn["humidity"]          = round($this->_weather->hmid, 1);
+        $weatherReturn["humidity"]          = $this->_weather->hmid;
         if (is_numeric($this->_weather->vis)) {
-            $weatherReturn["visibility"]    = round($this->convertDistance($this->_weather->vis, "sm", $units["vis"]), 2);
+            $weatherReturn["visibility"]    = $this->convertDistance($this->_weather->vis, "sm", $units["vis"]);
         } else {
             $weatherReturn["visibility"]    = $this->_weather->vis;
         }
         $weatherReturn["uvIndex"]           = $this->_weather->uv->i;
         $weatherReturn["uvText"]            = $this->_weather->uv->t;
-        $weatherReturn["dewPoint"]          = round($this->convertTemperature($this->_weather->dewp, "f", $units["temp"]), 2);
-        $weatherReturn["moon"]              = $this->_weather->moon->t;
-        $weatherReturn["moonIcon"]          = $this->_weather->moon->icon;
+        $weatherReturn["dewPoint"]          = $this->convertTemperature($this->_weather->dewp, "f", $units["temp"]);
 
         return $weatherReturn;
     }
@@ -635,9 +594,7 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
 
         $forecastReturn = array();
 
-        if (is_object($this->_forecast)) {
-            $forecastReturn["cache"] = "MEM";
-        } elseif ($this->_cacheEnabled && ($forecast = $this->_getCache($id, "forecast"))) {
+        if ($this->_cacheEnabled && ($forecast = $this->_cache->get($id, "forecast"))) {
             // Encore...
             $this->_forecast = $forecast;
             $forecastReturn["cache"] = "HIT";
@@ -649,11 +606,6 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
                 return $status;
             }
             $forecastReturn["cache"] = "MISS";
-        }
-
-        // Make sure the location object has been loaded
-        if (!is_object($this->_location)) {
-            $this->getLocation($id);
         }
 
         // Some explanation for the next two lines: (same as above)
@@ -671,29 +623,29 @@ class Services_Weather_Weatherdotcom extends Services_Weather_Common {
 
         for ($i = 0; $i < $days; $i++) {
             $day = array(
-                "temperatureHigh" => round($this->convertTemperature($this->_forecast->day[$i]->hi, "f", $units["temp"]), 2),
-                "temperatureLow"  => round($this->convertTemperature($this->_forecast->day[$i]->low, "f", $units["temp"]), 2),
+                "temperatureHigh" => $this->convertTemperature($this->_forecast->day[$i]->hi, "f", $units["temp"]),
+                "temperatureLow"  => $this->convertTemperature($this->_forecast->day[$i]->low, "f", $units["temp"]),
                 "sunrise"         => date($this->_timeFormat, strtotime($this->_forecast->day[$i]->sunr)),
                 "sunset"          => date($this->_timeFormat, strtotime($this->_forecast->day[$i]->suns)),
                 "day" => array(
                     "condition"     => $this->_forecast->day[$i]->part[0]->t,
                     "conditionIcon" => $this->_forecast->day[$i]->part[0]->icon,
-                    "wind"          => round($this->convertSpeed($this->_forecast->day[$i]->part[0]->wind->s, "mph", $units["wind"]), 2),
-                    "windGust"      => round($this->convertSpeed($this->_forecast->day[$i]->part[0]->wind->gust, "mph", $units["wind"]), 2),
+                    "wind"          => $this->convertSpeed($this->_forecast->day[$i]->part[0]->wind->s, "mph", $units["wind"]),
+                    "windGust"      => $this->convertSpeed($this->_forecast->day[$i]->part[0]->wind->gust, "mph", $units["wind"]),
                     "windDegrees"   => $this->_forecast->day[$i]->part[0]->wind->d,
                     "windDirection" => $this->_forecast->day[$i]->part[0]->wind->t,
                     "precipitation" => $this->_forecast->day[$i]->part[0]->ppcp,
-                    "humidity"      => round($this->_forecast->day[$i]->part[0]->hmid, 1)
+                    "humidity"      => $this->_forecast->day[$i]->part[0]->hmid
                 ),
                 "night" => array (
                     "condition"     => $this->_forecast->day[$i]->part[1]->t,
                     "conditionIcon" => $this->_forecast->day[$i]->part[1]->icon,
-                    "wind"          => round($this->convertSpeed($this->_forecast->day[$i]->part[1]->wind->s, "mph", $units["wind"]), 2),
-                    "windGust"      => round($this->convertSpeed($this->_forecast->day[$i]->part[1]->wind->gust, "mph", $units["wind"]), 2),
+                    "wind"          => $this->convertSpeed($this->_forecast->day[$i]->part[1]->wind->s, "mph", $units["wind"]),
+                    "windGust"      => $this->convertSpeed($this->_forecast->day[$i]->part[1]->wind->gust, "mph", $units["wind"]),
                     "windDegrees"   => $this->_forecast->day[$i]->part[1]->wind->d,
                     "windDirection" => $this->_forecast->day[$i]->part[1]->wind->t,
                     "precipitation" => $this->_forecast->day[$i]->part[1]->ppcp,
-                    "humidity"      => round($this->_forecast->day[$i]->part[1]->hmid, 1)
+                    "humidity"      => $this->_forecast->day[$i]->part[1]->hmid
                 )
             );
 

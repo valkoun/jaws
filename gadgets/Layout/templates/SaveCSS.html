@@ -1,0 +1,46 @@
+<!-- BEGIN template -->
+<html>
+<head>
+<base href="{BASE_URL}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style2{.dir}.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<script type="text/javascript" src="{base_script}?gadget=Layout&amp;action=Ajax&amp;client=all&amp;stub={stub}"></script>
+<script type="text/javascript" src="{base_script}?gadget=Layout&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/Layout/resources/script.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/js/admin.js"></script>
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+</head>
+<body>
+<form id="form1" name="form1" action="{base_script}" method="post">
+<input type="hidden" name="gadget" value="Layout" />
+<input type="hidden" name="action" value="SaveCSS" />
+
+<!-- BEGIN css_form -->
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+	<td style="padding: 5px; width: 0%;" id="update-css-btn">{update_button}</td>
+	<td style="padding: 5px; width: 100%;" id="upload-css-btn">{upload_button}</td>
+	<td style="width: 0%;">&nbsp;</td>
+  </tr>
+  <tr>
+	<td colspan="3" id="css_textarea"><textarea name="css_data" id="css_data" style="width: 590px; height: 375px;">{css_data}</textarea>&nbsp;</td>
+  </tr>
+  </table>
+<!-- END css_form -->
+</form>
+</body>
+</html>
+<!-- END template -->

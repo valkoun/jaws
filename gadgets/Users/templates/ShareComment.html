@@ -1,0 +1,63 @@
+<!-- BEGIN template -->
+<html>
+<head>
+<base href="{BASE_URL}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style2{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Users/resources/style.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+
+<script type="text/javascript" src="{base_script}?gadget=Users&amp;action=Ajax&amp;client=all&amp;stub={stub}"></script>
+<script type="text/javascript" src="{base_script}?gadget=Users&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/Users/resources/{script}.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/xtree/xtree.js"></script>
+
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+<script type="text/javascript">
+	Event.observe(window, "load",function(){
+		setCommentSharing();
+	});
+</script>
+</head>
+<body style="background: none transparent; padding-left: 10px; padding-right: 10px">
+<!-- Working Notification -->  <div id="working_notification"></div>
+   <script type="text/javascript">
+    var loading_message = 'Loading...';
+    var navigate_away_message = 'You have unsaved changes in this page';
+   </script>
+  <!-- /Working Notification -->  
+   <script type="text/javascript">
+   //showWorkingNotification();
+   </script>
+<form name="form1" action="{base_script}" method="post">
+<table id="controls">
+    <tr><th style="padding-bottom: 10px;">{share_title}</th></tr>
+    <tr><td>
+        <div id="gadget-list" class="gadget-share-list" style="width: auto; height: auto;">
+        <!-- BEGIN gadget -->
+        <div style="height: 32px; padding-top: 8px; padding-left: 34px;" class="gadget-item{class}" id="{id}" title="{desc}" onmouseover="this.class = 'gadget-item gadget-selected'+(this.className.indexOf('gadget-checked') > -1 ? ' gadget-checked' : ''); this.className = 'gadget-item gadget-selected'+(this.className.indexOf('gadget-checked') > -1 ? ' gadget-checked' : '');" onmouseout="this.class = 'gadget-item'+(this.className.indexOf('gadget-checked') > -1 ? ' gadget-checked' : ''); this.className = 'gadget-item'+(this.className.indexOf('gadget-checked') > -1 ? ' gadget-checked' : '');" onclick="{onclick}">{title}</div>
+        <!-- END gadget -->
+        </div></td>
+    </tr>
+</table>
+</form>
+<script type="text/javascript">
+	var permissionsMsg = "Share with:";
+	var prevPermissionsMsg = null;
+	var jaws_url = "{JAWS_URL}";
+</script>
+</body>
+</html>
+<!-- END template -->

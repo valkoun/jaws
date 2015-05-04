@@ -1,0 +1,31 @@
+<!-- BEGIN comment -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+	<tbody>
+	<tr>
+	<td width="100%" valign="top">
+		<p align="left" class="news-update news-event-update" style="padding-top: 5px; text-align: left; display: block;" id="news-event-update-{event_id}">
+		<!-- BEGIN logo -->
+			<span style="float: left;"><a href="{order_url}"><img align="left" border="0" src="{logo}" style="padding-right: 5px; padding-bottom: 5px;" /></a></span>
+		<!-- END logo -->
+		<!-- BEGIN icon -->
+		<span style="box-shadow: 1px 1px 4px #CCCCCC; border-radius: 6px 6px 6px 6px; display: block; float: left; margin-top: 5px; margin-right: 10px; margin-bottom: 10px; cursor: pointer; cursor: hand;" onclick="location.href='{event_url}';">
+		<span style="display: block; background: crimson; color: #FFFFFF; font-size: 9px; line-height: 15px; padding: 0px; min-width: 50px; text-align: center; border-radius: 6px 6px 0px 0px;">{event_start_shortmonth}</span>
+		<span style="display: block; background: #EEEEEE; border: 1px solid #CCCCCC; color: #666666; font-size: 23px; text-align: center; line-height: 28px; min-width: 50px; vertical-align: middle; border-radius: 0px 0px 6px 6px;">{event_start_date}</span>
+		</span>
+		<!-- END icon -->
+		<strong><a href="{event_url}">{event_title}</a></strong>
+		<br>{event_description}<br>
+		<span style="clear: both; float: none; font-size: 11px; color: gray;">{time_str}{date_str}{host}</span>
+		</p>
+	</td>
+	<td style="padding-left: 8px;">
+		<div class="news-event-actions">
+			<!-- BEGIN actions -->
+			{button_join}{button_maybe}{button_decline}
+			<!-- END actions -->
+		</div>
+	</td>
+	</tr>
+	</tbody>
+</table>
+<!-- END comment -->

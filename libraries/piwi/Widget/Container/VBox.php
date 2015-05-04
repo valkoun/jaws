@@ -57,9 +57,6 @@ class VBox extends Box
     {
         $this->_XHTML  = "<table cellpadding=\"0\"";
         $this->_XHTML .= $this->buildBasicXHTML();
-        if (!empty($this->_width)) {
-            $this->_XHTML .= " width = \"{$this->_width}\"";
-        }
         $this->_XHTML .= ">\n";
 
         foreach ($this->getItems() as $item) {
@@ -107,5 +104,5 @@ class VBox extends Box
 
         $this->_XHTML .= "</table>";
     }
-
 }
+?>

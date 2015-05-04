@@ -6,7 +6,7 @@
  * @package    Menu
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class MenuLayoutHTML
@@ -14,16 +14,14 @@ class MenuLayoutHTML
     /**
      * Request URL
      *
-     * @var     string
-     * @access  private
+     * @access private
      */
     var $_ReqURL = '';
 
     /**
      * Loads layout actions
      *
-     * @access  private
-     * @return  array   Actions array
+     * @access private
      */
     function LoadLayoutActions()
     {
@@ -48,22 +46,27 @@ class MenuLayoutHTML
      * Displays the menus with their items
      *
      * @access  public
-     * @param   int     $gid    group ID
-     * @return  string  XHTML content with menu and menu items
+     * @return  string HTML content with menu and menu items
      */
     function Display($gid = 0)
     {
-        $model = $GLOBALS['app']->LoadGadget('Menu', 'Model');
+		$GLOBALS['app']->Layout->AddHeadLink('gadgets/Menu/resources/style.css', 'stylesheet', 'text/css');
+		$GLOBALS['app']->Layout->AddHeadLink('libraries/opentip/opentip.css', 'stylesheet', 'text/css');
+		$GLOBALS['app']->Layout->AddScriptLink('libraries/js/global2.js');			
+		$GLOBALS['app']->Layout->AddScriptLink('libraries/opentip/opentip.js');			
+		$GLOBALS['app']->Layout->AddScriptLink('libraries/opentip/excanvas.js');			
+		$model = $GLOBALS['app']->LoadGadget('Menu', 'Model');
         $group = $model->GetGroups($gid);
         if (Jaws_Error::IsError($group) || empty($group) || $group['visible'] == 0) {
             return false;
         }
 
-        $this->_ReqURL = Jaws_Utils::getRequestURL();
+        $this->_ReqURL = Jaws_Utils::getRequestURL(BASE_SCRIPT);
         $this->_ReqURL = str_replace(BASE_SCRIPT, '', $this->_ReqURL);
 
         $tpl = new Jaws_Template('gadgets/Menu/templates/');
         $tpl->Load('Menu.html', true);
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $tpl->SetBlock('levels');
 
         $tpl_str = $tpl->GetRawBlockContent();
@@ -73,6 +76,7 @@ class MenuLayoutHTML
         $tpl->SetVariable('menus_tree', $this->GetNextLevel($model, $tpl_str, $group['id'], 0));
         if ($group['title_view'] == 1) {
             $tpl->SetBlock("menu/group_title");
+			$tpl->SetVariable('actionName', 'Display_'.$group['id'].'_');
             $tpl->SetVariable('title', $group['title']);
             $tpl->ParseBlock("menu/group_title");
         }
@@ -85,47 +89,53 @@ class MenuLayoutHTML
      * Displays the next level of parent menu
      *
      * @access  public
-     * @param   object  $model      Jaws_Model reference
-     * @param   string  $tpl_str    XHTML template content passed by reference
-     * @param   int     $gid        Group ID
-     * @param   int     $pid
-     * @return  string  XHTML template content with sub menu items
+     * @return  string HTML content with sub menu items
      */
     function GetNextLevel(&$model, &$tpl_str, $gid, $pid)
     {
         $menus = $model->GetLevelsMenus($pid, $gid, true);
-        if (Jaws_Error::IsError($menus) || empty($menus)) return '';
+        if ((strlen((string)$pid) > 6 && substr((string)$pid, 0, 6) == 'custom') || Jaws_Error::IsError($menus) || empty($menus)) return '';
 
         $tpl = new Jaws_Template();
         $tpl->LoadFromString($tpl_str, false);
         $tpl->SetBlock('levels');
 
+		$ulclass = ($pid > 0 ? " class=\"ul_sub_menu\" style=\"display: none;\"" : " class=\"ul_top_menu\"");
+		$tpl->SetVariable('ul_class', $ulclass);
+        //$scripts = '';
+		
+		// Let everyone know
+		$GLOBALS['app']->loadClass('Shouter', 'Jaws_EventShouter');
+		$res = $GLOBALS['app']->Shouter->Shout('onBeforeLoadMenus', array('gid' => $gid, 'pid' => $pid, 'menus' => $menus));
+		if (Jaws_Error::IsError($res) || !$res) {
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, 'Error: '.(Jaws_Error::IsError($res) ? $res->GetMessage() : "Could not call onBeforeLoadMenus event shouter."));
+            }
+            return false;
+		} else if (isset($res['menus']) && !count($res['menus']) <= 0) {
+			$menus = $res['menus'];
+		}
+
         $len = count($menus);
-        static $level = -1;
         for ($i = 0; $i < $len; $i++) {
-            $level++;
-            $tpl->SetVariable('level', $level);
             $tpl->SetBlock('levels/menu_item');
             $tpl->SetVariable('mid', $menus[$i]['id']);
             $tpl->SetVariable('title', $menus[$i]['title']);
             $tpl->SetVariable('url', $menus[$i]['url']);
             $tpl->SetVariable('target', ($menus[$i]['url_target']==0)? '_self': '_blank');
 
-            if (!empty($menus[$i]['image'])) {
-                $src = $GLOBALS['app']->Map->GetURLFor('Menu', 'LoadImage', array('id' => $menus[$i]['id']));
-                $image =& Piwi::CreateWidget('Image', $src, $menus[$i]['title']);
-                $image->SetID('');
-                $tpl->SetVariable('image', $image->get());
-            } else {
-                $tpl->SetVariable('image', '');
-            }
-
             //menu selected?
-            $selected = str_replace(BASE_SCRIPT, '', urldecode($menus[$i]['url'])) == $this->_ReqURL;
+			$selected = str_replace(BASE_SCRIPT, '', $menus[$i]['url']) == $this->_ReqURL;
+			$aclass = " class=\"".($pid > 0 ? 'sub_menu_a' : 'menu_a')."\"";
+			if ($selected) {
+				$aclass = " class=\"menu_a_on\"";
+			}
+			$tpl->SetVariable('a_class', $aclass);            
             //get sub level menus
             $subLevel = $this->GetNextLevel($model, $tpl_str, $gid, $menus[$i]['id']);
+            $tpl->SetVariable('sub_menu', $subLevel);
+			$tpl->SetBlock('levels/menu_item/class');
             if ($selected || !empty($subLevel) || $i == 0 || $i == $len - 1) {
-                $tpl->SetBlock('levels/menu_item/class');
                 if ($i == 0) {
                     $tpl->SetBlock('levels/menu_item/class/first');
                     $tpl->ParseBlock('levels/menu_item/class/first');
@@ -142,12 +152,11 @@ class MenuLayoutHTML
                     $tpl->SetBlock('levels/menu_item/class/super');
                     $tpl->ParseBlock('levels/menu_item/class/super');
                 }
-                $tpl->ParseBlock('levels/menu_item/class');
             }
+			$tpl->ParseBlock('levels/menu_item/class');
 
-            $tpl->SetVariable('sub_menu', $subLevel);
+
             $tpl->ParseBlock('levels/menu_item');
-            $level--;
         }
 
         $tpl->ParseBlock('levels');

@@ -1,0 +1,93 @@
+<!-- BEGIN account_news -->
+<!-- BEGIN news_item -->
+<div class="news-item news-item{item_count} news-{type}" id="news-{display_id}" onmouseout="if ($('news-{edit_or_delete}-{display_id}')){$('news-{edit_or_delete}-{display_id}').style.visibility = 'hidden';};" onmouseover="if ($('news-{edit_or_delete}-{display_id}')){$('news-{edit_or_delete}-{display_id}').style.visibility = 'visible';};">
+	<script type="text/javascript">
+	var replyChannel{poll_id} = pusher.subscribe("private-reply_channel_{poll_id}");
+	replyChannel{poll_id}.bind("new_reply", function(data) {
+		if ($('working_notification')) {
+			$('working_notification').style.display = 'none';
+		}
+		response = usersSync.getcomment(data['id'], data['gadget'], {public});
+		if ($('working_notification')) {
+			$('working_notification').style.display = 'inline';
+		}
+		if (response['id']) {
+			if ($('news-{display_id}') && $('news-{display_id}').down('.total-comments')) {
+				var comments_total = $('news-{display_id}').down('.total-comments').innerHTML;
+				$('news-{display_id}').down('.total-comments').innerHTML = (parseInt(comments_total.replace(" comments", ''), 10)+1) + " comments";
+			}
+			var news_comments_html = '<div class="comment comment-new" id="comment-'+response['id']+'" onmouseout="if ($(\'comment-delete-'+response['id']+'\')){$(\'comment-delete-'+response['id']+'\').style.visibility = \'hidden\';};" onmouseover="if ($(\'comment-delete-'+response['id']+'\')){$(\'comment-delete-'+response['id']+'\').style.visibility = \'visible\';};">';
+			news_comments_html += '<div id="comment-delete-'+response['id']+'" class="comment-delete"><a onclick="DeleteComment('+response['id']+', \'reply\');" href="javascript:void(0);">X</a></div>';		
+			news_comments_html += response['image']+'<div class="comment-body"><span class="comment-name">'+(response['link'] && response['link'] != '' ? '<a href="'+response['link']+'" class="comment-name">' : '')+response['name']+(response['link'] && response['link'] != '' ? '</a>' : '')+'</span>&nbsp;<span class="comment-preview" id="comment-preview-'+response['id']+'"'+response['preview_style']+'>'+response['preview_comment']+'</span><span class="comment-message" id="comment-full-'+response['id']+'"'+response['full_style']+'>'+response['comment']+'</span>';
+			news_comments_html += '</div><div class="comment-created news-timestamp">'+response['created']+'</div>';
+			news_comments_html += '</div>';
+			$('news-comments-{display_id}').innerHTML = $('news-comments-{display_id}').innerHTML + news_comments_html;
+		}
+	});
+	</script> 
+	<!-- BEGIN news_edit -->
+	<div class="news-edit menu news-edit-menu ym-hlist" id="news-edit-{display_id}">
+		<div class="content">
+			<ul class="ul_top_menu" style="text-align: left;">
+				<li id="news-menu-{display_id}" class="menu_li_item menu_first menu_super menu_last">
+					<a href="javascript:void(0);" target="_self" class="menu_a news-menu-title">
+					<!--[if gt IE 6]><!--></a><!--<![endif]--> 
+					<!--[if lte IE 6]><table><tr><td><![endif]-->
+					<ul class="ul_sub_menu">
+						<!-- BEGIN item -->
+						<li id="news-menu-{display_id}{num}" class="menu_li_item">
+							<a href="{url}" target="_self" class="sub_menu_a">{title}<!--[if gt IE 6]><!--></a><!--<![endif]-->							
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<!-- END item -->
+					</ul>
+					<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END news_edit -->
+	<!-- BEGIN news_delete -->
+	<div class="news-delete" id="news-delete-{display_id}"><a href="javascript:void(0);" onclick="DeleteComment({id}, 'update', '{display_id}');">X</a></div>
+	<!-- END news_delete -->
+	<div class="news-image">{image}</div>
+	<div class="news-body">
+		<div class="news-title">{title}</div>
+		<div class="news-info"{news_info_style}>
+			<span class="news-name">{link_start}{name}{link_end}<span class="news-preactivity">{preactivity}</span></span>
+			<div class="news-preview" id="news-preview-{display_id}"{preview_style}>{message_preview}</div>
+			<div class="news-message" id="news-full-{display_id}"{full_style}>{message}</div>
+		</div>
+		<div class="news-created news-timestamp"{news_info_style}>{created}{activity}{replies_total}{social_link}</div>
+		{social_html}
+		<!-- BEGIN comments -->
+		<div class="news-comments" id="news-comments-{display_id}">
+			{view_replies}
+			<!-- BEGIN comment -->
+			<div class="comment{class}" id="comment-{display_id}" onmouseout="if ($('comment-delete-{display_id}')){$('comment-delete-{display_id}').style.visibility = 'hidden';};" onmouseover="if ($('comment-delete-{display_id}')){$('comment-delete-{display_id}').style.visibility = 'visible';};">
+				<!-- BEGIN comment_delete -->
+				<div id="comment-delete-{display_id}" class="comment-delete"><a onclick="DeleteComment({id}, 'reply', '{display_id}');" href="javascript:void(0);">X</a></div>
+				<!-- END comment_delete -->
+				{image}<div class="comment-body"><span class="comment-name">{link_start}{link_start}{name}{link_end}</span>&nbsp;
+				<span class="comment-message" id="comment-preview-{display_id}"{preview_style}>{message_preview}</span>
+				<span class="comment-message" id="comment-full-{display_id}"{full_style}>{message}</span>
+				</div>
+				<div class="comment-created news-timestamp">{created}</div>
+			</div>
+			<!-- END comment -->
+		</div>
+		<div class="comments-form" id="comments-form-{display_id}">
+			<div class="comment-holder" id="comment-holder-{display_id}">
+			<input class="comment-click" id="comment-click-{display_id}" value="Reply to this..." onclick="showCommentForm('{display_id}');" />
+			</div>
+			<div class="comment-area" id="comment-area-{display_id}">
+			<textarea class="comment-entry" id="comment-entry-{display_id}" onblur="if (this.value == '') {hideCommentForm('{display_id}');};"></textarea>
+			</div>
+			<div class="comment-buttons" id="comment-buttons-{display_id}">{comment_submit}</div>
+		</div>
+		<!-- END comments -->
+	</div>
+</div>
+<div class="news-separator">&nbsp;</div>
+<!-- END news_item -->
+<!-- END account_news -->

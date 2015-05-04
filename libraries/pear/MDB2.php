@@ -1227,25 +1227,16 @@ class MDB2_Driver_Common extends PEAR
     /**
      * string array
      * @var     string
-     * @access  public
+     * @access  protected
      */
-    var $string_quoting = array(
-        'start' => "'",
-        'end' => "'",
-        'escape' => false,
-        'escape_pattern' => false,
-    );
+    var $string_quoting = array('start' => "'", 'end' => "'", 'escape' => false, 'escape_pattern' => false);
 
     /**
      * identifier quoting
      * @var     array
-     * @access  public
+     * @access  protected
      */
-    var $identifier_quoting = array(
-        'start' => '"',
-        'end' => '"',
-        'escape' => '"',
-    );
+    var $identifier_quoting = array('start' => '"', 'end' => '"', 'escape' => '"');
 
     /**
      * sql comments
@@ -2652,10 +2643,8 @@ class MDB2_Driver_Common extends PEAR
                     return $tableInfo;
                 }
                 $types = array();
-                $types_assoc = array();
                 foreach ($tableInfo as $field) {
                     $types[] = $field['mdb2type'];
-                    $types_assoc[$field['name']] = $field['mdb2type'];
                 }
             } else {
                 $types = null;
@@ -2682,13 +2671,6 @@ class MDB2_Driver_Common extends PEAR
             }
             if (!empty($types)) {
                 $err = $result->setResultTypes($types);
-                if (PEAR::isError($err)) {
-                    $result->free();
-                    return $err;
-                }
-            }
-            if (!empty($types_assoc)) {
-                $err = $result->setResultTypesAssoc($types_assoc);
                 if (PEAR::isError($err)) {
                     $result->free();
                     return $err;
@@ -4045,9 +4027,7 @@ class MDB2_Statement_Common
     function bindValue($parameter, $value, $type = null)
     {
         if (!is_numeric($parameter)) {
-            if (strpos($parameter, ':') === 0) {
-                $parameter = substr($parameter, 1);
-            }
+            $parameter = preg_replace('/^:(.*)$/', '\\1', $parameter);
         }
         if (!in_array($parameter, $this->positions)) {
             return $this->db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
@@ -4080,22 +4060,20 @@ class MDB2_Statement_Common
     {
         $types = is_array($types) ? array_values($types) : array_fill(0, count($values), null);
         $parameters = array_keys($values);
-        $this->db->pushErrorHandling(PEAR_ERROR_RETURN);
-        $this->db->expectError(MDB2_ERROR_NOT_FOUND);
         foreach ($parameters as $key => $parameter) {
+            $this->db->pushErrorHandling(PEAR_ERROR_RETURN);
+            $this->db->expectError(MDB2_ERROR_NOT_FOUND);
             $err = $this->bindValue($parameter, $values[$parameter], $types[$key]);
+            $this->db->popExpect();
+            $this->db->popErrorHandling();
             if (PEAR::isError($err)) {
                 if ($err->getCode() == MDB2_ERROR_NOT_FOUND) {
                     //ignore (extra value for missing placeholder)
                     continue;
                 }
-                $this->db->popExpect();
-                $this->db->popErrorHandling();
                 return $err;
             }
         }
-        $this->db->popExpect();
-        $this->db->popErrorHandling();
         return MDB2_OK;
     }
 
@@ -4118,9 +4096,7 @@ class MDB2_Statement_Common
     function bindParam($parameter, &$value, $type = null)
     {
         if (!is_numeric($parameter)) {
-            if (strpos($parameter, ':') === 0) {
-                $parameter = substr($parameter, 1);
-            }
+            $parameter = preg_replace('/^:(.*)$/', '\\1', $parameter);
         }
         if (!in_array($parameter, $this->positions)) {
             return $this->db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,

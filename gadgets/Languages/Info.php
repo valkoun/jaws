@@ -1,39 +1,36 @@
 <?php
 /**
- * Languages Core Gadget
+ * Language translation support in both admin and visitor sections. Default translation strings can be set by site 
+ * admins, and overridden by users or translated automatically using APIs such as Google Translate.
  *
- * @category   LanguagesInfo
+ * @category   GadgetInfo
+ * @category   feature
  * @package    Languages
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class LanguagesInfo extends Jaws_GadgetInfo
 {
     /**
-     * Gadget version
+     * Sets info about Languages gadget
      *
-     * @var     string
-     * @access  private
+     * @access public
      */
-    var $_Version = '0.2.1';
+    function LanguagesInfo()
+    {
+        parent::Init('Languages');
+        $this->GadgetName(_t('LANGUAGES_NAME'));
+        $this->GadgetDescription(_t('LANGUAGES_DESCRIPTION'));
+        $this->GadgetVersion('0.2.0');
+        //$this->Doc('gadgets/Languages');
+        $this->SetAttribute('core_gadget', true);
 
-    /**
-     * Is this gadget core gadget?
-     *
-     * @var    boolean
-     * @access  private
-     */
-    var $_IsCore = true;
-
-    /**
-     * Gadget ACLs
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_ACLs = array(
-        'ModifyLanguageProperties',
-    );
+        $acls  = array(
+            'ManageLanguages',
+            'ModifyLanguageProperties',
+        );
+        $this->PopulateACLs($acls);
+    }
 
 }

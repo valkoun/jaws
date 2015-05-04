@@ -1,0 +1,57 @@
+<!-- BEGIN info -->
+<div class="info-item" id="info-{display_id}" onmouseout="if ($('info-{edit_or_delete}-{display_id}')){$('info-{edit_or_delete}-{display_id}').style.visibility = 'hidden';};" onmouseover="if ($('info-{edit_or_delete}-{display_id}')){$('info-{edit_or_delete}-{display_id}').style.visibility = 'visible';};">
+	<!-- BEGIN info_edit -->
+	<div class="info-edit menu info-edit-menu" id="info-edit-{display_id}">
+		<div class="content">
+			<ul style="text-align: left;">
+				<li id="info-menu-{display_id}" class="menu_li_item menu_first menu_last">
+					<a href="javascript:void(0);" target="_self" class="menu_a info-menu-title">
+					<!--[if gt IE 6]><!-->&#9660;</a><!--<![endif]--> 
+					<!--[if lte IE 6]><table><tr><td><![endif]-->
+					<ul class="ul_sub_menu">
+						<!-- BEGIN item -->
+						<li id="info-menu-{display_id}{num}" class="menu_li_item">
+							<a href="{url}" target="_self" class="sub_menu_a">{title}<!--[if gt IE 6]><!--></a><!--<![endif]-->							
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<!-- END item -->
+					</ul>
+					<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END info_edit -->
+	<!-- BEGIN info_delete -->
+	<div class="info-delete" id="info-delete-{display_id}"><a href="javascript:void(0);" onclick="clearPreview();">X</a></div>
+	<!-- END info_delete -->
+	<div class="info-image">{image}</div>
+	<div class="info-body">
+		<div class="info-title"></div>
+		<div class="info-info">
+			<span class="info-name">{link_start}{name}{link_end}<br />
+			<span class="info-preactivity">{host_link_start}{host}{host_link_end}</span></span>
+			<div class="info-message" id="info-full-{display_id}">{message}</div>
+		</div>
+	</div>
+</div>
+<div class="info-separator">&nbsp;</div>
+<!-- END info -->
+<!-- BEGIN info_inline -->
+<span class="external-url-info">
+<span class="info-items">
+<span class="info-item" id="info-{display_id}">
+	<span class="info-image">{image}</span>
+	<span class="info-body">
+		<span class="info-title"></span>
+		<span class="info-info">
+			<span class="info-name">{link_start}{name}{link_end}<br />
+			<span class="info-preactivity">{host_link_start}{host}{host_link_end}</span></span>
+			<span class="info-message" id="info-full-{display_id}">{message}</span>
+		</span>
+	</span>
+</span>
+<span class="info-separator">&nbsp;</span>
+</span>
+</span>
+<!-- END info_inline -->

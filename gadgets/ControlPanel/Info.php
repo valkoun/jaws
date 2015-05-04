@@ -1,39 +1,35 @@
 <?php
 /**
- * ControlPanel Core Gadget
+ * ControlPanel to manage everything.
  *
  * @category   GadgetInfo
+ * @category   feature
  * @package    ControlPanel
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class ControlPanelInfo extends Jaws_GadgetInfo
 {
     /**
-     * Gadget version
+     * Sets info about ControlPanel gadget
      *
-     * @var     string
-     * @access  private
+     * @access  public
      */
-    var $_Version = '0.8.0';
+    function ControlPanelInfo()
+    {
+        parent::Init('ControlPanel');
+        $this->GadgetName(_t('CONTROLPANEL_NAME'));
+        $this->GadgetDescription(_t('CONTROLPANEL_DESCRIPTION'));
+        $this->GadgetVersion('0.8.0');
+        //$this->Doc('gadget/ControlPanel');
+        $this->SetAttribute('core_gadget', true);
 
-    /**
-     * Is this gadget core gadget?
-     *
-     * @var     boolean
-     * @access  private
-     */
-    var $_IsCore = true;
-
-    /**
-     * Gadget ACLs
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_ACLs = array(
-        'Backup',
-    );
-
+        $acls = array(
+            'default',
+            'DatabaseBackups',
+            'Statistics',
+        );
+        $this->PopulateACLs($acls);
+    }
 }

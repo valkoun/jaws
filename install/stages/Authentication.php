@@ -6,7 +6,7 @@
  * @package    InstallStage
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Installer_Authentication extends JawsInstallerStage
@@ -18,12 +18,15 @@ class Installer_Authentication extends JawsInstallerStage
      */
     function Installer_Authentication()
     {
+		$_SESSION['install']['secure'] = false;
         if (!isset($_SESSION['install']['Authentication']) && 
            (!isset($_SESSION['install']['predefined']) || !$_SESSION['install']['predefined']))
         {
-            $_SESSION['install']['secure']= false;
-            $_SESSION['install']['Authentication'] = array('key' => md5(uniqid('installer')) . time() . floor(microtime()*1000));
-        }
+            $_SESSION['install']['Authentication'] = array(
+				'key' => md5(uniqid('installer')) . time() . floor(microtime()*1000), 
+				'parent' => 0
+			);
+		}
     }
 
     /**
@@ -37,10 +40,12 @@ class Installer_Authentication extends JawsInstallerStage
         $request =& Jaws_Request::getInstance();
         $use_log = $request->get('use_log', 'post');
         //Set main session-log vars
-        if (isset($use_log)) {
-            $_SESSION['use_log'] = $use_log === 'yes'? JAWS_LOG_DEBUG : false;
+        if (isset($use_log) && $use_log == 'yes') {
+            $_SESSION['use_log'] = 'yes';
+        } else {
+            $_SESSION['use_log'] = 'no';
         }
-        _log(JAWS_LOG_DEBUG,"Generating new installation key");
+        log_install("Generating new installation key");
 
         $tpl = new Jaws_Template(INSTALL_PATH . 'stages/Authentication/templates/');
         $tpl->Load('display.html', false, false);
@@ -102,13 +107,13 @@ class Installer_Authentication extends JawsInstallerStage
         if (file_exists($key_file)) {
             $key = trim(file_get_contents($key_file));
             if ($key === $_SESSION['install']['Authentication']['key']) {
-                _log(JAWS_LOG_DEBUG,"Input log and session key match");
+                log_install("Input log and session key match");
                 return true;
             }
-            _log(JAWS_LOG_DEBUG,"The key found doesn't match the one below, please check that you entered the key correctly");
+            log_install("The key found doesn't match the one below, please check that you entered the key correctly");
             return new Jaws_Error(_t('INSTALL_AUTH_ERROR_KEY_MATCH', 'key.txt'), 0, JAWS_ERROR_WARNING);
         }
-        _log(JAWS_LOG_DEBUG,"Your key file was not found, please make sure you created it, and the web server is able to read it.");
+        log_install("Your key file was not found, please make sure you created it, and the web server is able to read it.");
         return new Jaws_Error(_t('INSTALL_AUTH_ERROR_KEY_FILE', 'key.txt'), 0, JAWS_ERROR_WARNING);
     }
 }

@@ -194,7 +194,7 @@ class Entry extends Bin
         $this->_XHTML .= $this->buildBasicXHTML();
         $this->_XHTML .= $this->buildJSEvents();
 
-        $this->_XHTML.= " />";
+        $this->_XHTML.= " />\n";
     }
-
 }
+?>

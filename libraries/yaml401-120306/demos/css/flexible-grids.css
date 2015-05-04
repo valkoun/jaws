@@ -1,0 +1,276 @@
+/**
+ * "Yet Another Multicolumn Layout" - YAML CSS Framework
+ *
+ * central stylesheet - layout example "flexible-grids"
+ *
+ * @copyright       Copyright 2005-2012, Dirk Jesse
+ * @license         CC-BY 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-CDL (http://www.yaml.de/license.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         v4.0.1
+ * @lastmodified    $Date: 2012-03-03 11:45:41 +0100 (Sa, 03 Mrz 2012) $
+ */
+
+/* Google Font API */
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic,700|Droid+Sans:700);
+
+/* import core styles | Basis-Stylesheets einbinden */
+@import url(../../yaml/core/base.css);
+
+/* import screen layout | Screen-Layout einbinden */
+@import url(../../yaml/navigation/hlist.css);
+@import url(../../yaml/forms/gray-theme.css);
+
+@import url(../../yaml/screen/typography.css);
+@import url(../../yaml/screen/screen-FULLPAGE-layout.css);
+
+/* import print layout | Druck-Layout einbinden */
+@import url(../../yaml/print/print.css);
+
+a {
+color: #3465a4;
+}
+
+a:hover {
+color: #9db029;
+}
+
+.color_bkgnd_primary {
+	color: #FFFFFF;
+	background: #3465A4;
+	padding:2px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.users .color_bkgnd_primary  {
+background:none repeat scroll 0 0 #999999;
+}
+
+/* ----- DATAGRID ----- */
+.jawsDatagridPager {
+  text-align: right;
+  border: 0px;
+  width: 100%;
+}
+
+.jawsDatagrid {
+  border-radius: 4px;
+  padding:    2px;
+  background: #edf3fe;
+  border:     1px dashed #ccc;
+  border-spacing: 0px;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.jawsDatagrid tbody {
+  border: 0px;
+}
+
+.jawsDatagrid td {
+  padding:  3px 5px;
+  border-bottom: 1px solid #fff;
+}
+
+.jawsDatagrid thead td {
+  border-bottom: 1px solid #3465a4;
+  background-color: #3465a4;
+  color: #fff;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}
+
+.light-color{ color: #729fcf; }
+.medium-color { color: #3465a4; }
+.dark-color { color: #3465a4; }
+.light-background { background-color: #729fcf; color: #3465a4; }
+.medium-background{ background-color: #3465a4; color: #fff; }
+.dark-background{ background-color: #3465a4; color: #fff; }
+.accent-color { color: #cee14b; }
+.accent-background{ background-color: #cee14b; color: #9db029; }
+.strong-color {
+background: #3465a4;
+color: #fff; padding: 4px;
+font-weight: bold;
+}
+
+.removed {
+display: none !important;
+}
+.form_comment {
+font-size: x-small;
+}
+
+.terminal {
+margin-top: 15px;
+padding: 15px;
+font-size: small;
+font-family: "Courier New", Courier;
+background: #000;
+border: solid 1px #d3d7cf;
+line-height: 110%;
+color: white;
+}
+
+.code, .xml , .script {
+margin: 16px;
+padding: 16px;
+font-size: small;
+font-family: "Courier New", Courier;
+background: #fff;
+border: solid 1px #d3d7cf;
+line-height: 100%;
+color: #000dbd;
+}
+
+.keyword {
+color: #00a20b;
+}
+
+.comment {
+color:red;
+}
+
+.literal {
+color: purple;
+}
+
+.term-box {
+background-color: #fafafa;
+color: #3465a4;
+border: 1px solid #9db029;
+padding: 10px;
+font-size: 11px;
+width: 95%;
+}
+
+/* Debug */
+#debug-table {
+background-color: white;
+color: black;
+font-size: x-small;
+}
+
+#debug-table pre {
+font-size: small;
+}
+
+pre.var_dump {
+line-height:1.8em;
+}
+
+pre.var_dump span.type {
+color:#006600;
+background:transparent;
+}
+
+pre.var_dump span.value {
+padding:2px; color:#339900;
+background:#F0F0F0;
+border: 1px dashed #CCCCCC;
+}
+/* End Debug */
+
+/** pager **/
+.pager {text-align: center; color: #888; font-size: 90%; margin: 2em auto 0.8em auto;}
+.pager span {padding: 0.3em 0.4em; margin: 0 0.1em; border: 1px solid #999;}
+span.pager_previous, span.pager_next {border: 2px solid #999;}
+span.pager_previous {margin-right: 0.7em;}
+span.pager_next {margin-left: 0.7em;}
+.pager span a {text-decoration: none;}
+.pager span:hover {background-color: #666;}
+.pager span:hover a {color: #fff;}
+.pager span.pager_current:hover {background: transparent;}
+
+/* ----- MENUBAR ----- */
+.jaws-menubar {
+    float: left;
+    list-style: none;
+    margin: 0 0 1.5em 0;
+    padding: 0;
+    font-size: 100%;
+    width: 100%;
+}
+
+
+.jaws-menubar li {
+    float: left;
+    margin: 0 2px 0 0;
+    padding: 0 0 0 8px;
+}
+
+.jaws-menubar li:first-child {
+    margin-left: 1em;
+}
+
+.jaws-menubar a {
+    display: inline;
+    padding: 4px 0px 4px 0px;
+    border-bottom: none;
+    color: #666;
+    text-decoration: none;
+    vertical-align: bottom;
+}
+
+.jaws-menubar a:hover {
+    color: #222;
+}
+
+.jaws-menubar img {
+    border: 0;
+    vertical-align: bottom;
+}
+
+.jaws-menubar li.selected {
+}
+
+.jaws-menubar li.selected a {
+    padding-bottom: 5px;
+    color: #000;
+    font-weight: bold;
+}
+/* ----- END MENUBAR ----- */
+
+/* Header section */
+#top_header {
+background: #3465a4;
+}
+
+#top_header h1 {
+color: #fff;
+font-weight: bold;
+font-size: large;
+}
+
+#top_header h1 a, #top_header h1 a:hover {
+color: #fff;
+text-decoration: none;
+}
+
+#top_header p {
+color: #fff;
+}
+/* End Header */
+
+/* Footer */
+#sub_footer {
+letter-spacing: 1px;
+border-top: 1px dotted #babdb6;
+margin-top: 40px;
+color: #888a85;
+padding: 10px;
+}
+
+#sub_footer a, #sub_footer a:hover{
+text-decoration: none;
+}
+
+#sub_footer p {
+font-size: smaller;
+margin: 0 0 10px 0;
+}
+/* End Footer */
+

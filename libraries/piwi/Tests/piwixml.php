@@ -31,8 +31,8 @@ for ($i=0; $i < 20; $i++) {
         $impares[] =  new ComboOption ("numero $i", "Número $i");
 }
 
-$combogroup->AddGroup ("pares", "pares", $pares);
-$combogroup->AddGroup ("impares", "impares", $impares, true);
+$combogroup->AddGroup ("pares", $pares);
+$combogroup->AddGroup ("impares", $impares, true);
 $combogroup->SetDefault ("pares", "Número 2");
 
 echo $combogroup->GetPiwiXML ();

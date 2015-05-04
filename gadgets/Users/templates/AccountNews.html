@@ -1,0 +1,51 @@
+<!-- BEGIN account_news -->
+<div id="accountNews" class="accountNews">
+	<div id="update-holder">
+	<input id="update-click" value="What's on your mind?" onclick="showUpdateForm();" />
+	</div>
+	<div id="update-area">
+	<textarea id="update-entry" onblur="if (this.value == '') {hideUpdateForm();};"></textarea>
+	</div>
+	<div id="update-buttons">{update_submit}</div>
+	<!-- BEGIN no_news -->
+	<div>&nbsp;</div>
+	<div class="simple-response-msg">{message}</div>
+	<div>&nbsp;</div>
+	<!-- END no_news -->
+	<div id="news-{news_id}items">
+		<!-- BEGIN news_item -->
+		<div class="news-item news-{type}" id="news-{display_id}">
+			<div class="news-image">{image}</div>
+			<div class="news-body">
+				<div class="news-title">{title}</div>
+				<div class="news-info"{news_info_style}><span class="news-name"><a href="{link}">{name}{activity}</a></span>
+				<span class="news-preview" id="news-preview-{display_id}"{preview_style}>{message_preview}</span>
+				<span class="news-message" id="news-full-{display_id}"{full_style}>{message}</span></div>
+				<div class="news-created news-timestamp"{news_info_style}>{created}</div>
+				<div class="news-comments" id="news-comments-{display_id}">
+					{view_replies}
+					<!-- BEGIN comment -->
+					<div class="comment{class}" id="comment-{display_id}">
+						{image}<div class="comment-body"><a href="{link}" class="comment-name">{name}</a>&nbsp;
+						<span class="comment-message" id="comment-preview-{display_id}"{preview_style}>{message_preview}</span>
+						<span class="comment-message" id="comment-full-{display_id}"{full_style}>{message}</span>
+						</div>
+						<div class="comment-created news-timestamp">{created}</div>
+					</div>
+					<!-- END comment -->
+				</div>
+				<div class="comments-form">
+					<div class="comment-holder" id="comment-holder-{display_id}">
+					<input class="comment-click" id="comment-click-{display_id}" value="Reply to this..." onclick="showCommentForm('{display_id}');" />
+					</div>
+					<div class="comment-area" id="comment-area-{display_id}">
+					<textarea class="comment-entry" id="comment-entry-{display_id}" onblur="if (this.value == '') {hideCommentForm('{display_id}');};"></textarea>
+					</div>
+					<div class="comment-buttons" id="comment-buttons-{display_id}">{comment_submit}</div>
+				</div>
+			</div>
+		</div>
+		<!-- END news_item -->
+	</div>
+</div>
+<!-- END account_news -->

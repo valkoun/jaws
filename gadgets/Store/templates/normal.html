@@ -1,0 +1,1307 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+		var msgbox=$('msgbox_{msg-id}');if((msgbox.className!='error-message')&&(msgbox.className!='warning-message')&&(window.hideResponseBox)){hideResponseBox(msgbox);};
+	</script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+<!-- BEGIN products -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget store products">
+	<div class="content">
+<!--[if IE]>
+ <style type="text/css">
+  #left {word-wrap: break-word;}
+ </style>
+<![endif]-->
+			<div class="{pagetype}-breadcrumb-holder">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" class="hdr_bkgnd">
+      			  <tr>
+					<td align="left"><img border="0" src="images/spacer.gif"></td>
+					<td width="100%"><img border="0" src="images/spacer.gif"></td>
+					<td><img border="0" src="images/spacer.gif"></td>
+                  </tr>
+                  <tr>
+					<td><img border="0" src="images/spacer.gif" height="5" width="5" align="top"></td>
+					<td width="100%">
+					{BREADCRUMB}
+					</td>
+					<td><img border="0" src="images/spacer.gif"></td>
+                </tr>
+				<tr>
+					<td colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></td>
+				</tr>
+			  </table>
+			</div>
+			<div>&nbsp;</div>
+			<div class="{pagetype}-parent-holder">
+				<div style="float: left;{image_style}">{productparentImage}</div>
+				<div>{productparentDescription}</div>
+			</div>
+			<div>&nbsp;</div>
+{PAGE_INDEX}
+			<div>&nbsp;</div>
+			<div class="{pagetype}-pagecycle-holder">
+{PAGE_CYCLE}
+			</div>
+			<div>&nbsp;</div>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd">
+              <tr>
+                <td width="0%" valign="top"><img border="0" SRC="images/spacer.gif" width="1" height="1"></td>
+                <td width="100%" valign="top">
+<!-- BEGIN listproduct -->                          
+{product_header}
+                            <table border="0" cellpadding="3" cellspacing="0" width="100%" class="color_bkgnd">
+                              <tr>
+                                <td width="100%">
+                                  <div align="center" class="product_listing_bkgnd product_listing_{evenodd} product_listing_{num}" id="product_listing_{id}" onclick="location.href = '{product_link}';">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                      <tr>
+                                        <td class="color_bkgnd" colspan="4" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+									  </tr>
+
+										<tr>	
+											<td width="0%" valign="top" align="left" style="font-size: 0.0001em; line-height: 0px"><img border="0" SRC="images/spacer.gif" width="1" height="3"></td>
+										</tr>
+                                      <tr>
+                                        <td width="0%" valign="top" align="left" class="color_white">
+{product_image}
+										</td>
+                                        <td width="0%" valign="top" align="left" style="font-size: 0.0001em; line-height: 0px"><img border="0" SRC="images/spacer.gif" width="1" height="1"></td>
+                                        <td valign="top" align="left" width="100%">
+
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="color_bkgnd">
+                                            <tr>
+                                              <td width="100%" valign="top" align="left" colspan="4">
+                                                <div align="center" class="product_bkgnd_primary">
+                                          <table width="100%" border="0" cellspacing="0" cellpadding="3">
+											<tr>
+                                        		<td width="100%" align="left" valign="top" style="padding-bottom: 5px;">
+														&nbsp;<a href="{product_link}"><U><B>{title}</B></U></a>
+														{retail}
+														<nobr>
+														<b>{price}</b>
+														<span class="sale_price" style="font-weight: bold;{sale_display}">{sale_price}</span>
+														&nbsp;&nbsp;<b>{unit}</b>
+														</nobr>
+														{setup_fee}
+											  </td>
+											</tr>
+											<tr>
+                                              <td width="100%" valign="top" align="left">
+                                                <div align="center" class="product_highlights_bkgnd" id="product_highlights_{id}">
+                                                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr> 	
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+														<td width="100%" valign="top" style="padding: 5px;">
+															<div class="list-product-description">
+																{description}
+															</div>
+														</td>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+													</tr>
+													<tr>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+														<td class="product_cart" width="100%" valign="top" align="right" style="text-align: right; padding: 10px;">
+														{ADD_TO_CART}
+														</td>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+													</tr>
+													<tr>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+                                                      	<td width="100%" valign="top">
+															<span style="font-size: 0.8em;">
+															{sm_description}
+															{brand}
+															{product_code}
+															{weight}
+															</span>
+														</td>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+                                            		</tr>
+													<tr>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+                                                      	<td width="100%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+                                                      	<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+													</tr>
+                                                  </table>
+                                                </div>
+											  </td>
+                                            </tr>
+											<tr>
+												<td width="100%" valign="top" align="left" style="padding: 5px;">
+													{attribute}
+												</td>
+                                            </tr>
+													<tr>
+														<td width="100%" valign="top" align="left" style="padding: 5px;">
+															{NO_LISTING_DETAILS}
+														</td>
+													</tr>
+                                                  </table>
+                                                </div>
+												<div style="text-align: right;"><span class="list-product-category">{category}</span>&nbsp;<span class="list-product-contact">{contact}{company}</span></div>
+											  </td>
+                                            </tr>
+                                          </table>
+
+                                        </td>
+                                        <td width="0%" valign="top" align="left" style="font-size: 0.0001em; line-height: 0px"><img border="0" SRC="images/spacer.gif" width="4" height="1"></td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                            </center>
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                            </center>
+                          </div>
+						  <div class="product_separator_top product_separator_top_{evenodd}">&nbsp;</div>
+						  <div class="product_separator product_separator_{evenodd}"><img border="0" SRC="images/spacer.gif" width="100%" height="1"></div>
+						  <div class="product_separator_bottom product_separator_bottom_{evenodd}">&nbsp;</div>
+<!-- END listproduct -->
+<!-- BEGIN gridproduct -->
+						<div class="gridproduct product_listing_{evenodd} product_listing_{num}" id="gridproduct-{id}">
+							{product_image}
+							<div class="gridproduct_title"><a href="{product_link}" title="{safe_title}">{title}</a></div>
+							<div class="gridproduct_price"><a href="{product_link}"><span>... </span>{price}</a></div>
+						</div>
+<!-- END gridproduct -->
+{NO_PRODUCTS}
+                       
+                          <table border="0" cellpadding="5" cellspacing="0" width="98%">
+                            <tr>
+                              <td width="100%">&nbsp;</td>
+                            </tr>
+                          </table>
+
+						</td>
+					</tr>
+				</table>
+{PAGE_CYCLE2}
+
+<script type="text/javascript">
+// <![CDATA[
+function validate(form) {
+var rtn;
+rtn = true;
+
+var today = new Date();
+var DateIn = new Date();
+DateIn.setMonth(form.MonthIn.value - 1);
+DateIn.setDate(form.DayIn.value);
+DateIn.setFullYear(form.YearIn.value);
+var DateOut = new Date();
+DateOut.setMonth(form.MonthOut.value - 1);
+DateOut.setDate(form.DayOut.value);
+DateOut.setFullYear(form.YearOut.value);
+
+if (rtn && (Date.parse(DateIn) < Date.parse(today))) {
+  alert('Please make sure the date of arrival is after today.');
+  rtn=false;
+}
+if (rtn && (Date.parse(DateIn) > Date.parse(DateOut))) {
+  alert('Please make sure the date of arrival is before the departure date.');
+  rtn=false;
+}
+if (rtn && (form.Adults.value.length < 1 || checknum(form.Adults.value) == false)) {
+  alert('Please enter the number of adults staying.');
+  rtn=false;
+}
+if (rtn && (form.Children.value.length < 1 || checknum(form.Children.value) == false)) {
+  alert('Please enter the number of children staying.');
+  rtn=false;
+}
+
+return rtn;
+}
+
+var cntd
+cntd = 0
+
+function sendText(datewriter, text)
+{
+	var rtn;
+	rtn = true;
+
+	alert(datewriter.name);
+	datewriter.value = text;
+	datewriter.style.color = 'red';
+	alert(datewriter.name);
+
+}
+// ]]>
+</script>
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget store">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Store_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END products -->
+
+<!-- BEGIN product -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget store product">
+	<div class="content">
+	  <table border="0" cellpadding="0" cellspacing="0" width="100%" class="hdr_bkgnd">
+		  <tr>
+			<td align="left" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif"></td>
+			<td width="100%" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif"></td>
+			<td style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif"></td>
+		  </tr>
+		  <tr>
+			<td style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="5" width="5" align="top"></td>
+
+			<td width="100%">
+			{BREADCRUMB}
+			</td>
+			<td style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif"></td>
+		</tr>
+		<tr>
+			<td colspan="3" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="3" width="1"></td>
+		</tr>
+	  </table>
+
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" height="28">
+			<tr>
+				<td width="100%" height="1" align="left">
+					<div align="left">
+						<table border="0" cellspacing="0" width="100%" cellpadding="0" height="1" class="color_bkgnd">
+<!-- BEGIN preview_mode -->
+							<tr>
+								<td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" colspan="3" style="font-size: 0.0001em; line-height: 0px">&nbsp;</td>
+								<td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+							<tr>
+								<td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" colspan="3" bgcolor="#ffffcc">
+									<span style="font-size: 1.8em; color: #FF0000;">&nbsp;&nbsp;<img border="0" src="images/icon_err_red.gif">&nbsp;Previewing Your Product:</span><br />&nbsp;
+									<span style="color: #FF0000;">This Listing has not yet been approved by {HTTP_REFERER}<br />&nbsp;</span>
+								</td>
+								<td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+<!-- END preview_mode -->
+							<tr>
+								<td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" style="padding: 5px;">
+									<h1>{title}</h1>
+								</td>
+								<td width="0%" style="padding: 5px;" valign="bottom"><nobr>                                            
+									  <span style="font-weight: bold; font-size: 1em;">&nbsp;&nbsp;{retail}</span>
+									  <span style="font-weight: bold; font-size: 1em;">&nbsp;&nbsp;{price}</span>
+									  <span style="font-weight: bold; font-size: 1em;{sale_display}" class="sale_price">{sale_price}</span>
+									  <span style="font-weight: bold; font-size: 1em;">&nbsp;&nbsp;{unit}</span>
+									  <span style="font-weight: bold; font-size: 1em;">&nbsp;&nbsp;{setup_fee}</span>
+								</nobr></td>
+								<td width="0%" style="padding: 5px;" valign="bottom"><nobr>[ID: {id}]</nobr></td>
+								<td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd product_content">
+		  <tr>
+		   <td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+		   <td width="100%">
+			 <div align="center">
+			   <table border="0" cellpadding="5" cellspacing="0" width="100%">
+				<tr>
+				  <td width="100%">
+						{product_header}
+								<table border="0" cellpadding="3" cellspacing="0" width="100%" class="color_bkgnd">
+									<tr>
+										<td width="100%">
+											<div align="center" class="product_listing_bkgnd">
+												<table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd">
+
+													<tr>
+														<td class="color_bkgnd" colspan="3" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+													</tr>
+													<tr>
+														<td colspan="3" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="3" width="1"></td>
+													</tr>
+													<tr>
+														<td valign="top" colspan="3">
+<!-- Product Navigation -->
+															<div id="prodnav_container">
+																<div id="prodnav_images" class="prodnav" onclick="if (document.getElementById('prodnav_images').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('save')) {document.getElementById('save').style.display = 'none';}; if (document.getElementById('images')) {var target = document.getElementById('images'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_images_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_images.png)';};" title="View Images"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Images</a></p></div><div style="background: url({JAWS_URL}gadgets/Store/images/btn_product_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="prodnav_print" class="prodnav" onclick="window.open('{HTTP_REFERER}/index.php?gadget=Store&action=PrintProductDetails&id={id}');" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_print_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_print.png)';};" title="Printable Version"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a href="javascript:void(0);">Printable Version</a></p></div><div style="background: url({JAWS_URL}gadgets/Store/images/btn_product_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="prodnav_email{emailDisabled}" class="prodnav{emailDisabled}" onclick="if (document.getElementById('prodnav_email').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('save')) {document.getElementById('save').style.display = 'none';}; if (document.getElementById('email')) {var target = document.getElementById('email'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_email_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_email.png)';};" title="Share This"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Share This</a></p></div><div style="background: url({JAWS_URL}gadgets/Store/images/btn_product_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="prodnav_calendar{calendarDisabled}" class="prodnav{calendarDisabled}" onclick="{CALENDAR_CLICK}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_calendar_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_calendar.png)';};"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a href="{CALENDAR_ANCHOR}">{CALENDAR_CLICK_TEXT}</a></p></div><div style="background: url({JAWS_URL}gadgets/Store/images/btn_product_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="prodnav_save{saveDisabled}" class="prodnav{saveDisabled}" onclick="if (document.getElementById('prodnav_save').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('save')) {var target = document.getElementById('save'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_save_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_save.png)';};" title="Inquire About This Product"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Inquire About This Product</a></p></div><div style="background: url({JAWS_URL}gadgets/Store/images/btn_product_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="prodnav_vendor{vendorDisabled}" class="prodnav{vendorDisabled}" onclick="{VENDOR_CLICK}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_tour_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Store/images/btn_product_tour.png)';};"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>{VENDOR_CLICK_TEXT}</a></p></div><div style="background: url({JAWS_URL}gadgets/Store/images/btn_product_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div style="float: none; clear: both; font-size: 0.01em;">&nbsp;</div>
+															</div>
+															<div id="product_details_container">
+																<table border="0" cellpadding="2" cellspacing="0" width="100%">
+																	<tr>
+																		<td valign="top" width="70%">
+<!-- Product E-mail To A Friend -->
+																<div align="left" id="email" class="product_media" style="display: none;">
+																	<a name="email">&nbsp;</a>
+																	<div>{PRODUCT_EMAIL_FORM}</div>
+																</div>
+<!-- Product Inquiry -->
+																<div align="left" id="save" class="product_media" style="display: none;">
+																	<a name="save">&nbsp;</a>
+																	<div>{PRODUCT_INQUIRY_FORM}</div>
+																</div>
+<!-- Product Image(s) -->
+																<div align="left" id="images" class="product_media">
+<!-- BEGIN image_grid -->
+																	<div class="horizontal_carousel" id="horizontal_carousel">
+																	  <div class="carousel_container" id="carousel_container">
+																		<div class="carousel_holder" id="carousel_holder">
+																			{mainImage}
+																			{carouselItems}
+																			<div style="float: none; clear: both; font-size: 0.01em;">&nbsp;</div>
+																		</div>
+																	  </div>
+																	</div>
+<!-- END image_grid -->
+<!-- BEGIN carousel -->
+																	<div class="carousel_navigation" id="carousel_navigation" style="padding-bottom: 6px; font-size: 1.2em; font-weight: bold; text-align: center"></div>
+																	<div class="horizontal_carousel" id="horizontal_carousel">
+																	  <div class="previous_button" id="previous_button"></div>  
+																	  <div class="carousel_container" id="carousel_container">
+																		<div class="carousel_holder" id="carousel_holder">
+																			{mainImage}
+																			{carouselItems}
+																		</div>
+																	  </div>
+																	  <div class="next_button" id="next_button"></div>
+																	</div>
+																	<script type="text/javascript">
+																	$('horizontal_carousel').style.visibility = 'hidden';
+																	var theEmbeds = new Array();
+																	var n = 0;
+																	var hCarousel = null;
+																	var x = null;
+																	var button_widths = 0;
+																	document.observe("dom:loaded", function(){
+																		// ADDED: Try to hide any iframes in child elements...
+																		var holder = $('carousel_holder');
+																		var thisChild = holder.firstChild;
+																		var prev_button_width = parseInt($("previous_button").offsetWidth, 10);
+																		var next_button_width = parseInt($("next_button").offsetWidth, 10);
+																		button_widths = (prev_button_width + next_button_width)+30;
+																		while (thisChild != holder.lastChild) {
+																			if (thisChild.nodeType == 1) {
+																				var thisEmbeds = new Array();
+																				thisEmbeds = thisChild.getElementsByTagName('iframe');
+																				if (thisEmbeds.length) {
+																					for (i=0; i < thisEmbeds.length; i++) {
+																						theEmbeds[i] = thisEmbeds[i].src;
+																						thisEmbeds[i].src = '';
+																						thisEmbeds[i].height = parseInt($("horizontal_carousel").offsetHeight, 10)-10;
+																						thisEmbeds[i].width = 0;
+																						thisEmbeds[i].style.height = parseInt($("horizontal_carousel").offsetHeight, 10)-10 + "px";;
+																						thisEmbeds[i].style.width = '0px';
+																					}
+																				}
+																				if (thisChild.id != 'carousel_item1') {
+																					thisChild.style.visibility = 'hidden';
+																				}
+																				n++;
+
+																			}
+																			thisChild = thisChild.nextSibling;
+																		}
+																		$('carousel_navigation').innerHTML += '<img src="images/carousel_nav_left.png" border="0" /><a id="carousel_nav0" href="javascript: void(0);" onclick="hCarousel.scrollTo(0);" style="text-decoration: none;"><img src="images/carousel_nav_on.png" border="0" /></a>{carouselNav}<img src="images/carousel_nav_right.png" border="0" />';
+																	});
+
+																	function startscroll() {
+																	   x = window.setInterval(function scroll() {
+																		var nextItem = hCarousel.currentIndex() + 1;
+																		if (nextItem == n) {
+																			hCarousel.scrollTo(0);
+																		} else {
+																			hCarousel.scrollTo(nextItem);
+																		};
+																	   },5000);
+																	}
+
+																	function stopscroll() {
+																	   window.clearInterval(x);
+																	}
+
+																	function runTest() {
+																		$('horizontal_carousel').style.visibility = 'visible';
+																		updateCarouselSize();
+																		hCarousel = new UI.Carousel("horizontal_carousel", {container: ".carousel_container", scrollInc: "auto"});
+																		{startScroll}
+																		$('horizontal_carousel').observe('mouseover', stopscroll);
+																		$('horizontal_carousel').observe('mouseout', startscroll);
+																		
+																		new UI.Carousel('horizontal_carousel').observe('scroll:ended', function() {
+																			var holder = $('carousel_holder');
+																			var thisChild = holder.firstChild;
+																			for (t=0; t < (n+1); t++) {
+																				if (t!=hCarousel.currentIndex()) {
+																					if ($('carousel_nav'+t)) {
+																						$('carousel_nav'+t).childNodes[0].src = "images/carousel_nav_off.png";
+																					}
+																				} else {
+																					if ($('carousel_nav'+t)) {
+																						$('carousel_nav'+t).childNodes[0].src = "images/carousel_nav_on.png";
+																					}
+																				}
+																			}
+																			while (thisChild != holder.lastChild) {
+																				if (thisChild.nodeType == 1) {
+																					if (thisChild.id == 'carousel_item'+(hCarousel.currentIndex()+1)) {
+																						thisChild.style.visibility = 'visible';
+																						var thisEmbeds = new Array();
+																						thisEmbeds = thisChild.getElementsByTagName('iframe');
+																						if (thisEmbeds.length) {
+																							for (i=0; i < thisEmbeds.length; i++) {
+																								//stopscroll();
+																								thisEmbeds[i].src = theEmbeds[i];
+																								thisEmbeds[i].width = (parseInt($('horizontal_carousel').parentNode.offsetWidth, 10)-button_widths+10);
+																								thisEmbeds[i].style.width = (parseInt($('horizontal_carousel').parentNode.offsetWidth, 10)-button_widths+10)+'px';
+																							}
+																						}
+																					} else {
+																						thisChild.style.visibility = 'hidden';
+																					}
+																				}
+																				thisChild = thisChild.nextSibling;
+																			}
+																		});
+																		
+																		new UI.Carousel('horizontal_carousel').observe('scroll:started', function() {
+																			// ADDED: Try to hide any iframes in child elements...
+																			var holder = $('carousel_holder');
+																			var thisChild = holder.firstChild;
+																			while (thisChild != holder.lastChild) {
+																				if (thisChild.nodeType == 1) {
+																					thisChild.style.visibility = 'visible';
+																					var thisEmbeds = new Array();
+																					thisEmbeds = thisChild.getElementsByTagName('iframe');
+																					if (thisEmbeds.length) {
+																						for (i=0; i < thisEmbeds.length; i++) {
+																							//stopscroll();
+																							thisEmbeds[i].src = '';
+																							thisEmbeds[i].width = 0;
+																							thisEmbeds[i].style.width = '0px';
+																						}
+																					}
+																				}
+																				thisChild = thisChild.nextSibling;
+																			}
+																		});
+
+																	}
+
+																  function resized() {
+																	updateCarouselSize();  
+																	if (hCarousel)
+																	  hCarousel.updateSize();
+																  }
+
+																  function updateCarouselSize() {
+																	if ($('horizontal_carousel').parentNode) {
+																		var dim = parseInt($('horizontal_carousel').parentNode.offsetWidth, 10);
+																	} else {
+																		var dim = document.viewport.getDimensions(); 
+																		dim = dim.width;
+																	}
+																	$("horizontal_carousel").style.width = dim + "px";
+																	$$("#horizontal_carousel .carousel_container").first().style.width = (dim - button_widths) + "px";
+																	var height = parseInt($("horizontal_carousel").offsetHeight, 10);
+																	$("carousel_container").style.height = height+'px';
+																	if ($$(".carousel_itemImage")) {
+																		$$(".carousel_itemImage").each(function(item) {
+																			item.style.height = height+'px';
+																		});
+																	}
+																	if ($$(".carousel_itemCode")) {
+																		$$(".carousel_itemCode").each(function(item) {
+																			item.style.height = height+'px';
+																			item.style.width = (dim - button_widths) + "px";
+																		});
+																	}
+																	var holder = $('carousel_holder');
+																	var thisChild = holder.firstChild;
+																	while (thisChild != holder.lastChild) {
+																		if (thisChild.nodeType == 1) {
+																			thisChild.width = (dim - button_widths);
+																			thisChild.style.width = (dim - button_widths) + "px";
+																			thisChild.height = height;
+																			thisChild.style.height = height+'px';
+																			thisChild.style.minHeight = height+'px';
+																			secondChild = thisChild.firstChild;
+																			while (secondChild != thisChild.lastChild) {
+																				if (secondChild.nodeType == 1) {
+																					secondChild.width = (dim - button_widths);
+																					secondChild.style.width = (dim - button_widths) + "px";
+																					secondChild.height = height;
+																					secondChild.style.height = height+'px';
+																					secondChild.style.minHeight = height+'px';
+																				}
+																				secondChild = secondChild.nextSibling;
+																			}
+																		}
+																		thisChild = thisChild.nextSibling;
+																	}
+																  }
+
+																  Event.observe(window, "load", runTest);
+																  Event.observe(window, "resize", resized);
+																	</script>
+<!-- END carousel -->
+<!-- BEGIN image -->
+																  <div class="product_details_image">
+																	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td width="50%">&nbsp;</td>
+																			<td width="0%">
+																				<img border="0" style="cursor: pointer; pointer: hand;" ONCLICK="window.open('{lg_imageSrc}');" SRC="{imageSrc}">
+																			</td>
+																			<td width="50%">&nbsp;</td>
+																		</tr>
+																	  </table>
+																	</div>
+<!-- END image -->
+<!-- BEGIN no_image -->
+																	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td width="50%">&nbsp;</td>
+																			<td width="0%">
+																			  <div class="product_no_image">
+																				  <b>No Image</b>
+																			  </div>
+																			</td>
+																			<td width="50%">&nbsp;</td>
+																		</tr>
+																	  </table>
+<!-- END no_image -->
+																</div>
+<!--
+																<div align="left" id="images" class="product_media">
+																  <div class="product_details_no_image">
+																	  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td width="50%"><img border="0" src="images/spacer.gif" height="120" width="1"></td>
+																			<td width="0%" valign="top" style="vertical-align: top; text-align: center;"><b>No Image</b></td>
+																			<td width="50%">&nbsp;</td>
+																		</tr>
+																	  </table>
+																  </div>
+																</div>
+																<div>&nbsp;</div>
+-->
+<!-- BEGIN description -->
+																<div style="display: block; float: none; clear: both;">&nbsp;</div>
+																<div><a name="description"><b>&nbsp;Description</b></a></div>
+																<div>{description}</div>
+<!-- END description -->
+
+																		</td>
+																		<td width="30%" valign="top" style="text-align: right; padding: 10px;"><img border="0" src="images/spacer.gif" height="3" width="1"><br />
+																		{ADD_TO_CART}
+																		</td>
+																	</tr>
+																</table>
+																<table border="0" cellpadding="2" cellspacing="0" width="100%">
+																		<tr>
+																			<td valign="top" width="100%">
+																				<div align="center">
+																					<table border="0" cellpadding="2" cellspacing="0" width="100%">
+																						<tr>
+<!-- Product Highlights -->
+																							<td valign="top" align="left" width="100%">
+																							  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="color_bkgnd">
+																								<tr>
+																								  <td width="100%" valign="top" align="left" colspan="4">
+																									<div align="center" class="product_bkgnd_primary">
+																									  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+																										<tr>
+																										  <td width="100%" valign="top" align="left">
+																											<div align="center" class="product_highlights_bkgnd">
+																											  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+																												<tr>
+																													<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																													<td width="70%" valign="top"><img border="0" src="images/spacer.gif" height="3" width="1">
+																													<span style="font-size: 0.8em;">
+																														{sm_description}
+																														{brand}
+																														{weight}
+																														{product_code}
+																														{category}																										
+																													</span>
+																													</td>
+																													<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																												</tr>
+																												<tr>
+																													<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																													<td width="100%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																													<td width="0%" valign="top" class="color_bkgnd" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																												</tr>
+																											  </table>
+																											</div>
+																											{NO_LISTING_DETAILS}
+																										  </td>
+																										</tr>
+																									  </table>
+																									</div>
+																								  </td>
+																								</tr>
+																							  </table>
+																							  </td>
+
+																						  </tr>
+																					</table>
+
+																			</div>
+																		</td>
+																	</tr>
+																</table>
+<!-- Comments -->
+																<div align="left" id="calendar" class="product_calendar">
+																	<a name="comments">&nbsp;</a>
+																	<div>{CALENDAR}</div>
+																</div>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+</table>
+				
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="100%" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td width="0%" valign="top">&nbsp;</td>
+		<td width="0%" style="font-size: 0.0001em; line-height: 0px"><img border="0" src="images/spacer.gif" width="2" height="20"></td>
+		<td width="100%" valign="top">
+			<table width="100%" cellspacing="0" cellpadding="5">
+<!-- description
+				<tr>
+					<td height="18" width="100%" class="product_bkgnd_primary">
+						<a name="description"><b>&nbsp;Description</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="9" width="100%" style="padding: 10px">
+						{description}
+					</td>
+				</tr>
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+description -->
+<!-- BEGIN attribute -->
+				<tr>
+					<td height="18" width="100%" class="product_bkgnd_primary">
+						<a name="amenities"><b>&nbsp;Attributes</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" style="padding: 10px">
+						{attribute}
+					</td>
+				</tr>
+<!-- END attribute -->
+
+<!-- BEGIN reservation_chart -->
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+					<tr>
+						<td width="100%" valign="top">
+							<div align="left">
+								<table width="100%" border="0" cellspacing="0" cellpadding="2" height="1">
+									<tr>
+										<td width="100%" class="product_bkgnd_primary"><a name="rates"><b>&nbsp;Rates</b></a></td>      				
+									</tr>
+									<tr>
+										<td colspan="100%">
+											<table border="0" cellpadding="0" cellspacing="0" width="100%">
+												<tr>
+													<td class="hdr_bkgnd">&nbsp;</td>
+													<td style="border-right: 1pt dotted #CCCCCC" class="hdr_bkgnd"><span><b>&nbsp;{labeldy}&nbsp;</b></span></td>
+													<td style="border-right: 1pt dotted #CCCCCC" class="hdr_bkgnd"><span><b>&nbsp;{labelwk}&nbsp;</b></span></td>      				
+													<td class="hdr_bkgnd"><span><b>&nbsp;{labelmo}&nbsp;</b></span></td>      				
+												</tr>
+<!-- if rentlowdy > "" OR rentlowwk > "" OR rentlowmo > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype1}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC;">&nbsp;{rentlowdy}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC;">&nbsp;{rentlowwk}&nbsp;</td>
+													<td align="center">&nbsp;{rentlowmo}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentlowdy2 > "" OR rentlowwk2 > "" OR rentlowmo2 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype2}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowdy2}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowwk2}&nbsp;</td>
+													<td align="center">&nbsp;{rentlowmo2}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentlowdy3 > "" OR rentlowwk3 > "" OR rentlowmo3 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype3}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowdy3}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowwk3}&nbsp;</td>
+													<td align="center">&nbsp;{rentlowmo3}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if renthighdy > "" OR renthighwk > "" OR renthighmo > "" then
+												<tr>
+													<td style="border-top: 1pt dotted #CCCCCC; border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype1}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" >&nbsp;{renthighdy}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" >&nbsp;{renthighwk}&nbsp;</td>
+													<td align="center" style="border-top: 1pt dotted #CCCCCC;" >&nbsp;{renthighmo}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if renthighdy2 > "" OR renthighwk2 > "" OR renthighmo2 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype2}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighdy2}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighwk2}&nbsp;</td>
+													<td align="center" >&nbsp;{renthighmo2}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if renthighdy3 > "" OR renthighwk3 > "" OR renthighmo3 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype3}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighdy3}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighwk3}&nbsp;</td>
+													<td align="center" >&nbsp;{renthighmo3}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentpeakdy > "" OR rentpeakwk > "" OR rentpeakmo > "" then
+												<tr>
+													<td style="border-top: 1pt dotted #CCCCCC; border-right: 1pt dotted #CCCCCC;" class="color_bkgnd"><span style="color: #0066CC;"><b>&nbsp;{renttype1}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" class="color_bkgnd">&nbsp;{rentpeakdy}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" class="color_bkgnd">&nbsp;{rentpeakwk}&nbsp;</td>
+													<td align="center" style="border-top: 1pt dotted #CCCCCC;" class="color_bkgnd">&nbsp;{rentpeakmo}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentpeakdy2 > "" OR rentpeakwk2 > "" OR rentpeakmo2 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;" class="color_bkgnd"><span style="color: #0066CC;"><b>&nbsp;{renttype2}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakdy2}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakwk2}&nbsp;</td>
+													<td align="center" class="color_bkgnd">&nbsp;{rentpeakmo2}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentpeakdy3 > "" OR rentpeakwk3 > "" OR rentpeakmo3 > ""
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;" class="color_bkgnd"><span style="color: #0066CC;"><b>&nbsp;{renttype3}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakdy3}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakwk3}&nbsp;</td>
+													<td align="center" class="color_bkgnd">&nbsp;{rentpeakmo3}&nbsp;</td>
+												</tr>
+end if -->
+											</table>
+										</td>
+									</tr>				
+									<tr>
+										<td>&nbsp;</td>      				
+									</tr>
+									<tr>
+										<td class="color_white"><img border="0" src="images/spacer.gif" height="10" width="10"></td>
+										<td>&nbsp;<span style="font-size: 0.8em;"><b>Low Season Dates:<br />&nbsp;</b> October - February</span></td>      				
+									</tr>
+									<tr>
+										<td class="color_white"><img border="0" src="images/spacer.gif" height="10" width="10"></td>
+										<td>&nbsp;<span style="font-size: 0.8em;"><b>High Season Dates:<br />&nbsp;</b> March - May</span></td>      				
+									</tr>
+									<tr>
+										<td class="color_white"><img border="0" src="images/spacer.gif" height="10" width="10"></td>
+										<td>&nbsp;<span style="font-size: 0.8em;"><b>Low Season Dates:<br />&nbsp;</b> June - September</span></td>      				
+									</tr>
+									<tr>
+										<td>&nbsp;</td>      				
+									</tr>	   				   
+								</table>
+							</div>
+						</td>
+					</tr>
+
+<!-- END reservation_chart -->
+
+<!-- BEGIN contact -->
+				<tr>
+					<td height="18" width="100%" class="product_bkgnd_primary">
+						<a name="contact"><b>&nbsp;For More Information</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="9" width="100%" style="padding: 10px">
+						{company_logo}
+						<p style="line-height: 18px;">{contact}{company}
+						<br />&nbsp;
+						{contact_phone}
+						{contact_email}
+						</p>
+					</td>
+				</tr>
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+<!-- END contact -->
+
+<!-- BEGIN external_links -->
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="product_bkgnd_primary" height="18" width="100%">
+						<a name="links"><b>&nbsp;Links</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="18" width="100%" style="padding: 10px">
+{alink}
+{alink2}
+{alink3}
+					</td>
+				</tr>
+<!-- END external_links -->
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="100%">&nbsp;</td>
+	</tr>
+</table>
+		</div>
+	</td>
+	 <td width="0%" valign="top" style="font-size: 0.0001em; line-height: 0px"><img border="0" SRC="images/spacer.gif" width="1" height="1"></td>
+</tr>
+</table>
+<div style="background: #EEEEEE; margin-bottom: 10px;"><img border="0" SRC="images/spacer.gif" width="100%" height="1"></div>
+
+<script type="text/javascript">
+// <![CDATA[
+function validate(form){var rtn;rtn=true;var today=new Date();var DateIn=new Date();DateIn.setMonth(form.MonthIn.value-1);DateIn.setDate(form.DayIn.value);DateIn.setFullYear(form.YearIn.value);var DateOut=new Date();DateOut.setMonth(form.MonthOut.value-1);DateOut.setDate(form.DayOut.value);DateOut.setFullYear(form.YearOut.value);if(rtn&&(Date.parse(DateIn)<Date.parse(today))){alert('Please make sure the date of arrival is after today.');rtn=false;};if(rtn&&(Date.parse(DateIn)>Date.parse(DateOut))){alert('Please make sure the date of arrival is before the departure date.');rtn=false};if(rtn&&(form.Adults.value.length<1||checknum(form.Adults.value)==false)){alert('Please enter the number of adults staying.');rtn=false};if(rtn&&(form.Children.value.length<1||checknum(form.Children.value)==false)){alert('Please enter the number of children staying.');rtn=false;};return rtn;};var cntd; cntd=0; function sendText(datewriter,text){var rtn;rtn=true;alert(datewriter.name);datewriter.value=text;datewriter.style.color='red';alert(datewriter.name);};
+// ]]>
+</script>
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget store">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Store_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END product -->
+
+<!-- BEGIN index -->
+<!-- BEGIN header -->
+<div class="gadget custom_index">
+  <h2>{title}</h2>
+  <div id="products-index-{id}" class="content">
+<!-- END header -->
+    <ul class="custom_indexList{ulclass}">
+    <!-- BEGIN item -->
+      <li class="custom_indexItem{liclass}">{image}<a class="custom_indexTitle" href="{link}">{title}</a><span class="custom_indexCount"><span class="custom_indexTotal">{count}</span>{count_string}</span><span class="custom_indexDesc" align="justify">{desc}</span><span class="custom_indexDateStr">{update_string}<span class="custom_indexDate">{updated}</span></span>
+	  {child_items}
+      </li>
+    <!-- END item -->
+	</ul>
+<!-- BEGIN footer -->
+  </div>
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Store_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END footer -->
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-store-head" class="layout_head">
+<h2 id="layout_{actionName}_title"><a href="{link}">{layout_title}</a></h2>
+</div>
+<div id="layout_{actionName}_body" class="layout_body">
+<!-- BEGIN slideshow -->
+<style>
+	#store-slideshow-{id}{float:left;position:relative;overflow:hidden;} 
+    #store-slideshow-{id} #store-slide-caption{id}{position:absolute;bottom:10px;left:0;z-index:1000;background:{slideshow_textbar_bkgnd};padding:10px 80px 10px 10px;color:#D3E2C1;cursor:pointer;pointer:hand;} 
+    .fade-box{width:950px;position:absolute;text-align:left;z-index:900;} 
+    .fade-box div{display:none;} 
+    #store-slideshow_overlay{id}{position:absolute;top:0px;left:0px;z-index:800;list-style:none;cursor:pointer;pointer:hand;} 
+    #store-show-controls{id}{position:absolute;bottom:22px;right:10px;z-index:1100; list-style: none;} 
+    #store-show-controls{id} li{float:left;} 
+    #store-show-controls{id} li a:link,#store-show-controls{id} li a:visited{display:block;width:16px;height:16px;background-repeat:no-repeat;background-position:0 0;} 
+    #store-show-controls{id} li a span{position:absolute;left:-9999px;} 
+    #store-show-controls{id} li#store-PauseButton{id}{position:absolute;right:30px;} 
+    #store-show-controls{id} li#store-PauseButton{id} a:link,#store-show-controls{id} li#store-PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #store-show-controls{id} li#store-PauseButton{id} a span{position:static;left:0;} 
+    #store-show-controls{id} li#store-PlayButton{id}{position:absolute;right:30px;} 
+    #store-show-controls{id} li#store-PlayButton{id} a:link,#store-show-controls{id} li#store-PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #store-show-controls{id} li#store-PlayButton{id} a span{position:static;left:0;} 
+    /*
+	#store-show-controls{id} li#store-PreviousButton{id} a{background-image:url(icons/silk_set/resultset_previous.png);} 
+    #store-show-controls{id} li#store-NextButton{id} a{background-image:url(icons/silk_set/resultset_next.png);} 	
+	*/
+</style>
+<div id="store-slideshow-{id}" class="store-slideshow">
+	<div style="position:relative;z-index:10;">
+	<script type="text/javascript">
+	var store{id}_slides = new Array(); 
+	var slideshow{id}_width = parseInt($('store-slideshow-{id}').offsetWidth);
+	var slideshow{id}_height = parseInt($('store-slideshow-{id}').offsetHeight);
+	if (slideshow{id}_width == 0) {
+		slideshow{id}_width = {slideshow_width};
+	}
+	if (slideshow{id}_height == 0) {
+		slideshow{id}_height = {slideshow_height};
+	}
+	</script>
+<!-- BEGIN image -->
+		<div {image_style} id="store-image-{image_id}" class="fade-box">
+			<a href="javascript:oStoreSlides{image_linkid}.goNext();">
+				<img id="store-img-{image_id}" src="{image_src}" alt="" />
+				<div class="image-caption">{image_caption}</div>
+			</a>
+		</div>
+		<input type="hidden" id="store-image{image_count}_href" value="{image_href}">
+		<script type="text/javascript">
+			{image_dimensions}
+			store{image_linkid}_slides.push("store-image-{image_id}");
+		</script>
+<!-- END image -->
+	</div>
+	<ul id="store-show-controls{id}">
+		<li id="store-PlayButton{id}" style="display: none;">
+			<a href="javascript:oStoreSlides{id}.startSlideShow();"><span>[play]</span></a>
+		</li>
+		<li id="store-PauseButton{id}" style="display: none;">
+			<a href="javascript:oStoreSlides{id}.stop();"><span>[stop]</span></a>
+		</li>
+		<!--<li class="png-fix" id="store-PreviousButton"><a class="png-fix" href="javascript:oStoreSlides.goPrevious();"><span>Previous</span></a></li>
+		<li id="store-NextButton"><a class="png-fix" href="javascript:oStoreSlides.goNext();"><span>Next</span></a></li>-->
+	</ul>
+	<div id="store-slideshow_overlay{id}">&nbsp;</div>
+	<p id="store-slide-counter{id}" style="display: none;">1 of {slideshow_total}</p>
+	<div id="store-slide-caption{id}">&nbsp;</div>
+	<script type="text/javascript">
+	{slideshow_dimensions}
+	Event.observe(window,"load",function(){
+		if($("store-slideshow-{id}")){
+			//$("flash-slideshow-{id}").style.display = "";
+			oStoreSlides{id}=new iSlideShow({
+			autostart:{slideshow_load_immediately},
+			start:0,
+			{slideshow_timer}
+			slides:store{id}_slides,
+			counter:"store-slide-counter{id}",
+			caption:"store-slide-caption{id}",
+			playButton	: "store-PlayButton{id}",
+			pauseButton	: "store-PauseButton{id}"
+			});
+			if ($('store-image'+oStoreSlides{id}.iImageId+'_href').value.length) {
+				Event.observe("store-slideshow_overlay{id}","click",function(b){Event.stop(b);location.href = $('store-image'+oStoreSlides{id}.iImageId+'_href').value;});
+				Event.observe("store-slide-caption{id}","click",function(b){Event.stop(b);location.href = $('store-image'+oStoreSlides{id}.iImageId+'_href').value;});
+			} else {
+				Event.observe("store-slideshow_overlay{id}","click",function(b){Event.stop(b);oStoreSlides{id}.goNext();});
+				Event.observe("store-slide-caption{id}","click",function(b){Event.stop(b);oStoreSlides{id}.goNext();});
+			}
+		}});
+	</script>
+</div>
+<!-- END slideshow -->
+<!-- BEGIN search -->
+			  <form method="POST" action="{action}" id="Store_search_form" name="Store_search_form" onsubmit="if(document.getElementById('Store_searchkeyword').value=='Enter Keyword to Search')document.getElementById('Store_searchkeyword').value='';">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+				  <td width="0%">
+				  <nobr>
+					<input name="Store_keyword" id="Store_searchkeyword" value="{searchkeyword_value}" onfocus="this.style.color='#000000';if(this.value==this.defaultValue){this.value='';};" onblur="if(this.value==''){this.value='Enter Keyword to Search';this.style.color='#888888';};" size="25" style="color: #888888; font-size: 80%; padding: 3px">&nbsp;
+					
+					<select style="max-width: 120px;" size="1" name="Store_id" id="Store_id">
+                            <option {category_default} value="all">Show Me...</option>
+                            <option value="all">All Categories</option>
+							{category_options}
+							{attribute_options}
+					</select>&nbsp;&nbsp;
+					<select style="max-width: 120px;" size="1" name="Store_brand" id="Store_brand" onchange="javascript: if(document.getElementById('Store_searchkeyword').value=='Enter Keyword to Search')document.getElementById('Store_searchkeyword').value=''; location.href = 'index.php?gadget=Store&action=Category&id=' + document.getElementById('Store_id').value + '&Store_sortColumn=' + document.getElementById('Store_sortColumn').value + '&Store_sortDir=' + document.getElementById('Store_sortDir').value + '&Store_brand=' + document.getElementById('Store_brand').value + '&Store_keyword=' + document.getElementById('Store_searchkeyword').value;">
+                            <option {brand_default} value="">Select Brand...</option>
+                            <option value="">All Brands</option>
+							{brand_options}
+					</select>&nbsp;&nbsp;
+					
+					&nbsp;&nbsp;<select style="max-width: 120px;" size="1" name="Store_sortColumn" id="Store_sortColumn" onchange="javascript: if(document.getElementById('Store_searchkeyword').value=='Enter Keyword to Search')document.getElementById('Store_searchkeyword').value=''; location.href = 'index.php?gadget=Store&action=Category&id=' + document.getElementById('Store_id').value + '&Store_sortColumn=' + document.getElementById('Store_sortColumn').value + '&Store_sortDir=' + document.getElementById('sortDir').value + '&Store_brand=' + document.getElementById('Store_brand').value + '&Store_keyword=' + document.getElementById('Store_searchkeyword').value;">
+                            <option {sort_default} value="premium">Sort By...</option>
+                            {sort_options}
+                    </select>&nbsp;<select style="max-width: 120px;" size="1" name="Store_sortDir" id="Store_sortDir" onchange="javascript: if(document.getElementById('Store_searchkeyword').value=='Enter Keyword to Search')document.getElementById('Store_searchkeyword').value=''; location.href = 'index.php?gadget=Store&action=Category&id=' + document.getElementById('Store_id').value + '&Store_sortColumn=' + document.getElementById('Store_sortColumn').value + '&Store_sortDir=' + document.getElementById('sortDir').value + '&Store_brand=' + document.getElementById('Store_brand').value + '&Store_keyword=' + document.getElementById('Store_searchkeyword').value;">
+                            <option {sort_asc} value="ASC">Ascending</option>
+                            <option {sort_desc} value="DESC">Descending</option>
+                    </select>&nbsp;&nbsp;
+					<input TYPE="submit" value="GO" style="font-size: 1.0em;" id="Store_searchsubmit">&nbsp;
+					</nobr>
+					</td>
+
+					<td width="0%">
+						<nobr><span style="font-size: x-small;" id="showallprodsearch">
+						<a href="index.php?products/all.html">
+						SHOW ALL</a></span><span style="font-size: x-small;" id="saveprodsearch">&nbsp;
+						<a href="javascript: void(0);" onclick="if (document.getElementById('saveStoreSearch')) {if (document.getElementById('saveStoreSearch').style.display == 'none') {document.getElementById('saveStoreSearch').style.display = '';} else {document.getElementById('saveStoreSearch').style.display = 'none';};};y=$$('.product_image');y.each(function(n) {$(n).style.position = 'relative';$(n).style.top = '0px';$(n).style.left = '0px';$(n).up(0).next(1).down('div.product_bkgnd_primary').style.marginLeft = '0px';});z=$$('.product_image a img');z.each(function(n) {$(n).style.position = 'relative';n.observe('mouseover', function(element) {return false;});});">
+						SAVE SEARCH</a></span></nobr>
+					</td>
+				</tr>
+				<tr>
+					<td><div id="Store_search_choices" class="autocomplete"></div></td>
+				</tr>
+              </table>
+			  <div id="saveStoreSearch" style="display: none; padding: 15px; text-align: left;">
+					<h2 style="color: #666666;">Save This Search</h2>
+					Right click on the link below, select "Copy" to get the Permanent Link to this Search.</p>
+					<p><textarea class="code" style="padding:0; font-size: 90%" id="Store_code" name="Store_code" rows="3" onmousedown="if(event.button==2){Store_select_code();};" onclick="Store_select_code();" cols="64" readonly="readonly">{permalink}</textarea></p>
+			  </div>
+            </form>
+			<script type="text/javascript">
+				var Store_save_html = $('saveStoreSearch').innerHTML;
+				function Store_select_code()
+				{
+				//var text_val=eval(element);
+				document.Store_search_form.code.focus();
+				document.Store_search_form.code.select();
+				}
+
+				function Store_GetStateId(element, entry) {
+					Store_AutoCompleteHost = '{site_url}/index.php?gadget=Store&action=AutoComplete';
+					Store_AutoCompleteURL = "&element=Store_searchkeyword&methodcount=1&initial1gadget=Store&initial1method=SearchKeyWithProducts&initial1paramcount=10&initial1param1="+$('Store_brand').value+"&initial1param2=&initial1param3="+$('Store_id').value+"&initial1param4=&initial1param5=null&initial1param6={id_autocomplete}&initial1param7=true&initial1param8=title&initial1param9=ASC&initial1param10=title";
+					return entry+"&methodcount=1&initial1gadget=Store&initial1method=SearchKeyWithProducts&initial1paramcount=10&initial1param1="+$('Store_brand').value+"&initial1param2=&initial1param3="+$('Store_id').value+"&initial1param4=&initial1param5=null&initial1param6={id_autocomplete}&initial1param7=true&initial1param8=title&initial1param9=ASC&initial1param10=title";
+				}
+					
+				function Store_ShowNoMatches(text, li) {
+					value = li.innerHTML;
+					if(value.indexOf("No matches") != -1){
+						text.value = 'No matches were found.';
+						$('Store_search_choices').style.display = '';
+					}
+				}
+				
+				var Store_AutoCompleteHost = '';
+				var Store_AutoCompleteURL = '';
+				var Store_ShowingChoices = false;
+				var Store_ComboBox = Class.create();
+
+				Store_ComboBox.Autocompleter = Ajax.Autocompleter;
+
+				// Overload onBlur
+				Store_ComboBox.Autocompleter.prototype.onBlur = function(event) {
+					if (Element.getStyle(this.update, 'display') == 'none') { return; }
+					// Dont hide the div on "blur" if the user clicks scrollbar
+					if(event&&Element.getStyle(this.update, 'height') != ''){
+						if( Position.within( this.update , Event.pointerX(event) , Event.pointerY(event) ) ){ 
+							Event.observe(this.update, "blur", this.onBlur.bindAsEventListener(this),true); 
+							// make sure blur is still around on
+							return; 
+						}
+					}
+					// needed to make click events working
+					setTimeout(this.hide.bind(this), 250);
+					this.hasFocus = false;
+					this.active = false; 
+				}
+
+				Store_ComboBox.Autocompleter.prototype.markPrevious = function() {
+					if(this.index > 0) this.index--
+					else this.index = this.entryCount-1;
+					this.getEntry(this.index).scrollIntoView(false);
+				}
+					
+				Store_ComboBox.prototype = {
+					initialize: function(textBox, resultsElement, array, options) {
+						this.textBox = $(textBox);
+								
+						//Cache for allChoicesHtml
+						this.allChoicesHtml = null
+						
+						this.results = $(resultsElement);
+						
+						this.array = array;
+						
+						this.results.style.display 	= 'none';
+						
+						this.events = {
+							showChoices: 	this.showChoices.bindAsEventListener(this),
+							hideChoices: 	this.hideChoices.bindAsEventListener(this),
+							click:			this.click.bindAsEventListener(this),
+							keyDown:		this.keyDown.bindAsEventListener(this)
+						}
+						
+						this.autocompleter = new Store_ComboBox.Autocompleter(this.textBox, this.results, this.array, options);
+						
+						Event.observe(this.textBox, 'click', this.events.click);
+						Event.observe(this.textBox, 'keydown', this.events.keyDown);
+					},
+					
+					/*
+					getAllChoices: function(e) {
+						if(!this.allChoicesHtml){
+							var choices = this.array.collect( function(choice) { return '<li>' + choice + '</li>'; } ).slice(0, 200);;
+							this.allChoicesHtml = '<ul>' + choices.join('') + (this.array.length>100?'<li class="disabled"><strong>Limited to the first 200 items!</strong></li>':'') + '</ul>';
+						}
+						this.autocompleter.updateChoices(this.allChoicesHtml);
+					},
+					*/
+					keyDown: function(e) {
+						if (e.keyCode == Event.KEY_DOWN && this.choicesVisible() ) {
+							this.showChoices();
+						}			
+					},
+					
+					// returns boolean indicating whether the choices are displayed
+					choicesVisible: function() { return (Element.getStyle(this.autocompleter.update, 'display') == 'none'); },
+					
+					click: function() {
+						if (this.choicesVisible() ) {
+							this.showChoices();
+						} else {
+							this.hideChoices();
+						}
+					},
+						
+					showChoices: function() {
+						this.textBox.focus();
+						this.autocompleter.changed = false;
+						this.autocompleter.hasFocus = true;
+						//this.getAllChoices();
+					},
+					
+					hideChoices: function() {
+						this.autocompleter.onBlur();
+					}
+				}
+				Event.observe(window, 'load', function(e){
+					var SComboBox = new Store_ComboBox('Store_searchkeyword', 'Store_search_choices', "{site_url}/index.php?gadget=Store&action=AutoComplete", {paramName: "query", minChars: 1, callback: Store_GetStateId, afterUpdateElement: Store_ShowNoMatches});
+				});
+
+				/*
+				new Ajax.Autocompleter("Store_searchkeyword", "Store_search_choices", "index.php?gadget=Maps&action=AutoCompleteRegions", {
+				  paramName: "query", 
+				  minChars: 1,
+				  callback: Store_GetStateId
+				});
+				*/
+				
+			</script>
+<!-- END search -->
+<!-- BEGIN featuredproducts -->
+<!-- start_featuredproducts_{gid} -->
+<div class="featuredproducts" id="featuredproducts-{gid}">
+<!-- BEGIN item -->
+	<div class="featuredproduct" id="featuredproduct-{pid}">
+<!-- BEGIN image -->
+		<div class="featuredproduct_image" style="background: url({image_src}) scroll center center no-repeat;"><a href="{image_href}" title="{image_caption}"><img alt="{image_caption}" border="0" src="{base_url}images/blank.gif" width="200" height="200" /></a></div>
+<!-- END image -->
+<!-- BEGIN no_image -->
+		<div class="featuredproduct_no_image" onclick="location.href='{image_href}';">
+		  <b>No Image</b>
+		</div>
+<!-- END no_image -->
+		<div class="featuredproduct_title"><a href="{href}" title="{caption}">{title}</a></div>
+		<div class="featuredproduct_price"><a href="{href}"><span>... </span>{price}</a></div>
+	</div>
+<!-- END item -->
+</div>
+<!-- end_featuredproducts_{gid} -->
+<!-- END featuredproducts -->
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Store_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END layout -->

@@ -19,7 +19,6 @@ define('_ES_SEARCH_LAYOUT_SIMPLEBOX', "Caja de búsqueda simple");
 define('_ES_SEARCH_LAYOUT_SIMPLEBOX_DESCRIPTION', "Provee una caja de búsqueda sin seleccionar los gadgets");
 define('_ES_SEARCH_LAYOUT_ADVANCEDBOX', "Caja de búsqueda avanzada");
 define('_ES_SEARCH_LAYOUT_ADVANCEDBOX_DESCRIPTION', "Provee una caja para la búsqueda avanzada");
-define('_ES_SEARCH_RESULTS', "Resultados de la busqueda");
 define('_ES_SEARCH_RESULTS_SUBTITLE', "{0} items fueron encontrados con la cadena <strong>{1}</strong>");
 define('_ES_SEARCH_RESULTS_IN_GADGETS', "{0} elementos encontrados para [{1}] en {2}");
 define('_ES_SEARCH_NO_RESULTS', "Ningún ítem fue encontrado con la cadena <strong>{0}</strong>");

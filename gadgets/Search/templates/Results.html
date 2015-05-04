@@ -1,26 +1,32 @@
 <!-- BEGIN results -->
-<div class="gadget search search_results">
+<!-- BEGIN header -->
+<div class="gadget search_results">
   <h2>{title}</h2>
-  <div class="content">
+    <div class="content">
+<!-- END header -->
     <!-- BEGIN subtitle -->{text}<!-- END subtitle -->
     <!-- BEGIN gadget --><h4>{gadget_result}</h4><!-- END gadget -->
+<!-- BEGIN header2 -->
+    <ul>
+<!-- END header2 -->
+    <!-- BEGIN item -->
+      <li class="clearfix">
+        <div class="clearfix">
+        <div class="snippet">
+          <div><a href="{url}" target="{target}">{title}</a><small class="gadget_date">{date}</small></div>
+          <p>{snippet}</p>
+        </div>
+        <div class="gadget_logo">
+          <a href="{url}" target="{target}"><img src="{image}" width="48" alt="{title}"/></a>
+        </div>
+        </div>
+      </li>
+    <!-- END item -->
+    <!-- BEGIN notfound --><li class="clearfix">{message}</li><!-- END notfound -->
+	  <li class="clearfix">{navigation}</li>
+<!-- BEGIN footer -->
+    </ul>
   </div>
-  <ul>
-  <!-- BEGIN item -->
-    <li class="clearfix">
-      <div class="clearfix">
-      <div class="snippet">
-        <div><a href="{url}" target="{target}">{title}</a><small>{date}</small></div>
-        <p>{snippet}</p>
-      </div>
-      <div class="gadget_logo">
-        <a href="{url}" target="{target}"><img src="{image}" width="48" alt="{title}"/></a>
-      </div>
-      </div>
-    </li>
-  <!-- END item -->
-  </ul>
-  <!-- BEGIN notfound -->{message}<!-- END notfound -->
-  {navigation}
 </div>
+<!-- END footer -->
 <!-- END results -->

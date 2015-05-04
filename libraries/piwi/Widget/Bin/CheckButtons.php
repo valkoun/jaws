@@ -107,6 +107,27 @@ class CheckButtons extends Bin
     }
 
     /**
+     * Order items by selected
+     * @access public
+     */
+    function orderBySelected()
+    {
+        $selected = array();
+        $notselected = array();
+        if (count($this->_options) > 0) {
+            foreach ($this->_options as $option) {
+                $value = $option->getValue();
+                if ($option->isSelected())  {
+                    $selected[$value] = $option;
+                } else {
+                    $notselected[$value] = $option;
+                }
+            }
+        }
+        $this->_options = array_merge($selected,$notselected);
+    }
+
+    /**
      * Set the direction
      *
      * @param  string  $direction Direction of the CheckButtons
@@ -207,18 +228,18 @@ class CheckButtons extends Bin
             $c = 0; // Element counter.
         }
 
-        $baseName = $this->_name;
+        $realName = $this->_name;
         $this->_name .= "[]";
 
-        foreach ($this->_options as $value => $option) {
+        foreach ($this->_options as $option) {
             $item = '<input type="checkbox"';
 
             $this->_id = $option->getID();
             if (empty($this->_id)) {
-                $this->_id = $baseName . '_' . $value;
+                $this->_id = $realName . '_' . md5(uniqid(rand(), true));
             }
 
-            $this->_value = $value;
+            $this->_value = $option->getValue();
             $item .= $this->buildBasicXHTML();
             $item .= $this->buildJSEvents();
             $this->_value = '';
@@ -228,7 +249,8 @@ class CheckButtons extends Bin
                 $item .= ' disabled="disabled"';
             }
 
-            if ($option->isSelected()) {
+            $selected = $option->isSelected();
+            if ($selected) {
                 $item .= ' checked="checked"';
             }
 
@@ -266,5 +288,5 @@ class CheckButtons extends Bin
             $this->_XHTML .= "</table>\n";
         }
     }
-
 }
+?>

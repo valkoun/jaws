@@ -1,289 +1,241 @@
 <?php
 /**
- * Main application, the core
+ * Main application, the core ;-)
  *
  * @category   Application
  * @package    Core
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @author     Helgi Ãžormar ÃžorbjÃ¶rnsson <dufuz@php.net>
+ * @author     Helgi Þormar Þorbjörnsson <dufuz@php.net>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
+ * @TODO:	Static-ize URLs (jaws, data, full, etc) within methods
+ * @TODO:	Store visitor language preference along with admin language in LoadDefaults
+ * @TODO:	Use Jaws_Cache for all caching
  */
 class Jaws
 {
     /**
-     * Is index page
-     *
-     * @var     bool
-     * @access  private
-     */
-    var $_IsIndex = false;
-
-    /**
      * The main request's gadget
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
-    var $_RequestGadget = '';
+    var $_MainRequestGadget = '';
 
     /**
      * The main request's action
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
-    var $_RequestAction = '';
-
-    /**
-     * Default preferences
-     * @var     array
-     * @access  private
+    var $_MainRequestAction = '';
+    
+	/**
+     * The main request's id
+     * @var	string
+     * @access	protected
      */
-    var $_Preferences = array(
-        'theme'             => 'jaws',
-        'language'          => 'en',
-        'editor'            => null,
-        'timezone'          => null,
-        'calendar_type'     => 'Gregorian',
-        'calendar_language' => 'en',
-    );
+    var $_MainRequestId = '';
 
     /**
      * The application's theme.
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
-    var $_Theme = 'jaws';
+    var $_Theme = 'default';
 
     /**
      * The language the application is running in.
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
     var $_Language = 'en';
 
     /**
      * The calendar type.
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
     var $_CalendarType = 'Gregorian';
 
     /**
      * The calendar language the application is running in.
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
     var $_CalendarLanguage = 'en';
 
     /**
      * The editor application is using
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
     var $_Editor = null;
 
     /**
-     * The timezone
-     * @var     string
-     * @access  protected
+     * The user timezone
+     * @var	string
+     * @access	protected
      */
-    var $_Timezone = null;
+    var $_UserTimezone = null;
 
     /**
      * Browser flag
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
     var $_BrowserFlag = '';
 
     /**
      * Browser HTTP_ACCEPT_ENCODING
-     * @var     string
-     * @access  protected
+     * @var	string
+     * @access	protected
      */
     var $_BrowserEncoding = '';
 
     /**
      * Should application use layout?
-     * @var     bool
-     * @access  protected
+     * @var	boolean
+     * @access	protected
      */
     var $_UseLayout = false;
 
     /**
+     * Application is in stand alone mode
+     * @var	boolean
+     * @access	protected
+     */
+    var $_standAloneMode = false;
+
+    /**
      * Store gadget object for later use so we aren't running
      * around with multiple copies
-     * @var array
-     * @access  protected
+     * @var	array
+     * @access	protected
      */
     var $_Gadgets = array();
 
     /**
-     * Store plugin object for later use so we aren't running
-     * around with multiple copies
-     * @var array
-     * @access  protected
+     * Store what's on layout, so things are added only once
+     * @var	array
+     * @access	protected
      */
-    var $_Plugins = array();
-
+    var $_ItemsOnLayout = array();
+    
     /**
-     * Store hook object for later use so we aren't running
-     * @var array
-     * @access  protected
+     * Store DB queries
+     * @var	array
+     * @access	protected
+     */
+    var $_DBCache = array();
+    
+	/**
+     *
+     * @var	array
+     * @access	protected
      */
     var $_Classes = array();
 
     /**
-     * Constructor
-     *
-     * @access  public
-     */
-    function Jaws()
-    {
-        require_once JAWS_PATH . 'include/Jaws/Template.php';
-        require_once JAWS_PATH . 'include/Jaws/Header.php';
-        require_once JAWS_PATH . 'include/Jaws/Plugin.php';
-        require_once JAWS_PATH . 'include/Jaws/Gadget.php';
-        require_once JAWS_PATH . 'include/Jaws/GadgetHTML.php';
-        require_once JAWS_PATH . 'include/Jaws/GadgetInfo.php';
-
-        $this->loadClass('UTF8', 'Jaws_UTF8');
-    }
-
-    /**
      * Does everything needed to get the application to a usable state.
      *
-     * @return  void
-     * @access  public
+     * @access 	public
+     * @return 	void
      */
-    function create()
+    function Create()
     {
+        $this->loadClass('UTF8', 'Jaws_UTF8');
         $this->loadClass('Translate', 'Jaws_Translate');
         $this->loadClass('Registry', 'Jaws_Registry');
-
-        $this->loadPreferences();
         $this->Registry->Init();
         $this->InstanceSession();
   
         $this->loadDefaults();
         $this->Translate->Init($this->_Language);
 
+        // This is needed for all gadgets
+        require_once JAWS_PATH . 'include/Jaws/Gadget.php';
+        require_once JAWS_PATH . 'include/Jaws/Template.php';
+
         $this->loadClass('Map', 'Jaws_URLMapping');
         $this->Map->Load();
     }
 
     /**
-     * Load the default application preferences(language, theme, ...)
+     * Visitor application preferences such as language, theme, editor, timezone, and calendar type.
      *
-     * @return  void
-     * @access  public
+     * @access 	public
+     * @category 	feature
+     * @return 	void
      */
-    function loadPreferences()
-    {
-        $this->_Preferences = array(
-            'theme'             => $this->Registry->Get('/config/theme'),
-            'language'          => $this->Registry->Get(JAWS_SCRIPT == 'index'?
-                                                        '/config/site_language':
-                                                        '/config/admin_language'),
-            'editor'            => $this->Registry->Get('/config/editor'),
-            'timezone'          => $this->Registry->Get('/config/timezone'),
-            'calendar_type'     => $this->Registry->Get('/config/calendar_type'),
-            'calendar_language' => $this->Registry->Get('/config/calendar_language'),
-        );
-    }
-
-    /**
-     * Set the language and theme, first based on session data, then on application defaults.
-     *
-     * @return  void
-     * @access  public
-     */
-    function loadDefaults()
+    function LoadDefaults()
     {
         if (APP_TYPE == 'web') {
             $cookie_precedence = ($this->Registry->Get('/config/cookie_precedence') == 'true');
 
-            // load from session
             $this->_Theme            = $this->Session->GetAttribute('theme');
-            $this->_Language         = $this->Session->GetAttribute('language');
-            $this->_Editor           = $this->Session->GetAttribute('editor');
-            $this->_Timezone         = $this->Session->GetAttribute('timezone');
-            $this->_CalendarType     = $this->Session->GetAttribute('calendartype');
             $this->_CalendarLanguage = $this->Session->GetAttribute('calendarlanguage');
-
-            // load cookies preferences
-            $cookies = array(
-                'theme'             => $this->Session->GetCookie('theme'),
-                'language'          => $this->Session->GetCookie('language'),
-                'editor'            => $this->Session->GetCookie('editor'),
-                'timezone'          => $this->Session->GetCookie('timezone'),
-                'calendar_type'     => $this->Session->GetCookie('calendar_type'),
-                'calendar_language' => $this->Session->GetCookie('calendar_language'),
-            );
-
-            // theme
+            $this->_Editor           = $this->Session->GetAttribute('editor');
+            $this->_UserTimezone     = $this->Session->GetAttribute('timezone');
+            if (is_null($this->_UserTimezone)) {
+                if ($cookie_precedence && !is_null($this->Session->GetCookie('timezone'))) {
+                    $this->_UserTimezone = $this->Session->GetCookie('timezone');
+                } else {
+                    $this->_UserTimezone = $this->Registry->Get('/config/timezone');
+                }
+            }
+			$dst = date('I');
+			$this->_UserTimezone = ($dst == 1 ? (string)(((int)$this->_UserTimezone) + 1) : $this->_UserTimezone);
+			
             if (empty($this->_Theme)) {
-                if ($cookie_precedence && !empty($cookies['theme'])) {
-                    $this->_Theme = $cookies['theme'];
+                if ($cookie_precedence && $this->Session->GetCookie('theme')) {
+                    $this->_Theme = $this->Session->GetCookie('theme');
                 } else {
-                    $this->_Theme = $this->_Preferences['theme'];
+                    $this->_Theme = $this->Registry->Get('/config/theme');
                 }
             }
 
-            // language
             if (JAWS_SCRIPT == 'admin') {
-                $this->_Language = empty($this->_Language)? $this->_Preferences['language'] : $this->_Language;
+                $userLanguage    = $this->Session->GetAttribute('language');
+                $this->_Language = empty($userLanguage)? $this->Registry->Get('/config/admin_language') : $userLanguage;
+            } elseif (JAWS_SCRIPT == 'index') {
+                if ($cookie_precedence && $this->Session->GetCookie('language')) {
+                    $this->_Language = $this->Session->GetCookie('language');
+                } else {
+                    $this->_Language = $this->Registry->Get('/config/site_language');
+                }
             } else {
-                if ($cookie_precedence && !empty($cookies['language'])) {
-                    $this->_Language = $cookies['language'];
-                } else {
-                    $this->_Language = $this->_Preferences['language'];
-                }
+                $this->_Language = 'en';
             }
 
-            // editor
-            if (empty($this->_Editor)) {
-                if ($cookie_precedence && !is_null($cookies['editor'])) {
-                    $this->_Editor = $cookies['editor'];
-                } else {
-                    $this->_Editor = $this->_Preferences['editor'];
-                }
+            if ($cookie_precedence && $this->Session->GetCookie('calendar_type')) {
+                $this->_CalendarType = $this->Session->GetCookie('calendar_type');
+            } else {
+                $this->_CalendarType = $this->Registry->Get('/config/calendar_type');
             }
 
-            // timezone
-            if (is_null($this->_Timezone)) {
-                if ($cookie_precedence && !is_null($cookies['timezone'])) {
-                    $this->_Timezone = $cookies['timezone'];
-                } else {
-                    $this->_Timezone = $this->_Preferences['timezone'];
-                }
-            }
-
-            // calendar type
-            if (empty($this->_CalendarType)) {
-                if ($cookie_precedence && !is_null($cookies['calendar_type'])) {
-                    $this->_CalendarType = $cookies['calendar_type'];
-                } else {
-                    $this->_CalendarType = $this->_Preferences['calendar_type'];
-                }
-            }
-
-            // calendar language
             if (empty($this->_CalendarLanguage)) {
-                if ($cookie_precedence && !is_null($cookies['calendar_language'])) {
-                    $this->_CalendarLanguage = $cookies['calendar_language'];
+                if ($cookie_precedence && $this->Session->GetCookie('calendar_language')) {
+                    $this->_CalendarLanguage = $this->Session->GetCookie('calendar_language');
                 } else {
-                    $this->_CalendarLanguage = $this->_Preferences['calendar_language'];
+                    $this->_CalendarLanguage = $this->Registry->Get('/config/calendar_language');
                 }
             }
         } else {
-            $this->_Theme            = $this->_Preferences['theme'];
-            $this->_Language         = $this->_Preferences['language'];
-            $this->_Editor           = $this->_Preferences['editor'];
-            $this->_Timezone         = $this->_Preferences['timezone'];
-            $this->_CalendarType     = $this->_Preferences['calendar_type'];
-            $this->_CalendarLanguage = $this->_Preferences['calendar_language'];
+            $this->_Theme    = $this->Registry->Get('/config/theme');
+            if (JAWS_SCRIPT == 'admin') {
+                $this->_Language = $this->Registry->Get('/config/admin_language');
+            } elseif (JAWS_SCRIPT == 'index') {
+                $this->_Language = $this->Registry->Get('/config/site_language');
+            } else {
+                $this->_Language = 'en';
+            }
+
+            $this->_CalendarType = $this->Registry->Get('/config/calendar_type');
+            $this->_CalendarLanguage = $this->Registry->Get('/config/calendar_language');
+        }
+
+        if (empty($this->_Editor)) {
+            $this->_Editor = $this->Registry->Get('/config/editor');
         }
 
         require_once 'Net/Detect.php';
@@ -294,21 +246,21 @@ class Jaws
     /**
      * Setup the applications session.
      *
-     * @return  void
-     * @access  public
+     * @access 	public
+     * @return 	void
      */
     function InstanceSession()
     {
         require_once JAWS_PATH . 'include/Jaws/Session.php';
         $this->Session =& Jaws_Session::factory();
-        $this->Session->Init();
+		$this->Session->Init();
     }
 
     /**
      * Setup the applications cache.
      *
-     * @return  void
-     * @access  public
+     * @access 	public
+     * @return 	void
      */
     function InstanceCache()
     {
@@ -319,8 +271,8 @@ class Jaws
     /**
      * Setup the applications Layout object.
      *
-     * @return  void
-     * @access  public
+     * @access 	public
+     * @return 	void
      */
     function InstanceLayout()
     {
@@ -331,8 +283,8 @@ class Jaws
     /**
      * Get the boolean answer if application is using a layout
      *
-     * @return  bool
-     * @access  public
+     * @access 	public
+     * @return 	boolean
      */
     function IsUsingLayout()
     {
@@ -340,46 +292,75 @@ class Jaws
     }
 
     /**
-     * Get the name of the Theme
+     * Get the boolean answer if application is standalone
      *
-     * @access  public
-     * @param   bool    $rel_url relative url
-     * @return  string The name of the theme
+     * @access 	public
+     * @return 	boolean
      */
-    function GetTheme($rel_url = true)
+    function IsStandAloneMode()
+    {
+        return $this->_standAloneMode;
+    }
+
+    /**
+     * Set the boolean answer if application is standalone
+     *
+     * @access 	public
+     * @param 	boolean	$mode	standalone mode (true or false)
+     * @return 	void
+     */
+    function SetStandAloneMode($mode = false)
+    {
+        $this->_standAloneMode = $mode;
+    }
+
+    /**
+     * Get default theme
+     *
+     * @access 	public
+     * @return 	mixed	Array of theme info, or Jaws_Error on error
+     */
+    function GetTheme()
     {
         static $theme;
         if (!isset($theme)) {
             // Check if valid theme name
             if (strpos($this->_Theme, '..') !== false ||
-                strpos($this->_Theme, '%') !== false ||
-                strpos($this->_Theme, '\\') !== false ||
-                strpos($this->_Theme, '/') !== false) {
-                    return new Jaws_Error(_t('GLOBAL_ERROR_INVALID_NAME', 'GetTheme'),
-                                          'Getting theme name');
+                strpos($this->_Theme, '\\') !== false) {
+                    return new Jaws_Error(_t('GLOBAL_ERROR_INVALID_NAME', 'GetTheme'), 'Getting theme name');
             }
 
             $theme = array();
             $theme['name'] = $this->_Theme;
-            $theme['path'] = JAWS_THEMES. $this->_Theme . '/';
-            if (!is_dir($theme['path'])) {
-                $theme['url']    = $this->getThemeURL($this->_Theme . '/', $rel_url, true);
-                $theme['path']   = JAWS_BASE_THEMES. $this->_Theme . '/';
-                $theme['exists'] = is_dir($theme['path']);
-            } else {
-                $theme['url']    = $this->getThemeURL($this->_Theme . '/', $rel_url);
-                $theme['exists'] = true;
-            }
+            if (substr(strtolower($this->_Theme), 0, 4) == 'http') {
+				if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' && substr(strtolower($this->_Theme), 0, 5) == 'http:') {
+					$theme['path']	= $this->GetSiteURL('', false, 'https').'/gz.php?type=css&uri=' . urlencode($this->_Theme . '/');
+					$theme['url']	= $this->GetSiteURL('', false, 'https').'/gz.php?type=css&uri=' . urlencode($this->_Theme . '/');
+				} else {	
+					$theme['path']	= $this->_Theme . '/';
+					$theme['url']	= $this->_Theme . '/';
+                }
+				$theme['exists'] = true;
+			} else {
+				$theme['path'] = JAWS_DATA . 'themes/' . $this->_Theme . '/';
+	            if (!is_dir($theme['path'])) {
+                	$theme['url']    = $this->getDataURL('themes/' . $this->_Theme . '/', true, true);
+                	$theme['path']   = JAWS_BASE_DATA .  'themes/' . $this->_Theme . '/';
+                	$theme['exists'] = is_dir($theme['path']);
+            	} else {
+               		$theme['url']    = $this->getDataURL('themes/' . $this->_Theme . '/', true);
+                	$theme['exists'] = true;
+            	}			
+			}
         }
-
         return $theme;
     }
 
     /**
-     * Get the default language
+     * Get default language
      *
-     * @access  public
-     * @return  string The default language
+     * @access 	public
+     * @return 	string	The default language
      */
     function GetLanguage()
     {
@@ -388,8 +369,7 @@ class Jaws
             strpos($this->_Language, '%') !== false ||
             strpos($this->_Language, '\\') !== false ||
             strpos($this->_Language, '/') !== false) {
-                return new Jaws_Error(_t('GLOBAL_ERROR_INVALID_NAME', 'GetLanguage'),
-                                      'Getting language name');
+                return new Jaws_Error(_t('GLOBAL_ERROR_INVALID_NAME', 'GetLanguage'), 'Getting language name');
         }
         return $this->_Language;
     }
@@ -397,8 +377,8 @@ class Jaws
     /**
      * Get the default editor
      *
-     * @access  public
-     * @return  string The default language
+     * @access 	public
+     * @return 	string	The default language
      */
     function GetEditor()
     {
@@ -408,8 +388,8 @@ class Jaws
     /**
      * Get Browser flag
      *
-     * @access  public
-     * @return  string The type of browser
+     * @access 	public
+     * @return 	string	The type of browser
      */
     function GetBrowserFlag()
     {
@@ -417,7 +397,7 @@ class Jaws
     }
 
     /**
-     * Overwrites the default values the Application use
+     * Overwrites the default values the Application uses
      *
      * It overwrites the default values with the input values
      * (which should come in an array)
@@ -432,8 +412,9 @@ class Jaws
      * different from the default ones (or the values that were already loaded)
      * we load the translation stuff again
      *
-     * @access  public
-     * @param   array   $defaults  New default values
+     * @access 	public
+     * @param 	array   $defaults  New default values
+     * @return 	void
      */
     function OverwriteDefaults($defaults) 
     {
@@ -476,7 +457,8 @@ class Jaws
                     break;
 
                 case 'timezone':
-                    $this->_Timezone = $value;
+                    $dst = date('I');
+					$this->_UserTimezone = ($dst == 1 ? (string)(((int)$value) + 1) : $value);
                     break;
             }
         }
@@ -487,10 +469,10 @@ class Jaws
     }
     
     /**
-     * Get the default language
+     * Get the default Calendar type
      *
-     * @access  public
-     * @return  string The default language
+     * @access 	public
+     * @return 	string	The default Calendar type
      */
     function GetCalendarType()
     {
@@ -498,10 +480,10 @@ class Jaws
     }
 
     /**
-     * Get the default language
+     * Get the default Calendar language
      *
-     * @access  public
-     * @return  string The default language
+     * @access 	public
+     * @return 	string	The default Calendar language
      */
     function GetCalendarLanguage()
     {
@@ -511,12 +493,12 @@ class Jaws
     /**
      * Get the available authentication methods
      *
-     * @access  public
-     * @return  array  Array with available authentication methods
+     * @access	public
+     * @return 	array	Array with available authentication methods
      */
     function GetAuthMethods()
     {
-        $path = JAWS_PATH . 'include/Jaws/Auth';
+        $path = JAWS_PATH . 'include/Jaws/AuthScripts';
         if (is_dir($path)) {
             $methods = array();
             $dir = scandir($path);
@@ -538,67 +520,51 @@ class Jaws
      * stores it globally for later use so we do not have duplicates
      * of the same instance around in our code.
      *
-     * @access  public
-     * @param   string $gadget      Name of the gadget
-     * @param   string $type        The type being loaded
-     * @param   string $filename    Try to find gadget class in this file
-     * @return  mixed  Gadget class object on successful, Jaws_Error otherwise
+     * @access 	public
+     * @param 	string	$gadget	Name of the gadget
+     * @param 	string	$filename	The file being loaded
+     * @return 	object	Gadget instance or Jaws_Error on error
      */
-    function LoadGadget($gadget, $type = 'HTML', $filename = '')
+    function LoadGadget($gadget, $filename = 'HTML')
     {
-        $type   = trim($type);
-        $gadget = urlencode(trim(strip_tags($gadget)));
-        $type_class_name = $gadget . ucfirst($type);
+        $gadget   = urlencode(trim(strip_tags($gadget)));
+        $filename = trim($filename);
+        $gadgetname = $gadget . ucfirst($filename);
         $load_registry = true;
-        if (!isset($this->_Gadgets[$gadget][$type])) {
-            if (!is_dir(JAWS_PATH . 'gadgets/' . $gadget)) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_GADGET_DOES_NOT_EXIST', $gadget),
-                                        'Gadget directory check');
-                return $error;
-            }
-
-            // is gadget published?
-            if (defined('JAWS_PUBLISHED_GADGETS')) {
-                static $published_gadgets;
-                if (!isset($published_gadgets)) {
-                    $published_gadgets = array_filter(array_map('trim', explode(',', JAWS_PUBLISHED_GADGETS)));
-                }
-
-                if (!in_array($gadget, $published_gadgets)) {
-                    $error = new Jaws_Error(_t('GLOBAL_ERROR_GADGET_NOT_PUBLISHED', $gadget),
-                                            'Gadget publish check',
-                                            JAWS_ERROR_INFO);
-                    return $error;
-                }
-            }
-
-            // Load gadget's language file
-            $this->Translate->LoadTranslation($gadget, JAWS_COMPONENT_GADGET);
-
-            switch ($type) {
+        if (!isset($this->_Gadgets[$gadget][$filename])) {
+            switch ($filename) {
                 case 'Info':
                     $load_registry = false;
+                    if (!Jaws::classExists('Jaws_GadgetInfo')) {
+                        require_once JAWS_PATH . 'include/Jaws/GadgetInfo.php';
+                    }
                     break;
                 case 'HTML':
                 case 'AdminHTML':
+                    if (!Jaws::classExists('Jaws_GadgetHTML')) {
+                        require_once JAWS_PATH . 'include/Jaws/GadgetHTML.php';
+                    }
                     break;
             }
 
-            $file = JAWS_PATH . 'gadgets/' . $gadget . '/' . $type . '.php';
+            $file = JAWS_PATH . 'gadgets/' . $gadget . '/' . $filename . '.php';
             if (file_exists($file)) {
                 include_once $file;
             }
 
-            if (!Jaws::classExists($type_class_name)) {
+            if (!Jaws::classExists($gadgetname)) {
                 // return a error
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', $type_class_name),
-                                        'Gadget class check');
+                $error = new Jaws_Error(_t('GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', $gadgetname), 'Gadget class check');
                 return $error;
             }
 
-            if ($load_registry &&
-               (!isset($this->_Gadgets[$gadget]) || !isset($this->_Gadgets[$gadget]['Registry'])))
-            {
+            $obj = new $gadgetname();
+			if (Jaws_Error::IsError($obj)) {
+                $error = new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_INSTANCE', $file, $gadgetname), 'Gadget file loading');
+                return $error;
+            }
+
+            if ($load_registry && (!isset($this->_Gadgets[$gadget]) || !isset($this->_Gadgets[$gadget]['Registry']))) {
                 $this->_Gadgets[$gadget]['Registry'] = true;
                 if (isset($this->ACL)) {
                     $this->ACL->LoadFile($gadget);
@@ -606,176 +572,57 @@ class Jaws
                 $this->Registry->LoadFile($gadget);
             }
 
-            $obj = new $type_class_name($gadget);
-            if (Jaws_Error::IsError($obj)) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_INSTANCE', $file, $type_class_name),
-                                        'Gadget file loading');
-                return $error;
+            if (in_array($filename, array('Model', 'AdminModel'))) {
+                $obj->Init($gadget);
             }
 
-            $this->_Gadgets[$gadget][$type]['base']  = $obj;
-            $this->_Gadgets[$gadget][$type]['files'] = array();
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loaded gadget: ' . $gadget . ', File: ' . $type);
+            $this->_Gadgets[$gadget][$filename] = $obj;
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loaded gadget: ' . $gadget . ', File: ' . $filename);
+            }
         }
 
-        $filename = trim($filename);
-        if (!empty($filename)) {
-            if (!isset($this->_Gadgets[$gadget][$type]['files'][$filename])) {
-                switch ($type) {
-                    case 'HTML':
-                        $file_class_name = $gadget. '_Actions_'. $filename;
-                        $file = JAWS_PATH. "gadgets/$gadget/Actions/$filename.php";
-                        break;
-
-                    case 'LayoutHTML':
-                        $file_class_name = $gadget. '_Actions_'. $filename;
-                        $file = JAWS_PATH. "gadgets/$gadget/Actions/$filename.php";
-                        break;
-
-                    case 'AdminHTML':
-                        $file_class_name = $gadget. '_Actions_Admin_'. $filename;
-                        $file = JAWS_PATH. "gadgets/$gadget/Actions/Admin/$filename.php";
-                        break;
-
-                    case 'Model':
-                        $file_class_name = $gadget. '_Model_'. $filename;
-                        $file = JAWS_PATH. "gadgets/$gadget/Model/$filename.php";
-                        break;
-
-                    case 'AdminModel':
-                        $file_class_name = $gadget. '_Model_Admin_'. $filename;
-                        $file = JAWS_PATH. "gadgets/$gadget/Model/Admin/$filename.php";
-                        break;
-                }
-
-                if (file_exists($file)) {
-                    include_once $file;
-                }
-
-                if (!Jaws::classExists($file_class_name)) {
-                    // return a error
-                    $error = new Jaws_Error(_t('GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', $file_class_name),
-                                            'Gadget class check');
-                    return $error;
-                }
-
-                $objFile = new $file_class_name($gadget);
-                if (Jaws_Error::IsError($objFile)) {
-                    $error = new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_INSTANCE', $file, $file_class_name),
-                                            'Gadget file loading');
-                    return $error;
-                }
-
-                $this->_Gadgets[$gadget][$type]['files'][$filename] = $objFile;
-                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded gadget file: $gadget, Type: $type, File: $filename");
-            }
-
-            return $this->_Gadgets[$gadget][$type]['files'][$filename];
-        }
-
-        return $this->_Gadgets[$gadget][$type]['base'];
-    }
-
-    /**
-     * Loads the plugin file in question, makes a instance and
-     * stores it globally for later use so we do not have duplicates
-     * of the same instance around in our code.
-     *
-     * @access  public
-     * @param   string $plugin Name of the plugin
-     * @return  mixed Plugin class object on successful, Jaws_Error otherwise
-     */
-    function LoadPlugin($plugin)
-    {
-        $plugin = urlencode(trim(strip_tags($plugin)));
-        if (!isset($this->_Plugins[$plugin])) {
-            if (!is_dir(JAWS_PATH . 'plugins/' . $plugin)) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_PLUGIN_DOES_NOT_EXIST', $plugin),
-                                        'Plugin directory check');
-                return $error;
-            }
-
-            // is plugin published?
-            if (defined('JAWS_PUBLISHED_PLUGINS')) {
-                static $published_plugins;
-                if (!isset($published_plugins)) {
-                    $published_plugins = array_filter(array_map('trim', explode(',', JAWS_PUBLISHED_PLUGINS)));
-                }
-
-                if (!in_array($plugin, $published_plugins)) {
-                    $error = new Jaws_Error(_t('GLOBAL_ERROR_PLUGIN_NOT_PUBLISHED', $plugin),
-                                            'Plugin publish check');
-                    return $error;
-                }
-            }
-
-            $file = JAWS_PATH . 'plugins/' . $plugin . '/' . $plugin . '.php';
-            if (file_exists($file)) {
-                include_once $file;
-            }
-
-            if (!Jaws::classExists($plugin)) {
-                // return a error
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', $plugin),
-                                        'Plugin class check');
-                return $error;
-            }
-
-            $obj = new $plugin();
-            if (Jaws_Error::IsError($obj)) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_INSTANCE', $file, $plugin),
-                                        'Plugin file loading');
-                return $error;
-            }
-
-            // load registry file
-            $this->Registry->LoadFile($plugin, 'plugins');
-            // load plugin's language file
-            $this->Translate->LoadTranslation($plugin, JAWS_COMPONENT_PLUGIN);
-
-            $this->_Plugins[$plugin] = $obj;
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loaded plugin: ' . $plugin);
-        }
-
-        return $this->_Plugins[$plugin];
+        return $this->_Gadgets[$gadget][$filename];
     }
 
     /**
      * Set main request properties like gadget and action
      *
-     * @access  public
-     * @param   bool    $index  Index page?
-     * @param   string  $gadget Gadget's name
-     * @param   string  $action Gadget's action
-     * @return  void
+     * @access 	public
+     * @param 	string  $gadget	Gadget's name
+     * @param 	string  $action	Gadget's action
+     * @param 	string  $id	Gadget's ID
+     * @return 	void
      */
-    function SetMainRequest($index, $gadget, $action)
+    function SetMainRequest($gadget, $action, $id = null)
     {
-        $this->_IsIndex       = $index;
-        $this->_RequestGadget = $gadget;
-        $this->_RequestAction = $action;
-    }
+        $this->_MainRequestGadget = $gadget;
+        $this->_MainRequestAction = $action;
+        if (!is_null($id)) {
+			$this->_MainRequestId = $id;
+		}
+	}
 
     /**
      * Get main request properties like gadget and action
      *
-     * @access  public
-     * @return  array   Main request data array
+     * @access 	public
+     * @return 	array	Array of main request information
      */
     function GetMainRequest()
     {
-        return array('index'  => $this->_IsIndex,
-                     'gadget' => $this->_RequestGadget,
-                     'action' => $this->_RequestAction);
+        return array('gadget' => $this->_MainRequestGadget,
+                     'action' => $this->_MainRequestAction,
+					 'id' => $this->_MainRequestId);
     }
 
     /**
-     * Set true|false if a gadget has been updated so we don't check it again and again
+     * Set true or false if a gadget has been updated so we don't check it again and again
      *
-     * @access  public
-     * @param   string  $gadget     Gadget's name
-     * @param   bool    $status     True if gadget is updated (installed and latest version)
-     * @return  void
+     * @access 	public
+     * @param 	string  $gadget	Gadget's name
+     * @param 	boolean	$status	True if gadget is updated (installed and latest version)
+     * @return 	void
      */
     function SetGadgetAsUpdated($gadget, $status = true)
     {
@@ -788,9 +635,9 @@ class Jaws
      * Returns true or false is gadget has been marked as updated. If the gadget hasn't been marked
      * it returns null.
      *
-     * @access  public
-     * @param   string  $gadget  Gadget's name
-     * @return  mixed   True/False if gadget exist, otherwise Null
+     * @access 	public
+     * @param 	string	$gadget	Gadget's name
+     * @return 	mixed	boolean True if Gadget is marked, null otherwise
      */
     function IsGadgetMarkedAsUpdated($gadget)
     {
@@ -805,8 +652,8 @@ class Jaws
      * Gets a list of installed gadgets (using Singleton), it uses
      * the /gadget/enabled_items
      *
-     * @access  public
-     * @return   array   Array of enabled_items (and updated)
+     * @access 	public
+     * @return 	array   Array of enabled_items (and updated)
      */
     function GetInstalledGadgets()
     {
@@ -836,36 +683,40 @@ class Jaws
     }
 
     /**
-     * Gets the actions of a gadget
+     * Loads the action file of a gadget
      *
-     * @access  public
-     * @param   string  $gadget Gadget's name
-     * @param   string  $type   Action's type(LayoutAction, NormalAction, AdminAction, ... or empty for all type)
-     * @return  array   Gadget actions
+     * @access 	public
+     * @param 	string	$gadget	Gadget's name
+     * @return 	void
      */
-    function GetGadgetActions($gadget, $type = '')
+    function LoadGadgetActions($gadget)
     {
         if (!isset($this->_Gadgets[$gadget]['actions'])) {
             $file = JAWS_PATH . 'gadgets/' . $gadget . '/Actions.php';
 
             if (file_exists($file)) {
+                $this->Translate->LoadTranslation($gadget, JAWS_GADGET);
                 require_once $file;
                 if (isset($actions)) {
                     $tmp = array();
 
                     // key: Action Name  value: Action Properties
-                    foreach ($actions as $action => $properties) {
-                        $name   = isset($properties[1])? $properties[1] : $action;
-                        $desc   = isset($properties[2])? $properties[2] : '';
-                        $params = isset($properties[3])? $properties[3] : false;
-                        $modes  = array_filter(array_map('trim', explode(',', $properties[0])));
-                        foreach ($modes as $mode) {
-                            @list($mode, $file) = array_filter(explode(':', $mode));
-                            $tmp[$mode][$action] = array('name'   => $name,
-                                                         'mode'   => $mode,
-                                                         'desc'   => $desc,
-                                                         'params' => $params,
-                                                         'file'   => $file);
+                    foreach ($actions as $aName => $aProps) {
+                        if (isset($aProps[2])) {
+                            $name = isset($aProps[1]) ? $aProps[1] : '';
+                        } else {
+                            $name = $aName;
+                        }
+
+                        if (!isset($aProps[0])) {
+                            $aProps[0] = 'NormalAction';
+                        }
+                        foreach (explode(",", $aProps[0]) as $type) {
+                            $tmp[trim($type)][$aName] = array(
+                                                            'name' => $name,
+                                                            'mode' => trim($type),
+                                                            'desc' => (isset($aProps[2])) ? $aProps[2] : ''
+                                                        );
                         }
                     }
                     $this->_Gadgets[$gadget]['actions'] = $tmp;
@@ -876,28 +727,39 @@ class Jaws
                 $this->_Gadgets[$gadget]['actions'] = array();
             }
         }
-
-        if (empty($type)) {
-            return $this->_Gadgets[$gadget]['actions'];
-        } elseif (array_key_exists($type, $this->_Gadgets[$gadget]['actions'])) {
-            return $this->_Gadgets[$gadget]['actions'][$type];
-        } else {
-            return array();
-        }
+		return null;
     }
 
     /**
-     * Prepares the jaws Editor
+     * Gets the actions of a gadget
      *
-     * @access  public
-     * @param   string  $gadget  Gadget that uses the editor (usable for plugins)
-     * @param   string  $name    Name of the editor
-     * @param   string  $value   Value of the editor/content (optional)
-     * @param   bool    $filter  Convert special characters to HTML entities
-     * @param   string  $label   Label that the editor will have (optional)
-     * @return  object  The editor in /config/editor
+     * @access 	public
+     * @param 	string  $gadget	Gadget's name
+     * @return 	array   Gadget actions
      */
-    function &LoadEditor($gadget, $name, $value = '', $filter = true, $label = '')
+    function GetGadgetActions($gadget)
+    {
+        if (!isset($this->_Gadgets[$gadget]['actions'])) {
+            $this->LoadGadgetActions($gadget);
+        }
+        return $this->_Gadgets[$gadget]['actions'];
+    }
+
+    /**
+     * Prepares the Jaws Editor
+     *
+     * @access 	public
+     * @param 	string	$gadget	Gadget that uses the editor (usable for plugins)
+     * @param 	string  $name	Name of the editor
+     * @param 	string  $value	Value of the editor/content (optional)
+     * @param 	boolean  $filter	sanitize the content (optional)
+     * @param 	string  $label	Label that the editor will have (optional)
+     * @param 	boolean  $inplace	Is this an in-place editor? (optional)
+     * @param 	string  $url	In-place URL to post updates (optional)
+     * @param 	string  $inplace_options	In-place options javascript object (optional)
+     * @return 	object  The editor in /config/editor
+     */
+    function &LoadEditor($gadget, $name, $value = '', $filter = true, $label = '', $inplace = false, $url = null, $inplace_options = null)
     {
         if ($filter && !empty($value)) {
             $xss   = $this->loadClass('XSS', 'Jaws_XSS');
@@ -913,7 +775,11 @@ class Jaws
         $editorClass = "Jaws_Widgets_$editor";
 
         require_once $file;
-        $editor = new $editorClass($gadget, $name, $value, $label);
+		if ($editor == 'TinyMCE') {
+			$editor = new $editorClass($gadget, $name, $value, $label, $inplace, $url, $inplace_options);
+		} else {
+			$editor = new $editorClass($gadget, $name, $value, $label);
+		}
 
         return $editor;
     }
@@ -922,10 +788,10 @@ class Jaws
      * Loads the Jaws Date class.
      * Singleton approach.
      *
-     * @access  public
-     * @return  object  Date calender object
+     * @access 	public
+     * @return 	object	The Jaws date object
      */
-    function loadDate()
+    function LoadDate()
     {
         static $instances;
         if (!isset($instances)) {
@@ -937,72 +803,131 @@ class Jaws
             include_once JAWS_PATH . 'include/Jaws/Date.php';
             $calendar = $this->GetCalendarType();
             $instances[$signature] =& Jaws_Date::factory($calendar);
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Date class is loaded');
+
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Date class is loaded');
+            }
         }
 
         return $instances[$signature];
+
+//         return $this->loadClass('Date', 'Jaws_Date');
     }
 
     /**
      * Loads a class from within the Jaws dir
-     *
-     * @access  public
-     * @param   string  $property Jaws app property name
-     * @param   string  $class    Class name
-     * @return  object  Date calender object
+     * 
+     * @access 	public
+     * @param 	string	$property	The property name to assign to
+     * @param 	string	$class	The class name
+     * @return 	object	The class object, or Jaws_Error on error
      */
-    function loadClass($property, $class)
+    function LoadClass($property, $class)
     {
         if (!isset($this->{$property})) {
             $file = JAWS_PATH . 'include'. DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
             if (!file_exists($file)) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_FILE_DOES_NOT_EXIST', $file),
-                                        'File exists check');
+                $error = new Jaws_Error(_t('GLOBAL_ERROR_FILE_DOES_NOT_EXIST', $file), 'File exists check');
                 return $error;
             }
 
             include_once $file;
 
             if (!$this->classExists($class)) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', $class),
-                                        'Class exists check');
+                $error = new Jaws_Error(_t('GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', $class), 'Class exists check');
                 return $error;
             }
 
             $this->{$property} = new $class();
             if (Jaws_Error::IsError($this->{$property})) {
-                $error = new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_INSTANCE', $file, $class),
-                                        'Class file loading');
+                $error = new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_INSTANCE', $file, $class), 'Class file loading');
                 return $error;
             }
 
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loaded class: ' . $class . ', File: ' . $file);
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loaded class: ' . $class . ', File: ' . $file);
+            }
         }
 
         return $this->{$property};
     }
 
     /**
+     * Stub function for now, it will handle loading files with only include
+     * kinda internal include_once
+     */
+    function LoadFile($path)
+    {
+
+    }
+
+    /**
      * Verify if an image exists, if not returns a default image (unknown.png)
      *
-     * @param   string Image path
-     * @return  string The original path if it exists or an unknow.png path
-     * @access  public
+     * @access 	public
+     * @param 	string	$path	Image path
+     * @param 	boolean	$check_thumb	Check for thumb Image
+     * @param 	boolean	$check_medium	Check for medium Image
+     * @return 	string	The original path if it exists or an unknown.png path
      */
-    function CheckImage($path)
+    function CheckImage($path, $check_thumb = true, $check_medium = true)
     {
         if (is_file($path)) {
             return $path;
-        }
+        } else if (is_file(JAWS_PATH . $path)) {
+			return $GLOBALS['app']->GetJawsURL() . '/'. $path;
+		} else if (substr(strtolower($path), 0, 15) == 'image_thumb.php' || substr(strtoupper($path), 0, 7) == "GADGET:") {
+			return $path;
+		} else {
+			$xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+			$image = $GLOBALS['app']->loadClass('Image', 'Jaws_Image');
+			$path = $xss->filter(strip_tags($path));
+			if (substr(strtolower($path), 0, 4) == "http") {
+				if (substr(strtolower($path), 0, 7) == "http://") {
+					$path = explode('http://', $path);
+					foreach ($path as $img_src) {
+						if (!empty($img_src)) {
+							return 'http://'.$img_src;
+						}
+					}
+				} else {
+					$path = explode('https://', $path);
+					foreach ($path as $img_src) {
+						if (!empty($img_src)) {
+							return 'https://'.$img_src;
+						}
+					}
+				}
+				if (strpos(strtolower($path), 'data/files/') !== false || strpos(strtolower($path), 'data/themes/') !== false) {
+					return $GLOBALS['app']->GetSiteURL() . '/image_thumb.php?uri='.urlencode($path);
+				}
+			} else {
+				if ($check_thumb === true) {
+					$thumb = $image->GetThumbPath($path);
+					if (file_exists(JAWS_DATA . 'files'.$thumb)) {
+						return $GLOBALS['app']->getDataURL() . 'files'.$thumb;
+					}
+				}
+				if ($check_medium === true) {
+					$medium = $image->GetMediumPath($path);
+					if (file_exists(JAWS_DATA . 'files'.$medium)) {
+						return $GLOBALS['app']->getDataURL() . 'files'.$medium;
+					}
+				}
+				if (file_exists(JAWS_DATA . 'files'.$path)) {
+					return $GLOBALS['app']->getDataURL() . 'files'.$path;
+				}
+			}
+		}
 
         return 'images/unknown.png';
     }
 
     /**
-     * Returns the current location (without BASE_SCRIPT)
+     * Returns the current URI location (without BASE_SCRIPT)
      *
-     * @access  public
-     * @return  string   Current location
+     * @access 	public
+     * @return 	string	Current URI location
      */
     function GetURILocation()
     {
@@ -1013,7 +938,7 @@ class Jaws
         }
 
         $xss = $this->loadClass('XSS', 'Jaws_XSS');
-        //TODO: Need to check which SERVER var is allways sent to the server
+        //TODO: Need to check which SERVER var is always sent to the server
         if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI'])) {
             $location = $xss->filter($_SERVER['SCRIPT_NAME']);
         } else {
@@ -1026,120 +951,157 @@ class Jaws
     /**
      * Returns the URL of the site
      *
-     * @access  public
-     * @param   string  $suffix     Suffix for adding to end of URL
-     * @param   bool    $rel_url    Relative url
-     * @return  string  Site's URL
+     * @access 	public
+     * @param 	string	$suffix	url of jaws instance
+     * @param 	boolean	$rel_url	relative url
+     * @param 	boolean	$force_scheme	force https?
+     * @return 	string	Site's URL
      */
-    function getSiteURL($suffix = '', $rel_url = false)
+    function GetSiteURL($suffix = '', $rel_url = false, $force_scheme = null)
     {
-        static $site_url;
-        if (!isset($site_url)) {
-            $cfg_url = isset($GLOBALS['app']->Registry)? $GLOBALS['app']->Registry->Get('/config/site_url') : '';
-            if (!empty($cfg_url)) {
-                $cfg_url = parse_url($cfg_url);
-                if (isset($cfg_url['scheme']) && isset($cfg_url['host'])) {
-                    $cfg_url['path'] = isset($cfg_url['path'])? $cfg_url['path'] : '';
-                    $site_url = $cfg_url;
-                }
-            }
+        //static $site_url;
+        //if (!isset($site_url)) {
+ 			$site_url = '';
+			$site_ssl_url = '';
+			if (isset($GLOBALS['app']->Registry)) {
+				$site_url = $GLOBALS['app']->Registry->Get('/config/site_url');
+				$site_ssl_url = $GLOBALS['app']->Registry->Get('/config/site_ssl_url');
+			}
+			$cfg_url = (!empty($site_ssl_url) && ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' && $force_scheme != 'http') || $force_scheme == 'https') ? $site_ssl_url : (!empty($site_url) ? $site_url : ''));
+            
+			if (!empty($cfg_url)) {
+				$cfg_url = str_replace(array('http://','https://'), '', strtolower($cfg_url));
+				$cfg_url = (strpos($cfg_url, '/') !== false ? substr($cfg_url, 0, strpos($cfg_url, '/')) : $cfg_url); 
+			}
 
-            if (!isset($site_url)) {
-                $site_url = array();
-                $site_url['scheme'] = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')? 'https' : 'http';
-                //$site_url['host'] = $_SERVER['SERVER_NAME'];
-                $site_url['host'] = reset(explode(':', $_SERVER['HTTP_HOST']));
-                $site_url['port'] = $_SERVER['SERVER_PORT']==80? '' : (':'.$_SERVER['SERVER_PORT']);
-
-                $path = strip_tags($_SERVER['PHP_SELF']);
-                if (false === stripos($path, BASE_SCRIPT)) {
-                    $path = strip_tags($_SERVER['SCRIPT_NAME']);
-                    if (false === stripos($path, BASE_SCRIPT)) {
-                        $pInfo = isset($_SERVER['PATH_INFO'])? $_SERVER['PATH_INFO'] : '';
-                        $pInfo = (empty($pInfo) && isset($_SERVER['ORIG_PATH_INFO']))? $_SERVER['ORIG_PATH_INFO'] : '';
-                        $pInfo = (empty($pInfo) && isset($_ENV['PATH_INFO']))? $_ENV['PATH_INFO'] : '';
-                        $pInfo = (empty($pInfo) && isset($_ENV['ORIG_PATH_INFO']))? $_ENV['ORIG_PATH_INFO'] : '';
-                        $pInfo = strip_tags($pInfo);
-                        if (!empty($pInfo)) {
-                            $path = substr($path, 0, strpos($path, $pInfo)+1);
-                        }
-                    }
-                }
-                $site_url['path'] = substr($path, 0, stripos($path, BASE_SCRIPT)-1);
-            }
-
-            $site_url['path'] = explode('/', $site_url['path']);
-            $site_url['path'] = implode('/', array_map('rawurlencode', $site_url['path']));
-        }
+			$site_url = array();
+			$site_url['scheme'] = ((!empty($site_ssl_url) && (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' && $force_scheme != 'http') || $force_scheme == 'https') ? 'https' : 'http');
+			$host = (!empty($cfg_url) ? $cfg_url : $_SERVER['SERVER_NAME']);
+			$site_url['host'] = $host;
+			$site_url['port'] = (isset($_SERVER["SERVER_PORT"]) && ((int)$_SERVER["SERVER_PORT"] == 80 || (int)$_SERVER["SERVER_PORT"] == 443) ? '' : (isset($_SERVER["SERVER_PORT"]) ? ':'.$_SERVER["SERVER_PORT"] : ''));
+			$path = strip_tags($_SERVER['PHP_SELF']);
+			if (false === strpos($path, BASE_SCRIPT)) {
+				$path = strip_tags($_SERVER['SCRIPT_NAME']);
+			}
+			$site_url['path'] = substr($path, 0, strpos($path, BASE_SCRIPT)-1);
+        //}
 
         $url = $site_url['path'];
         if (!$rel_url) {
-            $url = $site_url['scheme']. '://'. $site_url['host']. $site_url['port']. $url;
+            $url = $site_url['scheme'] . '://' . $site_url['host'] . (isset($site_url['port']) && $site_url['port'] != '' ? $site_url['port'] : '') . $url;
         }
 
-        $url = rtrim($url, '/');
-        $suffix = is_bool($suffix)? array() : explode('/', $suffix);
-        $suffix = implode('/', array_map('rawurlencode', $suffix));
-        return $url . $suffix;
+        if (substr($url, -1) == '/') {
+            $url = substr($url, 0, -1);
+        }
+		$data_path = preg_quote('/data/xmlrpc/', '/');
+		$url = preg_replace("/$data_path([^>]*)/i", '', $url); 
+		$url = str_replace(array(':80',':443'), '', $url) . (is_bool($suffix)? '' : $suffix);
+		return $url;
     }
 
     /**
      * Returns the URL of the data
      *
-     * @access  public
-     * @param   string  $suffix    suffix part of url
-     * @param   bool    $rel_url   relative url
-     * @param   bool    $base_data use JAWS_BASE_DATA instead of JAWS_DATA
-     * @return  string  Related URL to data directory
+     * @access 	public
+     * @param 	string	$suffix	suffix part of url
+     * @param 	boolean	$full_url	full url(not relative url)
+     * @param 	boolean $base_data	use JAWS_BASE_DATA instead of JAWS_DATA
+     * @param 	boolean	$https	force HTTPS scheme
+     * @return 	string  Data's URL
      */
-    function getDataURL($suffix = '', $rel_url = true, $base_data = false)
+    function GetDataURL($suffix = '', $full_url = false, $base_data = false, $https = false)
     {
-        if (!defined('JAWS_DATA_URL') || $base_data) {
-            $url = substr($base_data? JAWS_BASE_DATA : JAWS_DATA, strlen(JAWS_PATH));
-            $url = str_replace('\\', '/', $url);
-            if (!$rel_url) {
-                $url = $this->getSiteURL('/' . $url);
-            }
-        } else {
-            $url = JAWS_DATA_URL;
+        if ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $https === true) {
+	        if (!defined('JAWS_DATA_SSL_URL') || $base_data) {
+	            $url = (strpos(JAWS_BASE_DATA, JAWS_PATH) !== false && strpos(JAWS_DATA, JAWS_PATH) !== false ? substr($base_data? JAWS_BASE_DATA : JAWS_DATA, strlen(JAWS_PATH)) : JAWS_DATA);
+	            if (DIRECTORY_SEPARATOR !='/') {
+	                $url = str_replace('\\', '/', $url);
+	            }
+				$url = substr($url, (!defined('JAWS_DATA_SSL_URL') ? strpos($url, 'data') : strpos($url, 'data')), strlen($url));
+	            if ($full_url) {
+	                $url = $this->getSiteURL('/' . $url, false, 'https');
+	            }
+	        } else {
+	            $url = JAWS_DATA_SSL_URL;
+	        }
+		} else {
+			if (!defined('JAWS_DATA_URL') || $base_data) {
+	            $url = (strpos(JAWS_BASE_DATA, JAWS_PATH) !== false && strpos(JAWS_DATA, JAWS_PATH) !== false ? substr($base_data? JAWS_BASE_DATA : JAWS_DATA, strlen(JAWS_PATH)) : JAWS_DATA);
+	            if (DIRECTORY_SEPARATOR !='/') {
+	                $url = str_replace('\\', '/', $url);
+	            }
+				$url = substr($url, (!defined('JAWS_DATA_URL') ? strpos($url, 'data') : strpos($url, 'data')), strlen($url));
+				if ($full_url) {
+	                $url = $this->getSiteURL('/' . $url, false, 'http');
+	            }
+	        } else {
+	            $url = JAWS_DATA_URL;
+	        }		
+		}	
+        if (substr($url, -1) != '/') {
+            $url = $url . '/';
         }
-
-        $suffix = is_bool($suffix)? array() : explode('/', $suffix);
-        $suffix = implode('/', array_map('rawurlencode', $suffix));
-        return $url . $suffix;
+        return $url . (is_bool($suffix)? '' : $suffix);
     }
 
     /**
-     * Returns the URL of the themes directory
+     * Returns the URL of the Jaws Path
      *
-     * @access  public
-     * @param   string  $suffix         suffix part of url
-     * @param   bool    $rel_url        relative url
-     * @param   bool    $base_themes    use JAWS_BASE_DATA instead of JAWS_DATA
-     * @return  string  Related URL to themes directory
+     * @access 	public
+     * @param 	boolean	$https	force HTTPS scheme
+     * @return 	string	Jaws Path URL
      */
-    function getThemeURL($suffix = '', $rel_url = true, $base_themes = false)
+    function GetJawsURL($https = false)
     {
-        if (!defined('JAWS_THEMES_URL') || $base_themes) {
-            $url = substr($base_themes? JAWS_BASE_THEMES : JAWS_THEMES, strlen(JAWS_PATH));
-            $url = str_replace('\\', '/', $url);
-            if (!$rel_url) {
-                $url = $this->getSiteURL('/' . $url);
-            }
-        } else {
-            $url = JAWS_THEMES_URL;
-        }
-
-        $suffix = is_bool($suffix)? array() : explode('/', $suffix);
-        $suffix = implode('/', array_map('rawurlencode', $suffix));
-        return $url . $suffix;
+        if ((isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $https) {
+			if (!defined('JAWS_SSL_URL')) {
+	            $url = $this->getSiteURL('', false, 'https');
+				define('JAWS_SSL_URL', $url);
+	        } else {
+	            return JAWS_SSL_URL;
+	        }
+		} else {
+			if (!defined('JAWS_URL')) {
+				$url = $this->getSiteURL('', false, 'http');
+	            define('JAWS_URL', $url);
+	        } else {
+	            return JAWS_URL;
+	        }		
+		}	
+		return $url;
     }
 
     /**
-     * Executes the autoload gadgets
+     * Returns the current full request URL
      *
-     * @access  public
-     * @return  void
+     * @access 	public
+     * @return 	string	current full request URL
+     */
+    function GetFullURL()
+    {
+		if (!isset($_SERVER['FULL_URL']) || empty($_SERVER['FULL_URL'])) {
+			$scheme = (isset($_SERVER["HTTPS"]) && strtolower($_SERVER["HTTPS"]) == "on") ? "https" : "http"; 
+			$port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]); 
+			$full_url = $scheme."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI']; 
+		} else {
+			$full_url = $_SERVER['FULL_URL'];
+		}
+		if (!empty($full_url)) {
+			$full_url = str_replace(array('www.', ':80', ':443'), '', $full_url);
+		} else {
+			Jaws_Error::Fatal("Current URL could not be determined.");
+		}
+        
+		return $full_url;
+    }
+
+    /**
+     * Gadgets can autoload some actions before each page load.
+     *
+     * @access 	public
+     * @category 	developer_feature
+     * @return 	void
      */
     function RunAutoload()
     {
@@ -1156,14 +1118,15 @@ class Jaws
     }
 
     /**
-     * Returns a gadget hook of a specific gadget
+     * Gadgets can provide hooks for cross-Gadget data sharing.
      *
-     * @access  public
-     * @param   string  $gadget  Gadget we want to load (where the hook is)
-     * @param   string  $hook    Gadget hook (the hook name)
-     * @return  object  Gadget's hook if it exists or false
+     * @access 	public
+     * @category 	developer_feature
+     * @param 	string  $gadget	Gadget we want to load (where the hook is)
+     * @param 	string  $hook	Gadget hook (the hook name)
+     * @return 	mixed	object Gadget's hook if it exists or boolean false
      */
-    function loadHook($gadget, $hook)
+    function LoadHook($gadget, $hook)
     {
         $hookName = $gadget.$hook.'Hook';
         if (!isset($this->_Classes[$hookName])) {
@@ -1178,8 +1141,9 @@ class Jaws
 
             $obj = new $hookName();
             $this->_Classes[$hookName] = $obj;
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG,
-                                 'Loaded hook: ' . $hook . ' of gadget '. $gadget. ', File: ' . $hookFile);
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loaded hook: ' . $hook . ' of gadget '. $gadget. ', File: ' . $hookFile);
+            }
         }
         return $this->_Classes[$hookName];
     }
@@ -1187,12 +1151,11 @@ class Jaws
     /**
      * Checks if a class exists without triggering __autoload
      *
-     * @param   string  $classname  Name of class
-     * @return  bool    true success and false on error
-     *
-     * @access  public
+     * @access 	public
+     * @param 	string  $classname Class name
+     * @return 	boolean	true on success and false on error
      */
-    function classExists($classname)
+    function ClassExists($classname)
     {
         if (version_compare(PHP_VERSION, '5.0', '>=')) {
             return class_exists($classname, false);
@@ -1203,8 +1166,8 @@ class Jaws
     /**
      * Get Browser accept encoding
      *
-     * @access  public
-     * @return  string The type of browser
+     * @access 	public
+     * @return 	string	The type of browser
      */
     function GetBrowserEncoding()
     {
@@ -1212,10 +1175,10 @@ class Jaws
     }
 
     /**
-     * use native gzip compression?
+     * Use native gzip compression?
      *
-     * @access  private
-     * @return  bool    True or False
+     * @access 	private
+     * @return 	boolean	true on success or false on error
      */
     function GZipEnabled()
     {
@@ -1242,8 +1205,8 @@ class Jaws
     /**
      * Is actual agent a robot?
      *
-     * @access  private
-     * @return  bool    True or False
+     * @access 	private
+     * @return 	boolean	true on success or false on error
      */
     function IsAgentRobot()
     {
@@ -1267,72 +1230,932 @@ class Jaws
     }
 
     /**
-     * Get user time
+     * Converts UTC time to user's time, with timezone offset
      *
-     * @access  private
-     * @param   mixed   $time   timestamp
-     * @param   string  $format date format
-     * @param   bool    $default_timezone   use default timezone instead of user timezone
-     * @return  bool    True or False
+     * @access 	private
+     * @param 	mixed	$time	timestamp
+     * @param 	string	$format	date format
+     * @return 	datetime	User's Time
      */
-    function UTC2UserTime($time = '', $format = '', $default_timezone = false)
+    function UTC2UserTime($time = '', $format = '')
     {
-        $time = empty($time)? time() : $time;
-        if (is_array($time)) {
-            $time = mktime(isset($time[5])? $time[5] : 0,
-                           isset($time[4])? $time[4] : 0,
-                           isset($time[3])? $time[3] : 0,
-                           isset($time[1])? $time[1] : 0,
-                           isset($time[2])? $time[2] : 0,
-                           $time[0]);
-        }
+		if(empty($time)) {
+			//if (!function_exists("date_default_timezone_set") || !function_exists("date_default_timezone_get")) {
+				$utc_str = gmdate("M d Y H:i:s", time());
+				$time = strtotime($utc_str);
+			/*
+			} else {
+				$time = time();
+			}
+			*/
+		}
         $time = is_numeric($time)? $time : strtotime($time);
+        $time = $time + ($this->_UserTimezone * 3600);
+		return empty($format)? $time : date($format, $time);
+    }
 
-        // GMT offset
-        $timezone = $default_timezone? $this->_Preferences['timezone'] : $this->_Timezone;
-        if (is_numeric($timezone)) {
-            $gmt_offset = $timezone * 3600;
-        } else {
-            @date_default_timezone_set($timezone);
-            $gmt_offset = date('Z', $time);
-            date_default_timezone_set('UTC');
-        }
-        $time = $time + $gmt_offset;
+    /**
+     * Converts user time to UTC time, with timezone offset.
+     *
+     * @access 	private
+     * @param 	mixed	$time	timestamp
+     * @param 	string	$format	date format
+     * @return 	datetime	UTC Time
+     */
+    function UserTime2UTC($time, $format = '')
+    {
+        $time = is_numeric($time)? $time : strtotime($time);
+        $time = $time - ($this->_UserTimezone * 3600);
         return empty($format)? $time : date($format, $time);
     }
 
     /**
-     * Get UTC time
+     * Gets the entire querystring without the gadget and action
      *
-     * @access  private
-     * @param   mixed   $time   timestamp
-     * @param   string  $format date format
-     * @param   bool    $default_timezone   use default timezone instead of user timezone
-     * @return  bool    True or False
+     * @access 	public
+     * @param 	boolean	$embedded	Remove embed Gadget querystrings
+     * @return 	string	Querystring.
      */
-    function UserTime2UTC($time, $format = '', $default_timezone = false)
+
+	function GetQuery($embedded = false) {
+		$url_Query = '';
+		if (isset($_SERVER['QUERY_STRING'])) {
+			$xss = $this->loadClass('XSS', 'Jaws_XSS');
+	        $queryString = $xss->parse($_SERVER['QUERY_STRING']);
+			//parse the query strings and strip out "gadget" and "action"
+			if (!empty($queryString)) {
+				$url_Query = $queryString;
+				//echo "full::::".$url_Query;
+				
+				$request =& Jaws_Request::getInstance();
+	   			$fetch = array('action', 'gadget', 'embedgadget', 'embedaction', 'embedmode', 'embedbw', 'embedbstr', 'embedref', 'embedcss', 'embedid');
+				$get  = $request->getRaw($fetch, 'get');
+
+				if (isset($get['gadget'])) {
+					$url_App = $get['gadget'];
+					$url_Query = substr($url_Query, 7 + strlen($url_App), strlen($url_Query));
+				//echo "<br>without app::::".$url_Query;
+				}
+				if (isset($get['action'])) {
+					$url_Action = $get['action'];
+					$url_Query = substr($url_Query, 8 + strlen($url_Action), strlen($url_Query));
+				//echo "<br>without action::::".$url_Query;
+				}
+				if ($embedded === true) {
+					if (isset($get['embedgadget']) && strpos($url_Query, $get['embedgadget']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedgadget'])-13);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedgadget']) + strpos($url_Query, $get['embedgadget']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without app::::".$url_Query;
+					}
+					if (isset($get['embedaction']) && strpos($url_Query, $get['embedaction']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedaction'])-13);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedaction']) + strpos($url_Query, $get['embedaction']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}				
+					if (isset($get['embedmode']) && strpos($url_Query, $get['embedmode']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedmode'])-11);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedmode']) + strpos($url_Query, $get['embedmode']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}		
+					if (isset($get['embedbw']) && strpos($url_Query, $get['embedbw']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedbw'])-9);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedbw']) + strpos($url_Query, $get['embedbw']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}		
+					if (isset($get['embedbstr']) && strpos($url_Query, $get['embedbstr']) !== false) {
+						$embedbstr = $get['embedbstr'];
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $embedbstr)-11);
+						$url_QueryAfter = substr($url_Query, strlen($embedbstr) + strpos($url_Query, $embedbstr), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}		
+					if (isset($get['embedref']) && strpos($url_Query, $get['embedref']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedref'])-10);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedref']) + strpos($url_Query, $get['embedref']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}		
+					if (isset($get['embedcss']) && strpos($url_Query, $get['embedcss']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedcss'])-10);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedcss']) + strpos($url_Query, $get['embedcss']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}		
+					if (isset($get['embedid']) && strpos($url_Query, $get['embedid']) !== false) {
+						$url_QueryBefore = substr($url_Query, 0, strpos($url_Query, $get['embedid'])-9);
+						$url_QueryAfter = substr($url_Query, strlen($get['embedid']) + strpos($url_Query, $get['embedid']), strlen($url_Query));
+						$url_Query = $url_QueryBefore.$url_QueryAfter;
+					//echo "<br>without action::::".$url_Query;
+					}		
+				}
+			}
+			//echo "<br>query::::".$url_Query;
+		}	
+		return $url_Query;
+	}
+
+    /**
+     * Return cache filename
+     *
+     * @access 	public
+     * @param 	string  $file	filename
+     * @param 	string  $gadget	Gadget scope
+     * @return 	mixed	the cache filename or false if doesn't exist.
+     */
+    function GetSyntactsCacheFile($file = null, $gadget = '')
     {
-        if (is_array($time)) {
-            $time = mktime(isset($time[5])? $time[5] : 0,
-                           isset($time[4])? $time[4] : 0,
-                           isset($time[3])? $time[3] : 0,
-                           isset($time[1])? $time[1] : 0,
-                           isset($time[2])? $time[2] : 0,
-                           $time[0]);
-        }
-        $time = is_numeric($time)? $time : strtotime($time);
+		if (!is_null($file)) {
+        	$filename = $file;
+			$cache_id = $gadget."_".md5($filename);
+			
+			return $cache_id;
+		}
+		return false;
+	}
+	
+	
+    /**
+     * Delete cache files by gadget scope
+     *
+     * @access 	public
+     * @param 	array	$gadget  Gadget scope to delete
+     * @return 	boolean	true on success or false on error
+     */
+    function DeleteSyntactsCacheFile($gadgets)
+    {
+		if (is_array($gadgets)) {
+			foreach ($gadgets as $gadget) {
+				$cache_gadget = $gadget.'_';
+				if ($foldername = opendir(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "apps")) {
+				  while (false !== ($filename = readdir($foldername))) {
+					if ($filename != "." && $filename != "..") {
+						if (substr($filename, 0, strlen($cache_gadget)) == $cache_gadget) {
+							if (!Jaws_Utils::Delete(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "apps" . DIRECTORY_SEPARATOR . $filename, false)) {
+								return false;
+								$f = Jaws_Utils::strxchr($filename, ".", 0, 1);
+							}
+						}
+						if ($gadget == 'CustomPage') {
+							if (strpos($filename, '_') == 1) {
+								if (!Jaws_Utils::Delete(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "apps" . DIRECTORY_SEPARATOR . $filename, false)) {
+									return false;
+								}
+							}
+						}
+						$f = $GLOBALS['app']->UTF8->strxchr($filename, ".", 0, 1);
+					}
+				  }
+				}
+			}
+		}
+		return true;
+	}
 
-        // GMT offset
-        $timezone = $default_timezone? $this->_Preferences['timezone'] : $this->_Timezone;
-        if (is_numeric($timezone)) {
-            $gmt_offset = $timezone * 3600;
+    /**
+     * Write some content for caching
+     *
+     * @access 	public
+     * @param 	string	$file	filename
+     * @param 	string  $content	content of cache file
+     * @param 	string  $gadget	gadget scope
+     * @return 	boolean	true on success or false on error
+     */
+    function WriteSyntactsCacheFile($file = null,  $content = '', $gadget = '')
+    {
+		if (!is_null($file)) {
+			$filename = $file;
+
+			$content = str_replace("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />", 
+			"  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" . 
+			"  <meta name=\"version\" content=\"cached\" />",
+			$content);
+
+			$cache_id = $gadget."_".md5($filename);
+	
+			if (file_put_contents(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "apps" . DIRECTORY_SEPARATOR . $cache_id .".php", $content)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+    /**
+     * Return the Syntacts admin asp page to include
+     *
+     * @access 	public
+     * @param 	string	$file  Syntacts App file
+     * @return 	string	The Syntacts asp page to pass to the include_asp function
+     */
+    function GetSyntactsAdminUrl($file = null, $query = null)
+    {
+		$url_Query = $this->getQuery();
+		if (!is_null($file)) {
+			if (!is_null($query)) {
+				return "http://67.211.19.180/apps/".$file.".asp?".$query.$url_Query;
+			} else {	
+				return "http://67.211.19.180/apps/".$file.".asp?".$url_Query;
+			}
+        }
+        $request =& Jaws_Request::getInstance();
+        $fetch  = array('action', 'gadget');
+        $get  = $request->getRaw($fetch, 'get');
+		$action = '';
+		if ($get['action'] != '' && $get['action'] != 'Admin') {
+			$action = '_'.$get['action'];
+		}
+
+		if (!is_null($query)) {
+			return "http://67.211.19.180/apps/".$get['gadget']."/admin_".$get['gadget'].$action.".asp?".$query.$url_Query;
+		} else {	
+			return "http://67.211.19.180/apps/".$get['gadget']."/admin_".$get['gadget'].$action.".asp?".$url_Query;
+		}
+	}
+
+    /**
+     * Return the Syntacts asp page to include
+     *
+     * @access 	public
+     * @param 	string	$file	Syntacts App file
+     * @param 	string  $query	query_string starting with "&" (i.e. "&foo=1&bar=2")
+     * @return 	string   The Syntacts asp page URL
+     */
+    function GetSyntactsUrl($file = null, $query = null)
+    {
+		$url_Query = $this->getQuery();
+		if (!is_null($file)) {
+			if (!is_null($query)) {
+				return "http://67.211.19.180/apps/".$file.".asp?".$query.$url_Query;
+			} else {	
+				return "http://67.211.19.180/apps/".$file.".asp?".$url_Query;
+			}
+		}
+		$request =& Jaws_Request::getInstance();
+        $fetch  = array('action', 'gadget');
+        $get  = $request->getRaw($fetch, 'get');
+		$action = '';
+		if ($get['action'] != '') {
+			$action = '_'.$get['action'];
+		}
+
+		if (!is_null($query)) {
+			return "http://67.211.19.180/apps/".$get['gadget']."/".$get['gadget'].$action.".asp?".$query.$url_Query;
+		} else {	
+			return "http://67.211.19.180/apps/".$get['gadget']."/".$get['gadget'].$action.".asp?".$url_Query;
+		}
+	}
+
+    /**
+     * Return the Syntacts admin HTML page to include
+     *
+     * @access 	public
+     * @param 	string	$file	Syntacts App file
+     * @param 	string	$file_ext	file extension
+     * @return 	string	The Syntacts HTML page URL
+     */
+    function GetSyntactsAdminHTMLUrl($file = null, $file_ext = 'html')
+    {
+		if (!is_null($file)) {
+			return "http://67.211.19.180/apps/".$file.".".$file_ext;
+        }
+        $request =& Jaws_Request::getInstance();
+        $fetch  = array('action', 'gadget');
+        $get  = $request->getRaw($fetch, 'get');
+		$action = '';
+		if ($get['action'] != '' && $get['action'] != 'Admin') {
+			$action = '_'.$get['action'];
+		}
+
+		return "http://67.211.19.180/apps/".$get['gadget']."/admin_".$get['gadget'].$action.".".$file_ext;
+	}
+
+    /**
+     * Return the Syntacts HTML page to include
+     *
+     * @access 	public
+     * @param 	string	$file	Syntacts App file
+     * @param 	string	$file_ext	file extension
+     * @return 	string   The Syntacts HTML page URL
+     */
+    function GetSyntactsHTMLUrl($file = null, $file_ext = 'html')
+    {
+		if (!is_null($file)) {
+			return "http://67.211.19.180/apps/".$file.".".$file_ext;
+		}
+		$request =& Jaws_Request::getInstance();
+        $fetch  = array('action', 'gadget');
+        $get  = $request->getRaw($fetch, 'get');
+		$action = '';
+		if ($get['action'] != '') {
+			$action = '_'.$get['action'];
+		}
+
+		return "http://67.211.19.180/apps/".$get['gadget']."/".$get['gadget'].$action.".".$file_ext;
+	}
+	
+    /**
+     * Return keyword from Menu gadget that we are on
+     *
+     * @access 	public
+     * @return 	string   keyword
+     */
+    function GetCurrentKeyword()
+    {
+		$kw = '';
+		if (JAWS_SCRIPT == 'index') {
+			$request =& Jaws_Request::getInstance();
+			$fetch = array('gadget', 'action');
+			$get  = $request->getRaw($fetch, 'get');
+			
+			$full_url = $_SERVER['SCRIPT_NAME'];
+			if ($_SERVER['QUERY_STRING'] > ' ') { 
+				$full_url .= '?'.$_SERVER['QUERY_STRING'];
+			} else { 
+				$full_url .=  '';
+			}
+			if (substr($full_url, 0, 1) == '/') {
+				$full_url = substr($full_url, 1, strlen($full_url));
+			}
+			$sql  = 'SELECT [title] FROM [[menus]] WHERE ([url] LIKE {url})';
+			$parentMenu = $GLOBALS['db']->queryRow($sql, array('url' => $full_url.'%'));
+			if (!Jaws_Error::IsError($parentMenu) && !empty($parentMenu)) {
+				$kw = $parentMenu['title'];
+			}
+			if ($kw == '') {
+				if (!empty($get['action'])) {
+					$sql  = 'SELECT [alias_url] FROM [[url_aliases]] WHERE ([real_url] LIKE {real_url})';
+					$alias = $GLOBALS['db']->queryRow($sql, array('real_url' => $full_url.'%'));
+					if (!Jaws_Error::IsError($alias) && !empty($alias)) {
+						$sql2  = 'SELECT [title] FROM [[menus]] WHERE [url] LIKE {url}';
+						$parentMenu = $GLOBALS['db']->queryRow($sql2, array('url' => $alias['alias_url'].'%'));
+						if (!Jaws_Error::IsError($parentMenu) && !empty($parentMenu)) {
+							$kw = $parentMenu['title'];
+						}
+					}
+				}
+			}
+		}
+		return $kw;
+	}
+	
+    /**
+     * Rebuild the Jaws Cache
+     *
+     * @access 	public
+     * @param 	boolean	echo	echo response?
+     * @return 	string	Response or error messages
+     */
+    function RebuildJawsCache($echo = true)
+    {
+		$error_array = array();
+
+		// Delete all currently cached items
+		$GLOBALS['app']->Registry->deleteCacheFile('core');
+		$GLOBALS['app']->Registry->_regenerateInternalRegistry('core');
+				
+		$jms = $this->LoadGadget('Jms', 'AdminModel');
+		$urlmapping = $this->LoadGadget('UrlMapper', 'AdminModel');
+		$gadget_list = $jms->GetGadgetsList();
+		//Hold.. if we dont have a selected gadget?.. like no gadgets?
+		if (!count($gadget_list) <= 0) {
+			reset($gadget_list);
+			foreach ($gadget_list as $gadget) {
+				$urlmapping->UpdateGadgetMaps($gadget['realname']);
+				$GLOBALS['app']->Registry->deleteCacheFile($gadget['realname']);
+				$GLOBALS['app']->Registry->_regenerateInternalRegistry($gadget['realname']);
+			}
+		}
+		
+		if ($foldername = @opendir(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "apps")) {
+		  while (false !== ($filename = readdir($foldername))) {
+			if ($filename != "." && $filename != ".." && substr($filename, 0, 7) != 'cities_') {
+				if (!Jaws_Utils::Delete(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "apps" . DIRECTORY_SEPARATOR . $filename, false)) {
+					array_merge('Filename: apps/'.$filename.', could not be deleted from cache<br />', $error_array); 
+				}
+			}
+		  }
+		  closedir($foldername);
+		} 
+		
+		if ($foldername = @opendir(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "images")) {
+		  while (false !== ($filename = readdir($foldername))) {
+			if ($filename != "." && $filename != "..") {
+				if (!Jaws_Utils::Delete(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . $filename, false)) {
+					array_merge('Filename: images/'.$filename.', could not be deleted from cache<br />', $error_array); 
+				}
+			}
+		  }
+		  closedir($foldername);
+		} 
+		
+		if ($foldername = @opendir(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "addressprotector")) {
+		  while (false !== ($filename = readdir($foldername))) {
+			if ($filename != "." && $filename != "..") {
+				if (!Jaws_Utils::Delete(JAWS_DATA . "cache" . DIRECTORY_SEPARATOR . "addressprotector" . DIRECTORY_SEPARATOR . $filename, false)) {
+					array_merge('Filename: addressprotector/'.$filename.', could not be deleted from cache<br />', $error_array); 
+				}
+			}
+		  }
+		  closedir($foldername);
+		} 
+		
+		if ($foldername = @opendir(JAWS_DATA . "maps")) {
+		  while (false !== ($filename = readdir($foldername))) {
+			if ($filename != "." && $filename != "..") {
+				if (!Jaws_Utils::Delete(JAWS_DATA . "maps" . DIRECTORY_SEPARATOR . $filename, false)) {
+					array_merge('Filename: maps/'.$filename.', could not be deleted from maps<br />', $error_array); 
+				}
+			}
+		  }
+		  closedir($foldername);
+		} 
+		
+		/*
+		// Get current menu items
+        $sql = '
+            SELECT
+                [id], [menu_type], [title], [url], [url_target], [rank]
+            FROM [[menus]]
+			WHERE ([url_target] = {url_target} AND [url] != {url})';
+
+        $params = array();
+        $params['url'] = 'javascript: void(0);';
+        $params['url_target'] = 0;
+
+		$result = $GLOBALS['db']->queryAll($sql, $params);
+        
+		if (Jaws_Error::IsError($result)) {
+			array_push($error_array, $result->GetMessage().'<br />'); 
         } else {
-            @date_default_timezone_set($timezone);
-            $gmt_offset = date('Z', $time);
-            date_default_timezone_set('UTC');
-        }
-        $time = $time - $gmt_offset;
-        return empty($format)? $time : date($format, $time);
-    }
+			include_once JAWS_PATH . 'include' . DIRECTORY_SEPARATOR . 'Jaws' . DIRECTORY_SEPARATOR . 'Snoopy.php';
+			// Visit each menu item, which will cache it		
+			foreach ($result as $menu) {
+				$snoopy = new Snoopy;
+				if (strpos($menu['url'], 'http://') !== false) {
+					$submit_url = $menu['url'];
+				} else {
+					$submit_url = $this->getSiteURL().'/'.$menu['url'];
+				}
+				if(!$snoopy->fetch($submit_url)) {
+					array_push($error_array, $snoopy->error.'<br />'); 
+				}
+			}
+		}
+		*/
+		if (isset($error_array[0])) {
+			foreach ($error_array as $error_msg) {
+				echo $error_msg;
+			}
+		} else {
+			if ($echo === true) {
+				echo 'Cache was rebuilt successfully.';
+			}
+		}
+		return true;
+	}
 
+		
+    /**
+     * Redirect to the correct Jaws Site using the resellers data and parent site data
+     *
+     * @access 	public
+     * @param 	boolean	$admin	admin section?
+     * @param 	boolean	$onlyWWW	only check for (and remove) "www." in SERVER_NAME
+     * @return 	mixed	void or Jaws_Error on error
+     */
+    function GetCorrectURL($admin = false, $onlyWWW = false)
+    {
+		$full_url = $this->getFullURL(); 
+		$xss   = $this->loadClass('XSS', 'Jaws_XSS');
+		$domain = $xss->filter(str_replace('www.', '', strtolower($_SERVER['SERVER_NAME'])));
+		$scheme = 'http://';
+		if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
+			$scheme = 'https://';
+		}
+		if (strpos($_SERVER['QUERY_STRING'], "images/blank.gif") !== false) {
+			header("HTTP/1.1 301 Moved Permanently");
+			require_once JAWS_PATH . 'include/Jaws/Header.php';
+			Jaws_Header::Location($scheme.$domain.'/images/blank.gif');
+			exit;
+		}
+		if (substr_count($full_url,"index.php?") > 1 || substr_count($_SERVER['REQUEST_URI'],"index.php?") > 1) {
+			header("HTTP/1.1 301 Moved Permanently");
+			require_once JAWS_PATH . 'include/Jaws/Header.php';
+			Jaws_Header::Location($scheme.$domain);
+			exit;
+		}
+		if (strpos($_SERVER['REQUEST_URI'],"index.php") !== false && strpos($_SERVER['REQUEST_URI'],"data/files/") !== false && strpos($_SERVER['REQUEST_URI'], "customtheme") === false) {
+			header("HTTP/1.1 301 Moved Permanently");
+			require_once JAWS_PATH . 'include/Jaws/Header.php';
+			Jaws_Header::Location($scheme.$domain);
+			exit;
+		}
+		
+		if (isset($_SERVER['SERVER_NAME']) && !empty($_SERVER['SERVER_NAME'])) {
+			if ($onlyWWW === true) {
+				header("HTTP/1.1 301 Moved Permanently");
+				require_once JAWS_PATH . 'include/Jaws/Header.php';
+				Jaws_Header::Location($full_url);
+				exit;
+			} else {
+				$domains_url = '';
+				// Get reseller key
+				$datadir = JAWS_DATA;
+				if (!is_dir($datadir)) {
+					$GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_FILE_DOES_NOT_EXIST'), RESPONSE_ERROR);
+					return new Jaws_Error(_t('GLOBAL_ERROR_FILE_DOES_NOT_EXIST'), "Reading data directory");
+				}
+				$dir = scandir($datadir);
+				foreach($dir as $file) {
+					if ($file != '.' && $file != '..' && substr($file, 0, (strpos($file, '.'))) != 'resellers' && end(explode('.', strtolower($file))) == 'txt') {
+						$reseller_key = substr($file, 0, (strpos($file, '.')));
+						break;
+					}
+				}
+				// Get reseller information from reseller key
+				$reseller_info = $this->GetResellerInfo($reseller_key);
+				if (Jaws_Error::IsError($reseller_info)) {
+					return $reseller_info;
+				} else if (isset($reseller_info[6]) && $reseller_info[6] == 'active' && isset($reseller_info[4]) && !empty($reseller_info[4])) {
+					$reseller_title = $reseller_info[1];
+					$reseller_desc = $reseller_info[2];
+					$reseller_link = $reseller_info[3];
+					$reseller_domains = explode(',', $reseller_info[4]);
+					$domains_url = "http://".$reseller_domains[0]."/data/".$reseller_key.".txt";
+					
+					$reseller_expires = $reseller_info[5];
+					$reseller_status = $reseller_info[6];
+					$reseller_email = $reseller_info[7];
+					$reseller_created = $reseller_info[8];
+					
+				} else {
+					return new Jaws_Error("Could not parse active domains list file", "Parsing active domains file");
+				}
+				/*
+				include_once JAWS_PATH . 'include' . DIRECTORY_SEPARATOR . 'Jaws' . DIRECTORY_SEPARATOR . 'Snoopy.php';
+				$snoopy = new Snoopy;
+				if($domains_url != '' && $snoopy->fetch($domains_url)) {
+				*/
+				if(file_exists(JAWS_DATA . $reseller_key . '.txt')) {
+					$site_info = Jaws_Utils::split2D(file_get_contents(JAWS_DATA . $reseller_key . '.txt'));
+					$parent_domains = array();
+					
+					foreach($site_info as $site) {		            
+						$site_id = (isset($site[0]) ? $site[0] : '');
+						$site_title = (isset($site[1]) ? $site[1] : '');
+						$site_desc = (isset($site[2]) ? $site[2] : '');
+						$site_domains = (isset($site[3]) ? explode(',', $site[3]) : array());
+						$site_secureaddress = (isset($site[4]) ? $site[4] : '');
+						$site_serveraddress = (isset($site[5]) ? $site[5] : '');
+						$site_expires = (isset($site[6]) ? $site[6] : '');
+						$site_status = (isset($site[7]) ? $site[7] : '');
+						$site_email = (isset($site[8]) ? $site[8] : '');
+						$site_mailserver = (isset($site[9]) ? $site[9] : '');
+						$site_pageconst = (isset($site[10]) ? $site[10] : '');
+						$site_reservationOn = (isset($site[11]) ? $site[11] : '');
+						$site_ecommerceOn = (isset($site[12]) ? $site[12] : '');
+						$site_ecommerceTrack = (isset($site[13]) ? $site[13] : '');
+						$site_ownerId = (isset($site[14]) ? $site[14] : '');
+						$site_created = (isset($site[15]) ? $site[15] : '');
+						foreach ($site_domains as $site_domain) {
+							$site_domain = strtolower($site_domain);
+							$site_base_domain = (strpos($site_domain, '/') !== false ? substr($site_domain, 0, strpos($site_domain, '/')) : $site_domain);
+							$site_active = false;
+							if ($site_id == '0') {
+								$parent_domains[] = $site_domain;
+							}
+							if ($site_status == 'temp' || $site_status == 'active') {
+								$site_active = true;
+							}
+							$requested_domain = $domain;
+							if ($site_active && ($site_id == '0' && strtolower($_SERVER['SERVER_NAME']) == 'www.'.$site_domain) || (!empty($site_id) && ($site_id != '0' && ((($requested_domain == $site_base_domain) && !in_array($site_base_domain, $reseller_domains)) || $requested_domain == $site_domain) || (strtolower($_SERVER['SCRIPT_NAME']) == ($site_id != '0' ? "/".$site_id : '').'/index.php' || strtolower($_SERVER['SCRIPT_NAME']) == ($site_id != '0' ? "/".$site_id : '').'/admin.php')))) {
+								header("HTTP/1.1 301 Moved Permanently");
+								require_once JAWS_PATH . 'include/Jaws/Header.php';
+								Jaws_Header::Location($scheme.str_replace('www.', '', $site_domains[0]).'/'.($admin === true ? 'admin' : 'index' ).'.php');
+								exit;
+							}
+						}
+					}
+				} else {
+					return new Jaws_Error("Could not parse active domains list file", "Parsing active domains file");
+				}
+
+			}
+		}
+	}
+   
+    /**
+     * Tasks can be scheduled to be fired periodically at a given time, or one time only.
+     *
+     * @access 	public
+     * @category 	developer_feature
+     * @param 	string	$scriptpath	URL to execute
+     * @param 	integer	$time_interval	interval execution (in seconds)
+     * @param 	timestamp	$fire_time	unix timestamp of first execution
+     * @param 	boolean	$run_only_once	should the schedule only execute once?
+     * @return 	mixed	True on success, Jaws_Error on error
+     */
+    function InsertScheduler($scriptpath = '', $time_interval = 43200, $fire_time = null, $run_only_once = 0)
+    {
+        if (trim($scriptpath) != '') {
+			$sql = "
+				INSERT INTO [phpjobscheduler]
+					([scriptpath], [time_interval], [fire_time], [run_only_once])
+				VALUES
+					({scriptpath}, {time_interval}, {fire_time}, {run_only_once})";
+
+			$fire_time = (!is_null($fire_time)) ? $fire_time : strtotime("now");
+
+			$params               		= array();
+			$params['scriptpath']      	= $scriptpath;
+			$params['time_interval']   	= $time_interval;
+			$params['fire_time']        = $fire_time;
+			$params['run_only_once'] 	= $run_only_once;
+
+			$result = $GLOBALS['db']->query($sql, $params);
+			if (Jaws_Error::IsError($result)) {
+	            $GLOBALS['app']->Session->PushLastResponse("Couldn't insert schedule", RESPONSE_ERROR);
+				return new Jaws_Error("Couldn't insert schedule for ".$scriptpath, "Inserting schedule");
+			}
+			$GLOBALS['app']->Session->PushLastResponse("Schedule created", RESPONSE_NOTICE);
+			return true;
+		} else {
+			$GLOBALS['app']->Session->PushLastResponse("Scriptpath was not provided to create a schedule", RESPONSE_ERROR);
+			return new Jaws_Error("Scriptpath was not provided to create a schedule", "Inserting schedule");
+		}
+	}
+
+    /**
+     * Update Scheduler by ID
+     *
+     * @access 	public
+     * @param 	integer	$id	ID of existing schedule
+     * @param 	integer	$time_interval	interval execution (in seconds)
+     * @param 	timestamp	$fire_time	unix timestamp of first execution
+     * @param 	boolean	$run_only_once	should the schedule only execute once?
+     * @return 	mixed	True on success, Jaws_Error on error
+     */
+    function UpdateScheduler($id, $time_interval = 43200, $fire_time = null, $run_only_once = 0)
+    {
+        if (!empty($id)) {
+			$sql = "
+				UPDATE [phpjobscheduler] SET 
+					[time_interval] = {time_interval}, 
+					[fire_time] = {fire_time}, 
+					[run_only_once] = {run_only_once}
+				WHERE [id] = {id}";
+
+			$fire_time = (!is_null($fire_time)) ? $fire_time : strtotime("now");
+
+			$params               		= array();
+			$params['id']      			= (int)$id;
+			$params['time_interval']   	= $time_interval;
+			$params['fire_time']        = $fire_time;
+			$params['run_only_once'] 	= $run_only_once;
+
+			$result = $GLOBALS['db']->query($sql, $params);
+			if (Jaws_Error::IsError($result)) {
+				$GLOBALS['app']->Session->PushLastResponse("Couldn't update schedule", RESPONSE_ERROR);
+				return new Jaws_Error("Couldn't update schedule ID: ".$id, "Updating schedule");
+			}
+			$GLOBALS['app']->Session->PushLastResponse("Schedule updated", RESPONSE_NOTICE);
+			return true;
+		} else {
+			$GLOBALS['app']->Session->PushLastResponse("Scriptpath was not provided to update schedule", RESPONSE_ERROR);
+			return new Jaws_Error("Scriptpath was not provided to update schedule", "Updating schedule");
+		}
+	}
+
+    /**
+     * Delete Scheduler by ID
+     *
+     * @access 	public
+     * @param 	integer	$id	ID of existing schedule
+     * @return 	mixed	True on success, Jaws_Error on error
+     */
+    function DeleteScheduler($id)
+    {
+        if (!empty($id)) {
+
+			$sql = 'DELETE FROM [phpjobscheduler] WHERE [id] = {id}';
+			$result = $GLOBALS['db']->query($sql, array('id' => $id));
+			if (Jaws_Error::IsError($result)) {
+				$GLOBALS['app']->Session->PushLastResponse("Couldn't delete schedule", RESPONSE_ERROR);
+				return new Jaws_Error("Couldn't delete schedule ID: ".$id, "Deleting schedule");
+			}
+			$GLOBALS['app']->Session->PushLastResponse("Schedule deleted", RESPONSE_NOTICE);
+			return true;
+		} else {
+			$GLOBALS['app']->Session->PushLastResponse("Scriptpath was not provided to delete schedule", RESPONSE_ERROR);
+			return new Jaws_Error("Scriptpath was not provided to delete schedule", "Deleting schedule");
+		}
+	}
+	
+    /**
+     * Reseller support.
+     *
+     * @access 	public
+     * @category 	feature
+     * @param 	string	$key	Jaws reseller site/config_key to look for
+     * @param 	string	$host	Jaws reseller hostname to look for
+     * @return 	mixed	Array of reseller data, or Jaws_Error on error
+     */
+    function GetResellerInfo($key = null, $host = null)
+    {
+		require_once JAWS_PATH . 'include' . DIRECTORY_SEPARATOR . 'Jaws' . DIRECTORY_SEPARATOR . 'Snoopy.php';
+		$reseller_url = "http://jaws-project.com/data/resellers.txt";
+		$snoopy = new Snoopy;
+
+		if(!is_null($key) && $snoopy->fetch($reseller_url)) {
+			$reseller_info = Jaws_Utils::split2D(trim($snoopy->results));
+			foreach($reseller_info as $reseller) {		            
+				if ($reseller[0] == $key) {
+					return $reseller;
+				}
+			}
+		} else if(!is_null($host) && $snoopy->fetch($reseller_url)) {
+			$reseller_info = Jaws_Utils::split2D(trim($snoopy->results));
+			foreach($reseller_info as $reseller) {		            
+				$reseller_domains = explode(',', $reseller[4]);
+				if (in_array(strtolower($host), $reseller_domains)) {
+					return $reseller;
+				}
+			}
+		} else {
+			return new Jaws_Error("Could not parse reseller file", "Getting reseller info");
+		}
+	}
+    
+	/**
+     * Run custom scripts.
+     *
+     * @access 	public
+     * @category 	developer_feature
+     * @return 	mixed	output of custom hook, or Jaws_Error on error
+     */
+    function LoadCustomHook()
+    {
+		if (file_exists(JAWS_DATA . 'hooks' . DIRECTORY_SEPARATOR . 'Custom.php')) {
+			include_once JAWS_DATA . 'hooks' . DIRECTORY_SEPARATOR . 'Custom.php';
+			$hook = new CustomHook;
+			$request =& Jaws_Request::getInstance();
+			$call = $request->get('fuseaction', 'get');
+			if (method_exists($hook, $call)) {
+				$res = $hook->$call();
+				if ($res === false || Jaws_Error::IsError($res)) {
+					//return $res;
+					return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'), 'CORE');
+				} else if (isset($res['return'])) {
+					return $res['return'];
+				}
+			}
+		}
+	}
+	
+	/**
+     * Password protected pages.
+     *
+     * @access 	public
+     * @category 	feature
+     * @param 	string	$url	URL to check
+     * @param 	boolean	$standAlone	Is standalone?
+     * @param 	boolean	$redirect	Redirect to log-in if protected?
+     * @return 	mixed	HTTP redirect, or boolean true on success or false on error
+     */
+    function IsPasswordProtected($url = null, $standAlone = null, $redirect = true)
+    {
+		// Password protected pages
+		if (!$GLOBALS['app']->Session->Logged()) {
+			// Get protected_pages registry value
+			$GLOBALS['app']->Registry->LoadFile('Users');
+			$password_protected = $GLOBALS['app']->Registry->Get('/gadgets/Users/protected_pages');
+			// Get URL of menu id
+			if (!empty($password_protected)) {
+				$menu_ids = explode(',',$password_protected);
+				$menuModel = $GLOBALS['app']->LoadGadget('Menu', 'Model');
+				foreach ($menu_ids as $id) {
+					$menu = $menuModel->GetMenu((int)$id);
+					if (!Jaws_Error::IsError($menu)) {
+						// Redirect to log-in if password protected
+						$real_url = $GLOBALS['app']->Map->GetAliasPath($menu['url']);
+						$real_url = ($real_url === false ? $menu['url'] : $real_url);
+						if (is_null($url) || empty($url)) {
+							$url = $this->GetFullURL();
+						}
+						if (strpos($url, $real_url) !== false || strpos($url, $menu['url']) !== false) {
+							for ($i = 0; $i < 10; $i++) {
+								if (strpos($url, $real_url.$i) !== false) {
+									return false;
+								}
+							}
+							$GLOBALS['app']->Session->PushSimpleResponse("You must log-in to view this page. If you don't have an account, you can <a href=\"index.php?gadget=Users&action=Registration&redirect_to=".urlencode($url)."\">Create one</a>");
+							$userHTML = $GLOBALS['app']->LoadGadget('Users', 'HTML');
+							if (is_null($standAlone)) {
+								$standAlone = $this->IsStandAloneMode();
+							}
+							if ($redirect === false) {
+								return true;
+							} else {
+								if ($standAlone === true) {
+									echo $userHTML->DefaultAction();
+								} else {
+									require_once JAWS_PATH . 'include/Jaws/Header.php';
+									Jaws_Header::Location('index.php?gadget=Users&redirect_to='.urlencode($url));
+								}
+							}
+							exit;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+     * XML-RPC API.
+     *
+     * @access 	public
+     * @category 	feature
+     * @param 	string	$host	hostname
+     * @param 	string	$path	script to call
+     * @param 	string	$method	method name we're calling
+     * @param 	array	$params	parameters to send
+     * @return 	object	Object of returned data, or Jaws_Error on error
+     */
+    function XmlRpc($host, $path, $method, $params)
+    {
+		//var_dump($params);
+		require_once 'XML/RPC.php';
+        
+		// Prepare an XML-RPC Message.
+        $eArgs = array();
+		foreach ($params as $v) {
+			$eArgs[] = XML_RPC_encode($v);
+        }
+        $msg = new XML_RPC_Message($method, $eArgs);
+
+        $cli = new XML_RPC_Client($path, $host, (substr(strtolower($host), 0, 5) == 'https' ? 443 : 80));
+        //$cli->setDebug(1);
+		//var_dump($cli);
+        $res = $cli->send($msg, 0);
+		//var_dump($res);
+		//$error = new Jaws_Error(var_export($res, true).': '.$method.' ('.var_export($params, true).')', "XMLRPC");
+		if (is_object($res) && method_exists($res, 'value')) {
+			$val = $res->value();
+		}
+        if (!is_object($res) || (!is_object($val) || !is_a($val, 'XML_RPC_value'))) {
+			$params[0] = '*****';
+			$params[1] = '*****';
+			return new Jaws_Error($method.': '."\n".var_export($res, true)."\n".' ('.var_export($params, true).')', "XMLRPC");
+		}
+		
+        return XML_RPC_decode($val);
+	}
+	
+	/**
+     * RESTful API.
+     *
+     * @access 	public
+     * @category 	feature
+     * @param 	string	$url	script to call
+     * @param 	string	$method	HTTP method
+     * @param 	string	$response_type	response body format (json or xml)
+     * @param 	array	$post	post parameters
+     * @return 	string	Response body
+     */
+    function Rest($url, $method = 'GET', $response_type = 'json', $post_params = array())
+    {
+		require_once 'HTTP/Request.php';
+		$httpRequest = new HTTP_Request($url);
+		$httpRequest->setMethod(HTTP_REQUEST_METHOD_POST);
+		//$httpRequest->setBasicAuth("Username", "Password");
+		if (!count($post_params) <= 0) {
+			//$httpRequest->setBody($GLOBALS['app']->UTF8->json_encode($params));
+			foreach ($post_params as $pk => $pv) {
+				$httpRequest->addPostData($pk, $pv);
+			}
+		}
+		$resRequest = $httpRequest->sendRequest();
+		if (PEAR::isError($resRequest) || (int) $httpRequest->getResponseCode() <> 200) {
+			return new Jaws_Error('ERROR REQUESTING URL: '.$url.' ('.$httpRequest->getResponseCode().')', _t('USERS_NAME'));
+		}
+		$data = $httpRequest->getResponseBody();
+		switch (strtolower($response_type)) {
+			case 'xml':
+				require_once 'XML/Unserializer.php';
+
+				$unserializer = new XML_Unserializer();
+				$unserializer->setOption('parseAttributes', true);
+				//$unserializer->setOption('decodeFunction', 'strtolower');
+				$data = $unserializer->unserialize($data);
+				break;
+			case 'json':
+				$data = $GLOBALS['app']->UTF8->json_decode($data);
+				break;
+		}
+		return $data;
+	}
 }

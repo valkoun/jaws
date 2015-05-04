@@ -5,7 +5,7 @@
  * @category   Captcha
  * @package    Policy
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class ComplexCaptcha
@@ -47,16 +47,13 @@ class ComplexCaptcha
         $img = $this->HexEncode($GLOBALS['app']->Map->GetURLFor('Policy', 'Captcha',
                                                                 array('key' => $prefix . $key), false));
 
-        $res['label'] = _t('GLOBAL_CAPTCHA_CODE');
         $res['captcha'] =& Piwi::CreateWidget('Image', '', '');
         $res['captcha']->SetTitle(_t('GLOBAL_CAPTCHA_CODE'));
         $res['captcha']->SetID('captcha_img_'.rand());
         $res['captcha']->SetSrc($img);
         $res['entry'] =& Piwi::CreateWidget('Entry', $prefix . $key, '');
         $res['entry']->SetID('captcha_'.rand());
-        $res['entry']->SetStyle('direction: ltr;');
-        $res['entry']->SetTitle(_t('GLOBAL_CAPTCHA_CASE_INSENSITIVE'));
-        $res['description'] = _t('GLOBAL_CAPTCHA_CODE_DESC');
+        $res['entry']->SetTitle(_t('GLOBAL_CAPTCHA_SENSITIVE'));
         return $res;
     }
 
@@ -81,7 +78,7 @@ class ComplexCaptcha
      * Check if a captcha key is valid
      *
      * @access  public
-     * @param   bool     Valid/Not Valid
+     * @param   boolean  Valid/Not Valid
      */
     function Check()
     {
@@ -157,6 +154,9 @@ class ComplexCaptcha
             WHERE [key] = {key}";
         $result = $GLOBALS['db']->queryOne($sql, $params);
         if (Jaws_Error::IsError($result) || empty($result)) {
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, $result->getMessage());
+            }
             $result = false;
         }
 
@@ -187,7 +187,9 @@ class ComplexCaptcha
         $result = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($result)) {
             $key = '';
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR, $result->getMessage());
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, $result->getMessage());
+            }
         }
 
         return $key;
@@ -254,32 +256,32 @@ class ComplexCaptcha
         $height = 2.5 * imagefontheight (5);
         $im = imagecreatetruecolor ($width, $height);
         imagealphablending($im, true);
-        $black = imagecolorallocatealpha($im, 0, 0, 0, 0);
+        $black = imagecolorallocatealpha($im,0,0,0,0);
 
-        $rotated = imagecreatetruecolor(70, 70);
+        $rotated = imagecreatetruecolor (70, 70);
         $x = 0;
         for ($i = 0; $i < $text_length; $i++) {
-            $buffer = imagecreatetruecolor(20, 20);
-            $buffer2 = imagecreatetruecolor(40, 40);
+            $buffer = imagecreatetruecolor (20, 20);
+            $buffer2 = imagecreatetruecolor (40, 40);
             // Get a random color
             $red = mt_rand(0,255);
             $green = mt_rand(0,255);
             $blue = 255 - sqrt($red * $red + $green * $green);
-            $color = imagecolorallocate($buffer, $red, $green, $blue);
+            $color = imagecolorallocate ($buffer, $red, $green, $blue);
             // Create character
             imagestring($buffer, 5, 0, 0, $value[$i], $color);
             // Resize character
-            imagecopyresized($buffer2, $buffer, 0, 0, 0, 0, 25 + mt_rand(0,12), 25 + mt_rand(0,12), 20, 20);
+            imagecopyresized ($buffer2, $buffer, 0, 0, 0, 0, 25 + mt_rand(0,12), 25 + mt_rand(0,12), 20, 20);
             // Rotate characters a little
             $rotated = imagerotate($buffer2, mt_rand(-25, 25),imagecolorallocatealpha($buffer2,0,0,0,0));
-            imagecolortransparent($rotated, imagecolorallocatealpha($rotated,0,0,0,0));
+            imagecolortransparent ($rotated, imagecolorallocatealpha($rotated,0,0,0,0));
             // Move characters around a little
             $y = mt_rand(1, 3);
             $x += mt_rand(2, 6);
-            imagecopymerge($im, $rotated, $x, $y, 0, 0, 40, 40, 100);
+            imagecopymerge ($im, $rotated, $x, $y, 0, 0, 40, 40, 100);
             $x += 22;
-            imagedestroy($buffer);
-            imagedestroy($buffer2);
+            imagedestroy ($buffer);
+            imagedestroy ($buffer2);
         }
 
         // Draw polygons
@@ -288,7 +290,7 @@ class ComplexCaptcha
                 mt_rand(-0.25*$width,$width*1.25),mt_rand(-0.25*$width,$width*1.25),
                 mt_rand(-0.25*$width,$width*1.25),mt_rand(-0.25*$width,$width*1.25),
                 mt_rand(-0.25*$width,$width*1.25),mt_rand(-0.25*$width,$width*1.25));
-            $color = imagecolorallocatealpha($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast), $object_alpha);
+            $color = imagecolorallocatealpha ($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast), $object_alpha);
             imagefilledpolygon($im, $vertices, 3, $color);
         }
 
@@ -296,7 +298,7 @@ class ComplexCaptcha
         if ($num_ellipses > 0) for ($i = 0; $i < $num_ellipses; $i++) {
             $x1 = mt_rand(0,$width);
             $y1 = mt_rand(0,$height);
-            $color = imagecolorallocatealpha($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast), $object_alpha);
+            $color = imagecolorallocatealpha ($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast), $object_alpha);
             imagefilledellipse($im, $x1, $y1, mt_rand($min_radius,$max_radius), mt_rand($min_radius,$max_radius), $color);
         }
 
@@ -306,8 +308,8 @@ class ComplexCaptcha
             $y1 = mt_rand(-$height*0.25,$height*1.25);
             $x2 = mt_rand(-$width*0.25,$width*1.25);
             $y2 = mt_rand(-$height*0.25,$height*1.25);
-            $color = imagecolorallocatealpha($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast), $object_alpha);
-            imagesetthickness($im, mt_rand($min_thickness,$max_thickness));
+            $color = imagecolorallocatealpha ($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast), $object_alpha);
+            imagesetthickness ($im, mt_rand($min_thickness,$max_thickness));
             imageline($im, $x1, $y1, $x2, $y2 , $color);
         }
 
@@ -315,7 +317,7 @@ class ComplexCaptcha
         if ($num_dots > 0) for ($i = 0; $i < $num_dots; $i++) {
             $x1 = mt_rand(0,$width);
             $y1 = mt_rand(0,$height);
-            $color = imagecolorallocatealpha($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast),$object_alpha);
+            $color = imagecolorallocatealpha ($im, mt_rand(0,$contrast), mt_rand(0,$contrast), mt_rand(0,$contrast),$object_alpha);
             imagesetpixel($im, $x1, $y1, $color);
         }
 

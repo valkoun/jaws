@@ -1,0 +1,286 @@
+<!-- BEGIN view_order -->
+	<!-- BEGIN gateway_logo -->
+	<div style="text-align: left;"><img border="0" align="left" style="padding-right: 10px; padding-bottom: 10px;" src="{gateway_logo}" /></div>
+	<!-- END gateway_logo -->
+	
+	<!-- BEGIN header -->
+	<h1><img border="0" align="left" style="padding-right: 10px; padding-bottom: 10px;" src="{icon}" />{title}</h1>
+	<!-- END header -->
+	
+	<!-- BEGIN error -->
+	<p><b>Unfortunately, your order (or some parts of it) may not have gone through.</b></p>
+	<p>{error}</p>
+	<!-- END error -->
+	
+	<!-- BEGIN accept -->
+	<p style="text-align: left;">To continue, you must accept the terms below.</p><p>&nbsp;</p>
+	<!-- END accept -->
+	
+	<div style="color: #333333; background:#FCFCFC none repeat scroll 0 0; border:1px solid #CCCCCC; padding:1.9em;">
+	
+	<!-- BEGIN ack -->
+		<p>&nbsp;</p><p style="text-align: left">Your order has been sent to {site_name}. Here is your receipt
+		<!-- BEGIN print -->
+		&nbsp;(<a href="{print_link}">print it</a>)
+		<!-- END print -->
+		:</p><p>&nbsp;</p>
+	<!-- END ack -->
+	
+	<!-- BEGIN order -->
+		<p>&nbsp;</p>
+		<table width="100%" border="0" cellspacing="0" cellpadding="3" id="syntactsCategories_order{OwnerID}" class="syntactsCategories">
+		<tbody>
+			<tr noDrop="true" noDrag="true" id="syntactsCategories_head_order{OwnerID}" class="syntactsCategories_head">
+				<TD valign="top" WIDTH="50%" class="color_bkgnd_primary" style="padding: 3px;">Order Information&nbsp;</TD>
+				<TD valign="top" WIDTH="50%" class="color_bkgnd_primary" style="padding: 3px;">&nbsp;</TD>				
+			</tr>
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="border-top: dotted 1pt #E2E2E2;" class="syntacts-form-row" style="padding: 10px;"><b>Order Status:</b></td>
+				<td valign="top" style="border-top: dotted 1pt #E2E2E2;" class="syntacts-form-row" style="padding: 10px;">{order_status}</td>
+			</tr>
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Order Number:</b></td>
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{orderno}</td>
+			</tr>
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Description:</b></td>
+				<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{order_description}</td>
+			</tr>
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Order Total:</b></td>
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{order_total}</td>
+			</tr>
+			<!-- BEGIN merchant -->
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Merchant:</b></td>
+				<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{merchant_name}</td>
+			</tr>
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Merchant ID:</b></td>
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{merchant_id}</td>
+			</tr>
+			<!-- END merchant -->
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Order Items:</b></td>
+				<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">
+				<!-- BEGIN order_item -->
+					<a href="{item_link}">{item_title}</a><br />
+					Price: {item_price}<br />
+					Qty: {item_qty}<br />
+					Details: {item_details}<br /><br />
+				<!-- END order_item -->
+				</td>
+			</tr>
+			<!-- BEGIN customfield -->
+			<tr noDrop="true" noDrag="true">
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>{custom_name}:</b></td>
+				<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{custom_value}</td>
+			</tr>
+			<!-- END customfield -->
+			</tbody>
+		</table>
+		<p>&nbsp;</p>
+	<!-- END order -->
+	
+	<!-- BEGIN billing -->
+		<table width="100%" border="0" cellspacing="0" cellpadding="3" id="syntactsCategories_billing{OwnerID}" class="syntactsCategories">
+		<tbody>
+		<tr noDrop="true" noDrag="true" id="syntactsCategories_head_billing{OwnerID}" class="syntactsCategories_head">
+			<TD valign="top" WIDTH="50%" class="color_bkgnd_primary" style="padding: 3px;">Billing&nbsp;Information</TD>
+			<TD valign="top" WIDTH="50%" class="color_bkgnd_primary" style="padding: 3px;">&nbsp;</TD>				
+		</tr>
+		<!-- BEGIN customer_cc_type -->
+		<tr noDrop="true" noDrag="true">
+		<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Card Type:</b></td>
+		<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_cc_type}</td>
+		</tr>
+		<!-- END customer_cc_type -->
+		<!-- BEGIN customer_cc_number -->
+		<tr noDrop="true" noDrag="true">
+		<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Card Number:</b></td>
+		<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_cc_number}</td>
+		</tr>
+		<!-- END customer_cc_number -->
+		<!-- BEGIN customer_cc_exp -->
+		<tr noDrop="true" noDrag="true">
+		<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Card Expiration (MM / YYYY):</b></td>
+		<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_cc_exp_month} / {customer_cc_exp_year}</td>
+		</tr>
+		<!-- END customer_cc_exp -->
+		<!-- BEGIN customer_cc_cvv -->
+		<tr noDrop="true" noDrag="true">
+		<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Card CVV (Security Digits):</b></td>
+		<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_cc_cvv}</td>
+		</tr>
+		<!-- END customer_cc_cvv -->
+		<!-- BEGIN customer_name -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Billing Name:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_name}</td>
+		</tr>
+		<!-- END customer_name -->
+		<!-- BEGIN customer_email -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Billing E-mail:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_email}</td>
+		</tr>
+		<!-- END customer_email -->
+		<!-- BEGIN customer_phone -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Phone:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_phone}</td>
+		</tr>
+		<!-- END customer_phone -->
+		<!-- BEGIN customer_fax -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Fax:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_fax}</td>
+		</tr>
+		<!-- END customer_fax -->
+		<!-- BEGIN customer_company -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Billing Company:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_company}</td>
+		</tr>
+		<!-- END customer_company -->
+		<!-- BEGIN customer_address -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Billing Address:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_address}</td>
+		</tr>
+		<!-- END customer_address -->
+		<!-- BEGIN customer_address2 -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Billing Address (cont'd):</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_address2}</td>
+		</tr>
+		<!-- END customer_address2 -->
+		<!-- BEGIN customer_city -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Billing City:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_city}</td>
+		</tr>
+		<!-- END customer_city -->
+		<!-- BEGIN customer_region -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Billing State:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_region}</td>
+		</tr>
+		<!-- END customer_region -->
+		<!-- BEGIN customer_postal -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Billing Postal:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_postal}</td>
+		</tr>
+		<!-- END customer_postal -->
+		<!-- BEGIN customer_country -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Billing Country:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_country}</td>
+		</tr>
+		<!-- END customer_country -->
+		</tbody>
+		</table>
+		<p>&nbsp;</p>
+	<!-- END billing -->
+	
+	<!-- BEGIN shipping -->
+		<table width="100%" border="0" cellspacing="0" cellpadding="3" id="syntactsCategories_shipping{OwnerID}" class="syntactsCategories">
+		<tbody>
+		<tr noDrop="true" noDrag="true" id="syntactsCategories_head_shipping{OwnerID}" class="syntactsCategories_head">
+			<TD valign="top" WIDTH="50%" class="color_bkgnd_primary" style="padding: 3px;">Shipping&nbsp;Information</TD>
+			<TD valign="top" WIDTH="50%" class="color_bkgnd_primary" style="padding: 3px;">&nbsp;</TD>				
+		</tr>
+		<!-- BEGIN shiptype -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="border-top: dotted 1pt #E2E2E2;" class="syntacts-form-row" style="padding: 10px;"><b>Shipping Type:</b></td>
+			<td valign="top" style="border-top: dotted 1pt #E2E2E2;" class="syntacts-form-row" style="padding: 10px;">{shiptype}</td>
+		</tr>
+		<!-- END shiptype -->
+		<!-- BEGIN customer_shipname -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Shipping Name:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_shipname}</td>
+		</tr>
+		<!-- END customer_shipname -->
+		<!-- BEGIN customer_shipaddress -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Shipping Address:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_shipaddress}</td>
+		</tr>
+		<!-- END customer_shipaddress -->
+		<!-- BEGIN customer_shipaddress2 -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Shipping Address (cont'd):</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_shipaddress2}</td>
+		</tr>
+		<!-- END customer_shipaddress2 -->
+		<!-- BEGIN customer_shipcity -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Shipping City:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_shipcity}</td>
+		</tr>
+		<!-- END customer_shipcity -->
+		<!-- BEGIN customer_shipregion -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Shipping State:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_shipregion}</td>
+		</tr>
+		<!-- END customer_shipregion -->
+		<!-- BEGIN customer_shippostal -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;"><b>Shipping Postal:</b></td>
+			<td valign="top" style="" class="syntacts-form-row" style="padding: 10px;">{customer_shippostal}</td>
+		</tr>
+		<!-- END customer_shippostal -->
+		<!-- BEGIN customer_shipcountry -->
+		<tr noDrop="true" noDrag="true">
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;"><b>Shipping Country:</b></td>
+			<td valign="top" style="background: #EDF3FE;" class="syntacts-form-row" style="padding: 10px;">{customer_shipcountry}</td>
+		</tr>
+		<!-- END customer_shipcountry -->
+		</tbody>
+		</table>
+		<p>&nbsp;</p>
+	<!-- END shipping -->
+		
+	<!-- BEGIN footer_form_start -->
+		<form action="{form_action}" method="POST">
+	<!-- END footer_form_start -->
+		
+	<!-- BEGIN footer_form_terms -->
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="100%" valign="top" colspan="2"><div style="padding: 5px;"><p>By checking the box below, you accept the following terms:</p></div></td>
+					</tr>
+					<tr>
+						<td width="0%" valign="top"><div style="padding: 5px;"><input type="checkbox" name="confirm" value="Y" /></div></td>
+						<td width="100%" valign="top"><div style="padding: 5px;"><textarea disabled="disabled" name="terms" style="height: 100px; width: 100%;">
+							{checkout_terms}
+						</textarea></div></td>
+					</tr>
+				</tbody>
+			</table>
+			<p>&nbsp;</p>
+	<!-- END footer_form_terms -->
+	
+	<!-- BEGIN footer_form_hidden -->
+			<input type="hidden" name="confirm" value="Y" />
+	<!-- END footer_form_hidden -->
+	
+	<!-- BEGIN footer -->
+			<p>&nbsp;</p>
+			<p>{checkout_button}
+		<!-- BEGIN shopping_link -->
+			<a href="{shopping_link}">Click here to continue shopping</a> on {site_name}.
+		<!-- END shopping_link -->
+			</p>
+			<p>&nbsp;</p>
+	<!-- END footer -->
+		
+	<!-- BEGIN footer_form_end -->
+		</form>
+	<!-- END footer_form_end -->
+	</div>
+<!-- END view_order -->

@@ -1,0 +1,36 @@
+<!-- BEGIN form -->
+<html>
+<head>
+<base href="{BASE_URL}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style2{.dir}.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<script type="text/javascript" src="{base_script}?gadget=FlashGallery&amp;action=Ajax&amp;client=all&amp;stub={stub}"></script>
+<script type="text/javascript" src="{base_script}?gadget=FlashGallery&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/FlashGallery/resources/{script}.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/js/admin.js"></script>
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+<style type="text/css">
+.jaws-menubar { display: none; }
+.actionbar { display: none; }
+</style>
+</head>
+<body>
+<div>
+{content}
+</div>
+</body>
+</html>
+<!-- END form -->

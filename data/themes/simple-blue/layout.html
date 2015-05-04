@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- BEGIN layout -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <base href="{BASE_URL}" />
+  <title>{site-title}</title>
+  <meta name="author" content="{site-author}" />
+  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+  <meta name="keywords" content="{site-keywords}" />
+  <meta name="description" content="{site-description}" />
+  <meta http-equiv="content-language" content="{site-languages}" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="{THEME}style{.dir}.css" media="screen" />
+  <!-- BEGIN head -->{ELEMENT}<!-- END head -->
+</head>
+<body class="{syntacts-body}">
+{edit-page-button}
+<div id="container">
+<div id="first_header" class="wide clearfix">
+<!-- BEGIN first_header -->{ELEMENT}<!-- END first_header -->
+</div>
+
+<div id="header">
+<div class="title"><a href="{site-url}">{site-name}</a></div>
+<span class="desc">{site-slogan}</span>
+</div>
+  <table style="width: 100%;">
+    <tr>
+    <td id="bar1" valign="top" class="narrow">
+    <!-- BEGIN bar1 narrow="yes" -->{ELEMENT}<!-- END bar1 -->
+    </td>
+    <td id="main" valign="top" class="wide">
+    <!-- BEGIN main -->{ELEMENT}<!-- END main -->
+    <!-- BEGIN footer -->{ELEMENT}<!-- END footer -->
+    </td>
+    <td id="bar2" valign="top" class="narrow">
+    <!-- BEGIN bar2 narrow="yes" -->{ELEMENT}<!-- END bar2 -->
+    </td>
+    </tr>
+  </table>
+<div id="footer">
+<br />
+<br />Copyright &#169; {site-copyright}. All Rights Reserved.
+<br />Powered by <a href="{powered-link}" rel="external">{powered-by}</a>
+<br /><br /><br />
+</div>
+</div>
+</body>
+</html>
+<!-- END layout -->

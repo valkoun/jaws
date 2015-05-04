@@ -1,0 +1,44 @@
+#themes_info {
+    text-align: right;
+}
+
+#themes_info th {
+    color: #3465a4;
+}
+
+#search_div {
+    float: right;
+}
+
+#buttons_area {
+    padding: 0px;
+    border-spacing: 0px;
+    float: left;
+}
+
+#themes_combo, #theme_upload {
+    direction: ltr;
+}
+
+#themes_list_area {
+    width: 250px;
+    height: 250px;
+}
+
+#themes_info_area {
+    width: 500px;
+    text-align: right;
+}
+
+#theme_area {
+    width: 100%;
+    height: 350px;
+    max-height: 350px;
+    overflow: auto;
+    border: 1px solid #ccc;
+}
+
+#extra_options {
+    height: 100px;
+    text-align: right;
+}

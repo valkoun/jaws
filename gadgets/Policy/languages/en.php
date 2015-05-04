@@ -20,23 +20,19 @@ define('_EN_POLICY_ACL_MANAGEIPS', "Add/Edit/Delete IPs");
 define('_EN_POLICY_ACL_AGENTBLOCKING', "Agent blocking");
 define('_EN_POLICY_ACL_MANAGEAGENTS', "Add/Edit/Delete agents");
 define('_EN_POLICY_ACL_ENCRYPTION', "Encryption management");
-define('_EN_POLICY_ACL_MANAGEENCRYPTIONKEY', "Encryption keys management");
 define('_EN_POLICY_ACL_ANTISPAM', "AntiSpam management");
 define('_EN_POLICY_ACL_ADVANCEDPOLICIES', "Advanced settings management");
-
-/* common */
-define('_EN_POLICY_BLOCKED', "Blocked");
 
 /* IP Range Blocking */
 define('_EN_POLICY_IP_BLOCKING', "IP Blocking");
 define('_EN_POLICY_IP_ADDRESS', "IP Address");
 define('_EN_POLICY_IP_RANGE', "IP Range");
-define('_EN_POLICY_IP_BLOCK_UNDEFINED', "Block undefined IP");
+define('_EN_POLICY_IP_ENABLE_BLOCKING', "Enable IP Blocking");
 
 /* Agent Blocking */
 define('_EN_POLICY_AGENT_BLOCKING', "Agent Blocking");
 define('_EN_POLICY_AGENT', "Agent");
-define('_EN_POLICY_AGENT_BLOCK_UNDEFINED', "Block undefined agent");
+define('_EN_POLICY_AGENT_ENABLE_BLOCKING', "Enable Agent Blocking");
 
 /* Encryption */
 define('_EN_POLICY_ENCRYPTION', "Encryption");
@@ -53,15 +49,8 @@ define('_EN_POLICY_ENCRYPTION_KEY_START_DATE', "Key Start Date");
 define('_EN_POLICY_ANTISPAM', "AntiSpam");
 define('_EN_POLICY_ANTISPAM_ALLOWDUPLICATE', "Allow duplicate messages");
 define('_EN_POLICY_ANTISPAM_CAPTCHA', "Captcha");
-define('_EN_POLICY_ANTISPAM_CAPTCHA_ALWAYS', "Always");
-define('_EN_POLICY_ANTISPAM_CAPTCHA_ANONYMOUS', "Anonymous users only");
 define('_EN_POLICY_ANTISPAM_FILTER', "Spam filter");
 define('_EN_POLICY_ANTISPAM_PROTECTEMAIL', "Protect emails");
-
-//Math Captcha
-define('_EN_POLICY_CAPTCHA_MATH_PLUS', "{0} plus {1} is equal to?");
-define('_EN_POLICY_CAPTCHA_MATH_MINUS', "{0} minus {1} is equal to?");
-define('_EN_POLICY_CAPTCHA_MATH_MULTIPLY', "{0} multiplied by {1} is equal to?");
 
 //Advanced Settings
 define('_EN_POLICY_ADVANCED_POLICIES', "Advanced Policies");

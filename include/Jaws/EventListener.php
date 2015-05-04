@@ -1,12 +1,13 @@
 <?php
 /**
- * Class that takes care of 'listening': creating the objects and
- * executing methods when they receive a call from a shouter
+ * Create custom event listeners that execute
+ * automatically when a shouter is fired.
  *
  * @category   Event
+ * @category   developer_feature
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_EventListener
@@ -18,7 +19,7 @@ class Jaws_EventListener
      * @param   string  $gadget  Gadget name that listens
      * @param   string  $call    Call name (call that is waiting)
      * @param   string  $method  Gadget method that will be executed
-     * @return  bool    True if listener was added, otherwise returns Jaws_Error
+     * @return  boolean True if listener was added, otherwise returns Jaws_Error
      */
     function NewListener($gadget, $call, $method)
     {
@@ -35,8 +36,7 @@ class Jaws_EventListener
 
         $rs = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($rs)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_NOT_ADDED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_NOT_ADDED'), 'CORE');
         }
 
         return true;
@@ -48,7 +48,7 @@ class Jaws_EventListener
      * @access  public
      * @param   string  $gadget  Gadget name
      * @param   string  $method  Gadget method name
-     * @return  bool    True if listener was deleted, otherwise returns Jaws_Error
+     * @return  boolean True if listener was deleted, otherwise returns Jaws_Error
      */
     function DeleteListener($gadget, $method = '')
     {
@@ -63,8 +63,7 @@ class Jaws_EventListener
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_NOT_DELETED'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_NOT_DELETED'), 'CORE');
         }
 
         return true;
@@ -78,7 +77,7 @@ class Jaws_EventListener
      * @param   string  $gadget  Gadget name
      * @param   mixed   $param   Param that is send to the listener, can be a
      *                           string, int, array, object, etc.
-     * @return  bool    True if call was received/executed successfully, otherwise returns Jaws_Error
+     * @return  boolean True if call was received/executed successfully, otherwise returns Jaws_Error
      */
     function Listen($call, $param)
     {
@@ -92,15 +91,13 @@ class Jaws_EventListener
                 if (Jaws_Gadget::IsGadgetInstalled($listener['gadget'])) {
                     $gadget = $GLOBALS['app']->loadGadget($listener['gadget'], 'AdminModel');
                     if (Jaws_Error::IsError($gadget)) {
-                        return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'),
-                                              __FUNCTION__);
+                        return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'), 'CORE');
                     }
 
                     if (method_exists($gadget, $listener['method'])) {
                         $res = $gadget->$listener['method']($param);
                         if (Jaws_Error::IsError($res)) {
-                            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'),
-                                                  __FUNCTION__);
+                            return new Jaws_Error(_t('GLOBAL_ERROR_EVENTS_LISTENER_ERROR'), 'CORE');
                         }
                     }
                 }
@@ -128,8 +125,7 @@ class Jaws_EventListener
 
         $res = $GLOBALS['db']->queryAll($sql, array('id' => $id));
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetListeners'),
-                                  __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetListeners'), 'CORE');
         }
 
         return $res;
@@ -150,8 +146,7 @@ class Jaws_EventListener
 
         $res = $GLOBALS['db']->queryRow($sql);
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetListener'),
-                                  __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetListener'), 'CORE');
         }
 
         return $res;
@@ -175,8 +170,7 @@ class Jaws_EventListener
 
         $res = $GLOBALS['db']->queryAll($sql, array('call' => $call));
         if (Jaws_Error::IsError($res)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetListenersWaiting'),
-                                     __FUNCTION__);
+            return new Jaws_Error(_t('GLOBAL_ERROR_QUERY_FAILED', 'GetListenersWaiting'), 'CORE');
         }
 
         return $res;

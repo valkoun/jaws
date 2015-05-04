@@ -13,14 +13,20 @@
 define('_EN_LANGUAGES_NAME', "Languages");
 define('_EN_LANGUAGES_DESCRIPTION', "Add/Edit language's strings");
 
+/* Layout */
+define('_EN_LANGUAGES_TITLE_DISPLAY', "Language Translations");
+define('_EN_LANGUAGES_DESCRIPTION_DISPLAY', "Show Language choices and allow visitors to save their preferred Language.");
+
 /* ACLs */
-define('_EN_LANGUAGES_ACL_MANAGELANGUAGES', "Access to Languages gadge");
-define('_EN_LANGUAGES_ACL_MODIFYLANGUAGEPROPERTIES', "Modify language's properties");
+define('_EN_LANGUAGES_ACL_MANAGELANGUAGES', "Access to Languages gadget");
+define('_EN_LANGUAGES_ACL_MODIFYLANGUAGEPROPERTIES', "Modify Languages properties");
 
 /* Common strings */
 define('_EN_LANGUAGES_LANGUAGE', "Language");
 define('_EN_LANGUAGES_COMPONENT', "Component");
 define('_EN_LANGUAGES_SETTINGS', "Settings");
+define('_EN_LANGUAGES_SETTINGS_UPDATED', "Settings updated successfully.");
+define('_EN_LANGUAGES_SETTINGS_CANT_UPDATE', "There was a problem updating Settings.");
 define('_EN_LANGUAGES_CHANGES', "Changes");
 define('_EN_LANGUAGES_LANGUAGE_CODE', "Code");
 define('_EN_LANGUAGES_LANGUAGE_NAME', "Name");

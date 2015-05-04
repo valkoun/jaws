@@ -5,7 +5,7 @@
  * @category   JawsType
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_EncodeConvert
@@ -78,5 +78,5 @@ class Jaws_EncodeConvert
         }
         return $retstr;
     }
-
 }
+?>

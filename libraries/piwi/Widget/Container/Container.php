@@ -2,18 +2,17 @@
 /*
  * Container.php - Main Class for all container widgets
  *
- * @version  $Id $
+ * @category   Widget
+ * @package    Piwi
  * @author   Pablo Fischer <pablo@pablo.com.mx>
- *
- * <c> Pablo Fischer 2004
- * <c> Piwi
+ * @copyright  2004 Pablo Fischer
+ * @copyright  2004 Piwi
+ * @version  $Id $
  */
 define ('PIWI_INVALID_FILTER', -1);
 define ('PIWI_INVALID_FILTER_MESSAGE', 'Invalid filter passed');
 
 require_once PIWI_PATH . '/Widget/Widget.php';
-
-
 
 class Container extends Widget
 {
@@ -238,7 +237,9 @@ class Container extends Widget
             $xhtml .= " cellspacing=\"".$this->_spacing."\"";
         }
 
-        $xhtml .= parent::buildBasicXHTML();
+		$xhtml .= " width=\"100%\"";
+        
+		$xhtml .= parent::buildBasicXHTML();
 
         return $xhtml;
     }

@@ -1,6 +1,6 @@
-// script.aculo.us scriptaculous.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us scriptaculous.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,7 +24,7 @@
 // For details, see the script.aculo.us web site: http://script.aculo.us/
 
 var Scriptaculous = {
-  Version: '1.9.0',
+  Version: '1.8.3',
   require: function(libraryName) {
     try{
       // inserting via DOM fails in Safari 2.0, so brute force approach
@@ -54,7 +54,7 @@ var Scriptaculous = {
         Scriptaculous.REQUIRED_PROTOTYPE);
 
     var js = /scriptaculous\.js(\?.*)?$/;
-    $$('script[src]').findAll(function(s) {
+    $$('head script[src]').findAll(function(s) {
       return s.src.match(js);
     }).each(function(s) {
       var path = s.src.replace(js, ''),
@@ -66,9 +66,9 @@ var Scriptaculous = {
 };
 
 // File: builder.js ----------------------------------------------------------------------
-// script.aculo.us builder.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us builder.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 //
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
@@ -204,9 +204,9 @@ var Builder = {
 };
 
 // File: effects.js ----------------------------------------------------------------------
-// script.aculo.us effects.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us effects.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // Contributors:
 //  Justin Palmer (http://encytemedia.com/)
 //  Mark Pilgrim (http://diveintomark.org/)
@@ -1329,9 +1329,9 @@ $w('getInlineOpacity forceRerendering setContentZoom collectTextNodes collectTex
 Element.addMethods(Effect.Methods);
 
 // File: dragdrop.js ---------------------------------------------------------------------
-// script.aculo.us dragdrop.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us dragdrop.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+// Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 //
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/
@@ -2305,11 +2305,11 @@ Element.offsetSize = function (element, type) {
 };
 
 // File: controls.js ---------------------------------------------------------------------
-// script.aculo.us controls.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us controls.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2010 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//           (c) 2005-2010 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
-//           (c) 2005-2010 Jon Tirsen (http://www.tirsen.com)
+// Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
+//           (c) 2005-2009 Ivan Krstic (http://blogs.law.harvard.edu/ivan)
+//           (c) 2005-2009 Jon Tirsen (http://www.tirsen.com)
 // Contributors:
 //  Richard Livsey
 //  Rahul Bhargava
@@ -3272,9 +3272,9 @@ Form.Element.DelayedObserver = Class.create({
 });
 
 // File: slider.js -----------------------------------------------------------------------
-// script.aculo.us slider.js v1.9.0, Thu Dec 23 16:54:48 -0500 2010
+// script.aculo.us slider.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
 
-// Copyright (c) 2005-2010 Marty Haught, Thomas Fuchs
+// Copyright (c) 2005-2009 Marty Haught, Thomas Fuchs
 //
 // script.aculo.us is freely distributable under the terms of an MIT-style license.
 // For details, see the script.aculo.us web site: http://script.aculo.us/

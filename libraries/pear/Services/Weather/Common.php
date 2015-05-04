@@ -7,7 +7,7 @@
  * PHP versions 4 and 5
  *
  * <LICENSE>
- * Copyright (c) 2005-2011, Alexander Wirtz
+ * Copyright (c) 2005-2009, Alexander Wirtz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     CVS: $Id: Common.php 314012 2011-08-01 11:04:57Z eru $
+ * @version     CVS: $Id: Common.php 277074 2009-03-12 23:16:41Z eru $
  * @link        http://pear.php.net/package/Services_Weather
  * @filesource
  */
@@ -69,9 +69,9 @@ define("SERVICES_WEATHER_SUNFUNCS_SUNSET_ZENITH",     90.83);
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     Release: 1.4.6
+ * @version     Release: 1.4.5
  * @link        http://pear.php.net/package/Services_Weather
  */
 class Services_Weather_Common {
@@ -241,26 +241,11 @@ class Services_Weather_Common {
      */
     function setCache($cacheType = "file", $cacheOptions = array())
     {
-        if ($cacheType == "lite") {
-            if ((@include_once "Cache/Lite.php") == false) {
-                return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_CACHE_INIT_FAILED, __FILE__, __LINE__);
-            } else {
-                $cacheOptions["automaticSerialization"] = true;
-                $cacheOptions["pearErrorMode"]          = CACHE_LITE_ERROR_RETURN;
-                $cacheOptions["lifeTime"]               = null;
-                @$cache = new Cache_Lite($cacheOptions);
-            }
-        } else {
-            // The error handling in Cache is a bit crummy (read: not existent)
-            // so we have to do that on our own...
-            if ((@include_once "Cache.php") === false) {
-                return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_CACHE_INIT_FAILED, __FILE__, __LINE__);
-            } else {
-                @$cache = new Cache($cacheType, $cacheOptions);
-            }
-        }
-
-        if (is_object($cache) && (strtolower(get_class($cache)) == "cache_lite" || strtolower(get_class($cache)) == "cache" || is_subclass_of($cache, "cache"))) {
+        // The error handling in Cache is a bit crummy (read: not existent)
+        // so we have to do that on our own...
+        @include_once "Cache.php";
+        @$cache = new Cache($cacheType, $cacheOptions);
+        if (is_object($cache) && (strtolower(get_class($cache)) == "cache" || is_subclass_of($cache, "cache"))) {
             $this->_cache        = $cache;
             $this->_cacheEnabled = true;
         } else {
@@ -270,90 +255,6 @@ class Services_Weather_Common {
         }
 
         return true;
-    }
-    // }}}
-
-    // {{{ _getCache()
-    /**
-     * Wrapper to retrieve cached data
-     *
-     * Requires Cache to be installed
-     *
-     * @param   string                      $id
-     * @param   string                      $type
-     * @return  array|bool
-     * @access  private
-     */
-    function _getCache($id, $type)
-    {
-        if ($this->_cacheEnabled) {
-            if (strtolower(get_class($this->_cache)) == "cache_lite") {
-                $this->_cache->setLifeTime(constant("SERVICES_WEATHER_EXPIRES_".strtoupper($type)));
-                $cache = $this->_cache->get($id, $type);
-            } else {
-                $cache = $this->_cache->get($id, $type);
-            }
-            
-            return $cache;
-        } else {
-            return false;
-        }
-    }
-    // }}}
-
-    // {{{ _getUserCache()
-    /**
-     * Wrapper to retrieve cached user-data
-     *
-     * Requires Cache to be installed
-     *
-     * @param   string                      $id
-     * @param   string                      $type
-     * @return  array|bool
-     * @access  private
-     */
-    function _getUserCache($id, $type)
-    {
-        if ($this->_cacheEnabled) {
-            if (strtolower(get_class($this->_cache)) == "cache_lite") {
-                $this->_cache->setLifeTime(constant("SERVICES_WEATHER_EXPIRES_".strtoupper($type)));
-                $cache = $this->_cache->get($id, $type."_user");
-            } else {
-                $cache = $this->_cache->getUserdata($id, $type);
-            }
-            
-            return $cache;
-        } else {
-            return false;
-        }
-    }
-    // }}}
-
-    // {{{ _saveCache()
-    /**
-     * Wrapper to save data to cache
-     *
-     * Requires Cache to be installed
-     *
-     * @param   string                      $id
-     * @param   mixed                       $data
-     * @param   mixed                       $userData
-     * @param   string                      $type
-     * @return  array|bool
-     * @access  private
-     */
-    function _saveCache($id, $data, $userData, $type)
-    {
-        if ($this->_cacheEnabled) {
-            if (strtolower(get_class($this->_cache)) == "cache_lite") {
-                $this->_cache->setLifeTime(null);
-                return ($this->_cache->save($data, $id, $type) && $this->_cache->save($userData, $id, $type."_user"));
-            } else {
-                return $this->_cache->extSave($id, $data, $userData, constant("SERVICES_WEATHER_EXPIRES_".strtoupper($type)), $type);
-            }
-        } else {
-            return false;
-        }
     }
     // }}}
 
@@ -525,10 +426,6 @@ class Services_Weather_Common {
      */
     function convertTemperature($temperature, $from, $to)
     {
-        if ($temperature == "N/A") {
-            return $temperature;
-        }
-
         $from = strtolower($from{0});
         $to   = strtolower($to{0});
 
@@ -541,7 +438,7 @@ class Services_Weather_Common {
             )
         );
 
-        return $result[$from][$to];
+        return round($result[$from][$to], 2);
     }
     // }}}
 
@@ -604,7 +501,7 @@ class Services_Weather_Common {
             }
             return sizeof($beaufort);
         } else {
-            return ($speed * $factor[$from][$to]);
+            return round($speed * $factor[$from][$to], 2);
         }
     }
     // }}}
@@ -645,7 +542,7 @@ class Services_Weather_Common {
             );
         }
 
-        return ($pressure * $factor[$from][$to]);
+        return round($pressure * $factor[$from][$to], 2);
     }
     // }}}
 
@@ -682,7 +579,7 @@ class Services_Weather_Common {
             );
         }
 
-        return ($distance * $factor[$from][$to]);
+        return round($distance * $factor[$from][$to], 2);
     }
     // }}}
 
@@ -700,7 +597,7 @@ class Services_Weather_Common {
      */
     function calculateWindChill($temperature, $speed)
     {
-        return (35.74 + 0.6215 * $temperature - 35.75 * pow($speed, 0.16) + 0.4275 * $temperature * pow($speed, 0.16));
+        return round(35.74 + 0.6215 * $temperature - 35.75 * pow($speed, 0.16) + 0.4275 * $temperature * pow($speed, 0.16));
     }
     // }}}
 
@@ -739,7 +636,7 @@ class Services_Weather_Common {
         }
         $dewSSP  = 6.1078 * pow(10, ($a * $dewPoint) / ($b + $dewPoint));
 
-        return (100 * $dewSSP / $tempSSP);
+        return round(100 * $dewSSP / $tempSSP, 1);
     }
     // }}}
 
@@ -775,7 +672,7 @@ class Services_Weather_Common {
 
         $v   = log($SP / 6.1078, 10);
 
-        return ($b * $v / ($a - $v));
+        return round($b * $v / ($a - $v), 1);
     }
     // }}}
 
@@ -801,168 +698,6 @@ class Services_Weather_Common {
     }
     // }}}
 
-    // {{{ calculateMoonPhase()
-    /**
-     * Calculates the moon age and phase
-     *
-     * The algorithms for this functions were taken from the German Wikipedia
-     * entry on Julian Daycount for getting the accurate JD to the second and
-     * the overall moon calculation were done according to
-     * Stephen R. Schmitt's website, which is cited multiple times on the web
-     * for this kind of calculation.
-     *
-     * The date has to be entered as a timestamp!
-     *
-     * @param   int                         $date
-     * @return  PEAR_Error|array
-     * @throws  PEAR_Error::SERVICES_WEATHER_ERROR_MOONFUNCS_DATE_INVALID
-     * @access  public
-     * @link    http://de.wikipedia.org/wiki/Julianisches_Datum
-     * @link    http://mysite.verizon.net/res148h4j/javascript/script_moon_phase.html
-     */
-    function calculateMoonPhase($date)
-    {
-        // Date must be timestamp for now
-        if (!is_int($date)) {
-            return Services_Weather::raiseError(SERVICES_WEATHER_ERROR_MOONFUNCS_DATE_INVALID, __FILE__, __LINE__);
-        }
-
-        $moon = array();
-
-        $year  = date("Y", $date);
-        $month = date("n", $date);
-        $day   = date("j", $date);
-        $hour  = date("G", $date);
-        $min   = date("i", $date);
-        $sec   = date("s", $date);
-
-        $age       = 0.0; // Moon's age in days from New Moon
-        $distance  = 0.0; // Moon's distance in Earth radii
-        $latitude  = 0.0; // Moon's ecliptic latitude in degrees
-        $longitude = 0.0; // Moon's ecliptic longitude in degrees
-        $phase     = "";  // Moon's phase
-        $zodiac    = "";  // Moon's zodiac
-        $icon      = "";  // The icon to represent the moon phase
-
-        $YY = 0;
-        $MM = 0;
-        $DD = 0;
-        $HH = 0;
-        $A  = 0;
-        $B  = 0;
-        $JD = 0;
-        $IP = 0.0;
-        $DP = 0.0;
-        $NP = 0.0;
-        $RP = 0.0;
-
-        // Calculate Julian Daycount to the second
-        if ($month > 2) {
-            $YY = $year;
-            $MM = $month;
-        } else {
-            $YY = $year  - 1;
-            $MM = $month + 12;
-        }
-
-        $DD = $day;
-        $HH = $hour/24 + $min/1440 + $sec/86400;
-
-        // Check for Gregorian date and adjust JD appropriately
-        if (($year*10000 + $month*100 + $day) >= 15821015) {
-            $A = floor($YY/100);
-            $B = 2 - $A + floor($A/4);
-        }
-
-        $JD = floor(365.25*($YY+4716)) + floor(30.6001*($MM+1)) + $DD + $HH + $B - 1524.5;
-
-        // Calculate moon's age in days
-        $IP = ($JD - 2451550.1) / 29.530588853;
-        if (($IP = $IP - floor($IP)) < 0) $IP++;
-        $age = $IP * 29.530588853;
-
-        switch ($age) {
-            case ($age <  1.84566):
-                $phase = "New";             break;
-            case ($age <  5.53699):
-                $phase = "Waxing Crescent"; break;
-            case ($age <  9.22831):
-                $phase = "First Quarter";   break;
-            case ($age < 12.91963):
-                $phase = "Waxing Gibbous";  break;
-            case ($age < 16.61096):
-                $phase = "Full";            break;
-            case ($age < 20.30228):
-                $phase = "Waning Gibbous";  break;
-            case ($age < 23.99361):
-                $phase = "Last Quarter";    break;
-            case ($age < 27.68493):
-                $phase = "Waning Crescent"; break;
-            default:
-                $phase = "New";
-        }
-
-        // Convert phase to radians
-        $IP = $IP * 2 * pi();
-
-        // Calculate moon's distance
-        $DP = ($JD - 2451562.2) / 27.55454988;
-        if (($DP = $DP - floor($DP)) < 0) $DP++;
-        $DP = $DP * 2 * pi();
-        $distance = 60.4 - 3.3 * cos($DP) - 0.6 * cos(2 * $IP - $DP) - 0.5 * cos(2 * $IP);
-
-        // Calculate moon's ecliptic latitude
-        $NP = ($JD - 2451565.2) / 27.212220817;
-        if (($NP = $NP - floor($NP)) < 0) $NP++;
-        $NP = $NP * 2 * pi();
-        $latitude = 5.1 * sin($NP);
-
-        // Calculate moon's ecliptic longitude
-        $RP = ($JD - 2451555.8) / 27.321582241;
-        if (($RP = $RP - floor($RP)) < 0) $RP++;
-        $longitude = 360 * $RP + 6.3 * sin($DP) + 1.3 * sin(2 * $IP - $DP) + 0.7 * sin(2 * $IP);
-        if ($longitude >= 360) $longitude -= 360;
-
-        switch ($longitude) {
-            case ($longitude <  33.18):
-                $zodiac = "Pisces";      break;
-            case ($longitude <  51.16):
-                $zodiac = "Aries";       break;
-            case ($longitude <  93.44):
-                $zodiac = "Taurus";      break;
-            case ($longitude < 119.48):
-                $zodiac = "Gemini";      break;
-            case ($longitude < 135.30):
-                $zodiac = "Cancer";      break;
-            case ($longitude < 173.34):
-                $zodiac = "Leo";         break;
-            case ($longitude < 224.17):
-                $zodiac = "Virgo";       break;
-            case ($longitude < 242.57):
-                $zodiac = "Libra";       break;
-            case ($longitude < 271.26):
-                $zodiac = "Scorpio";     break;
-            case ($longitude < 302.49):
-                $zodiac = "Sagittarius"; break;
-            case ($longitude < 311.72):
-                $zodiac = "Capricorn";   break;
-            case ($longitude < 348.58):
-                $zodiac = "Aquarius";    break;
-            default:
-                $zodiac = "Pisces";
-        }
-
-        $moon["age"]       = round($age, 2);
-        $moon["distance"]  = round($distance, 2);
-        $moon["latitude"]  = round($latitude, 2);
-        $moon["longitude"] = round($longitude, 2);
-        $moon["zodiac"]    = $zodiac;
-        $moon["phase"]     = $phase;
-        $moon["icon"]      = (floor($age) - 1)."";
-
-        return $moon;
-    }
-    // }}}
 
     // {{{ calculateSunRiseSet()
     /**
@@ -1174,11 +909,10 @@ class Services_Weather_Common {
      * @param   float                       $temperature    Temperature in deg F.
      * @param   float                       $latitude       Point latitude.
      * @param   float                       $longitude      Point longitude.
-     * @param   int                         $reportTime     The time when the weather report was generated.
      * @author  Seth Price  <seth@pricepages.org>
      * @access  public
      */
-    function getWeatherIcon($condition, $clouds = array(), $wind = 5, $temperature = 70, $latitude = -360, $longitude = -360, $reportTime = "")
+    function getWeatherIcon($condition, $clouds = array(), $wind = 5, $temperature = 70, $latitude = -360, $longitude = -360)
     {
         // Search for matches that don't use the time of day
         $hail     = (bool) stristr($condition, "hail");
@@ -1190,8 +924,7 @@ class Services_Weather_Common {
         $light    = (bool) stristr($condition, "light");
         $heavy    = (bool) stristr($condition, "heavy");
         $ice      = (bool) stristr($condition, "ice")      || (bool) stristr($condition, "pellets");
-        // Have to add a space to prevent matching on "snow grains"
-        $rain     = (bool) stristr($condition, " rain");
+        $rain     = (bool) stristr($condition, "rain");
         $snow     = (bool) stristr($condition, "snow");
         $fog      = (bool) stristr($condition, "fog")      || (bool) stristr($condition, "spray")        || (bool) stristr($condition, "mist");
         $haze     = (bool) stristr($condition, "haze");
@@ -1263,17 +996,10 @@ class Services_Weather_Common {
         // or twilight (~(+|-)1 hour of sunrise/sunset). Note that twilight isn't
         // always accurate because of issues wrapping around the 24hr clock. Oh well...
         if ($latitude < 90 && $latitude > -90 && $longitude < 180 && $longitude > -180) {
-
-            // Use provided time by report if available, otherwise use current GMT time
-            if ($reportTime <> "" && is_numeric($reportTime)) {
-                $timeOfDay = $reportTime;
-            } else {
-                $timeOfDay = gmmktime();
-            }
-
             // Calculate sunrise/sunset and current time in GMT
-            $sunrise   = $this->calculateSunRiseSet($timeOfDay, SUNFUNCS_RET_TIMESTAMP, $latitude, $longitude, SERVICES_WEATHER_SUNFUNCS_SUNRISE_ZENITH, 0, true);
-            $sunset    = $this->calculateSunRiseSet($timeOfDay, SUNFUNCS_RET_TIMESTAMP, $latitude, $longitude, SERVICES_WEATHER_SUNFUNCS_SUNRISE_ZENITH, 0, false);
+            $sunrise   = $this->calculateSunRiseSet(gmmktime(), SUNFUNCS_RET_TIMESTAMP, $latitude, $longitude, SERVICES_WEATHER_SUNFUNCS_SUNRISE_ZENITH, 0, true);
+            $sunset    = $this->calculateSunRiseSet(gmmktime(), SUNFUNCS_RET_TIMESTAMP, $latitude, $longitude, SERVICES_WEATHER_SUNFUNCS_SUNRISE_ZENITH, 0, false);
+            $timeOfDay = gmmktime();
 
             // Now that we have the sunrise/sunset times and the current time,
             // we need to figure out if it is day, night, or twilight. Wrapping

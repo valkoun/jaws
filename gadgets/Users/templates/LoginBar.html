@@ -1,0 +1,60 @@
+<!-- BEGIN LoginBar -->
+<div class="gadget users loginbar">
+  <form name="loginBar" action="{base_script}" method="post">
+  <input type="hidden" name="gadget" value="Users" />
+  <input type="hidden" name="action" value="Login" />
+  <input type="hidden" name="redirect_to" value="{redirect_to}" />
+  <div class="content">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tbody>
+			<tr>
+				<td width="50%" valign="top">
+					<p><label for="login_username">{username}:</label></p>
+				</td>
+				<td width="50%" valign="top">
+					<p><label for="login_password">{password}:</label></p>
+				</td>
+				<td width="0%" valign="top" colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td width="50%" valign="top">
+					<p><input name="username" id="login_username" type="text" value="" style="width:90%" /></p>
+				</td>
+				<td width="50%" valign="top">
+					<p><input name="password" id="login_password" type="password" value="" style="width:90%" /></p>
+				</td>
+				<td width="0%" valign="top" style="padding: 8px;">
+					<nobr>
+						<label for="login_remember" style="float: none; width: 0%;">{remember}</label>
+						&nbsp;&nbsp;<input type="checkbox" name="remember" id="login_remember" value="true" style="min-width: 0px; width: 0%;" />
+					</nobr>
+				</td>
+				<td width="0%" valign="top" style="padding: 6px;">
+					<button type="submit" value="{login}">{login}</button>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<p>
+						&nbsp;&nbsp;&nbsp;{forgot-password}
+						&nbsp;&nbsp;&nbsp;{user-register}
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+  </div>
+  </form>
+</div>
+<div>&nbsp;</div>
+<script type="text/javascript">
+  var rpxJsHost = (("https:" == document.location.protocol) ? "https://" : "http://static.");
+  document.write(unescape("%3Cscript src='" + rpxJsHost +
+"rpxnow.com/js/lib/rpx.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+  RPXNOW.overlay = true;
+  RPXNOW.language_preference = 'en';
+</script>
+<!-- END LoginBar -->

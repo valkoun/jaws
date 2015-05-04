@@ -3,19 +3,29 @@
  * Policy Ajax API
  *
  * @category   Ajax
- * @package    Policy 
+ * @package    Policy
  * @author     Amir Mohammad Saied <amir@gluegadget.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class PolicyAdminAjax extends Jaws_Ajax
 {
     /**
+     * Constructor
+     *
+     * @access  public
+     */
+    function PolicyAdminAjax(&$model)
+    {
+        $this->_Model =& $model;
+    }
+
+    /**
      * Get blocked IP range
      *
      * @access  public
-     * @param   int     $id ID of IP range addresses
+     * @param   int     $id ID of the to-be-blocked IP range addresses
      * @return  array   IP range info
      */
     function GetIPRange($id)
@@ -33,15 +43,14 @@ class PolicyAdminAjax extends Jaws_Ajax
      * Block an IP range
      *
      * @access  public
-     * @param   string  $from_ip  The from IP
-     * @param   string  $to_ip    The to IP
-     * @param   bool    $blocked
+     * @param   string  $from_ip  The to-be-blocked from IP
+     * @param   string  $to_ip    The to-be-blocked to IP
      * @return  string  Response
      */
-    function AddIPRange($from_ip, $to_ip = null, $blocked)
+    function AddIPRange($from_ip, $to_ip = null)
     {
         $this->CheckSession('Policy', 'ManageIPs');
-        $this->_Model->AddIPRange($from_ip, $to_ip, $blocked);
+        $this->_Model->AddIPRange($from_ip, $to_ip);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -50,15 +59,14 @@ class PolicyAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   int     $id ID of the to-be-blocked IP range addresses
-     * @param   string  $from_ip  The from IP
-     * @param   string  $to_ip    The to IP
-     * @param   bool    $blocked
+     * @param   string  $from_ip  The to-be-blocked from IP
+     * @param   string  $to_ip    The to-be-blocked to IP
      * @return  string  Response
      */
-    function EditIPRange($id, $from_ip, $to_ip, $blocked)
+    function EditIPRange($id, $from_ip, $to_ip)
     {
         $this->CheckSession('Policy', 'ManageIPs');
-        $this->_Model->EditIPRange($id, $from_ip, $to_ip, $blocked);
+        $this->_Model->EditIPRange($id, $from_ip, $to_ip);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -98,14 +106,13 @@ class PolicyAdminAjax extends Jaws_Ajax
      * Block an agent
      *
      * @access  public
-     * @param   string  $agent   Which Agent is supposed to be blocked or allowed
-     * @param   bool    $blocked
+     * @param   string  $agent   Which Agent is supposed to be blocked?
      * @return  string  Response
      */
-    function AddAgent($agent, $blocked)
+    function AddAgent($agent)
     {
         $this->CheckSession('Policy', 'ManageAgents');
-        $this->_Model->AddAgent($agent, $blocked);
+        $this->_Model->AddAgent($agent);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -114,14 +121,13 @@ class PolicyAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   int     $id     ID of the agent
-     * @param   string  $agent  Which Agent is supposed to be blocked or allowed
-     * @param   bool    $blocked
+     * @param   string  $agent  Which Agent is supposed to be blocked?
      * @return  string  Response
      */
-    function EditAgent($id, $agent, $blocked)
+    function EditAgent($id, $agent)
     {
         $this->CheckSession('Policy', 'ManageAgents');
-        $this->_Model->EditAgent($id, $agent, $blocked);
+        $this->_Model->EditAgent($id, $agent);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -129,7 +135,7 @@ class PolicyAdminAjax extends Jaws_Ajax
      * Unblock an agent
      *
      * @access  public
-     * @param   int $id ID of the agent
+     * @param   int $id ID of the agent which is going to be unblocked
      * @return  string  Response
      */
     function DeleteAgent($id)
@@ -140,42 +146,30 @@ class PolicyAdminAjax extends Jaws_Ajax
     }
 
     /**
-     * Set IPBlocking block undefined ip
+     * Enable BlockByIP
      *
      * @access  public
-     * @param   bool    $blocked    blocked by default
-     * @return  bool    True on success and Jaws error on failure
+     * @param   boolean $blockByIP     Enable/Disable block by IP
+     * @return  boolean True on success and Jaws error on failure
      */
-    function IPBlockingBlockUndefined($blocked)
+    function EnableBlockByIP($blockByIP)
     {
         $this->CheckSession('Policy', 'ManageIPs');
-        $res = $this->_Model->IPBlockingBlockUndefined($blocked);
-        if (Jaws_Error::IsError($res)) {
-            $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_NOT_UPDATED'), RESPONSE_ERROR);
-        } else {
-            $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_UPDATED'), RESPONSE_NOTICE);
-        }
-
+        $this->_Model->EnableBlockByIP($blockByIP);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Set AgentBlocking block undefined agent
+     * Enable BlockByAgent
      *
      * @access  public
-     * @param   bool    $blocked    blocked by default
-     * @return  bool    True on success and Jaws error on failure
+     * @param   boolean $blockByAgent   Enable/Disable block by Agent
+     * @return  boolean True on success and Jaws error on failure
      */
-    function AgentBlockingBlockUndefined($blocked)
+    function EnableBlockByAgent($blockByAgent)
     {
         $this->CheckSession('Policy', 'ManageAgents');
-        $res = $this->_Model->AgentBlockingBlockUndefined($blocked);
-        if (Jaws_Error::IsError($res)) {
-            $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_NOT_UPDATED'), RESPONSE_ERROR);
-        } else {
-            $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_UPDATED'), RESPONSE_NOTICE);
-        }
-
+        $this->_Model->EnableBlockByAgent($blockByAgent);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -183,10 +177,10 @@ class PolicyAdminAjax extends Jaws_Ajax
      * Update  Encryption Settings
      *
      * @access  public
-     * @param   bool    $enabled   Enable/Disable encryption
-     * @param   bool    $key_age   Key age
-     * @param   bool    $key_len   Key length
-     * @return  bool    True on success and Jaws error on failure
+     * @param   boolean $enabled   Enable/Disable encryption
+     * @param   boolean $key_age   Key age
+     * @param   boolean $key_len   Key length
+     * @return  boolean True on success and Jaws error on failure
      */
     function UpdateEncryptionSettings($enabled, $key_age, $key_len)
     {
@@ -199,17 +193,16 @@ class PolicyAdminAjax extends Jaws_Ajax
      * Update AntiSpam Settings
      *
      * @access  public
-     * @param   bool    $allow_duplicate
-     * @param   bool    $filter
-     * @param   string  $captcha
-     * @param   string  $captcha_driver
-     * @param   bool    $obfuscator
-     * @return  bool    True on success and Jaws error on failure
+     * @param   boolean $allow_duplicate
+     * @param   boolean $filter
+     * @param   boolean $captcha
+     * @param   boolean $obfuscator
+     * @return  boolean True on success and Jaws error on failure
      */
-    function UpdateAntiSpamSettings($allow_duplicate, $filter, $captcha, $captcha_driver, $obfuscator)
+    function UpdateAntiSpamSettings($allow_duplicate, $filter, $captcha, $obfuscator)
     {
         $this->CheckSession('Policy', 'AntiSpam');
-        $this->_Model->UpdateAntiSpamSettings($allow_duplicate, $filter, $captcha, $captcha_driver, $obfuscator);
+        $this->_Model->UpdateAntiSpamSettings($allow_duplicate, $filter, $captcha, $obfuscator);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -218,14 +211,14 @@ class PolicyAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   string  $passwd_complexity
-     * @param   int     $passwd_bad_count
-     * @param   int     $passwd_lockedout_time
-     * @param   int     $passwd_max_age
-     * @param   int     $passwd_min_length
+     * @param   integer $passwd_bad_count
+     * @param   integer $passwd_lockedout_time
+     * @param   integer $passwd_max_age
+     * @param   integer $passwd_min_length
      * @param   string  $xss_parsing_level
-     * @param   int     $session_idle_timeout
-     * @param   int     $session_remember_timeout
-     * @return  bool    True on success and Jaws error on failure
+     * @param   integer $session_idle_timeout
+     * @param   integer $session_remember_timeout
+     * @return  boolean True on success and Jaws error on failure
      */
     function UpdateAdvancedPolicies($passwd_complexity, $passwd_bad_count, $passwd_lockedout_time,
                                     $passwd_max_age, $passwd_min_length, $xss_parsing_level,
@@ -245,6 +238,7 @@ class PolicyAdminAjax extends Jaws_Ajax
      */
     function GetData($offset, $grid)
     {
+        $this->CheckSession('Policy', 'ManagePolicy');
         $gadget = $GLOBALS['app']->LoadGadget('Policy', 'AdminHTML');
         if (!is_numeric($offset)) {
             $offset = null;
@@ -264,5 +258,4 @@ class PolicyAdminAjax extends Jaws_Ajax
 
         return $dgData;
     }
-
 }

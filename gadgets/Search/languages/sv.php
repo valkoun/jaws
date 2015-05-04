@@ -19,7 +19,6 @@ define('_SV_SEARCH_LAYOUT_SIMPLEBOX', "Enkel sökruta");
 define('_SV_SEARCH_LAYOUT_SIMPLEBOX_DESCRIPTION', "Tillhandahåller en sökruta utan valbara moduler.");
 define('_SV_SEARCH_LAYOUT_ADVANCEDBOX', "Avancerad sökbox");
 define('_SV_SEARCH_LAYOUT_ADVANCEDBOX_DESCRIPTION', "Tillhandahåller en avancerad sökbox.");
-define('_SV_SEARCH_RESULTS', "Sökresultat");
 define('_SV_SEARCH_RESULTS_SUBTITLE', "{0} artiklar funna med innehållet [{0}]");
 define('_SV_SEARCH_RESULTS_IN_GADGETS', "{0} artiklar funna för [{1}] i [{2}]");
 define('_SV_SEARCH_NO_RESULTS', "Inga artiklar funna innehållandes [{0}]");

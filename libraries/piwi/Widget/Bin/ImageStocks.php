@@ -13,7 +13,7 @@ define('STOCK_ADD',                     PIWI_URL . 'piwidata/art/stock/actions/l
 define('STOCK_ALIGN_CENTER',            PIWI_URL . 'piwidata/art/stock/actions/format-justify-center.png');
 define('STOCK_ALIGN_LEFT',              PIWI_URL . 'piwidata/art/stock/actions/format-justify-left.png');
 define('STOCK_ALIGN_RIGHT',             PIWI_URL . 'piwidata/art/stock/actions/format-justify-right.png');
-define('STOCK_ATTACH',                  PIWI_URL . 'piwidata/art/stock/status/mail-attach.png');
+define('STOCK_ATTACH',                  PIWI_URL . 'piwidata/art/stock/status/mail-attachment.png');
 define('STOCK_BOOK',                    PIWI_URL . 'piwidata/art/stock/stock_book.png');
 define('STOCK_BOTTOM',                  PIWI_URL . 'piwidata/art/stock/actions/go-bottom.png');
 define('STOCK_BROKEN_IMAGE',            PIWI_URL . 'piwidata/art/stock/status/image-missing.png');
@@ -43,6 +43,7 @@ define('STOCK_INSERT_IMAGE',            PIWI_URL . 'piwidata/art/stock/stock_ins
 define('STOCK_INSERT_OBJECT',           PIWI_URL . 'piwidata/art/stock/stock_insert_object.png');
 define('STOCK_INSERT_TABLE',            PIWI_URL . 'piwidata/art/stock/stock_insert_table.png');
 define('STOCK_JUMP_TO',                 PIWI_URL . 'piwidata/art/stock/actions/go-jump.png');
+define('STOCK_LOCK',                    PIWI_URL . 'piwidata/art/stock/emblems/emblem-readonly.png');
 define('STOCK_LAST',                    PIWI_URL . 'piwidata/art/stock/actions/go-last.png');
 define('STOCK_LINE_IN',                 PIWI_URL . 'piwidata/art/stock/stock_line_in.png');
 define('STOCK_MIKE',                    PIWI_URL . 'piwidata/art/stock/devices/audio-input-microphone.png');
@@ -67,6 +68,7 @@ define('STOCK_SEARCH',                  PIWI_URL . 'piwidata/art/stock/actions/s
 define('STOCK_SPELLCHECK',              PIWI_URL . 'piwidata/art/stock/stock_spellcheck.png');
 define('STOCK_STOP',                    PIWI_URL . 'piwidata/art/stock/actions/process-stop.png');
 define('STOCK_TEXT_BOLD',               PIWI_URL . 'piwidata/art/stock/actions/format-text-bold.png');
+define('STOCK_TEXT_EDIT',               PIWI_URL . 'piwidata/art/stock/apps/accessories-text-editor.png');
 define('STOCK_TEXT_ITALIC',             PIWI_URL . 'piwidata/art/stock/actions/format-text-italic.png');
 define('STOCK_TEXT_UNDERLINE',          PIWI_URL . 'piwidata/art/stock/actions/format-text-underline.png');
 define('STOCK_TOP',                     PIWI_URL . 'piwidata/art/stock/actions/go-top.png');

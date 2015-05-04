@@ -1,0 +1,48 @@
+<!-- BEGIN template -->
+<html>
+<head>
+<base href="{BASE_URL}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/CustomPage/resources/style{.dir}.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<script type="text/javascript" src="{base_script}?gadget=CustomPage&amp;action=Ajax&amp;client=all&amp;stub={stub}"></script>
+<script type="text/javascript" src="{base_script}?gadget=CustomPage&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/CustomPage/resources/{client}script.js"></script>
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/CustomPage/resources/style{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+</head>
+<body style="background: url();">
+<div style="padding: 15px; text-align: left;">
+<!-- BEGIN gadget_button -->
+<p>Right click on the image below, select "Copy", then paste it to your Editor of choice.</p>
+<a href="{embed_link}" target="_blank"><img src="{embed_button}" border="0" /></a>
+<p><i>OR</i>&nbsp;
+Right click on the code below, select "Copy" and paste it into your HTML source code.</p>
+<p><form name="form1"><textarea class="code" style="padding:0; font-size: 75%" id="code" name="code" rows="5" onmousedown="if(event.button==2){select_code();};" onclick="select_code();" cols="64" readonly="readonly"><a href="{embed_link}" target="_blank"><img src="{embed_button}" border="0" /></a></textarea></form></p>
+<!-- END gadget_button -->
+<!-- BEGIN gadget_code -->
+Right click on the code below, select "Copy" and paste it into your HTML source code.</p>
+<p><form name="form1"><textarea class="code" style="padding:0; font-size: 75%" id="code" name="code" rows="5" onmousedown="if(event.button==2){select_code();};" onclick="select_code();" cols="64" readonly="readonly">{embed_link}</textarea></form></p>
+<!-- END gadget_code -->
+</div>
+<script>
+function select_code()
+{
+//var text_val=eval(element);
+document.form1.code.focus();
+document.form1.code.select();
+}
+</script>
+</body>
+</html>
+<!-- END template -->

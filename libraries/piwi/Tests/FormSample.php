@@ -34,9 +34,9 @@ for ($i = 0; $i < 20; $i++) {
     }
 }
 
-$combogroup->addGroup('pares', 'pares', $pares);
-$combogroup->addGroup('impares', 'impares', $impares, true);
-$combogroup->setDefault('Número 2');
+$combogroup->addGroup('pares', $pares);
+$combogroup->addGroup('impares', $impares, true);
+$combogroup->setDefault('pares', 'Número 2');
 $combogroup->setComment('numeros');
 /*Text Area*/
 

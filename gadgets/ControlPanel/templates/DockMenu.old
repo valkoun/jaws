@@ -1,0 +1,21 @@
+<div id="quickmenu_controls">
+<div id="quickmenu_centered"><div><div><div id="dock"></div></div></div></div>
+</div>
+<script type="text/javascript">
+	function createDockParameters(){
+	  return [
+	 <!-- BEGIN main -->
+		   <!-- BEGIN item -->
+		  {comma}{
+			name:      '{icon_name}',
+			extension: '{icon_ext}',
+			sizes:     [48, 64],
+			onclick:   function(){
+						 {click}
+					   }
+		  }
+		   <!-- END item -->
+	 <!-- END main -->
+		];
+	}
+</script>

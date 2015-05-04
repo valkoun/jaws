@@ -22,7 +22,6 @@ define('_EN_GLOBAL_ID', "ID");
 define('_EN_GLOBAL_TITLE', "Title");
 define('_EN_GLOBAL_URL', "URL");
 define('_EN_GLOBAL_SAVE', "Save {0}");
-define('_EN_GLOBAL_SUBMIT', "Submit {0}");
 define('_EN_GLOBAL_RESET', "Reset {0}");
 define('_EN_GLOBAL_NEW', "New {0}");
 define('_EN_GLOBAL_CREATE', "Create {0}");
@@ -33,6 +32,8 @@ define('_EN_GLOBAL_FILE', "File");
 define('_EN_GLOBAL_FILENAME', "Filename");
 define('_EN_GLOBAL_PROPERTIES', "Properties");
 define('_EN_GLOBAL_UPDATE_PROPERTIES', "Update properties");
+define('_EN_GLOBAL_SHARE', "Share");
+define('_EN_GLOBAL_ADD', "Add");
 define('_EN_GLOBAL_YES', "Yes");
 define('_EN_GLOBAL_NO', "No");
 define('_EN_GLOBAL_CREATED', "Created");
@@ -43,6 +44,9 @@ define('_EN_GLOBAL_START_TIME', "Start Time");
 define('_EN_GLOBAL_STOP_TIME', "Stop Time");
 define('_EN_GLOBAL_PREVIEW', "Preview");
 define('_EN_GLOBAL_EMAIL', "E-Mail");
+define('_EN_GLOBAL_CAPTCHA', "Captcha");
+define('_EN_GLOBAL_CAPTCHA_CODE', "Captcha Code");
+define('_EN_GLOBAL_CAPTCHA_SENSITIVE', "Captcha (case insensitive)");
 define('_EN_GLOBAL_ON', "on");
 define('_EN_GLOBAL_SEARCH', "Search");
 define('_EN_GLOBAL_PUBLISHED', "Published");
@@ -93,24 +97,23 @@ define('_EN_GLOBAL_USERNAME', "Username");
 define('_EN_GLOBAL_PASSWORD', "Password");
 define('_EN_GLOBAL_MY_ACCOUNT', "My Account");
 define('_EN_GLOBAL_REMEMBER_ME', "Remember me");
-define('_EN_GLOBAL_LOGIN_SECURE', "Secure login");
 define('_EN_GLOBAL_LANGUAGE', "Language");
 define('_EN_GLOBAL_NEXTPAGE', "Next page");
 define('_EN_GLOBAL_PREVIOUSPAGE', "Previous page");
+define('_EN_GLOBAL_TEMPLATE', "Template");
+define('_EN_GLOBAL_STATISTICS', "Statistics");
 define('_EN_GLOBAL_ERROR_ACCESS_DENIED', "You do not have access to this section");
-define('_EN_GLOBAL_ERROR_ACCESS_RESTRICTED', "You must <a href=\"{0}\">login</a> or <a href=\"{1}\">register</a> to access this section.");
-define('_EN_GLOBAL_GADGETS_GADGET_CANT_HAVE_NAME_CORE', "The gadget can't have the name Core, it's reserved for Jaws.");
+define('_EN_GLOBAL_ERROR_ACCESS_RESTRICTED', "You must <a href=\"{0}\">login</a> or <a href=\"{1}\">register</a> to continue.");
+define('_EN_GLOBAL_GADGETS_GADGET_CANT_HAVE_NAME_CORE', "The gadget can't have the name Core, it's reserved.");
+define('_EN_GLOBAL_NO_ACTIONS', "This gadget doesn't have any actions.");
 define('_EN_GLOBAL_READ_DOCUMENTATION', "Read documentation");
 define('_EN_GLOBAL_TIMES', "{0} time(s)");
 define('_EN_GLOBAL_RE', "Re: ");
 
 /* Jaws_GadgetInfo */
-define('_EN_GLOBAL_ACL_DEFAULT', "Access to front end interfaces");
-define('_EN_GLOBAL_ACL_DEFAULT_ADMIN', "Access to administration interfaces");
-define('_EN_GLOBAL_ACL_DEFAULT_REGISTRY', "Access to modification registry interface");
 define('_EN_GLOBAL_GI_GADGET_NAME', "Gadget Name");
 define('_EN_GLOBAL_GI_GADGET_GADGETNAME', "Gadget Name");
-define('_EN_GLOBAL_GI_GADGET_JAWSVERSION', "Jaws version required");
+define('_EN_GLOBAL_GI_GADGET_JAWSVERSION', "version required");
 define('_EN_GLOBAL_GI_GADGET_SECTION', "Gadget Section");
 define('_EN_GLOBAL_GI_GADGET_DESC', "Gadget Description");
 define('_EN_GLOBAL_GI_GADGET_VERSION', "Gadget Version");
@@ -125,8 +128,6 @@ define('_EN_GLOBAL_GI_GADGET_TYPE', "Type");
 define('_EN_GLOBAL_GI_GADGET_ACLKEYS', "ACL Keys");
 define('_EN_GLOBAL_GI_GADGET_SHORTDESC', "Short Description");
 define('_EN_GLOBAL_GI_GADGET_LONGDESC', "Long Description");
-define('_EN_GLOBAL_GI_GENERAL', "General");
-define('_EN_GLOBAL_GI_GADGETS', "Gadgets");
 
 /* Jaws_Gadget */
 define('_EN_GLOBAL_JG_NOADMIN', "This gadget does not have administration");
@@ -150,9 +151,23 @@ define('_EN_GLOBAL_DATE_MONTH', "{0} month(s)");
 /* Common phrases */
 define('_EN_GLOBAL_CONFIRM_DELETE', "Do you want to delete this {0}?");
 define('_EN_GLOBAL_IP', "IP Address");
+define('_EN_GLOBAL_CAPTCHA_CODE_DESC', "Please write the security code you see.");
 
 /* Gadget components */
 define('_EN_GLOBAL_ACTION_DEFAULT', "Default action");
+define('_EN_GLOBAL_USERLINK_REGISTER', "Register User");
+define('_EN_GLOBAL_ADMINLINK_LOGIN', "Admin Log-in");
+define('_EN_GLOBAL_ADMINLINK_CONTROLPANEL', "Control Panel");
+define('_EN_GLOBAL_USERLINK_LOGIN', "User Log-in");
+define('_EN_GLOBAL_USERLINK_LOGOUT', "User Log-out");
+define('_EN_GLOBAL_USERLINK_ACCOUNTHOME', "Account Home");
+define('_EN_GLOBAL_USERLINK_EDITPROFILE', "Edit Profile");
+define('_EN_GLOBAL_USERLINK_SETTINGS', "Edit Settings");
+define('_EN_GLOBAL_GROUPLINK_JOIN', "Join This Group");
+define('_EN_GLOBAL_USERS_ACCOUNT_HOME', "Welcome");
+define('_EN_GLOBAL_EMBED_CREATED', "Your gadget should appear on that page momentarily.");
+define('_EN_GLOBAL_EMBED_ERROR_INVALID_URL', "The URL provided was not correct.");
+define('_EN_GLOBAL_EMBED_ERROR_NOT_ADDED', "There was a problem embedding your gadget.");
 
 /* Upload strings */
 define('_EN_GLOBAL_FILE_UPLOADED', "The file {0} has been uploaded");
@@ -168,16 +183,13 @@ define('_EN_GLOBAL_ERROR_UPLOAD_7', "Failed to write file to disk");
 define('_EN_GLOBAL_ERROR_UPLOAD_8', "File upload stopped by extension");
 define('_EN_GLOBAL_ERROR_UPLOAD_CORRUPTED', "The uploaded file {0} corrupted");
 define('_EN_GLOBAL_ERROR_UPLOAD_INVALID_FORMAT', "Invalid format of uploaded file {0}");
+define('_EN_GLOBAL_ERROR_UPLOAD_FORMATS_DONT_MATCH', "Not expected file format. Actual format: {0}. Expected: {1}");
 
 /* Image strings */
 define('_EN_GLOBAL_IMAGE_RESIZED', "The image has been resized");
 define('_EN_GLOBAL_IMAGE_ROTATED', "The image has been rotated");
 define('_EN_GLOBAL_IMAGE_ROTATED_RIGHT', "The image has been rotated to the right");
 define('_EN_GLOBAL_IMAGE_ROTATED_LEFT', "The image has been rotated to the left");
-
-/* Meta tags */
-define('_EN_GLOBAL_META_KEYWORDS', "Meta keywords");
-define('_EN_GLOBAL_META_DESCRIPTION', "Meta description");
 
 /* Image Errors */
 define('_EN_GLOBAL_ERROR_IMAGE_NOMETHOD', "No method available for image handling");
@@ -186,6 +198,7 @@ define('_EN_GLOBAL_ERROR_IMAGE_CANT_ROTATE_TO_LEFT', "Can't rotate the image to 
 define('_EN_GLOBAL_ERROR_CANT_RESIZE_IMAGE', "There was a problem resizing the image");
 
 /* Common errors */
+define('_EN_GLOBAL_ERROR_GENERAL', "There was a problem while performing your request. Technical Support has been notified.");
 define('_EN_GLOBAL_ERROR_QUERY_FAILED', "There was a problem while trying to run {0} query.");
 define('_EN_GLOBAL_ERROR_FAILED_CREATING_DIR', "There was a problem creating {0} directory.");
 define('_EN_GLOBAL_ERROR_FAILED_ADDING_REGISTRY_KEY', "There was a problem adding the key {0} to the registry.");
@@ -195,29 +208,17 @@ define('_EN_GLOBAL_ERROR_FAILED_QUERY_FILE', "There was a problem running a quer
 define('_EN_GLOBAL_ERROR_NO_PRIVILEGES', "You don't have enough privileges to execute this task");
 define('_EN_GLOBAL_ERROR_FILE_DOES_NOT_EXIST', "The file {0} does not exist or is not readable.");
 define('_EN_GLOBAL_ERROR_FUNCTION_DOES_NOT_EXIST', "The function {0} does not exist.");
-define('_EN_GLOBAL_ERROR_GADGET_DOES_NOT_EXIST', "The gadget {0} does not exist.");
-define('_EN_GLOBAL_ERROR_PLUGIN_DOES_NOT_EXIST', "The plugin {0} does not exist.");
 define('_EN_GLOBAL_ERROR_CLASS_DOES_NOT_EXIST', "The class {0} is not defined, wrongly written or the file has not been included.");
 define('_EN_GLOBAL_ERROR_FAILED_CREATING_INSTANCE', "There was a error while creating an instance from class {0} located at {1}");
-define('_EN_GLOBAL_ERROR_GADGET_NOT_PUBLISHED', "The gadget {0} does not published.");
-define('_EN_GLOBAL_ERROR_PLUGIN_NOT_PUBLISHED', "The plugin {0} does not published.");
 define('_EN_GLOBAL_ERROR_INCOMPLETE_FIELDS', "Some fields haven't been (correctly) filled in.");
+define('_EN_GLOBAL_ERROR_GET_ACCOUNT_PANE', "There was a problem retrieving this gadget pane.");
 
-// Login/User error messages
+// Login error messages
 define('_EN_GLOBAL_ERROR_LOGIN_ONLY_ADMIN', "Only Admins can login into this section");
 define('_EN_GLOBAL_ERROR_LOGIN_WRONG', "Wrong username/password");
-define('_EN_GLOBAL_ERROR_LOGIN_EXPIRED', "This username is expired");
 define('_EN_GLOBAL_ERROR_LOGIN_LOCKED_OUT', "This username is locked out");
-define('_EN_GLOBAL_ERROR_LOGIN_LOGON_HOURS', "Logon hours terminated");
-define('_EN_GLOBAL_ERROR_LOGIN_CONCURRENT_REACHED', "Maximum number of concurrent logins reached");
+define('_EN_GLOBAL_ERROR_LOGIN_DISABLED', "Username is disabled");
 define('_EN_GLOBAL_ERROR_LOGIN_NOTCP', "Currently you don't have permission to use Control Panel");
-define('_EN_GLOBAL_ERROR_LOGIN_STATUS_0', "This username is disabled");
-define('_EN_GLOBAL_ERROR_LOGIN_STATUS_2', "This username is not verified");
-define('_EN_GLOBAL_ERROR_SESSION_NOTFOUND', "Session not found, please try again");
-define('_EN_GLOBAL_ERROR_INVALID_USERNAME', "The username is not valid, it can only contain letters or numbers, with a length of more than 2 characters");
-define('_EN_GLOBAL_ERROR_INVALID_EMAIL_ADDRESS', "The email address is not valid");
-define('_EN_GLOBAL_ERROR_INVALID_PASSWORD', "The password is not valid, it can only contain printable ASCII characters, with {0} characters minimum length");
-define('_EN_GLOBAL_ERROR_INVALID_COMPLEXITY', "The password is not complex enough, it must contain lower, upper, number and special characters");
 
 /* JSValidators */
 define('_EN_GLOBAL_VALIDATE_REQUIRED', "The field {0} is required");
@@ -239,13 +240,6 @@ define('_EN_GLOBAL_ERROR_URLMAP_MAPDIR_NOT_WRITABLE', "The map directory ({0}) i
 define('_EN_GLOBAL_ERROR_URLMAP_MAPDIR_CANT_CREATE', "There was a problem while creating the map directory ({0})");
 
 /* Captcha */
-define('_EN_GLOBAL_CAPTCHA', "Captcha");
-define('_EN_GLOBAL_CAPTCHA_CODE', "Captcha Code");
-define('_EN_GLOBAL_CAPTCHA_QUESTION', "Captcha question");
-define('_EN_GLOBAL_CAPTCHA_CASE_SENSITIVE', "Captcha (case sensitive)");
-define('_EN_GLOBAL_CAPTCHA_CASE_INSENSITIVE', "Captcha (case insensitive)");
-define('_EN_GLOBAL_CAPTCHA_CODE_DESC', "Write the captcha code you are seeing.");
-define('_EN_GLOBAL_CAPTCHA_QUESTION_DESC', "Please answer the question.");
 define('_EN_GLOBAL_CAPTCHA_ERROR_NOT_ADDED', "There was a problem while saving the Captcha key");
 define('_EN_GLOBAL_CAPTCHA_ERROR_OLD_CAPTCHAS_NOT_DELETED', "There was a problem while deleting the old Captcha keys");
 define('_EN_GLOBAL_CAPTCHA_ERROR_FORCED_CAPTCHAS_NOT_DELETED', "There was a problem while forcing a delete of all Captcha keys");
@@ -256,10 +250,13 @@ define('_EN_GLOBAL_HTTP_ERROR_TITLE_404', "Page not found");
 define('_EN_GLOBAL_HTTP_ERROR_CONTENT_404', "The requested page {0} could not be found, please contact the site administrator if you believe it should exist.");
 define('_EN_GLOBAL_HTTP_ERROR_TITLE_403', "Access Denied/Forbidden");
 define('_EN_GLOBAL_HTTP_ERROR_CONTENT_403', "You are not authorized to view this page.");
-define('_EN_GLOBAL_HTTP_ERROR_TITLE_500', "Internal Server Error");
-define('_EN_GLOBAL_HTTP_ERROR_CONTENT_500', "Internal Server Error, please contact the site administrator if you believe it should fix.");
 define('_EN_GLOBAL_HTTP_ERROR_TITLE_503', "Service Unavailable");
 define('_EN_GLOBAL_HTTP_ERROR_CONTENT_503', "This website is down for maintenance. Please check back again soon.");
+
+/* Comments Errors */
+define('_EN_GLOBAL_ERROR_COMMENT_ADDED', "There was a problem adding the message.");
+define('_EN_GLOBAL_ERROR_COMMENT_DELETED', "There was a problem deleting the message.");
+define('_EN_GLOBAL_ERROR_RETRIEVE_COMMENTS', "There was a problem while retrieving the comments.");
 
 /* Comments */
 define('_EN_GLOBAL_COMMENTS_STATUS', "Comment status");
@@ -271,5 +268,8 @@ define('_EN_GLOBAL_MARK_AS_APPROVED', "Mark as approved");
 define('_EN_GLOBAL_MARK_AS_WAITING', "Mark as waiting");
 define('_EN_GLOBAL_MARK_AS_SPAM', "Mark as spam");
 define('_EN_GLOBAL_SPAM_POSSIBLE_DUPLICATE_MESSAGE', "Duplicate message denied.");
+define('_EN_GLOBAL_CONFIRM_DELETE_COMMENT', "Are you sure you want to delete this?");
+define('_EN_GLOBAL_COMMENT_ADDED', "Your message was added.");
+define('_EN_GLOBAL_COMMENT_DELETED', "Message successfully deleted.");
 define('_EN_GLOBAL_MESSAGE_SENT', "Your message successfully sent.");
 define('_EN_GLOBAL_COMMENTS_RESTRICTED', "You must <a href=\"{0}\">login</a> or <a href=\"{1}\">register</a> to post a comment.");

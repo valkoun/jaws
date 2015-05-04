@@ -1,0 +1,133 @@
+.properties-slideshow {
+height: 299px;
+width: 343px;
+}
+
+#custom_page-section0 {
+margin-top: 15px;
+}
+#custom_page-section1 {
+margin-top: 15px;
+}
+#custom_page-section2 {
+margin-top: 15px;
+}
+#custom_page-section3 {
+margin-top: 15px;
+}
+
+.custom_page-post-title, .custom_page-post-timestamp {
+float: left;
+}
+
+.custom_page-post-timestamp {
+font-size: 80%;
+font-weight: normal;
+}
+
+.custom_page-post-image {
+max-width: 950px;
+max-height: 950px;
+}
+
+.gadget-custompage-thumb {
+  max-width: 80px;
+  max-height: 80px;
+  width: expression(this.width > 80 ? "80px" : true);
+  height: expression(this.height > 80 ? "80px" : true);
+}
+
+#glider {
+    /*
+	height: 300px;
+	*/
+	overflow: hidden;
+}
+
+div.glider_scroller { 
+	/* modify width and height of scrolling section if necessary	*/		
+	/*
+	width: 100%; 
+	height: 100%;
+	*/
+	overflow: hidden;
+}
+
+div.glider_scroller div.glider_section {
+	/* modify width and height of each section as needed (should match the size of the scroller window)	*/		
+	/*
+	width:100%;
+	height:100%;
+	*/
+	overflow:hidden;
+	float:left;
+}
+
+div.glider_scroller div.glider_content {
+	width: 10000px;
+}
+
+#add_page {
+    width: 130px;
+}
+
+#filter_options {
+    float: left;
+    vertical-align: top;
+}
+
+#editor {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.editor-preview {
+    width: 100%;
+    display: none;
+}
+
+#previewContent br {
+    display: block;
+}
+
+#content_form, #advanced_form, #display_form {
+    display: none;
+}
+
+/* New menu */
+#left_menu {
+    background: #fff url(../images/right_menu_bg.png) top left repeat-x;
+    border: 1px solid #babdb6;
+    margin: 0.5em;
+    width: 10em;
+    font-size: 85%;
+}
+
+#left_menu ul {
+    list-style: none;
+    padding: 0.5em;
+    margin: 0;
+}
+
+#left_menu ul li {
+    padding: 0.3em 0;
+    margin: 0 0 0.3em 0;
+    border-bottom: 1px solid #babdb6;
+    text-align: left;
+}
+
+#left_menu ul li:last-child {
+    border-bottom: 0;
+}
+
+#left_menu ul li a {
+    width: 100%;
+    display: block;
+    color: #666;
+    text-decoration: none;
+}
+
+#left_menu ul li a:hover {
+    color: #000;
+}
+/* Ends */

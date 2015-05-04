@@ -7,15 +7,15 @@
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Model
 {
     /**
      * Model's name
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      * @see SetName()
      * @see GetName()
      */
@@ -23,8 +23,8 @@ class Jaws_Model
 
     /**
      * Model's name
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      * @see SetDescription()
      * @see GetDescription()
      */
@@ -32,8 +32,8 @@ class Jaws_Model
 
     /**
      * Model's name
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      * @see SetVersion()
      * @see GetVersion()
      */
@@ -42,13 +42,11 @@ class Jaws_Model
     /**
      * Refactor Init, Jaws_Model::Init()
      *
-     * @access  public
-     * @param   string $gadget Gadget's name(same as the filesystem name)
-     * @return  void
+     * @access  protected
      */
-    function Jaws_Model($gadget = '')
+    function Init($name = '')
     {
-        $this->_Name = $gadget;
+        $this->_Name = $name;
     }
 
     /**
@@ -122,7 +120,7 @@ class Jaws_Model
      * Gadgets should override this method only if they need to perform actions to install.
      *
      * @access  public
-     * @return  bool    True on success and Jaws_Error on failure
+     * @return  boolean True on success and Jaws_Error on failure
      */
     function InstallGadget()
     {
@@ -133,7 +131,7 @@ class Jaws_Model
      * Updates the gadget
      *
      * @access  public
-     * @return  bool    True on success and Jaws_Error on failure
+     * @return  boolean True on success and Jaws_Error on failure
      */
     function UpdateGadget()
     {
@@ -141,37 +139,30 @@ class Jaws_Model
     }
 
     /**
-     * @access  public
+     * @access public
      */
     function InstallSchema($main_schema, $variables = array(), $base_schema = false, $data = false, $create = true, $debug = false)
     {
         $info = $GLOBALS['app']->LoadGadget($this->_Name, 'Info');
         $main_file = JAWS_PATH . 'gadgets/'. $this->_Name . '/schema/' . $main_schema;
         if (!file_exists($main_file)) {
-            return new Jaws_Error (_t('GLOBAL_ERROR_SQLFILE_NOT_EXISTS', $main_schema),
-                                   $info->GetAttribute('Name'),
-                                   JAWS_ERROR_ERROR,
-                                   1);
+            return new Jaws_Error (_t('GLOBAL_ERROR_SQLFILE_NOT_EXISTS', $main_file), $info->GetAttribute('Name'));
         }
 
         $base_file = false;
         if (!empty($base_schema)) {
             $base_file = JAWS_PATH . 'gadgets/'. $this->_Name . '/schema/' . $base_schema;
             if (!file_exists($base_file)) {
-                return new Jaws_Error(_t('GLOBAL_ERROR_SQLFILE_NOT_EXISTS', $base_schema),
-                                      $info->GetAttribute('Name'),
-                                      JAWS_ERROR_ERROR,
-                                      1);
+                return new Jaws_Error (_t('GLOBAL_ERROR_SQLFILE_NOT_EXISTS', $base_file),
+                                      $info->GetAttribute('Name'));
             }
         }
 
         $result = $GLOBALS['db']->installSchema($main_file, $variables, $base_file, $data, $create, $debug);
         if (Jaws_Error::IsError($result)) {
-            return new Jaws_Error(_t('GLOBAL_ERROR_FAILED_QUERY_FILE',
-                                     $main_schema . (empty($base_schema)? '': "/$base_schema")),
-                                  $info->GetAttribute('Name'),
-                                  JAWS_ERROR_ERROR,
-                                  1);
+            return new Jaws_Error($result->GetMessage(),
+            //return new Jaws_Error(_t('GLOBAL_ERROR_FAILED_QUERY_FILE', $main_schema . (empty($base_schema)? '': "/$base_schema")),
+                                 $info->GetAttribute('Name'));
         }
 
         return true;
@@ -234,18 +225,15 @@ class Jaws_Model
     /**
      * Installs the ACLs defined in the Info
      *
-     * @access  public
+     * @access public
      */
     function InstallACLs()
     {
         $acls = array();
         $info = $GLOBALS['app']->LoadGadget($this->_Name, 'Info');
-        foreach ($info->GetACLs() as $acl => $default) {
-            if (false === stripos(serialize($acls), "\"{$acl}\"")) {
-                $acls[] = array($acl, $default);
-            }
+        foreach ($info->GetACLs() as $acl => $opts) {
+            $acls[] = array($acl, $opts['Default']);
         }
-
         $GLOBALS['app']->ACL->NewKeyEx($acls);
         $GLOBALS['app']->ACL->commit($this->_Name);
     }
@@ -253,7 +241,7 @@ class Jaws_Model
     /**
      * Installs the ACLs defined in the Info
      *
-     * @access  public
+     * @access public
      */
     function UninstallACLs()
     {
@@ -261,7 +249,6 @@ class Jaws_Model
         foreach($info->GetACLs() as $acl => $opts){
             $GLOBALS['app']->ACL->DeleteKey($acl);
         }
-
         $GLOBALS['app']->ACL->Commit($this->_Name);
     }
 
@@ -273,28 +260,21 @@ class Jaws_Model
      * @access  protected
      * @param   string     $fast_url     Fast URL
      * @param   string     $table        DB table name (without [[ ]])
-     * @param   bool       $unique_check must be false in update methods
+     * @param   boolean    $unique_check must be false in update methods
      * @param   string     $field        Table field where fast_url is stored
      * @return  string     Correct fast URL
      */
-    function GetRealFastURL($fast_url, $table, $unique_check = true, $field = 'fast_url')
+    function GetRealFastURL($fast_url, $table, $unique_check = true, $field = 'fast_url', $current_id_field = null, $current_id = null)
     {
         if (is_numeric($fast_url)) {
             $fast_url = '-' . $fast_url . '-';
         }
 
-        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        $xss  = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $fast_url = $xss->defilter($fast_url, true);
 
-        if (version_compare(PHP_VERSION, '5.1.0', '<')) {
-            $fast_url = preg_replace(array('#[^[:alnum:]_\.-\s]#u', '#[\s_-]#u', '#-+#u'),
-                                     array('', '-', '-'),
-                                     $GLOBALS['app']->UTF8->strtolower($fast_url));
-        } else {
-            $fast_url = preg_replace(array('#[^\p{L}[:digit:]_\.-\s]#u', '#[\s_-]#u', '#-+#u'),
-                                     array('', '-', '-'),
-                                     $GLOBALS['app']->UTF8->strtolower($fast_url));
-        }
+        $fast_url = preg_replace('#\s|/|\\\#', '-', $fast_url);
+        $fast_url = preg_replace('#&|"|\'|\%|<|>#', '', $fast_url);
 
         if (!$unique_check) {
             return $fast_url;
@@ -307,6 +287,12 @@ class Jaws_Model
              SELECT COUNT(*)
              FROM [[$table]]
              WHERE [$field] = {fast_url}";
+			 
+		// Check everything except the current ID
+		if (!is_null($current_id_field) && !is_null($current_id)) {
+			$params['current_id'] = $current_id;
+			$sql .= " AND [$current_id_field] != {current_id}";
+		}		
 
         $total = $GLOBALS['db']->queryOne($sql, $params);
         if (Jaws_Error::isError($total) || ($total == '0')) {
@@ -340,5 +326,63 @@ class Jaws_Model
         $lastNumber = $numbers[count($numbers)-1];
         return $fast_url.'-'.($lastNumber+1);
     }
+    
+	/**
+     * Cleans image paths for local images being inserted
+     *
+     * @access  protected
+     * @param   string     $image     The image URL
+     * @return  string     Correct image URL
+     */
+    function cleanImagePath($image = '')
+    {
+        if (empty($image)) {
+			return $image;
+		}
+		$old_src = $image;
+		$image_src = str_replace(array(
+			strtolower($GLOBALS['app']->getDataURL('files/thumb/', true)), 
+			strtolower($GLOBALS['app']->getDataURL('files/medium/', true)), 
+			strtolower($GLOBALS['app']->getDataURL('files/', true)), 
+			strtolower($GLOBALS['app']->getDataURL('/', true)), 
+			strtolower($GLOBALS['app']->getDataURL('files/thumb/', true, false, true)),
+			strtolower($GLOBALS['app']->getDataURL('files/medium/', true, false, true)),
+			strtolower($GLOBALS['app']->getDataURL('files/', true, false, true)),
+			strtolower($GLOBALS['app']->getDataURL('/', true, false, true))
+		), '/', $image);
+		$image_src = (substr($image_src, 0, 1) == '/' && substr(strtolower(trim($image_src)), 0, 4) != 'http' && !file_exists(JAWS_DATA . 'files/'.$image_src) ? '' : $image_src);
+		while (substr($image_src, 0, 1) == '/') {
+			$image_src = substr($image_src, 1, strlen($image_src));
+			if (substr(strtolower($image_src), 0, 4) == "http") {
+				if (substr(strtolower($image_src), 0, 7) == "http://") {
+					$image_src = explode('http://', $image_src);
+					foreach ($image_src as $img_src) {
+						if (!empty($img_src)) {
+							$image_src = 'http://'.$img_src;
+							break;
+						}
+					}
+				} else {
+					$image_src = explode('https://', $image_src);
+					foreach ($image_src as $img_src) {
+						if (!empty($img_src)) {
+							$image_src = 'https://'.$img_src;
+							break;
+						}
+					}
+				}
+				break;
+			} else {
+				if (substr($image_src, 0, 1) != '/' && file_exists(JAWS_DATA . 'files/'.$image_src)) {
+					$image_src = '/'.$image_src;
+					break;
+				}
+			}
+		}
+		if ($image_src != $old_src) {
+			$image_src = (substr($image_src, 0, 1) != '/' && !is_array($image_src) ? '/'.$image_src : (is_array($image_src) ? implode('', $image_src) : $image_src));
+		}
+		return $image_src;
+	}
 
 }

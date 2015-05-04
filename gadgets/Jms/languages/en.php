@@ -92,6 +92,12 @@ define('_EN_JMS_GADGETS_REQUIRES_X_DEPENDENCY', "{0} can't be {2} because {1} ga
 define('_EN_JMS_SIDEBAR_ENABLE', "Enable");
 define('_EN_JMS_SIDEBAR_DISABLE', "Disable");
 
+/* Newsfeed Sidebar */
+define('_EN_JMS_SIDEBAR_NEWSFEED_TITLE', "Updates");
+define('_EN_JMS_SIDEBAR_NEWSFEED_ADD_NEW', "Add New");
+define('_EN_JMS_SIDEBAR_NEWSFEED_DESC', "");
+define('_EN_JMS_SIDEBAR_NEWSFEED_NO_ITEMS', "No new updates right now.");
+
 /* Gadgets Sidebar */
 define('_EN_JMS_SIDEBAR_DISABLED_GADGETS', "Disabled Gadgets");
 define('_EN_JMS_SIDEBAR_GADGETS_WAITING', "There are gadgets waiting to be enabled:");

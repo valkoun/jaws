@@ -1,0 +1,31 @@
+<!-- BEGIN backup -->
+<div id="control-panel-title" align="left"><span><img alt="Menu" style="vertical-align: middle;" src="{JAWS_URL}gadgets/ControlPanel/images/db-backup.png" />
+     <a href="admin.php">Control Panel</a> &rarr; <a href="admin.php?gadget=ControlPanel&action=DatabaseBackup">Backup</a>
+
+     <span id="cpsubtitle"></span>
+        </span></div>
+<div id="view_content">
+	<div style="text-align: center;">{months_html}</div>
+	<div>&nbsp;</div>
+      <table width="100%" border="0" cellspacing="0" cellpadding="3">
+		<tr>
+			<td width="90%" style="padding: 3px;"><h1>{description}</h1></td>
+			<td width="10%" style="padding: 3px;" align="right">
+			<input id="addButton" type="button" value="Create New Backup" onclick="location.href='admin.php?gadget=ControlPanel&action=DBBackup';">
+			</td>
+		</tr>
+	  </table>
+	<div style="clear: both; float: none; display: block; font-size: 0.01em;">&nbsp;</div>
+	<div valign="top">
+    <table width="100%" border="0" cellspacing="0" cellpadding="3" id="syntactsCategories">
+        <tbody>
+			<tr noDrop="true" noDrag="true" id="syntactsCategories_head">
+				<TD WIDTH="90%" class="color_bkgnd_primary" style="padding: 3px;"><b>Created</b></TD>
+				<TD WIDTH="10%" class="color_bkgnd_primary" ALIGN="center" style="padding: 3px;"><b>Actions</b></TD>
+			</tr>
+			{backups_html}
+		</tbody>
+	</table>
+	</div>
+</div>
+<!-- END backup -->

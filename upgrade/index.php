@@ -8,27 +8,31 @@
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Helgi Þormar Þorbjörnsson <dufuz@php.net>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 /* Dummy way for developers to get the errors
  * Turn off when releasing.
  */
+define('DEBUG', true);
+if (DEBUG) {
+    ini_set('display_errors', true);
+    error_reporting(E_ALL);
+}
+
 define('JAWS_SCRIPT', 'upgrade');
 define('BASE_SCRIPT', 'upgrade/index.php');
 define('APP_TYPE',    'web');
 
 if (!defined('JAWS_WIKI')) {
-    define('JAWS_WIKI', 'http://dev.jaws-project.com/wiki/');
-}
-if (!defined('JAWS_WIKI_FORMAT')) {
-    define('JAWS_WIKI_FORMAT', '{url}{lang}/{page}');
+    define('JAWS_WIKI', 'http://jaws-project.com/index.php/faq/');
+
 }
 
 session_start();
 
 if (isset($_GET['reset'])) {
-    session_destroy();
+    unset($_SESSION['upgrade']);
     header('Location: index.php');
     exit;
 }
@@ -46,24 +50,14 @@ if (!defined('JAWS_BASE_DATA')) {
 if (!defined('JAWS_DATA')) {
     define('JAWS_DATA', JAWS_BASE_DATA);
 }
-if (!defined('JAWS_CACHE')) {
-    define('JAWS_CACHE', JAWS_DATA. 'cache');
-}
-define('UPGRADE_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
-// Initialize the logger
-$_SESSION['use_log'] = isset($_SESSION['use_log'])? $_SESSION['use_log']: false;
-$logger = array('method'  => 'LogToFile',
-                'options' => array('file' => JAWS_DATA . 'logs/.upgrade.log'));
-require JAWS_PATH . 'include/Jaws/Log.php';
-$GLOBALS['log'] = new Jaws_Log($_SESSION['use_log'], $logger);
-$GLOBALS['log']->Start();
+define('UPGRADE_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 // Lets support older PHP versions so we can use spanking new functions
 require_once JAWS_PATH . 'include/Jaws/PHPFunctions.php';
 
-require_once JAWS_PATH . 'include/Jaws/Const.php';
 require_once JAWS_PATH . 'include/Jaws/Error.php';
+require_once JAWS_PATH . 'include/Jaws/Version.php';
 require_once JAWS_PATH . 'include/Jaws/Utils.php';
 require_once JAWS_PATH . 'include/Jaws/GadgetInfo.php';
 
@@ -82,12 +76,32 @@ if (isset($lang)) {
 }
 
 include_once JAWS_PATH . 'include/Jaws/Translate.php';
-$GLOBALS['i10n'] = new Jaws_Translate(false);
+$GLOBALS['i10n'] = new Jaws_Translate();
 if (isset($_SESSION['upgrade']['language'])) {
     $GLOBALS['i10n']->SetLanguage($_SESSION['upgrade']['language']);
 }
 $GLOBALS['i10n']->LoadTranslation('Global');
 $GLOBALS['i10n']->LoadTranslation('Upgrade');
+
+if (!function_exists('log_upgrade')) {
+    function log_upgrade($msg) { 
+        static $log;
+        
+        if (!isset($_SESSION['use_log'])) {
+            return;
+        }
+        
+        if ($_SESSION['use_log'] == 'yes') {
+            if (!isset($log)) {
+                //Enable the log
+                require_once JAWS_PATH . 'include/Jaws/Log.php';
+                $log = new Jaws_Log;
+            }
+            $logfile = JAWS_DATA .'logs/upgrade.log';
+            $log->LogToFile('LOG_DEBUG', $msg, array('file' => $logfile));
+        }
+    }
+}
 
 require_once 'stagelist.php';
 require_once 'JawsUpgrader.php';
@@ -175,30 +189,45 @@ if (isset($GLOBALS['message'])) {
 $tpl->ParseBlock('page');
 
 // Defines where the layout template should be loaded from.
+$theme = 'default';
 $direction = _t('GLOBAL_LANG_DIRECTION');
 $dir  = $direction == 'rtl' ? '.' . $direction : '';
 
-// Display the layout
-$layout = new Jaws_Template('templates');
-$layout->Load('layout.html');
-$layout->SetBlock('layout');
+// Display the page
+$page = new Jaws_Template(JAWS_BASE_DATA . 'themes/' . $theme);
+$page->Load('layout.html', false, false);
+$page->SetBlock('layout');
 
 // Basic setup
-$layout->SetVariable('BASE_URL', Jaws_Utils::getBaseURL('/upgrade/'));
-$layout->SetVariable('.dir', $dir);
-$layout->SetVariable('site-title', 'Jaws ' . JAWS_VERSION);
-$layout->SetVariable('site-name',  'Jaws ' . JAWS_VERSION);
-$layout->SetVariable('site-slogan', JAWS_VERSION_CODENAME);
+$page->SetVariable('BASE_URL', Jaws_Utils::getBaseURL(BASE_SCRIPT).'/upgrade/');
+$page->SetVariable('.dir', $dir);
+$page->SetVariable('THEME', '../data/themes/' . $theme . '/');
+$page->SetVariable('site-title', 'Jaws ' . JAWS_VERSION);
+$page->SetVariable('site-name',  'Jaws ' . JAWS_VERSION);
+$page->SetVariable('site-slogan', _t('UPGRADE_INTRO_WELCOME'));
+$page->SetVariable('layout-mode', 0);
+$page->SetVariable('powered-by', 'Jaws Project');
+
+// Load the stylesheet
+$page->SetBlock('layout/head');
+$page->SetVariable('ELEMENT', '<link rel="stylesheet" type="text/css"  href="resources/upgrade'.$dir.'.css" />');
+$page->ParseBlock('layout/head');
 
 // Load js files
-$layout->SetBlock('layout/head');
-$layout->SetVariable('ELEMENT', '<script type="text/javascript" src="../libraries/js/rsa.lib.js"></script>');
-$layout->ParseBlock('layout/head');
+$page->SetBlock('layout/head');
+$page->SetVariable('ELEMENT', '<script type="text/javascript" src="../libraries/js/bigint.js"></script>');
+$page->ParseBlock('layout/head');
+$page->SetBlock('layout/head');
+$page->SetVariable('ELEMENT', '<script type="text/javascript" src="../libraries/js/bigintmath.js"></script>');
+$page->ParseBlock('layout/head');
+$page->SetBlock('layout/head');
+$page->SetVariable('ELEMENT', '<script type="text/javascript" src="../libraries/js/rsa.js"></script>');
+$page->ParseBlock('layout/head');
 
 // Display the stage
-$layout->SetBlock('layout/main');
-$layout->SetVariable('ELEMENT', $tpl->Get());
-$layout->ParseBlock('layout/main');
-$layout->ParseBlock('layout');
+$page->SetBlock('layout/main');
+$page->SetVariable('ELEMENT', $tpl->Get());
+$page->ParseBlock('layout/main');
+$page->ParseBlock('layout');
 
-echo $layout->Get();
+echo $page->Get();

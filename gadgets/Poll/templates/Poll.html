@@ -1,0 +1,26 @@
+<!-- BEGIN Poll -->
+<div class="gadget poll">
+  <h2>{title}</h2>
+  <form action="{base_script}" name="poll_form_{pid}" method="post">
+  <div class="content">
+    <input type="hidden" name="gadget" value="Poll" />
+    <input type="hidden" name="action" value="Vote" />
+    <input type="hidden" name="pid" value="{pid}" />
+    <h3>{question}</h3>
+    <!-- BEGIN answer -->
+    <div>{input}<label for="answer_{aid}">{answer}</label></div>
+    <!-- END answer -->
+  </div>
+  <div class="actions">{result_link} {btn_vote}</div>
+  </form>
+  <!-- BEGIN cookie -->
+  <script type="text/javascript">
+    if (-1 != document.cookie.indexOf('poll_' + {pid})) {
+        document.poll_form_{pid}.onsubmit = function() {
+            return false;
+        }
+    }
+  </script>
+  <!-- END cookie -->
+</div>
+<!-- END Poll -->

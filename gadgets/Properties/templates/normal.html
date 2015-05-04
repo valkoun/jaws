@@ -1,0 +1,1823 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+		var msgbox=$('msgbox_{msg-id}');if((msgbox.className!='error-message')&&(msgbox.className!='warning-message')&&(window.hideResponseBox)){hideResponseBox(msgbox);};
+	</script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN properties -->
+<!-- BEGIN edit -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+	<div class="content">
+	{content}
+	</div>
+</div>
+<!-- END edit -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+	<div class="content">
+<!--[if IE]>
+ <style type="text/css">
+  #left {word-wrap: break-word;}
+ </style>
+<![endif]-->
+              <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="hdr_bkgnd">
+      			  <tr>
+					<TD align="left"><img border="0" src="images/spacer.gif"></TD>
+					<TD width="100%"><img border="0" src="images/spacer.gif"></TD>
+					<TD><img border="0" src="images/spacer.gif"></TD>
+                  </TR>
+                  <TR>
+					<TD><img border="0" src="images/spacer.gif" height="5" width="5" align="top"></TD>
+
+					<TD width="100%">
+					{BREADCRUMB}
+					</td>
+					<TD><img border="0" src="images/spacer.gif"></TD>
+                </TR>
+				<TR>
+					<TD colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></TD>
+				</TR>
+			  </TABLE>
+{PAGE_CYCLE}
+			<div>&nbsp;</div>
+			<div style="float: left;{image_style}">{propertyparentImage}</div>
+			<div>{propertyparentDescription}</div>
+				<style type="text/css">
+					#layout_CategoryMap_{propertyparentID}__title { display: none; }
+					#layout_CategoryMap_{propertyparentFast_url}__title { display: none; }
+				</style>
+			  <div>{CATEGORY_MAP}</div>
+			  <div>&nbsp;</div>
+            <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="color_bkgnd">
+              <TR>
+                <TD WIDTH="0%" VALIGN="top"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                <TD WIDTH="100%" VALIGN="top">
+<!-- BEGIN property -->                          
+{property_header}
+                            <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%" CLASS="color_bkgnd">
+                              <TR>
+                                <TD WIDTH="100%">
+                                  <DIV ALIGN="center" class="property_listing_bkgnd" id="property_listing_{id}" onclick="location.href = '{property_link}';">
+                                    <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+                                      <TR>
+                                        <TD CLASS="color_bkgnd" COLSPAN="4"><img border="0" src="images/spacer.gif" height="1" width="1"></TD>
+									  </TR>
+
+										<TR>	
+											<TD WIDTH="0%" VALIGN="top" ALIGN="left"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="1" HEIGHT="3"></TD>
+										</TR>
+                                      <TR>
+                                        <TD WIDTH="0%" VALIGN="top" ALIGN="left" class="color_white">
+{property_image}
+										</TD>
+                                        <TD WIDTH="0%" VALIGN="top" ALIGN="left"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="4" HEIGHT="1">
+                                        <TD VALIGN="top" ALIGN="left" WIDTH="100%">
+
+                                          <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0" CLASS="color_bkgnd">
+                                            <TR>
+                                              <TD WIDTH="100%" VALIGN="top" ALIGN="left" COLSPAN="4">
+                                                <DIV ALIGN="center" CLASS="property_bkgnd_primary">
+                                          <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="3">
+											<TR>
+                                        		<TD WIDTH="100%" ALIGN="left" valign="top" style="padding-bottom: 5px;">
+													<nobr>
+														&nbsp;<A HREF="{property_link}"><U><B>{title}</B></U></A>
+														<b>{price}</b>
+														<b>{rentdy}{rentwk}{rentmo}</b>
+													</nobr>
+											  </TD>
+											</TR>
+											<TR>
+                                              <TD WIDTH="100%" VALIGN="top" ALIGN="left">
+                                                <DIV ALIGN="center" CLASS="property_highlights_bkgnd" id="property_highlights_{id}">
+                                                  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+													<TR>
+                                                      	<TD WIDTH="0%" VALIGN="top" CLASS="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></TD>
+                                                      	<TD WIDTH="50%" VALIGN="top">
+															<span style="font-size: 0.8em;">
+															{community}
+															{city}
+															{bedroom}
+															{bathroom}
+															</span>
+														</TD>
+														<TD WIDTH="50%" VALIGN="top" align="right" style="text-align: right;">
+															{broker_logo}
+															<p style="font-size: 0.8em;">{agent}{broker}</p>
+														</TD>
+                                                      	<TD WIDTH="0%" VALIGN="top" CLASS="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></TD>
+                                            		</TR>
+													<TR>
+                                                      	<TD WIDTH="0%" VALIGN="top" CLASS="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></TD>
+                                                      	<TD WIDTH="100%" VALIGN="top" CLASS="color_bkgnd" colspan="2"><img border="0" src="images/spacer.gif" height="1" width="1"></TD>
+                                                      	<TD WIDTH="0%" VALIGN="top" CLASS="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></TD>
+													</TR>
+                                                  </TABLE>
+                                                </DIV>
+											  </TD>
+                                            </TR>
+											<TR>
+												<TD WIDTH="100%" VALIGN="top" ALIGN="left" style="padding: 5px;">
+													{amenity}
+												</TD>
+                                            </TR>
+													<TR>
+														<TD WIDTH="100%" VALIGN="top" ALIGN="left" style="padding: 5px;">
+															{NO_LISTING_DETAILS}
+															{description}
+														</TD>
+													</TR>
+                                                  </TABLE>
+                                                </DIV>
+												{VIEW_DETAILS}
+												<div style="text-align: right; padding-right: 20px;">{category}</div>
+											  </TD>
+                                            </TR>
+                                          </TABLE>
+
+                                        </TD>
+                                        <TD WIDTH="0%" VALIGN="top" ALIGN="left"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="4" HEIGHT="1">
+                                      </TR>
+                                    </TABLE>
+                                  </DIV>
+                                </TD>
+                              </TR>
+                            </TABLE>
+                            </CENTER>
+                                  </DIV>
+                                </TD>
+                              </TR>
+                            </TABLE>
+                            </CENTER>
+                          </DIV>
+						  <DIV>&nbsp;</DIV>
+						  <DIV class="property_separator"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="100%" HEIGHT="1"></DIV>
+						  <DIV>&nbsp;</DIV>
+<!-- END property -->
+{NO_PROPERTIES}
+                       
+                          <TABLE BORDER="0" CELLPADDING="5" CELLSPACING="0" WIDTH="98%">
+                            <TR>
+                              <TD WIDTH="100%"></TD>
+                            </TR>
+                          </TABLE>
+
+						</TD>
+					</TR>
+				</TABLE>
+				<div>&nbsp;</div>
+				{PAGE_CYCLE2}
+
+<script type="text/javascript">
+// <![CDATA[
+function validate(form) {
+var rtn;
+rtn = true;
+
+/*
+var today = new Date();
+var DateIn = new Date();
+DateIn.setMonth(form.MonthIn.value - 1);
+DateIn.setDate(form.DayIn.value);
+DateIn.setFullYear(form.YearIn.value);
+var DateOut = new Date();
+DateOut.setMonth(form.MonthOut.value - 1);
+DateOut.setDate(form.DayOut.value);
+DateOut.setFullYear(form.YearOut.value);
+
+if (rtn && (Date.parse(DateIn) < Date.parse(today))) {
+  alert('Please make sure the date of arrival is after today.');
+  rtn=false;
+}
+if (rtn && (Date.parse(DateIn) > Date.parse(DateOut))) {
+  alert('Please make sure the date of arrival is before the departure date.');
+  rtn=false;
+}
+if (rtn && (form.Adults.value.length < 1 || checknum(form.Adults.value) == false)) {
+  alert('Please enter the number of adults staying.');
+  rtn=false;
+}
+if (rtn && (form.Children.value.length < 1 || checknum(form.Children.value) == false)) {
+  alert('Please enter the number of children staying.');
+  rtn=false;
+}
+*/
+
+return rtn;
+} //end of function
+
+var cntd
+cntd = 0
+
+function sendText(datewriter, text)
+{
+	var rtn;
+	rtn = true;
+
+	alert(datewriter.name);
+	datewriter.value = text;
+	datewriter.style.color = 'red';
+	alert(datewriter.name);
+
+} //end of function
+// ]]>
+</script>
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Properties_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END properties -->
+
+<!-- BEGIN property -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+	<div class="content">
+	  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="hdr_bkgnd">
+		  <tr>
+			<TD align="left"><img border="0" src="images/spacer.gif"></TD>
+			<TD width="100%"><img border="0" src="images/spacer.gif"></TD>
+			<TD><img border="0" src="images/spacer.gif"></TD>
+		  </TR>
+		  <TR>
+			<TD><img border="0" src="images/spacer.gif" height="5" width="5" align="top"></TD>
+
+			<TD width="100%">
+			{BREADCRUMB}
+			</td>
+			<TD><img border="0" src="images/spacer.gif"></TD>
+		</TR>
+		<TR>
+			<TD colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></TD>
+		</TR>
+	  </TABLE>
+
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" height="28">
+			<tr>
+				<td width="100%" height="1" align="left">
+					<div align="left">
+						<table border="0" cellspacing="0" width="100%" cellpadding="0" height="1" class="color_bkgnd">
+<!-- BEGIN preview_mode -->
+							<tr>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" colspan="3">&nbsp;</td>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+							<tr>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" colspan="3" bgcolor="#ffffcc">
+									<span style="font-size: 1.8em; color: #FF0000;">&nbsp;&nbsp;<img border="0" src="images/ICON_err_red.gif">&nbsp;Previewing Your Property:</span><br />&nbsp;
+									<span style="color: #FF0000;">This Listing has not yet been approved by {HTTP_REFERER}<br />&nbsp;</span>
+								</td>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+<!-- END preview_mode -->
+							<tr>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="0%" valign="top" style="padding: 5px;">
+									<nobr><h1>{title}</h1></nobr>
+								</td>
+								<td width="100%" style="padding: 5px;"><nobr>                                            
+									  <span style="font-weight: bold; font-size: 1em;">&nbsp;&nbsp;{price}</span>
+									  <span style="font-weight: bold; font-size: 1em;">&nbsp;&nbsp;{rentdy}&nbsp;&nbsp;{rentwk}&nbsp;&nbsp;{rentmo}&nbsp;&nbsp;</span>
+								</nobr></td>
+								<td width="0%" style="padding: 5px;"><nobr>[ID: {id}]</nobr></td>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd">
+		  <tr>
+		   <td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+		   <td width="100%">
+			 <div align="center">
+			   <table border="0" cellpadding="5" cellspacing="0" width="100%">
+				<tr>
+				  <td width="100%">
+						{property_header}
+								<table border="0" cellpadding="3" cellspacing="0" width="100%" class="color_bkgnd">
+									<tr>
+										<td width="100%">
+											<div align="center" class="property_listing_bkgnd">
+												<table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd">
+
+													<tr>
+														<td class="color_bkgnd" colspan="3"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+													</tr>
+													<tr>
+														<td colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></td>
+													</tr>
+													<tr>
+														<td valign="top" colspan="3">
+<!-- Property Navigation -->
+															<div id="propnav_container">
+																<div id="propnav_map" class="propnav" onclick="if (document.getElementById('propnav_map').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('save')) {document.getElementById('save').style.display = 'none';}; if (document.getElementById('media_map')) {var target = document.getElementById('media_map'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_map_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_map.png)';};" title="View Map and Directions"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Map / Directions</a></p></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="propnav_print" class="propnav" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_print_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_print.png)';};" title="Printable Version"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a href="{HTTP_REFERER}/index.php?gadget=Properties&action=PrintPropertyDetails&id={id}" target="_blank">Printable Version</a></p></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="propnav_email{emailDisabled}" class="propnav{emailDisabled}" onclick="if (document.getElementById('propnav_email').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('save')) {document.getElementById('save').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('email')) {var target = document.getElementById('email'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_email_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_email.png)';};" title="E-mail To A Friend"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>E-mail To A Friend</a></p></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="propnav_calendar{calendarDisabled}" class="propnav{calendarDisabled}" onclick="{CALENDAR_CLICK}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_calendar_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_calendar.png)';};"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>{CALENDAR_CLICK_TEXT}</a></p></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<!--
+																<div id="propnav_save{saveDisabled}" class="propnav{saveDisabled}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_save_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_save.png)';};" title="Save This Property"><a href="javascript:void(0);" onclick="if (document.getElementById('propnav_save').className.indexOf('disabled') == -1) {if (document.getElementById('save')) {var target = document.getElementById('save'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50">Save This Property</p></a></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																-->
+																<div id="propnav_save{saveDisabled}" class="propnav{saveDisabled}" onclick="if (document.getElementById('propnav_save').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('save')) {var target = document.getElementById('save'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_save_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_save.png)';};" title="Inquire About This Property"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Inquire About This Property</a></p></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="propnav_tour{tourDisabled}" class="propnav{tourDisabled}" onclick="{PROPERTY_TOUR_CLICK}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_tour_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Properties/images/btn_property_tour.png)';};" title="Virtual Tour"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Virtual Tour</a></p></div><div style="background: url({JAWS_URL}gadgets/Properties/images/btn_property_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div style="float: none; clear: both; font-size: 0.01em;">&nbsp;</div>
+															</div>
+															<div id="property_details_container">
+<!-- Property Map and Directions -->
+																<div align="left" id="media_map" class="property_media" style="visibility: hidden;">
+																	<style type="text/css">
+																		#layout_PropertyMap_{id}__title { display: none; }
+																		{PROPERTY_MAP_STYLE}
+																	</style>
+																	<a name="map">&nbsp;</a>
+																	{PROPERTY_MAP}
+																	<div>&nbsp;</div>
+																	<div id="map_directions">Personalized directions coming soon!</div>
+																</div>
+																<script type="text/javascript">
+																// <![CDATA[
+																  Event.observe(window, "load", function() {$('media_map').style.display = 'none'; $('media_map').style.visibility = 'visible';});
+																// ]]>
+																</script>
+<!-- Property Virtual Tour -->
+																<div align="left" id="tour" class="property_media"{PROPERTY_STYLE}>
+																	<a name="tour">&nbsp;</a>
+																	<div>{PROPERTY_TOUR}</div>
+																	<style type="text/css">
+																		#layout_Display_Form__title { display: none; }
+																	</style>
+																</div>
+<!-- Property Calendar -->
+																<div align="left" id="calendar" class="property_media" style="visibility: hidden;">
+																	<a name="calendar">&nbsp;</a>
+																	<div>{PROPERTY_CALENDAR}</div>
+																	<style type="text/css">
+																		#layout_PropertyCalendar__title { display: none; }
+																		{PROPERTY_CALENDAR_STYLE}
+																	</style>
+																</div>
+																<script type="text/javascript">
+																// <![CDATA[
+																  Event.observe(window, "load", function() {$('calendar').style.display = 'none'; $('calendar').style.visibility = 'visible';});
+																// ]]>
+																</script>
+<!-- Property E-mail To A Friend -->
+																<div align="left" id="email" class="property_media" style="display: none;">
+																	<a name="email">&nbsp;</a>
+																	<div>{PROPERTY_EMAIL_FORM}</div>
+																</div>
+<!-- Property Inquiry -->
+																<div align="left" id="save" class="property_media" style="display: none;">
+																	<a name="save">&nbsp;</a>
+																	<div>{PROPERTY_INQUIRY_FORM}</div>
+																</div>
+<!-- Property Image(s) -->
+																<div align="left" id="images" class="property_media">
+<!-- BEGIN image_grid -->
+																	<div class="horizontal_carousel" id="horizontal_carousel">
+																	  <div class="carousel_container" id="carousel_container">
+																		<div class="carousel_holder" id="carousel_holder">
+																			{mainImage}
+																			{carouselItems}
+																			<div style="float: none; clear: both; font-size: 0.01em;">&nbsp;</div>
+																		</div>
+																	  </div>
+																	</div>
+<!-- END image_grid -->
+<!-- BEGIN carousel -->
+																	<div class="carousel_navigation" id="carousel_navigation" style="padding-bottom: 6px; font-size: 1.2em; font-weight: bold; text-align: center"></div>
+																	<div class="horizontal_carousel" id="horizontal_carousel">
+																	  <script>
+																		$('horizontal_carousel').style.visibility = 'hidden';
+																	  </script>
+																	  <div class="previous_button" id="previous_button"></div>  
+																	  <div class="carousel_container" id="carousel_container">
+																		<div class="carousel_holder" id="carousel_holder">
+																			{mainImage}
+																			{carouselItems}
+																		</div>
+																	  </div>
+																	  <div class="next_button" id="next_button"></div>
+																	</div>
+																	<script type="text/javascript">
+																// <![CDATA[
+																	var theEmbeds = new Array();
+																	//var theItems = new Array();
+																	var n = 0;
+																	var hCarousel = null;
+																	var x = null;
+																	var button_widths = 0;
+																	document.observe("dom:loaded", function(){
+																		// ADDED: Try to hide any iframes in child elements...
+																		var holder = $('carousel_holder');
+																		var thisChild = holder.firstChild;
+																		var prev_button_width = parseInt($("previous_button").offsetWidth, 10);
+																		var next_button_width = parseInt($("next_button").offsetWidth, 10);
+																		button_widths = (prev_button_width + next_button_width)+30;
+																		//$('carousel_navigation').innerHTML = '<img src="images/carousel_nav_left.png" border="0"/>';
+																		while (thisChild != holder.lastChild) {
+																			if (thisChild.nodeType == 1) {
+																				//theItems[n] = thisChild;
+																				//$('carousel_navigation').innerHTML = $('carousel_navigation').innerHTML + '<a id="carousel_nav'+n+'" href="javascript: void(0);" onclick="hCarousel.scrollTo('+n+');" style="text-decoration: none;"><img src="images/carousel_nav_off.png" border="0"/></a>';
+																				var thisEmbeds = new Array();
+																				thisEmbeds = thisChild.getElementsByTagName('iframe');
+																				if (thisEmbeds.length) {
+																					for (i=0; i<thisEmbeds.length; i++) {
+																						theEmbeds[i] = thisEmbeds[i].src;
+																						thisEmbeds[i].src = '';
+																						thisEmbeds[i].height = parseInt($("horizontal_carousel").offsetHeight, 10)-10;
+																						thisEmbeds[i].width = 0;
+																						thisEmbeds[i].style.height = parseInt($("horizontal_carousel").offsetHeight, 10)-10 + "px";;
+																						thisEmbeds[i].style.width = '0px';
+																					}
+																				}
+																				if (thisChild.id != 'carousel_item1') {
+																					thisChild.style.visibility = 'hidden';
+																				}
+																				n++;
+
+																			}
+																			thisChild = thisChild.nextSibling;
+																		}
+																		$('carousel_navigation').innerHTML += '<img src="images/carousel_nav_left.png" border="0" /><a id="carousel_nav0" href="javascript: void(0);" onclick="hCarousel.scrollTo(0);" style="text-decoration: none;"><img src="images/carousel_nav_on.png" border="0" /></a>{carouselNav}<img src="images/carousel_nav_right.png" border="0" />';
+																	});
+
+																	function startscroll() {
+																	   x = window.setInterval(function scroll() {
+																		var nextItem = hCarousel.currentIndex() + 1;
+																		if (nextItem == n) {
+																			hCarousel.scrollTo(0);
+																		} else {
+																			hCarousel.scrollTo(nextItem);
+																		};
+																	   },5000);
+																	}
+
+																	function stopscroll() {
+																	   window.clearInterval(x);
+																	}
+
+																	function runTest() {
+																		$('horizontal_carousel').style.visibility = 'visible';
+																		updateCarouselSize();
+																		hCarousel = new UI.Carousel("horizontal_carousel", {container: ".carousel_container", scrollInc: "auto"});
+																		//$('carousel_nav0').innerHTML = '<img src="images/carousel_nav_on.png" border="0"/>';
+																		{startScroll}
+																		$('horizontal_carousel').observe('mouseover', stopscroll);
+																		$('horizontal_carousel').observe('mouseout', startscroll);
+																		
+																		new UI.Carousel('horizontal_carousel').observe('scroll:ended', function() {
+																			//var currentIndex = event.memo.hCarousel.currentIndex();
+																			var holder = $('carousel_holder');
+																			var thisChild = holder.firstChild;
+																			//$('carousel_nav_select').style.visibility = 'hidden';
+																			for (t=0; t<n+1; t++) {
+																				if (t!=hCarousel.currentIndex()) {
+																					//$('carousel_nav_select_image').innerHTML = '<img src="images/carousel_nav_select'+t+'_off.png" border="0"/>';
+																					if ($('carousel_nav'+t)) {
+																						//$('carousel_nav'+t).src = 'images/carousel_nav_off.png';
+																						$('carousel_nav'+t).childNodes[0].src = "images/carousel_nav_off.png";
+																					}
+																				} else {
+																					//$('carousel_nav_select_image').innerHTML = '<img src="images/carousel_nav_select'+t+'_off.png" border="0"/>';
+																					//$('carousel_nav_select_image').src = 'images/carousel_nav_select'+t+'_off.png';
+																					if ($('carousel_nav'+t)) {
+																						//$('carousel_nav'+t).src = 'images/carousel_nav_on.png';
+																						$('carousel_nav'+t).childNodes[0].src = "images/carousel_nav_on.png";
+																					}
+																				}
+																			}
+																			while (thisChild != holder.lastChild) {
+																				if (thisChild.nodeType == 1) {
+																					if (thisChild.id == 'carousel_item'+(hCarousel.currentIndex()+1)) {
+																						thisChild.style.visibility = 'visible';
+																						var thisEmbeds = new Array();
+																						thisEmbeds = thisChild.getElementsByTagName('iframe');
+																						if (thisEmbeds.length) {
+																							for (i=0; i<thisEmbeds.length; i++) {
+																								//stopscroll();
+																								//Event.observe(thisChild.getElementsByTagName('iframe')[i], "load", startscroll);
+																								thisEmbeds[i].src = theEmbeds[i];
+																								//thisEmbeds[i].height = parseInt($("horizontal_carousel").offsetHeight, 10);
+																								thisEmbeds[i].width = (parseInt($('horizontal_carousel').parentNode.offsetWidth, 10)-button_widths+10);
+																								//thisEmbeds[i].style.height = parseInt($("horizontal_carousel").offsetHeight, 10) + "px";
+																								thisEmbeds[i].style.width = (parseInt($('horizontal_carousel').parentNode.offsetWidth, 10)-button_widths+10)+'px';
+																							}
+																						}
+																					} else {
+																						thisChild.style.visibility = 'hidden';
+																					}
+																				}
+																				thisChild = thisChild.nextSibling;
+																			}
+																		});
+																		
+																		new UI.Carousel('horizontal_carousel').observe('scroll:started', function() {
+																			// ADDED: Try to hide any iframes in child elements...
+																			var holder = $('carousel_holder');
+																			var thisChild = holder.firstChild;
+																			while (thisChild != holder.lastChild) {
+																				if (thisChild.nodeType == 1) {
+																					thisChild.style.visibility = 'visible';
+																					var thisEmbeds = new Array();
+																					thisEmbeds = thisChild.getElementsByTagName('iframe');
+																					if (thisEmbeds.length) {
+																						for (i=0; i<thisEmbeds.length; i++) {
+																							//stopscroll();
+																							//Event.observe(thisChild.getElementsByTagName('iframe')[i], "load", startscroll);
+																							thisEmbeds[i].src = '';
+																							//thisEmbeds[i].height = parseInt($("horizontal_carousel").offsetHeight, 10);
+																							thisEmbeds[i].width = 0;
+																							//thisEmbeds[i].style.height = parseInt($("horizontal_carousel").offsetHeight, 10)+"px";;
+																							thisEmbeds[i].style.width = '0px';
+																						}
+																					}
+																				}
+																				thisChild = thisChild.nextSibling;
+																			}
+																		});
+
+																	}
+
+																  function resized() {
+																	updateCarouselSize();  
+																	if (hCarousel)
+																	  hCarousel.updateSize();
+																  }
+
+																  function updateCarouselSize() {
+																	if ($('horizontal_carousel').parentNode) {
+																		var dim = parseInt($('horizontal_carousel').parentNode.offsetWidth, 10);
+																	} else {
+																		var dim = document.viewport.getDimensions(); 
+																		dim = dim.width;
+																	}
+																	//dim -= 20;                             
+																	$("horizontal_carousel").style.width = dim + "px";
+																	$$("#horizontal_carousel .carousel_container").first().style.width = (dim - button_widths) + "px";
+																	var height = parseInt($("horizontal_carousel").offsetHeight, 10);
+																	$("carousel_container").style.height = height+'px';
+																	if ($$(".carousel_itemImage")) {
+																		$$(".carousel_itemImage").each(function(item) {
+																			item.style.height = height+'px';
+																		});
+																	}
+																	if ($$(".carousel_itemCode")) {
+																		$$(".carousel_itemCode").each(function(item) {
+																			item.style.height = height+'px';
+																			item.style.width = (dim - button_widths) + "px";
+																		});
+																	}
+																	var holder = $('carousel_holder');
+																	var thisChild = holder.firstChild;
+																	while (thisChild != holder.lastChild) {
+																		if (thisChild.nodeType == 1) {
+																			thisChild.width = (dim - button_widths);
+																			thisChild.style.width = (dim - button_widths) + "px";
+																			thisChild.height = height;
+																			thisChild.style.height = height+'px';
+																			thisChild.style.minHeight = height+'px';
+																			secondChild = thisChild.firstChild;
+																			while (secondChild != thisChild.lastChild) {
+																				if (secondChild.nodeType == 1) {
+																					secondChild.width = (dim - button_widths);
+																					secondChild.style.width = (dim - button_widths) + "px";
+																					secondChild.height = height;
+																					secondChild.style.height = height+'px';
+																					secondChild.style.minHeight = height+'px';
+																				}
+																				secondChild = secondChild.nextSibling;
+																			}
+																		}
+																		thisChild = thisChild.nextSibling;
+																	}
+																  }
+
+																//function heightToSection1(target) {
+																//    $(target).style.height = parseInt($("horizontal_carousel").offsetHeight, 10)+"px";
+																//}
+
+																  Event.observe(window, "load", runTest);
+																  Event.observe(window, "resize", resized);
+																// ]]>
+																	</script>
+<!-- END carousel -->
+<!-- BEGIN image -->
+																  <div class="property_details_image">
+																	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td width="50%">&nbsp;</td>
+																			<td width="0%">
+																				<IMG BORDER="0" style="cursor: pointer; pointer: hand;" ONCLICK="window.open('{lg_imageSrc}');" SRC="{imageSrc}" WIDTH="220">
+																			</td>
+																			<td width="50%">&nbsp;</td>
+																		</tr>
+																	  </table>
+																	</div>
+<!-- END image -->
+																</div>
+																<div>&nbsp;</div>
+<!--
+																<div align="left" id="images" class="property_media">
+																  <div class="property_details_no_image">
+																	  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td width="50%"><img border="0" src="images/spacer.gif" height="120" width="1"></td>
+																			<td width="0%" valign="top" style="vertical-align: top; text-align: center;"><b>No Image</b></td>
+																			<td width="50%">&nbsp;</td>
+																		</tr>
+																	  </table>
+																  </div>
+																</div>
+																<div>&nbsp;</div>
+-->
+																	<table border="0" cellpadding="2" cellspacing="0" width="100%">
+																		<tr>
+																			<td valign="top" width="100%">
+																				<div align="center">
+																					<table border="0" cellpadding="2" cellspacing="0" width="100%">
+																						<tr>
+<!-- BEGIN no_image -->
+																							<td width="0%">
+																							  <div class="property_no_image">
+																								  <b>No Image</b>
+																							  </div>
+																							</td>
+																							<td valign="top" align="left" width="0%">&nbsp;</td>
+<!-- END no_image -->
+
+<!-- Property Highlights -->
+																							<td valign="top" align="left" width="100%">
+																							  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="color_bkgnd">
+																								<tr>
+																								  <td width="100%" valign="top" align="left" colspan="4">
+																									<div align="center" class="property_bkgnd_primary">
+																									  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+																										<tr>
+																										  <td width="100%" valign="top" align="left">
+																											<div align="center" class="property_highlights_bkgnd">
+																											  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+																												<tr>
+																													<td width="0%" valign="top" class="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																													<td width="100%" valign="top"><img border="0" src="images/spacer.gif" height="3" width="1">
+																													<span style="font-size: 0.8em;">
+																														{community}
+																														{city}
+																														{bedroom}
+																														{bathroom}
+																														{occupancy}
+																														{maxadultno}
+																														{maxchildno}
+																														{minstay}
+																														{roomcount}
+																														{options}
+																														{category}																										
+																													</span>
+																													</td>
+																													<td width="0%" valign="top" class="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																												</tr>
+																												<tr>
+																													<td width="0%" valign="top" class="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																													<td width="100%" valign="top" class="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																													<td width="0%" valign="top" class="color_bkgnd"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+																												</tr>
+																											  </table>
+																											</div>
+																											{NO_LISTING_DETAILS}
+																										  </td>
+																										</tr>
+																									  </table>
+																									</div>
+																								  </td>
+																								</tr>
+																							  </table>
+																							  </td>
+
+																						  </tr>
+																					</table>
+
+																			</div>
+																		</td>
+																	</tr>
+																</table>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+</table>
+				
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="100%" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td width="0%" valign="top">&nbsp;</td>
+		<td width="0%"><img border="0" src="images/spacer.gif" width="2" height="20"></td>
+		<td width="100%" valign="top">
+			<table width="100%" cellspacing="0" cellpadding="5">
+<!-- BEGIN description -->
+				<tr>
+					<td height="18" width="100%" class="property_bkgnd_primary">
+						<A NAME="description"><b>&nbsp;Description</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="9" width="100%" style="padding: 10px">
+						{description}
+					</td>
+				</tr>
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+<!-- END description -->
+<!-- BEGIN amenity -->
+				<tr>
+					<td height="18" width="100%" class="property_bkgnd_primary">
+						<A NAME="amenities"><b>&nbsp;Amenities</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" style="padding: 10px">
+						{amenity}
+					</td>
+				</tr>
+<!-- END amenity -->
+
+<!-- BEGIN reservation_chart -->
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+					<tr>
+						<td width="100%" valign="top">
+							<div align="left">
+								<table width="100%" border="0" cellspacing="0" cellpadding="2" height="1">
+									<tr>
+										<td width="100%" class="property_bkgnd_primary"><A NAME="rates"><b>&nbsp;Rates</b></A></td>      				
+									</tr>
+									<tr>
+										<td colspan="100%">
+											<table border="0" cellpadding="0" cellspacing="0" width="100%">
+												<tr>
+													<td class="hdr_bkgnd">&nbsp;</td>
+													<td style="border-right: 1pt dotted #CCCCCC" class="hdr_bkgnd"><span><b>&nbsp;{labeldy}&nbsp;</b></span></td>
+													<td style="border-right: 1pt dotted #CCCCCC" class="hdr_bkgnd"><span><b>&nbsp;{labelwk}&nbsp;</b></span></td>      				
+													<td class="hdr_bkgnd"><span><b>&nbsp;{labelmo}&nbsp;</b></span></td>      				
+												</tr>
+<!-- if rentlowdy > "" OR rentlowwk > "" OR rentlowmo > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype1}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC;">&nbsp;{rentlowdy}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC;">&nbsp;{rentlowwk}&nbsp;</td>
+													<td align="center">&nbsp;{rentlowmo}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentlowdy2 > "" OR rentlowwk2 > "" OR rentlowmo2 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype2}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowdy2}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowwk2}&nbsp;</td>
+													<td align="center">&nbsp;{rentlowmo2}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentlowdy3 > "" OR rentlowwk3 > "" OR rentlowmo3 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype3}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowdy3}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC">&nbsp;{rentlowwk3}&nbsp;</td>
+													<td align="center">&nbsp;{rentlowmo3}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if renthighdy > "" OR renthighwk > "" OR renthighmo > "" then
+												<tr>
+													<td style="border-top: 1pt dotted #CCCCCC; border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype1}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" >&nbsp;{renthighdy}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" >&nbsp;{renthighwk}&nbsp;</td>
+													<td align="center" style="border-top: 1pt dotted #CCCCCC;" >&nbsp;{renthighmo}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if renthighdy2 > "" OR renthighwk2 > "" OR renthighmo2 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype2}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighdy2}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighwk2}&nbsp;</td>
+													<td align="center" >&nbsp;{renthighmo2}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if renthighdy3 > "" OR renthighwk3 > "" OR renthighmo3 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;"><span style="color: #0066CC;"><b>&nbsp;{renttype3}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighdy3}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" >&nbsp;{renthighwk3}&nbsp;</td>
+													<td align="center" >&nbsp;{renthighmo3}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentpeakdy > "" OR rentpeakwk > "" OR rentpeakmo > "" then
+												<tr>
+													<td style="border-top: 1pt dotted #CCCCCC; border-right: 1pt dotted #CCCCCC;" class="color_bkgnd"><span style="color: #0066CC;"><b>&nbsp;{renttype1}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" class="color_bkgnd">&nbsp;{rentpeakdy}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC; border-top: 1pt dotted #CCCCCC;" class="color_bkgnd">&nbsp;{rentpeakwk}&nbsp;</td>
+													<td align="center" style="border-top: 1pt dotted #CCCCCC;" class="color_bkgnd">&nbsp;{rentpeakmo}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentpeakdy2 > "" OR rentpeakwk2 > "" OR rentpeakmo2 > "" then
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;" class="color_bkgnd"><span style="color: #0066CC;"><b>&nbsp;{renttype2}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakdy2}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakwk2}&nbsp;</td>
+													<td align="center" class="color_bkgnd">&nbsp;{rentpeakmo2}&nbsp;</td>
+												</tr>
+end if -->
+<!-- if rentpeakdy3 > "" OR rentpeakwk3 > "" OR rentpeakmo3 > ""
+												<tr>
+													<td style="border-right: 1pt dotted #CCCCCC;" class="color_bkgnd"><span style="color: #0066CC;"><b>&nbsp;{renttype3}&nbsp;</b></span></td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakdy3}&nbsp;</td>
+													<td align="center" style="border-right: 1pt dotted #CCCCCC" class="color_bkgnd">&nbsp;{rentpeakwk3}&nbsp;</td>
+													<td align="center" class="color_bkgnd">&nbsp;{rentpeakmo3}&nbsp;</td>
+												</tr>
+end if -->
+											</table>
+										</td>
+									</tr>				
+									<tr>
+										<td>&nbsp;</td>      				
+									</tr>
+									<tr>
+										<td class="color_white"><img border="0" src="images/spacer.gif" height="10" width="10"></td>
+										<td>&nbsp;<span style="font-size: 0.8em;"><b>Low Season Dates:<br />&nbsp;</b> October - February</span></td>      				
+									</tr>
+									<tr>
+										<td class="color_white"><img border="0" src="images/spacer.gif" height="10" width="10"></td>
+										<td>&nbsp;<span style="font-size: 0.8em;"><b>High Season Dates:<br />&nbsp;</b> March - May</span></td>      				
+									</tr>
+									<tr>
+										<td class="color_white"><img border="0" src="images/spacer.gif" height="10" width="10"></td>
+										<td>&nbsp;<span style="font-size: 0.8em;"><b>Low Season Dates:<br />&nbsp;</b> June - September</span></td>      				
+									</tr>
+									<tr>
+										<td>&nbsp;</td>      				
+									</tr>	   				   
+								</table>
+							</div>
+						</td>
+					</tr>
+
+<!-- END reservation_chart -->
+
+<!-- BEGIN contact -->
+				<tr>
+					<td height="18" width="100%" class="property_bkgnd_primary">
+						<A NAME="contact"><b>&nbsp;For More Information</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="9" width="100%" style="padding: 10px">
+						{broker_logo}
+						<p style="line-height: 18px;">{agent}{broker}
+						<br />&nbsp;
+						{agent_phone}
+						{agent_email}
+						{agent_website}
+						</p>
+					</td>
+				</tr>
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+<!-- END contact -->
+
+<!-- BEGIN external_links -->
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="property_bkgnd_primary" height="18" width="100%">
+						<a NAME="links"><b>&nbsp;Links</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="18" width="100%" style="padding: 10px">
+{alink}
+{alink2}
+{alink3}
+					</td>
+				</tr>
+<!-- END external_links -->
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="100%">&nbsp;</td>
+	</tr>
+</table>
+		</DIV>
+	</TD>
+	 <TD WIDTH="0%" VALIGN="top"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+</tr>
+</table>
+<DIV style="background: #EEEEEE; margin-bottom: 10px;"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="100%" HEIGHT="1"></DIV>
+
+<script type="text/javascript">
+// <![CDATA[
+function validate(form){var rtn;rtn=true;var today=new Date();var DateIn=new Date();DateIn.setMonth(form.MonthIn.value-1);DateIn.setDate(form.DayIn.value);DateIn.setFullYear(form.YearIn.value);var DateOut=new Date();DateOut.setMonth(form.MonthOut.value-1);DateOut.setDate(form.DayOut.value);DateOut.setFullYear(form.YearOut.value);if(rtn&&(Date.parse(DateIn)<Date.parse(today))){alert('Please make sure the date of arrival is after today.');rtn=false;};if(rtn&&(Date.parse(DateIn)>Date.parse(DateOut))){alert('Please make sure the date of arrival is before the departure date.');rtn=false};if(rtn&&(form.Adults.value.length<1||checknum(form.Adults.value)==false)){alert('Please enter the number of adults staying.');rtn=false};if(rtn&&(form.Children.value.length<1||checknum(form.Children.value)==false)){alert('Please enter the number of children staying.');rtn=false;};return rtn;};var cntd; cntd=0; function sendText(datewriter,text){var rtn;rtn=true;alert(datewriter.name);datewriter.value=text;datewriter.style.color='red';alert(datewriter.name);};
+// ]]>
+</script>
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Properties_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END property -->
+
+<!-- BEGIN index -->
+<div class="gadget custom_index">
+  <h2>{title}</h2>
+  <div id="properties-index-{id}" class="content">
+    <ul class="custom_indexList">
+    <!-- BEGIN item -->
+      <li class="custom_indexItem"><a class="custom_indexTitle" href="{link}">{title}</a><br /><span class="custom_indexDesc" align=\"justify\">{desc}</span><span class="custom_indexDateStr">{update_string}<span class="custom_indexDate">{updated}</span></span></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Properties_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-properties-head" class="layout_head">
+<h2 id="layout_{actionName}_title"><a href="{link}">{layout_title}</a></h2>
+</div>
+<div id="layout_{actionName}_body" class="layout_body">
+<!-- BEGIN map -->
+	<div id="properties-{id}" style="height: {properties_height}px; color: #000000;"></div>
+	{properties_dimensions}
+	<script type="text/javascript">
+    //<![CDATA[
+	function urldecode (str) {
+		// Decodes URL-encoded string  
+		// 
+		// version: 911.718
+		// discuss at: http://phpjs.org/functions/urldecode    // +   original by: Philip Peterson
+		// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+		// +      input by: AJ
+		// +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+		// +   improved by: Brett Zamir (http://brett-zamir.me)    // +      input by: travc
+		// +      input by: Brett Zamir (http://brett-zamir.me)
+		// +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+		// +   improved by: Lars Fischer
+		// +      input by: Ratheous    // +   improved by: Orlando
+		// +      reimplemented by: Brett Zamir (http://brett-zamir.me)
+		// %        note 1: info on what encoding functions to use from: http://xkr.us/articles/javascript/encode-compare/
+		// %        note 2: Please be aware that this function expects to decode from UTF-8 encoded strings, as found on
+		// %        note 2: pages served as UTF-8    // *     example 1: urldecode('Kevin+van+Zonneveld%21');
+		// *     returns 1: 'Kevin van Zonneveld!'
+		// *     example 2: urldecode('http%3A%2F%2Fkevin.vanzonneveld.net%2F');
+		// *     returns 2: 'http://kevin.vanzonneveld.net/'
+		// *     example 3: urldecode('http%3A%2F%2Fwww.google.nl%2Fsearch%3Fq%3Dphp.js%26ie%3Dutf-8%26oe%3Dutf-8%26aq%3Dt%26rls%3Dcom.ubuntu%3Aen-US%3Aunofficial%26client%3Dfirefox-a');    // *     returns 3: 'http://www.google.nl/search?q=php.js&ie=utf-8&oe=utf-8&aq=t&rls=com.ubuntu:en-US:unofficial&client=firefox-a'
+		
+		return decodeURIComponent(str).replace(/\+/g, '%20');
+	}
+	
+	$('properties-{id}').style.visibility = 'hidden';
+	if (typeof (map{id}IsSmall) == "undefined") {
+		var map{id}IsSmall = false;
+	}
+	var map;
+	var xml;
+    var geocoder = null;
+    var addresses = [];
+    var markers = [];
+	var addressMarker = new Array(2);
+    var numGeocoded = 0;
+	var tempImage;
+	var gmarkers = [];
+	var gOverMarkers = [];
+	var oProgressBar;
+    var bounds = null;
+	var orderCount = 1;
+	var usingLngLat = true;
+	var map_zoom = 8;
+	var baseIcon = null;
+	var baseShadow = null;
+	var highestZIndex = 0;
+	
+	function getWidth (text, size) {
+		var spanElement = document.createElement('span');
+		var nobrElement = document.createElement('nobr');
+		spanElement.style.position = "absolute";
+		spanElement.style.display = "block";
+		spanElement.style.clear = "both";
+		spanElement.style.float = "none";
+		spanElement.style.whiteSpace = "nowrap";
+		spanElement.style.fontSize = size/2.5 + "mm";
+		nobrElement.innerHTML = text;
+		spanElement.appendChild(nobrElement);
+		document.body.appendChild(spanElement);
+		var width = $(spanElement).getWidth();
+		var height = $(spanElement).getHeight();
+		document.body.removeChild(spanElement);
+		var dimensions = new Array();
+		dimensions[0] = width;
+		dimensions[1] = height;
+		return dimensions;
+	}
+    
+	function parseXml(str) {
+      if (window.ActiveXObject) {
+        var doc = new ActiveXObject('Microsoft.XMLDOM');
+        doc.loadXML(str);
+        return doc;
+      } else if (window.DOMParser) {
+        return (new DOMParser).parseFromString(str, 'text/xml');
+      }
+    }
+
+	function getHighestZIndex() {
+        // if we haven't previously got the highest zIndex
+        // save it as no need to do it multiple times
+        if (highestZIndex==0) {
+            if (gmarkers.length>0) {
+                for (var i=0; i<gmarkers.length; i++) {
+                    tempZIndex = gmarkers[i].getZIndex();
+                    if (tempZIndex>highestZIndex) {
+                        highestZIndex = tempZIndex;
+                    }
+                }
+            }
+        }
+        return highestZIndex;
+        //return google.maps.Overlay.getZIndex(marker.getPosition().lat()) + marker.importance*1000000;
+	}
+
+	// Creates a marker whose info window displays the letter corresponding
+	// to the given index.
+	function createMarker(point, num, over) {
+	  // Create a lettered icon for this point using our icon class
+	  var markerLabel = addresses[num][12];
+	  var fs = addresses[num][2]; // font-size
+	  var sfs = addresses[num][3]; // font-size
+	  if(map{id}IsSmall === true){
+		  fs = 8; // font-size
+		  sfs = 9; // font-size
+		  if (markerLabel == 'United States') {
+			markerLabel = 'US';
+		  } else if (markerLabel == 'South America') {
+			markerLabel = 'S AMERICA';
+		  } else if (markerLabel == 'Central America') {
+			markerLabel = 'C AMERICA';
+		  } else if (markerLabel == 'Caribbean') {
+			markerLabel = 'CARIBBEAN';
+		  } else if (markerLabel == 'Mexico') {
+			markerLabel = 'MEX';
+		  } else if (markerLabel == 'South Pacific') {
+			markerLabel = 'PACIFIC';
+		  }
+		  $('properties-{id}_overview').style.visibility = 'hidden';
+		  /*
+		  var y=markerLabel;
+		  var r='';
+		  a=markerLabel.replace(/\s/g,' ');
+		  var a=a.split(' ');
+		  for(z=0;z<a.length;z++){
+			  if (a[z].length > 0){
+			  r=((a.length>1) ? r+a[z].substring(0,1).toUpperCase() : a[z].substring(0,2).toUpperCase());
+			  }
+		  }
+		  markerLabel = r;
+		  */
+		  markerLabel = markerLabel.toUpperCase();
+	  }
+	  var markerText = addresses[num][13];
+	  var subTitle = addresses[num][16];
+	  var markerTarget = addresses[num][15];
+	  var markerInfo = '';
+	  var markerURL = '';
+	  if (markerTarget == 'infowindow') {
+		markerInfo = addresses[num][1];
+	  } else {
+		markerURL = addresses[num][14];
+	  }
+	  var bw = addresses[num][4]; // border width
+	  var ra = addresses[num][5]; // corner radius
+	  var fc = ''; //font color
+	  var fg = ''; //foreground color
+	  var bc = ''; // border color
+	  var markerTitle = '';
+	  var subtext = '';
+	  var titleDim = [];
+	  var subDim = [];
+	  var fWidth = 0;
+	  var fHeight = 0;
+	  var iconUrl = '';
+	  if (over === false || typeof(over) == "undefined") {
+		  over = false;
+		  fc = addresses[num][6]; //font color
+		  fg = addresses[num][7]; //foreground color
+		  bc = addresses[num][8]; // border color
+		  //if (markerLabel.indexOf(" ") > markerLabel.indexOf(",")) {
+			//var markerTitle = markerLabel.substr(0, markerLabel.indexOf(",")) + "%20>>";
+		  //} else if (markerLabel.indexOf(" ") < markerLabel.indexOf(",")) {
+			//var markerTitle = markerLabel.substr(0, markerLabel.indexOf(" ")) + "%20>>";
+		  //} else {
+			//var markerTitle = markerLabel + "%20>>";
+		  //}
+		  markerTitle = markerLabel;
+		  titleDim = getWidth(markerTitle, fs);
+		  fWidth = titleDim[0]+15;
+		  if (fWidth < 28) {
+			fWidth = 28;
+		  }
+		  fHeight = titleDim[1]+10;
+		  iconUrl = "index.php?gadget=Maps&action=Rounded&sh=r&w=" + fWidth + "&r=" + ra + "&fg=" + fg + "&bg=FFF&bgt=1&bw=" + bw + "&bc=" + bc + "&bt=0&ta=1&fs=" + fs + "&fc=" + fc + "&text=" + markerTitle;
+	  } else {
+		  fc = addresses[num][9]; //font color
+		  fg = addresses[num][10]; //foreground color
+		  bc = addresses[num][11]; // border color
+		  markerTitle = markerText;
+		  if (!subTitle || subTitle === null) {
+			if (markerTarget == 'infowindow') {
+				subtext = "EXPAND%20>>";
+			} else {
+				subtext = "VIEW PROPERTY%20>>";
+			}
+		  } else {
+			subtext = subTitle;
+		  }
+		  titleDim = getWidth(markerTitle, fs);
+		  subDim = getWidth(subtext, sfs);
+		  if (titleDim[0] < subDim[0]) {
+			fWidth = subDim[0]+15;
+		  } else {
+			fWidth = titleDim[0]+15;
+		  }
+		  fHeight = titleDim[1]+subDim[1]+10-3;
+		  iconUrl = "index.php?gadget=Maps&action=Rounded&sh=r&w=" + fWidth + "&r=" + ra + "&fg=" + fg + "&bg=FFF&bgt=1&bw=" + bw + "&bc=" + bc + "&bt=0&ta=1&fs=" + fs + "&fc=" + fc + "&text=" + markerTitle + "&sfs=" + sfs + "&subtext=" + subtext;
+	  }
+	  
+	  var letteredIcon = new google.maps.MarkerImage(iconUrl,
+	  // The size of this image.
+	  new google.maps.Size(fWidth, fHeight),
+	  // The origin for this image is 0,0.
+	  new google.maps.Point(0,0),
+	  // The anchor for this image.
+	  new google.maps.Point(0, fHeight));
+	  
+	  var shadowIcon = new google.maps.MarkerImage("{JAWS_URL}libraries/rounded_php/rounded_shadow_over.png",
+	  // The size of this image.
+	  new google.maps.Size(fWidth+9, fHeight+3),
+	  // The origin for this image is 0,0.
+	  new google.maps.Point(0,0),
+	  // The anchor for this image.
+	  new google.maps.Point(0, fHeight-3),
+	  new google.maps.Size(fWidth+9, fHeight+3));
+	  
+	  var marker = new google.maps.Marker({
+		position: point,
+		shadow: shadowIcon,
+		map: map,
+		icon: letteredIcon,
+		zIndex: orderCount
+	  });
+	  if (over === true) {
+		marker.set("myZIndex", marker.getZIndex());
+        google.maps.event.addListener(marker, "mouseover", function() {
+            getHighestZIndex();
+            this.setOptions({zIndex:highestZIndex+1});
+        });
+        google.maps.event.addListener(marker, "mouseout", function() {
+            this.setOptions({zIndex:this.get("myZIndex")});
+        });		
+	  }
+      bounds.extend(point);
+	  
+	  google.maps.event.addDomListener(marker, "click", function() {
+		if (markerTarget == 'infowindow') {
+			marker.openInfoWindowHtml(markerInfo);
+		} else {
+			if (markerTarget == 'javascript:void(0);') {
+				if (gmarkers) {
+					for (var i = 0; i < gmarkers.length; i++ ) {
+						gmarkers[i].setMap(null);
+					}
+				}	
+				bounds = null;
+				bounds = new google.maps.LatLngBounds();
+				eval(markerURL);
+			} else {
+				if (markerTarget == '_self') {
+					location.href = markerURL;
+				} else {
+					window.open(markerURL);
+				}
+			}
+		}
+	  });
+	  
+	  orderCount++;
+	  marker.importance = orderCount;
+	  gmarkers.push(marker);
+	  if (over == true) {
+		  gOverMarkers.push(marker);
+	  }
+	  google.maps.event.addDomListener(marker, "mouseout", function() {
+		 gOverMarkers[num].setVisible(false);
+	  });
+	  google.maps.event.addDomListener(marker, "mouseover", function() {
+		 gOverMarkers[num].setVisible(true);
+	  });
+	  map.fitBounds(bounds);
+	  map.setCenter(bounds.getCenter());
+	  return marker;
+	}
+
+	function addressResolved(status, results) {
+		var delay = 0;
+		if (addresses[numGeocoded][0]) {		
+			if (usingLngLat === true) {
+				latlng = addresses[numGeocoded][0].split(',');
+				if (latlng[0] && latlng[1]) {
+					 point = new google.maps.LatLng(latlng[1],latlng[0]);
+					 createMarker(point, numGeocoded);
+					 createMarker(point, numGeocoded, true);
+
+					// Move onto the next address; this skips bad addresses, too.
+					if (gOverMarkers[numGeocoded]) {
+						gOverMarkers[numGeocoded].setVisible(false);
+					}
+					//oProgressBar.updateLoader(1);
+					numGeocoded += 1;
+				} else {
+					//oProgressBar.remove();
+				}
+			} else {
+			   if (status == google.maps.GeocoderStatus.OK) {
+				 // Success; do something with the address.
+				 //marker = new google.maps.Marker(point);
+				 createMarker(results[0].geometry.location, numGeocoded);
+				 createMarker(results[0].geometry.location, numGeocoded, true);
+			   }
+				// Move onto the next address; this skips bad addresses, too.
+				if (gOverMarkers[numGeocoded]) {
+					gOverMarkers[numGeocoded].setVisible(false);
+				}
+				//oProgressBar.updateLoader(1);
+				numGeocoded += 1;
+			}
+		}
+		window.setTimeout(geocodeAll, delay);
+	}
+
+	function geocodeAll() {
+		  if (numGeocoded < addresses.length) {
+			addresses[numGeocoded] = new Array(16);
+			addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("lnglat");
+			if (addresses[numGeocoded][0] == '') {
+				addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("address");
+				usingLngLat = false;
+			}
+			addresses[numGeocoded][1] = markers[numGeocoded].childNodes[0].nodeValue;
+			addresses[numGeocoded][2] = parseInt(markers[numGeocoded].getAttribute("fs"), 10);
+			addresses[numGeocoded][3] = parseInt(markers[numGeocoded].getAttribute("sfs"), 10);
+			addresses[numGeocoded][4] = parseInt(markers[numGeocoded].getAttribute("bw"), 10);
+			addresses[numGeocoded][5] = parseInt(markers[numGeocoded].getAttribute("ra"), 10);
+			addresses[numGeocoded][6] = markers[numGeocoded].getAttribute("fc");
+			addresses[numGeocoded][7] = markers[numGeocoded].getAttribute("fg");
+			addresses[numGeocoded][8] = markers[numGeocoded].getAttribute("bc");
+			addresses[numGeocoded][9] = markers[numGeocoded].getAttribute("hfc");
+			addresses[numGeocoded][10] = markers[numGeocoded].getAttribute("hfg");
+			addresses[numGeocoded][11] = markers[numGeocoded].getAttribute("hbc");
+			addresses[numGeocoded][12] = markers[numGeocoded].getAttribute("title");
+			addresses[numGeocoded][13] = markers[numGeocoded].getAttribute("ext");
+			addresses[numGeocoded][14] = urldecode(markers[numGeocoded].getAttribute("url"));
+			addresses[numGeocoded][15] = markers[numGeocoded].getAttribute("target");
+			addresses[numGeocoded][16] = markers[numGeocoded].getAttribute("sub");
+			if (usingLngLat === true) {
+				addressResolved();
+			} else {
+				geocoder.geocode({'address': addresses[numGeocoded][0]}, addressResolved);
+			}
+		  } else {
+			//oProgressBar.remove();
+		  }
+    }
+		
+	function downloadURL() {
+		  request = new Ajax.Request("{properties_xml_url}", {
+			method: 'get',
+			onSuccess: function(transport) {
+			  data = transport.responseText;
+			  xml = parseXml(data);
+			  markers = xml.documentElement.getElementsByTagName("marker");
+			  addresses = new Array(markers.length);
+			  if (markers.length > 0) {
+				$('properties-{id}').style.visibility = 'visible';
+			  }
+			  //oProgressBar.start(markers.length);
+			  if (numGeocoded < addresses.length) {
+				addresses[numGeocoded] = new Array(16);
+				addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("lnglat");
+				if (addresses[numGeocoded][0] == '') {
+					addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("address");
+					usingLngLat = false;
+				}
+				addresses[numGeocoded][1] = markers[numGeocoded].childNodes[0].nodeValue;
+				addresses[numGeocoded][2] = parseInt(markers[numGeocoded].getAttribute("fs"), 10);
+				addresses[numGeocoded][3] = parseInt(markers[numGeocoded].getAttribute("sfs"), 10);
+				addresses[numGeocoded][4] = parseInt(markers[numGeocoded].getAttribute("bw"), 10);
+				addresses[numGeocoded][5] = parseInt(markers[numGeocoded].getAttribute("ra"), 10);
+				addresses[numGeocoded][6] = markers[numGeocoded].getAttribute("fc");
+				addresses[numGeocoded][7] = markers[numGeocoded].getAttribute("fg");
+				addresses[numGeocoded][8] = markers[numGeocoded].getAttribute("bc");
+				addresses[numGeocoded][9] = markers[numGeocoded].getAttribute("hfc");
+				addresses[numGeocoded][10] = markers[numGeocoded].getAttribute("hfg");
+				addresses[numGeocoded][11] = markers[numGeocoded].getAttribute("hbc");
+				addresses[numGeocoded][12] = markers[numGeocoded].getAttribute("title");
+				addresses[numGeocoded][13] = markers[numGeocoded].getAttribute("ext");
+				addresses[numGeocoded][14] = urldecode(markers[numGeocoded].getAttribute("url"));
+				addresses[numGeocoded][15] = markers[numGeocoded].getAttribute("target");
+				addresses[numGeocoded][16] = markers[numGeocoded].getAttribute("sub");
+				if (usingLngLat === true) {
+					addressResolved();
+				} else {
+					geocoder.geocode({'address': addresses[numGeocoded][0]}, addressResolved);
+				}
+			  }
+			  if (markers.length == 0) {
+				$('properties-{id}').style.display = 'none';
+			  }
+			}
+		});
+    }
+
+	// Re-anable alerts
+	KillAlerts = false;
+		 
+	document.observe("dom:loaded",function(){
+		pWidth{id} = parseInt(document.getElementById('properties-{id}').offsetWidth, 10);
+		pHeight{id} = parseInt(document.getElementById('properties-{id}').offsetHeight, 10);
+		bounds = new google.maps.LatLngBounds();
+		// Create a base icon for all of our markers that specifies the
+		// shadow, icon dimensions, etc.
+		  baseIcon = new google.maps.MarkerImage("https://maps.gstatic.com/mapfiles/ms2/micons/red.png",
+		  // The size of this image.
+		  new google.maps.Size(40, 34),
+		  // The origin for this image is 0,0.
+		  new google.maps.Point(0,0),
+		  // The anchor for this image.
+		  new google.maps.Point(0, 34));
+		
+		var myOptions = {
+			mapTypeId: google.maps.MapTypeId.{map_type},
+			overviewMapControl: true,
+			OverviewMapControlOptions: {'opened': true},
+			scrollwheel: true,
+			zoom: 8
+		};
+		map = new google.maps.Map(document.getElementById("properties-{id}"), myOptions);
+		
+		//map.enableScrollWheelZoom();
+		//map.addControl(new GLargeMapControl());
+		//map.addControl(new GMapTypeControl());
+		//map.setUIToDefault();
+		//map.addControl(new google.maps.OverviewMapControl(new google.maps.Size(parseInt(mWidth{id}/6), parseInt(mWidth{id}/6))));
+		// minimap in the down right corner
+		map.setCenter(new google.maps.LatLng(0, 0), 0);
+		//map.setMapType(google.maps.MapTypeId.{map_type});
+		geocoder = new google.maps.Geocoder();
+		window.setTimeout(downloadURL, 50);
+	});		
+	//]]>     
+	</script>
+<!-- END map -->
+<!-- BEGIN slideshow -->
+<style>
+	#properties-slideshow-{id}{float:left;position:relative;width:343px;height:299px;overflow:hidden;} 
+    #properties-slideshow-{id} #properties-slide-caption{id}{position:absolute;bottom:10px;left:0;z-index:1000;background:{slideshow_textbar_bkgnd};padding:10px 80px 10px 10px;width:343px;color:#D3E2C1;cursor:pointer;pointer:hand;} 
+    .fade-box{width:343px;position:absolute;text-align:center;z-index:900;} 
+    .fade-box div{display:none;} 
+    #properties-slideshow_overlay{id}{height:299px;width:343px;position:absolute;top:0px;left:0px;z-index:800;background:{slideshow_overlay_image} no-repeat;list-style:none;cursor:pointer;pointer:hand;} 
+    #properties-show-controls{id}{position:absolute;bottom:22px;right:10px;z-index:1100; list-style: none;} 
+    #properties-show-controls{id} li{float:left;} 
+    #properties-show-controls{id} li a:link,#properties-show-controls{id} li a:visited{display:block;width:16px;height:16px;background-repeat:no-repeat;background-position:0 0;} 
+    #properties-show-controls{id} li a span{position:absolute;left:-9999px;} 
+    #properties-show-controls{id} li#properties-PauseButton{id}{position:absolute;right:30px;} 
+    #properties-show-controls{id} li#properties-PauseButton{id} a:link,#properties-show-controls{id} li#properties-PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #properties-show-controls{id} li#properties-PauseButton{id} a span{position:static;left:0;} 
+    #properties-show-controls{id} liproperties-PlayButton{id}{position:absolute;right:30px;} 
+    #properties-show-controls{id} li#properties-PlayButton{id} a:link,#properties-show-controls{id} li#properties-PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #properties-show-controls{id} li#properties-PlayButton{id} a span{position:static;left:0;} 
+    /*
+	#properties-show-controls{id} li#properties-PreviousButton{id} a{background-image:url(icons/silk_set/resultset_previous.png);} 
+    #properties-show-controls{id} li#properties-NextButton{id} a{background-image:url(icons/silk_set/resultset_next.png);} 	
+	*/
+</style>
+<noscript>
+	<style type="text/css">.img-{id} { display: none; }</style>
+</noscript>
+<div id="properties-slideshow-{id}" class="properties-slideshow" style="background: {slideshow_background_color};">
+	<div style="position:relative;z-index:10;">
+	<script type="text/javascript">
+	var properties{id}_slides = new Array();
+	var properties{id}_srcs = new Array();
+	var slideshow{id}_width = parseInt($('properties-slideshow-{id}').offsetWidth, 10);
+	var slideshow{id}_height = parseInt($('properties-slideshow-{id}').offsetHeight, 10);
+	if (slideshow{id}_width == 0) {
+		slideshow{id}_width = {slideshow_width};
+	}
+	if (slideshow{id}_height == 0) {
+		slideshow{id}_height = {slideshow_height};
+	}
+	</script>
+<!-- BEGIN image -->
+		<div{image_style} id="properties-image-{image_linkid}_{image_id}" class="fade-box">
+			<!-- <a href="javascript:oPropertiesSlides{image_linkid}.goNext();"> -->
+				<img id="properties-img-{image_linkid}_{image_id}" class="img-{image_linkid}" src="{replace_image}" alt="{image_alt}" style="{image_height}" />
+				<noscript>
+					<img id="properties-img2-{image_linkid}_{image_id}" class="img2-{image_linkid}" src="{image_src}" alt="{image_alt}" style="{image_height}" />
+				</noscript>
+				<div class="image-caption">{image_caption}</div>
+			<!-- </a> -->
+		</div>
+		<input type="hidden" id="properties-image-{image_linkid}_{image_count}_href" value="{image_url}">
+		<input type="hidden" id="properties-image-{image_linkid}_{image_count}_target" value="{image_target}">
+		<script type="text/javascript">
+		{image_dimensions}
+		properties{image_linkid}_slides.push("properties-image-{image_linkid}_{image_id}");
+		properties{image_linkid}_srcs.push("{image_src}");
+		</script>
+<!-- END image -->
+	</div>
+	<ul id="properties-show-controls{id}">
+		<li id="properties-PlayButton{id}" style="display: none;">
+			<a href="javascript:oPropertiesSlides{id}.startSlideShow();"><span>[play]</span></a>
+		</li>
+		<li id="properties-PauseButton{id}" style="display: none;">
+			<a href="javascript:oPropertiesSlides{id}.stop();"><span>[stop]</span></a>
+		</li>
+		<!--<li class="png-fix" id="properties-PreviousButton"><a class="png-fix" href="javascript:oPropertiesSlides.goPrevious();"><span>Previous</span></a></li>
+		<li id="properties-NextButton"><a class="png-fix" href="javascript:oPropertiesSlides.goNext();"><span>Next</span></a></li>-->
+	</ul>
+	<div id="properties-slideshow_overlay{id}">&nbsp;</div>
+	<p id="properties-slide-counter{id}" style="display: none;">1 of {slideshow_total}</p>
+	<div id="properties-slide-caption{id}">&nbsp;</div>
+	<script type="text/javascript">
+	{slideshow_dimensions}
+	Event.observe(document,"dom:loaded",function(){
+		if($("properties-slideshow-{id}")){
+			//$("properties-slideshow-{id}").style.display = "";
+			oPropertiesSlides{id}=new iSlideShow({
+			autostart:false,
+			start:0,
+			wait:{slideshow_timer},
+			slides:properties{id}_slides,
+			srcs:properties{id}_srcs,
+			counter:"properties-slide-counter{id}",
+			caption:"properties-slide-caption{id}",
+			playButton	: "properties-PlayButton{id}",
+			pauseButton	: "properties-PauseButton{id}"
+			});
+			if ($('properties-image-{id}_'+oPropertiesSlides{id}.iImageId+'_href').value.length && $('properties-image-{id}_'+oPropertiesSlides{id}.iImageId+'_target').value.length) {
+				if ($('properties-image-{id}_'+oPropertiesSlides{id}.iImageId+'_target').value == '_blank') {
+					Event.observe("properties-slideshow_overlay{id}","click",function(b){Event.stop(b);window.open($('properties-image-{id}_'+oPropertiesSlides{id}.iImageId+'_href').value);});
+				} else {
+					Event.observe("properties-slideshow_overlay{id}","click",function(b){Event.stop(b);location.href = $('properties-image-{id}_'+oPropertiesSlides{id}.iImageId+'_href').value;});
+					Event.observe("properties-slide-caption{id}","click",function(b){Event.stop(b);location.href = $('properties-image-{id}_'+oPropertiesSlides{id}.iImageId+'_href').value;});
+				}
+			} else {
+				Event.observe("properties-slideshow_overlay{id}","click",function(b){Event.stop(b);oPropertiesSlides{id}.goNext();});
+				Event.observe("properties-slide-caption{id}","click",function(b){Event.stop(b);oPropertiesSlides{id}.goNext();});
+			}
+		}
+		Event.observe(window,"load",function(){
+			oPropertiesSlides{id}.startSlideShow();
+			<!-- BEGIN stop -->
+			setTimeout("oPropertiesSlides{id}.stop()", {slideshow_timer});
+			$("properties-show-controls{id}").style.display = 'none';
+			<!-- END stop -->
+		});
+	});
+	</script>
+</div>
+<!-- END slideshow -->
+<!-- BEGIN search -->
+			  <FORM METHOD="POST" ACTION="{action}" ID="properties_search_form" NAME="properties_search_form" onsubmit="if(document.getElementById('searchkeyword').value=='Enter City, Zip Code, Keyword'){document.getElementById('searchkeyword').value='';};if(document.getElementById('searchkeyword').value.indexOf(' - Amenity') == -1 && gotMatch !== true && document.getElementById('searchkeyword').value != ''){getClosestSearch(document.getElementById('searchkeyword').value, null, 'searchkeyword', 'search_choices', 'country', true);};if (document.getElementById('searchkeyword').value == 'No matches were found.'){showingChoices = true;setTimeout('document.getElementById(\'search_choices\').style.display = \'\';', 1000);return false;};">
+              <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+                <TR>
+				  <TD WIDTH="0%">
+				  <nobr>
+					<input NAME="keyword" id="searchkeyword" VALUE="{searchkeyword_value}" onfocus="this.style.color='#000000';if (showingChoices === true){document.getElementById('search_choices').style.display = 'none';};if(this.value==this.defaultValue || this.value == 'No matches were found.'){if (this.value == 'No matches were found.') {this.defaultValue = 'No matches were found.';}; this.value='';};" onblur="if(this.value==''){this.value=this.defaultValue;this.style.color='#888888';};" size="25" style="color: #888888; font-size: 80%; padding: 3px">&nbsp;
+					
+					<select size="1" name="id" id="id" onchange="javascript: if(document.getElementById('searchkeyword').value=='Enter City, Zip Code, Keyword')document.getElementById('searchkeyword').value=''; location.href = 'index.php?gadget=Properties&action=Category&id=' + document.getElementById('id').value + '&status=' + document.getElementById('searchstatus').value + '&sortColumn=' + document.getElementById('sortColumn').value + '&sortDir=' + document.getElementById('sortDir').value + '&bedroom=' + document.getElementById('searchbedroom').value + '&bathroom=' + document.getElementById('searchbathroom').value + '&keyword=' + document.getElementById('searchkeyword').value;">
+                            <option {category_default} value="all">Show Me...</option>
+                            <option value="all">All Categories</option>
+							{category_options}
+							{amenity_options}
+					</select>&nbsp;&nbsp;
+					
+					<select size="1" name="status" id="searchstatus" onchange="javascript: if(document.getElementById('searchkeyword').value=='Enter City, Zip Code, Keyword')document.getElementById('searchkeyword').value=''; location.href = 'index.php?gadget=Properties&action=Category&id=' + document.getElementById('id').value + '&status=' + document.getElementById('searchstatus').value + '&sortColumn=' + document.getElementById('sortColumn').value + '&sortDir=' + document.getElementById('sortDir').value + '&bedroom=' + document.getElementById('searchbedroom').value + '&bathroom=' + document.getElementById('searchbathroom').value + '&keyword=' + document.getElementById('searchkeyword').value;">
+                            <option {status_default} value="">Status...</option>
+							{status_options}
+                    </select>&nbsp;&nbsp;
+					<SELECT SIZE="1" NAME="bedroom" id="searchbedroom" onchange="javascript: if(document.getElementById('searchkeyword').value=='Enter City, Zip Code, Keyword')document.getElementById('searchkeyword').value=''; location.href = 'index.php?gadget=Properties&action=Category&id=' + document.getElementById('id').value + '&status=' + document.getElementById('searchstatus').value + '&sortColumn=' + document.getElementById('sortColumn').value + '&sortDir=' + document.getElementById('sortDir').value + '&bedroom=' + document.getElementById('searchbedroom').value + '&bathroom=' + document.getElementById('searchbathroom').value + '&keyword=' + document.getElementById('searchkeyword').value;">
+                      <OPTION {bedroom_default} value="">Bed</OPTION>
+							{bedroom_options}
+                    </SELECT>
+				  <SELECT SIZE="1" NAME="bathroom" id="searchbathroom" onchange="javascript: if(document.getElementById('searchkeyword').value=='Enter City, Zip Code, Keyword')document.getElementById('searchkeyword').value=''; location.href = 'index.php?gadget=Properties&action=Category&id=' + document.getElementById('id').value + '&status=' + document.getElementById('searchstatus').value + '&sortColumn=' + document.getElementById('sortColumn').value + '&sortDir=' + document.getElementById('sortDir').value + '&bedroom=' + document.getElementById('searchbedroom').value + '&bathroom=' + document.getElementById('searchbathroom').value + '&keyword=' + document.getElementById('searchkeyword').value;">
+                      <OPTION {bathroom_default} value="">Bath</OPTION>
+							{bathroom_options}
+                    </SELECT>
+					&nbsp;&nbsp;<select size="1" name="sortColumn" id="sortColumn">
+                            <option {sort_default} value="">Sort By...</option>
+                            {sort_options}
+                    </select>&nbsp;<select size="1" name="sortDir" id="sortDir" onchange="javascript: if(document.getElementById('searchkeyword').value=='Enter City, Zip Code, Keyword')document.getElementById('searchkeyword').value=''; location.href = 'index.php?gadget=Properties&action=Category&id=' + document.getElementById('id').value + '&status=' + document.getElementById('searchstatus').value + '&sortColumn=' + document.getElementById('sortColumn').value + '&sortDir=' + document.getElementById('sortDir').value + '&bedroom=' + document.getElementById('searchbedroom').value + '&bathroom=' + document.getElementById('searchbathroom').value + '&keyword=' + document.getElementById('searchkeyword').value;">
+                            <option {sort_asc} value="ASC">Sort Order...</option>
+                            <option value="ASC">Ascending</option>
+                            <option {sort_desc} value="DESC">Descending</option>
+                    </select>&nbsp;&nbsp;
+					<input TYPE="hidden" value="{owner_id}" name="owner_id">&nbsp;
+					<input TYPE="submit" value="GO" style="font-size: 1.0em;"{onclick}>&nbsp;
+					</nobr>
+					</TD>
+
+					<TD WIDTH="0%">
+						<nobr><span style="font-size: x-small;" id="showallpropsearch">
+						<A HREF="index.php?properties/all.html">
+						SHOW ALL</A></span><span style="font-size: x-small;" id="savepropsearch">&nbsp;
+						<A HREF="javascript: void(0);" onclick="if ($('saveSearch')) {if (save_html.indexOf('Or click an icon below to share this page') == (-1)) {$$('.social').each(function(element){var share_html = element.innerHTML; share_html = share_html.replace(/\<h2\>Share\<\/h2\>/g, '<p>Or click an icon below to share this page.<br />&nbsp;</p>'); save_html = save_html + share_html; $('saveSearch').innerHTML = save_html;});}; if ($('saveSearch').style.display == 'none') {$('saveSearch').style.display = '';} else {$('saveSearch').style.display = 'none';};};">
+						SAVE SEARCH</A></span></nobr>
+					</TD>
+				</TR>
+				<TR>
+					<TD><div id="search_choices" class="autocomplete"></div></TD>
+				</TR>
+              </TABLE>
+			  <div id="saveSearch" style="display: none; color: #000000; padding: 15px; text-align: left; background:#FFFFFF url({base_url}gadgets/Properties/images/right_menu_bg.png) repeat-x scroll left top; border:1px solid #BABDB6; margin:2em auto; width: 94%;">
+					<h2 style="color: #666666;">Save This Search</h2>
+					Right click on the link below, select "Copy" to get the Permanent Link to this Search.</p>
+					<p><textarea class="code" style="padding:0; font-size: 90%" id="code" name="code" rows="3" onmousedown="if(event.button==2){select_code();};" onclick="select_code();" cols="64" readonly="readonly">{permalink}</textarea></p>
+			  </div>
+            </FORM>
+			<script type="text/javascript">
+				var save_html = $('saveSearch').innerHTML;
+				function select_code()
+				{
+				//var text_val=eval(element);
+				document.properties_search_form.code.focus();
+				document.properties_search_form.code.select();
+				}
+
+				function getStateId(element, entry) {
+					autoCompleteHost = '{site_url}/index.php?gadget=Maps&action=AutoCompleteRegions';
+					autoCompleteURL = "&element=searchkeyword&methodcount=2&initial1gadget=Properties&initial1method=SearchKeyWithProperties&initial1paramcount=12&initial1param1="+$('searchstatus').value+"&initial1param2="+$('searchbedroom').value+"&initial1param3="+$('searchbathroom').value+"&initial1param4=&initial1param5=&initial1param6=&initial1param7=null&initial1param8={id_autocomplete}&initial1param9=true&initial1param10=city&initial1param11=ASC&initial1param12=city&initial2gadget=Properties&initial2method=SearchKeyWithProperties&initial2paramcount=12&initial2param1="+$('searchstatus').value+"&initial2param2="+$('searchbedroom').value+"&initial2param3="+$('searchbathroom').value+"&initial2param4=&initial2param5=&initial2param6=&initial2param7=null&initial2param8={id_autocomplete}&initial2param9=true&initial2param10=amenity&initial2param11=ASC&initial2param12=amenity";
+					return entry+"&methodcount=2&initial1gadget=Properties&initial1method=SearchKeyWithProperties&initial1paramcount=12&initial1param1="+$('searchstatus').value+"&initial1param2="+$('searchbedroom').value+"&initial1param3="+$('searchbathroom').value+"&initial1param4=&initial1param5=&initial1param6=&initial1param7=null&initial1param8={id_autocomplete}&initial1param9=true&initial1param10=city&initial1param11=ASC&initial1param12=city&initial2gadget=Properties&initial2method=SearchKeyWithProperties&initial2paramcount=12&initial2param1="+$('searchstatus').value+"&initial2param2="+$('searchbedroom').value+"&initial2param3="+$('searchbathroom').value+"&initial2param4=&initial2param5=&initial2param6=&initial2param7=null&initial2param8={id_autocomplete}&initial2param9=true&initial2param10=amenity&initial2param11=ASC&initial2param12=amenity";
+				}
+					
+				function showNoMatches(text, li) {
+					value = li.innerHTML;
+					if(value.indexOf("No matches") != -1){
+						text.value = 'No matches were found.';
+						$('search_choices').style.display = '';
+					}
+				}
+				
+				var autoCompleteHost = '';
+				var autoCompleteURL = '';
+				var showingChoices = false;
+				var MyComboBox = Class.create();
+
+				MyComboBox.Autocompleter = Ajax.Autocompleter;
+
+				// Overload onBlur
+				MyComboBox.Autocompleter.prototype.onBlur = function(event) {
+					if (Element.getStyle(this.update, 'display') == 'none') { return; }
+					// Dont hide the div on "blur" if the user clicks scrollbar
+					if(event&&Element.getStyle(this.update, 'height') != ''){
+						if( Position.within( this.update , Event.pointerX(event) , Event.pointerY(event) ) ){ 
+							Event.observe(this.update, "blur", this.onBlur.bindAsEventListener(this),true); 
+							// make sure blur is still around on
+							return; 
+						}
+					}
+					// needed to make click events working
+					setTimeout(this.hide.bind(this), 250);
+					this.hasFocus = false;
+					this.active = false; 
+				}
+
+				MyComboBox.Autocompleter.prototype.markPrevious = function() {
+					if(this.index > 0) this.index--
+					else this.index = this.entryCount-1;
+					this.getEntry(this.index).scrollIntoView(false);
+				}
+					
+				MyComboBox.prototype = {
+					initialize: function(textBox, resultsElement, array, options) {
+					this.textBox = $(textBox);
+							
+					//Cache for allChoicesHtml
+					this.allChoicesHtml = null
+					
+					this.results = $(resultsElement);
+					
+					this.array = array;
+					
+					this.results.style.display 	= 'none';
+					
+					this.events = {
+						showChoices: 	this.showChoices.bindAsEventListener(this),
+						hideChoices: 	this.hideChoices.bindAsEventListener(this),
+						click:			this.click.bindAsEventListener(this),
+						keyDown:		this.keyDown.bindAsEventListener(this)
+					}
+					
+					this.autocompleter = new MyComboBox.Autocompleter(this.textBox, this.results, this.array, options);
+					
+					Event.observe(this.textBox, 'click', this.events.click);
+					Event.observe(this.textBox, 'keydown', this.events.keyDown);
+					},
+					
+					/*
+					getAllChoices: function(e) {
+						if(!this.allChoicesHtml){
+							var choices = this.array.collect( function(choice) { return '<li>' + choice + '</li>'; } ).slice(0, 200);;
+							this.allChoicesHtml = '<ul>' + choices.join('') + (this.array.length>100?'<li class="disabled"><strong>Limited to the first 200 items!</strong></li>':'') + '</ul>';
+						}
+						this.autocompleter.updateChoices(this.allChoicesHtml);
+					},
+					*/
+					keyDown: function(e) {
+						if (e.keyCode == Event.KEY_DOWN && this.choicesVisible() ) {
+							this.showChoices();
+						}			
+					},
+					
+					// returns boolean indicating whether the choices are displayed
+					choicesVisible: function() { return (Element.getStyle(this.autocompleter.update, 'display') == 'none'); },
+					
+					click: function() {
+						if (this.choicesVisible() ) {
+							this.showChoices();
+						} else {
+							this.hideChoices();
+						}
+					},
+						
+					showChoices: function() {
+						this.textBox.focus();
+						this.autocompleter.changed = false;
+						this.autocompleter.hasFocus = true;
+						//this.getAllChoices();
+					},
+					
+					hideChoices: function() {
+						this.autocompleter.onBlur();
+					}
+				}
+				Event.observe(window, 'load', function(e){
+					var ComboBox = new MyComboBox('searchkeyword', 'search_choices', "{site_url}/index.php?gadget=Maps&action=AutoCompleteRegions", {paramName: "query", minChars: 3, callback: getStateId, afterUpdateElement: showNoMatches});
+				});
+
+				/*
+				new Ajax.Autocompleter("searchkeyword", "search_choices", "index.php?gadget=Maps&action=AutoCompleteRegions", {
+				  paramName: "query", 
+				  minChars: 1,
+				  callback: getStateId
+				});
+				*/
+				
+			</script>
+<!-- END search -->
+<!-- BEGIN reservationform -->
+			  <FORM METHOD="POST" ACTION="{action}" ID="properties_reservation_form" NAME="properties_reservation_form">
+              <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+                <TR>
+				  <TD WIDTH="0%">
+					{content}
+					<p style="text-align: right;">
+					<input TYPE="submit" value="Search" style="font-size: 1.0em;"{onclick}>&nbsp;
+					</p>
+					</TD>
+				</TR>
+              </TABLE>
+            </FORM>
+<!-- END reservationform -->
+<!-- BEGIN calendar -->
+			{content}
+<!-- END calendar -->
+<!-- BEGIN featuredproperties -->
+<div class="featuredproperties" id="featuredproperties-{gid}">
+<!-- BEGIN item -->
+	<div class="featuredproperty" id="featuredproperty-{pid}">
+<!-- BEGIN image -->
+		<div class="featuredproperty_image" style="background: url({image_src}) scroll center center no-repeat;"><a href="{image_href}" title="{image_caption}"><img alt="{image_caption}" border="0" src="{base_url}images/blank.gif" width="200" height="200" /></a></div>
+<!-- END image -->
+<!-- BEGIN no_image -->
+		<div class="featuredproperty_no_image" onclick="location.href='{image_href}';">
+		  <b>No Image</b>
+		</div>
+<!-- END no_image -->
+		<div class="featuredproperty_title"><a href="{href}">{title}</a></div>
+		<div class="featuredproperty_price"><a href="{href}">{price}</a></div>
+	</div>
+<!-- END item -->
+</div>
+<!-- END featuredproperties -->
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Properties_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END layout -->

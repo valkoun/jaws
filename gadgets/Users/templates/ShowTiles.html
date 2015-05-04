@@ -1,0 +1,114 @@
+<!-- BEGIN account_news -->
+<div id="{gadget}-accountTiles-holder">
+<!-- BEGIN news_header -->
+<script type="text/javascript">
+var photoCommentChannel = pusher.subscribe("private-tilecomment_channel_{gadget}");
+photoCommentChannel.bind("new_tilecomment", function(data) {
+	if ($('working_notification')) {
+		$('working_notification').style.display = 'none';
+    }
+	response = usersSync.getcomment(data['id'], data['gadget'], true);
+	if ($('working_notification')) {
+		$('working_notification').style.display = 'inline';
+    }
+	if (response['id']) {
+		tiles_items_html = '<div class="tiles-item tiles-message" id="tiles-'+response['poll_id']+'" onmouseout="if ($(\'tiles-delete-'+response['poll_id']+'\')){$(\'tiles-delete-'+response['poll_id']+'\').style.visibility = \'hidden\';};" onmouseover="if ($(\'tiles-delete-'+response['poll_id']+'\')){$(\'tiles-delete-'+response['poll_id']+'\').style.visibility = \'visible\';};">';
+		tiles_items_html += '	<div class="tiles-delete" id="tiles-delete-'+response['poll_id']+'"><a href="javascript:void(0);" onclick="DeletePhotoComment('+response['id']+', \'update\',\''+response['poll_id']+'\');">X</a></div>';
+		tiles_items_html += '	<div class="tiles-image">'+response['image']+'</div>';
+		tiles_items_html += '	<div class="tiles-body">';
+		tiles_items_html += '		<div class="tiles-title">'+response['title']+'</div>';
+		tiles_items_html += '		<div class="tiles-info"><span class="tiles-name">'+(response['link'] != '' ? '<a href="'+response['link']+'">' : '')+response['name']+(response['link'] != '' ? '</a>' : '')+'<span class="tiles-preactivity">'+(typeof(response['preactivity']) != "undefined" ? response['preactivity'] : '')+'</span></span>&nbsp;';
+		tiles_items_html += '		<span class="tiles-preview" id="tiles-preview-'+response['poll_id']+'"'+response['preview_style']+'>'+response['preview_comment']+'</span><span class="tiles-message" id="tiles-full-'+response['poll_id']+'"'+response['full_style']+'>'+response['comment']+'</span></div>';
+		tiles_items_html += '		<div class="tiles-created tiles-timestamp">'+response['created']+response['activity']+'</div>';
+		tiles_items_html += '		<div class="tiles-comments" id="tiles-comments-'+response['poll_id']+'">';
+		tiles_items_html += '		</div>';
+		tiles_items_html += '		<div class="tilecomments-form">';
+		tiles_items_html += '			<div class="tilecomment-holder" id="tilecomment-holder-'+response['poll_id']+'">';
+		tiles_items_html += '			<input class="tilecomment-click" id="tilecomment-click-'+response['poll_id']+'" value="Reply to this..." onclick="showPhotoCommentForm(\''+response['poll_id']+'\');" />';
+		tiles_items_html += '			</div>';
+		tiles_items_html += '			<div class="tilecomment-area" id="tilecomment-area-'+response['poll_id']+'">';
+		tiles_items_html += '			<textarea class="tilecomment-entry" id="tilecomment-entry-'+response['poll_id']+'" onblur="if (this.value == \'\') {hidePhotoCommentForm(\''+response['poll_id']+'\');};"></textarea>';
+		tiles_items_html += '			</div>';
+		tiles_items_html += '			<div class="tilecomment-buttons" id="tilecomment-buttons-'+response['poll_id']+'"><button type="button" name="tilecommentButton'+response['poll_id']+'" id="tilecommentButton-'+response['poll_id']+'" value="Ok" style="min-width: 60px;" onclick="javascript: '+response['reply_onclick']+'">Ok</button></div>';
+		tiles_items_html += '		</div>';
+		tiles_items_html += '	</div>';
+		tiles_items_html += '</div>';
+		if ($('tiles-'+response['gadget']+'-items')) {
+			$('tiles-'+response['gadget']+'-items').innerHTML = news_items_html + $('tiles-'+response['gadget']+'-items').innerHTML;
+		}
+		if (typeof(prevPane) == "undefined" || prevPane === null || prevPane == '') {
+			prevPane = response['gadget'];
+		}
+		if ($(prevPane+'-tiles-items') && (response['gadget'] == prevPane || prevPane == 'Users')) {
+			$(prevPane+'-tiles-items').innerHTML = tiles_items_html + $(prevPane+'-tiles-items').innerHTML;
+		}
+		var photoReplyChannel = pusher.subscribe("private-photoreply_channel_"+response['poll_id']);
+		photoReplyChannel.bind("new_photoreply", function(reply_data) {
+			if ($('working_notification')) {
+				$('working_notification').style.display = 'none';
+			}
+			reply = usersSync.getcomment(reply_data['id'], reply_data['gadget'], true);
+			if ($('working_notification')) {
+				$('working_notification').style.display = 'inline';
+			}
+			if (reply['id']) {
+				if ($('tiles-'+response['poll_id']) && $('tiles-'+response['poll_id']).down('.total-tilecomments')) {
+					var tilecomments_total = $('tiles-'+response['poll_id']).down('.total-tilecomments').innerHTML;
+					$('tiles-'+response['poll_id']).down('.total-tilecomments').innerHTML = (parseInt(tilecomments_total.replace(" comments", ''), 10)+1) + " comments";
+				}
+				var tiles_comments_html = '<div class="tilecomment tilecomment-new" id="tilecomment-'+reply['id']+'" onmouseout="if ($(\'tilecomment-delete-'+reply['id']+'\')){$(\'tilecomment-delete-'+reply['id']+'\').style.visibility = \'hidden\';};" onmouseover="if ($(\'tilecomment-delete-'+reply['id']+'\')){$(\'tilecomment-delete-'+reply['id']+'\').style.visibility = \'visible\';};">';
+				tiles_comments_html += '<div id="tilecomment-delete-'+reply['id']+'" class="tilecomment-delete"><a onclick="DeletePhotoComment('+reply['id']+', \'reply\');" href="javascript:void(0);">X</a></div>';		
+				tiles_comments_html += reply['image']+'<div class="tilecomment-body"><span class="tilecomment-name">'+(reply['link'] && reply['link'] != '' ? '<a href="'+reply['link']+'" class="tilecomment-name">' : '')+reply['name']+(reply['link'] && reply['link'] != '' ? '</a>' : '')+'</span>&nbsp;<span class="tilecomment-preview" id="tilecomment-preview-'+reply['id']+'"'+reply['preview_style']+'>'+reply['preview_comment']+'</span><span class="tilecomment-message" id="tilecomment-full-'+reply['id']+'"'+reply['full_style']+'>'+reply['comment']+'</span>';
+				tiles_comments_html += '</div><div class="tilecomment-created tiles-timestamp">'+reply['created']+'</div>';
+				tiles_comments_html += '</div>';
+				$('tiles-comments-'+response['poll_id']).innerHTML = $('tiles-comments-'+response['poll_id']).innerHTML + tiles_comments_html;
+			}
+		});
+	}
+});
+</script>
+<div id="{gadget}-accountTiles" class="accountTiles wide">
+	{header}
+	<div id="{gadget}-tile-entry" class="tile-entry">
+		<div>{entry_field}</div>
+		<div id="{gadget}-tile-actions" class="tile-actions" style="clear: both; float: right; text-align: right;{entry_actions_style}">{entry_sharing}{entry_button}</div>
+	</div>
+	<div style="display: block; clear: both; float: none; font-size: 0.0001em;">&nbsp;</div>
+	<div id="{gadget}-tiles-items" class="tiles-items">
+<!-- END news_header -->
+<!-- BEGIN no_news -->
+	<div>&nbsp;</div>
+	<div class="simple-response-msg" style="display: block; clear: both; float: none;">{message}</div>
+	<div>&nbsp;</div>
+<!-- END no_news -->
+<!-- BEGIN news_item -->
+	{thread}
+<!-- END news_item -->
+<!-- BEGIN news_footer -->
+	</div>
+</div>
+<script type="text/javascript">
+  confirmPhotoCommentDelete = "{confirmPhotoCommentDelete}";
+</script>
+<!-- BEGIN news_count -->
+<script type="text/javascript">
+if (typeof(tilemessages_on_layout) == "undefined") {
+	var tilemessages_on_layout = new Array();
+}
+if (typeof(total_tilemessages) == "undefined") {
+	var total_tilemessages = new Array();
+}
+if (typeof(tilemessages_limit) == "undefined") {
+	var tilemessages_limit = new Array();
+}
+tilemessages_on_layout['{gadget}'] = '{items_on_layout}';
+total_tilemessages['{gadget}'] = {count_on_layout};
+tilemessages_limit['{gadget}'] = {limit};
+</script>
+<!-- BEGIN news_more -->
+<div id="{gadget}-more-tiles-items" class="more-tiles-items clearfix"><a href="javascript:void(0);" onclick="showMorePhotoComments('{gadget}', {public}, {id}, {interactive}, '{method}');">Show more</a></div>
+<!-- END news_more -->
+<!-- END news_count -->
+<!-- END news_footer -->
+</div>
+<!-- END account_news -->

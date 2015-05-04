@@ -22,6 +22,7 @@ define('_HE_CONTROLPANEL_LOGIN_BAD_AUTH', "שם משתמש או סיסמה שג�
 define('_HE_CONTROLPANEL_LOGIN_LOST_PASSWORD', "שכחת סיסמה?");
 define('_HE_CONTROLPANEL_LOGIN_BACK_TO_SITE', "חזרה לאתר");
 define('_HE_CONTROLPANEL_LOGIN_TITLE', "כניסה");
+define('_HE_CONTROLPANEL_LOGIN_SECURE', "כניסה מאבטחת");
 define('_HE_CONTROLPANEL_LOGGED_IN_AS', "מחובר כ");
 define('_HE_CONTROLPANEL_UNSAVED_CHANGES', "יש לך שינויים שלא נשמרו בעמוד זה");
 define('_HE_CONTROLPANEL_OFFLINE_WARNING', "אזהרה: אתר במצב לא מקוון!");

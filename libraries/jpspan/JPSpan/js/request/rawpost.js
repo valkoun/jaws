@@ -49,7 +49,8 @@ function JPSpan_Request_RawPost(encoder) {
                     );
             break;
         };
-        this.http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        this.http.setRequestHeader('Content-Length', this.body.length);
+        this.http.setRequestHeader('Content-Type',this.encoder.contentType);
     };
     
     // Send the request

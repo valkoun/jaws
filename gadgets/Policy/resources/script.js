@@ -5,7 +5,7 @@
  * @package    Policy
  * @author     Amir Mohammad Saied <amir@gluegadget.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 /**
@@ -64,11 +64,11 @@ var PolicyCallback = {
         showResponse(response);
     },
 
-    ipblockingblockundefined: function(response) {
+    enableblockbyip: function(response) {
         showResponse(response);
     },
 
-    agentblockingblockundefined: function(response) {
+    enableblockbyagent: function(response) {
         showResponse(response);
     },
 
@@ -112,29 +112,15 @@ function unselectDataGridRow()
     selectedRowColor = null;
 }
 
-function toggleCaptcha() 
-{
-    if ($('captcha').value == 'DISABLED') {
-        $('captcha_driver').disabled = true;
-    } else {
-        $('captcha_driver').disabled = false;
-    }
-}
-
 /**
  * Add/Edit Blocked a IP Range
  */
 function saveIPRange()
 {
-    if ($('from_ipaddress').value.blank()) {
-        alert(incompleteFields);
-        return false;
-    }
-
     if ($('id').value == 0) {
-        policyAsync.addiprange($('from_ipaddress').value, $('to_ipaddress').value, $('blocked').value);
+        policyAsync.addiprange($('from_ipaddress').value, $('to_ipaddress').value);
     } else {
-        policyAsync.editiprange($('id').value, $('from_ipaddress').value, $('to_ipaddress').value, $('blocked').value);
+        policyAsync.editiprange($('id').value, $('from_ipaddress').value, $('to_ipaddress').value);
     }
 }
 
@@ -151,7 +137,6 @@ function editIPRange(element, id)
     $('id').value = ipRange['id'];
     $('from_ipaddress').value = ipRange['from_ip'];
     $('to_ipaddress').value   = ipRange['to_ip'];
-    $('blocked').selectedIndex = ipRange['blocked']? 1 : 0;
 }
 
 /**
@@ -173,15 +158,10 @@ function deleteIPRange(element, id)
  */
 function saveAgent()
 {
-    if ($('agent').value.blank()) {
-        alert(incompleteFields);
-        return false;
-    }
-
     if ($('id').value == 0) {
-        policyAsync.addagent($('agent').value, $('blocked').value);
+        policyAsync.addagent($('agent').value);
     } else {
-        policyAsync.editagent($('id').value, $('agent').value, $('blocked').value);
+        policyAsync.editagent($('id').value, $('agent').value);
     }
 }
 
@@ -196,10 +176,7 @@ function editAgent(element, id)
     var agent = policySync.getagent(id);
 
     $('id').value    = agent['id'];
-    console.log(agent['agent']);
-    $('agent').value = agent['agent'].defilter();
-    console.log($('agent').value);
-    $('blocked').selectedIndex = agent['blocked']? 1 : 0;
+    $('agent').value = agent['agent'];
 }
 
 /**
@@ -217,24 +194,24 @@ function deleteAgent(element, id)
 }
 
 /**
- * setIPBlockAnonymous
+ * setBlockByIP
  */
-function setBlockUndefinedIP()
+function setBlockByIP()
 {
     try {
-        policyAsync.ipblockingblockundefined($('block_undefined_ip').checked);
+        policyAsync.enableblockbyip($('blockByIP').checked);
     } catch(e) {
         alert(e);
     }
 }
 
 /**
- * setAgentBlockUndefined
+ * setBlockByAgent
  */
-function setBlockUndefinedAgent()
+function setBlockByAgent()
 {
     try {
-        policyAsync.agentblockingblockundefined($('block_undefined_agent').checked);
+        policyAsync.enableblockbyagent($('blockByAgent').checked);
     } catch(e) {
         alert(e);
     }
@@ -263,7 +240,6 @@ function saveAntiSpamSettings()
         policyAsync.updateantispamsettings($('allow_duplicate').value,
                                            $('filter').value,
                                            $('captcha').value,
-                                           $('captcha_driver').value,
                                            $('obfuscator').value);
     } catch(e) {
         alert(e);

@@ -1,0 +1,7 @@
+/**
+ * Custom theme to remove navigation menus for mobile apps
+ */
+
+#first_header {
+	display: none;
+}

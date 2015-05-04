@@ -33,8 +33,6 @@ define('_EN_LAYOUT_NEW', "Add Gadget");
 define('_EN_LAYOUT_BACK', "Back to Control Panel");
 define('_EN_LAYOUT_CHANGE_DW', "When to display this gadget");
 define('_EN_LAYOUT_THEME', "Theme");
-define('_EN_LAYOUT_THEME_LOCAL', "Local themes");
-define('_EN_LAYOUT_THEME_REMOTE', "Non-local themes");
 define('_EN_LAYOUT_THEME_CHANGED', "Theme has been changed");
 define('_EN_LAYOUT_CONFIRM_DELETE', "Are you sure you want to remove this gadget?");
 define('_EN_LAYOUT_REQUESTED_GADGET', "Requested Gadget");
@@ -66,6 +64,10 @@ define('_EN_LAYOUT_NEW_MODE_MSG', "How you want to name this mode?");
 define('_EN_LAYOUT_NEW_SECTION_MSG', "How you want to name this section?");
 define('_EN_LAYOUT_MODE_CONFIRM_DELETE', "Delete this layout mode?");
 define('_EN_LAYOUT_SECTION_CONFIRM_DELETE', "Delete this layout mode's section?");
+define('_EN_LAYOUT_CSS_TITLE', "Custom Theme CSS");
+define('_EN_LAYOUT_UPDATE_CSS', "Update CSS");
+define('_EN_LAYOUT_IMAGE_UPLOAD', "Upload Images");
+define('_EN_LAYOUT_EDIT_CSS', "Customize CSS");
 
 /* Responses */
 define('_EN_LAYOUT_ELEMENT_ADDED', "The element has been added");
@@ -81,3 +83,4 @@ define('_EN_LAYOUT_ERROR_ELEMENT_MOVED', "There was an error while moving the el
 define('_EN_LAYOUT_ERROR_ELEMENT_DELETED', "There was an error while deleting the element");
 define('_EN_LAYOUT_ERROR_CHANGE_WHEN', "Can't update display when property");
 define('_EN_LAYOUT_ERROR_NO_BLOCK', "Theme \"{0}\" doesn't have \"{1}\" block");
+define('_EN_LAYOUT_ERROR_CANT_WRITE_CSS', "There was an error while writing the CSS file. Check if it is writable.");

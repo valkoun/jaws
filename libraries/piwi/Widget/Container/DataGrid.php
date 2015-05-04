@@ -183,6 +183,7 @@ class DataGrid extends Container
      */
     function DataGrid($data, $caption = '', $id = '')
     {
+        $this->_name          = 'datagrid';
         $this->_columns       = array();
         $this->_caption       = $caption;
         $this->_actionColumns = array();
@@ -688,7 +689,7 @@ class DataGrid extends Container
                 $this->_XHTML .= $column->getTitle();
                 $this->_XHTML .= "</td>\n";
             }
-            $columnCounter;
+            $columnCounter++;
         }
 
         if (count($this->_actionColumns) > 0) {

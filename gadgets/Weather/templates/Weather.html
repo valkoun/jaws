@@ -1,0 +1,34 @@
+<!-- BEGIN weather -->
+<div class="gadget weather">
+  <h2>{title}</h2>
+  <div class="content">
+    <!-- BEGIN city -->
+    <h4>{NAME}</h4>
+    <div class="temperature clearfix">
+      <img src="gadgets/Weather/images/{ICON}.png" alt="{ICON}" width="36" height="36" />
+      <div>
+        <div><strong>{TEMP}</strong></div>
+        <div>{REAL_TEMP}</div>
+        <div><small>{LAST_UPDATED}</small></div>
+      </div>
+    </div>
+    <!-- BEGIN forecast -->
+    <h4>{forecast}</h4>
+    <ul>
+      <!-- BEGIN forecast_entry -->
+      <li>
+        <div class="forecast clearfix">
+          <img width="36" height="36" src="gadgets/Weather/images/{ICON}.png" alt="{ICON}" />
+          <div>
+            <div><span>{DATE}</span></div>
+            <div><span style="color: #f00;">{HIGH_TEMP}</span> - <span style="color: #00f;">{LOW_TEMP}</span></div>
+          </div>
+        </div>
+      </li>
+      <!-- END forecast_entry -->
+    </ul>
+    <!-- END forecast -->
+    <!-- END city -->
+  </div>
+</div>
+<!-- END weather -->

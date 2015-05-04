@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>Test Theme</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.6.1/prototype.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8/scriptaculous.js" type="text/javascript"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8/effects.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/scriptaculous/1.8/controls.js"></script>
+  <script src="../../../dist/window.js" type="text/javascript"></script>      
+  <link href="../../../themes/window/window.css" rel="stylesheet" type="text/css">
+  <link href="../../../themes/window/simplewhite.css" rel="stylesheet" type="text/css">
+  <link href="../../../themes/window/black_hud.css" rel="stylesheet" type="text/css">
+  <link href="../../../themes/shadow/mac_shadow.css" rel="stylesheet" type="text/css">
+  
+  <style type='text/css'>
+  body { 
+    background: url('../../assets/body_bg.png') repeat;  
+    overflow:hidden;
+  }
+  </style>
+  
+</head>
+<body>     
+<div id="msgbox" style="position: absolute; top: 5px; height: 50px; width: 100%; overflow: hidden"><a id="restart" href="#" onclick="expose()">Expose</a> </div>
+<script type="text/javascript"> 
+  function expose() {      
+	/*
+  	$('restart').style.display = 'none';
+	wm2 = new UI.WindowManager({ container: 'msgbox' });
+    w = new UI.Window({theme: "black_hud", shadow: false, height: 10, resizable: false, draggable: false, close: false, windowManager: wm2}); 
+  	w.setContent("<div style='width: 200px; height: 1px; padding-top: 18px; text-align: center;'>&nbsp;<br /><a href='javascript: void(0);' style='color: #FFFFFF; font-size: large;' onclick='w.hide(); unexpose();'>Exit expose</a></div>");
+  	w.show(false).focus();  
+	//w.observe("hidden", function() {top -= 20; left -= 20})
+	w.adapt.bind(w).delay(1);
+	w.observe("size:changed", function() {w.center();})		
+    */
+	var wm = UI.defaultWM;
+    var windows = wm.windows();
+    var area = wm.viewport.getDimensions();
+    var header = $('msgbox').getDimensions();
+    var nbRows = Math.ceil(Math.sqrt(windows.length));   
+    //var nbRows = windows.length;   
+    var nbCols = nbRows;
+    var nbColslInLastRow = nbCols - (nbRows * nbCols - windows.length);  
+    if (nbColslInLastRow<0) {
+      nbRows--;nbColslInLastRow = nbCols - (nbRows * nbCols - windows.length);  
+    }
+    var shadowSize = Object.clone(windows.first().shadow.shadowSize); 
+    shadowSize.top -= windows.first().shadow.unfocusedShadowShift.top;
+    shadowSize.left -= windows.first().shadow.unfocusedShadowShift.left;
+    shadowSize.width -= windows.first().shadow.unfocusedShadowShift.width;
+    shadowSize.height -= windows.first().shadow.unfocusedShadowShift.height;
+    
+    var currentRow = 0, currentCol = 0, top = header.height, left = 0;
+    var height = (area.height-header.height) / nbRows; 
+
+    windows.each(function(win) {
+		win.blur();
+		var width = area.width / (currentRow == nbRows - 1 ? nbColslInLastRow : nbCols);
+		win.morph({top: top + shadowSize.top, left: left + shadowSize.left, width: width - shadowSize.width, height: height - shadowSize.height});
+		currentCol++; 
+		left += width;        
+		if (currentCol >= nbCols) {
+			currentCol = 0;
+			currentRow++;
+			left = 0;
+			top += height;
+		}
+		if (!win.shown) {
+			win.show();
+			win.savedBounds = win.getBounds();       
+		}
+		//win.observe("focused", function() {w.hide(); unexpose();})		
+		//win.observe("focused", function() {unexpose(win);});		
+    });
+        
+    //unexpose.delay(2);
+  }   
+  
+  function unexpose(win) {
+  	//$('restart').style.display = '';
+	win.toggleMaximize();
+    /*
+	var wm = UI.defaultWM;
+    var windows = wm.windows();
+    windows.each(function(win) {
+      win.morph(win.savedBounds);
+    });
+	*/
+  } 
+  
+  function runTest() {     
+    /*
+	$R(1,5).each(function(index, arrName) {
+      var url = arrName[index];
+	  new UI.Window({theme: "simplewhite", shadow: true, url: url}).show();
+    });
+	*/
+	function openWindow(url) {
+      /*
+	  new UI.URLWindow({
+        width: 1, 
+        height: 1,
+        visible: false,
+        shadow: true,
+        theme: "simplewhite",
+		wired: true,
+		url: url});
+	  */
+      var w = new UI.Window({
+        width: 1, 
+        height: 1,
+        visible: false,
+        shadow: true,
+        theme: "simplewhite",
+		wired: true});
+		w.setContent("<div style='width: 200px; height: 1px; padding-top: 18px; text-align: center;'>&nbsp;<br /><a href='javascript: void(0);' style='color: #FFFFFF; font-size: large;' onclick='unexpose();'>Exit expose</a></div>");
+		w.setHeader(url);
+    } 
+   
+    openWindow("http://calendar.google.com");  
+    openWindow("http://www.scrumy.com/niblett");  
+    openWindow("http://www.apple.com");   
+    openWindow("http://www.google.com");  
+    openWindow("http://developer.yahoo.com/yui/");  
+    openWindow("http://jaws-project.com");  
+
+    
+   (function() {expose()}).delay(0);
+  }  
+  Event.observe(window, "load", runTest);
+</script>
+
+</body>
+</html>

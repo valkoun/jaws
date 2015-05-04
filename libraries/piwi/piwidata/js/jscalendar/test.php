@@ -1,5 +1,5 @@
 <?php
-exit; //for run this test, please remove this line
+
 $lang = $_GET['lang'];
 if (!$lang) {
     $lang = $_REQUEST['lang'];

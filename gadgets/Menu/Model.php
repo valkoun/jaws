@@ -8,7 +8,7 @@
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class MenuModel extends Jaws_Model
@@ -17,23 +17,21 @@ class MenuModel extends Jaws_Model
      * Returns a menu
      *
      * @access  public
-     * @param   int     $mid    menu ID
-     * @return  mixed  Array with all the available menus and Jaws_Error on error
+     * @return  array  Array with all the available menus and Jaws_Error on error
      */
     function GetMenu($mid)
     {
         $sql = '
             SELECT
-                [id], [pid], [gid], [menu_type], [title], [url], [url_target], [rank], [visible], [image]
+                [id], [pid], [gid], [menu_type], [title], [url], [url_target], [rank], [visible]
             FROM [[menus]]
             WHERE
                 [id] = {mid}';
 
-        $params = array();
+        $params        = array();
         $params['mid'] = $mid;
-
-        $types  = array('integer', 'integer', 'integer', 'text', 'text', 'text', 'integer', 'integer', 'integer', 'boolean');
-        $result = $GLOBALS['db']->queryRow($sql, $params, $types);
+        
+        $result = $GLOBALS['db']->queryRow($sql, $params);
         if (Jaws_Error::IsError($result)) {
             return new Jaws_Error(_t('MENU_ERROR_GET_MENUS'), _t('MENU_NAME'));
         }
@@ -45,29 +43,22 @@ class MenuModel extends Jaws_Model
      * Returns a list of  menus at a request level
      *
      * @access  public
-     * @param   int     $pid
-     * @param   int     $gid            group ID
-     * @param   bool    $onlyVisible    show only visible
-     * @return  mixed   Array with all the available menus and Jaws_Error on error
+     * @return  array  Array with all the available menus and Jaws_Error on error
      */
     function GetLevelsMenus($pid, $gid = null, $onlyVisible = false)
     {
-        $sql = '
-            SELECT [id], [gid], [title], [url], [url_target], [image], [visible]
-                FROM [[menus]]
-                WHERE ';
-        $sql.= (empty($gid)? '' : '[gid] = {gid} AND ') . '[pid] = {pid}'.
-               ($onlyVisible?' AND [visible] = {visible} ':' ');
+        $sql = 'SELECT [id],'. (empty($gid)? ' [gid],' : ''). ' [title], [url], [url_target]'.
+               ($onlyVisible? ' ' : ', [visible] ').
+               'FROM [[menus]] ';
+        $sql.= 'WHERE ' . (empty($gid)? '' : '[gid] = {gid} AND ') . '[pid] = {pid}'.
+               ($onlyVisible?' AND [visible] = 1 ':' ');
         $sql.= 'ORDER BY [rank] ASC';
 
-        $params = array();
-        $params['gid']     = $gid;
-        $params['pid']     = $pid;
-        $params['visible'] = 1;
+        $params        = array();
+        $params['gid'] = $gid;
+        $params['pid'] = $pid;
 
-        // using boolean type for blob to check it empty or not
-        $types = array('integer', 'integer', 'text', 'text', 'integer', 'boolean', 'integer');
-        $result = $GLOBALS['db']->queryAll($sql, $params, $types);
+        $result = $GLOBALS['db']->queryAll($sql, $params);
         if (Jaws_Error::IsError($result)) {
             return new Jaws_Error(_t('MENU_ERROR_GET_MENUS'), _t('MENU_NAME'));
         }
@@ -76,40 +67,10 @@ class MenuModel extends Jaws_Model
     }
 
     /**
-     * Returns the image of the menu
-     *
-     * @access  public
-     * @param   int     $id
-     * @return  blob    image or Jaws_Error on error
-     */
-    function GetMenuImage($id)
-    {
-        $sql = '
-            SELECT [image]
-            FROM [[menus]]
-            WHERE [id] = {id}';
-
-        $params = array();
-        $params['id'] = (int)$id;
-        $types  = array('blob');
-        $blob = $GLOBALS['db']->queryOne($sql, $params, $types);
-        if (Jaws_Error::IsError($blob)) {
-            return new Jaws_Error($blob->getMessage(), 'SQL');
-        }
-
-        $result = '';
-        while (!feof($blob)) {
-            $result.= fread($blob, 8192);
-        }
-        return $result;
-    }
-
-    /**
      * Returns a list with all the menus
      *
      * @access  public
-     * @param   int     $gid        group ID
-     * @return  mixed  Array with all the available menus and Jaws_Error on error
+     * @return  array  Array with all the available menus and Jaws_Error on error
      */
     function GetGroups($gid = null)
     {
@@ -135,4 +96,41 @@ class MenuModel extends Jaws_Model
         return $result;
     }
 
+    /**
+     * Returns a list with all the menus
+     *
+     * @access  public
+     * @return  array  Array with all the available menus and Jaws_Error on error
+     */
+    function GetMenus($gid = null, $target = null, $onlyVisible = false, $orderBy = '[menu_type] ASC, [title] ASC')
+    {
+        $sql = '
+            SELECT
+                [id], [menu_type], [title], [url], [url_target], [rank]'. ($onlyVisible == false ? ', [visible]' : ' ') .'
+            FROM [[menus]]
+			WHERE (';
+			
+		$sql .= (empty($target)? '[url_target] = 0' : '[url_target] = {url_target}');
+        
+		$sql .= (empty($gid)? '' : ' AND [gid] = {gid}');
+				
+		$sql .= ')';
+		
+		if (!empty($orderBy)) {	
+			$sql .= ' ORDER BY '.$orderBy;
+		}
+
+        $params = array();
+        $params['gid'] = $gid;
+        $params['url_target'] = $target;
+
+		$result = $GLOBALS['db']->queryAll($sql, $params);
+        
+		if (Jaws_Error::IsError($result)) {
+            return new Jaws_Error(_t('MENU_ERROR_GET_MENUS'), _t('MENU_NAME'));
+        }
+
+        return $result;
+    }
+	
 }

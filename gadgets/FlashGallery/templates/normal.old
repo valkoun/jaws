@@ -1,0 +1,162 @@
+<!-- BEGIN gallery2 -->
+<div class="gadget flash_gallery">
+<!-- BEGIN content -->
+	<div class="content">
+		{content}
+	</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+<!-- END not_found -->
+</div>
+<!-- END gallery2 -->
+
+<!-- BEGIN index -->
+<div class="gadget flashgallery_index">
+  <h2><a href="{link}">{title}</a></h2>
+  <div class="content">
+    <ul>
+    <!-- BEGIN item -->
+      <li><a href="{link}">{title}</a></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-flashgallery-head" class="gadget layout_head">
+<h2 id="layout_{actionName}_title">{layout_title}</h2>
+</div>
+<div class="gadget layout_body">
+<!-- BEGIN gallery -->
+<div id="flash-gallery-{id}" style="background: {gallery_background_color} {gallery_loading_image};"{div_resize}>&nbsp;This content requires Adobe's Flash Player. <a target="_blank" href="http://www.adobe.com/go/EN_US-H-GET-FLASH">Click here to download and install it</a>.<br />
+<a target="_blank" href="http://www.adobe.com/go/EN_US-H-GET-FLASH"><img alt="Click Here to Get Adobe Flash Player" border="0" src="{JAWS_URL}gadgets/FlashGallery/images/get_adobe_flash_player.gif" /></a></div>
+<script>
+	{gallery_dimensions}
+	{script_resize}
+	var so{id} = new SWFObject("{JAWS_URL}gadgets/FlashGallery/images/gallery_flash.swf", "gallerymovie{id}", gWidth{id}, gHeight{id}, "8");
+	so{id}.addVariable("xml_path", "{gallery_url}");
+	so{id}.addVariable("overlay_path", "{gallery_overlay_image}");
+	so{id}.addVariable("defaultView", "grid");
+	so{id}.addVariable("numColumns", "{gallery_columns}");
+	so{id}.addVariable("loop_items", "{gallery_order}");
+	so{id}.addVariable("numPause", "{gallery_timer}");
+	so{id}.addVariable("showButtons", "{gallery_show_buttons}");
+	so{id}.addVariable("button_pos", "{gallery_button_pos}");
+	//so{id}.addVariable("button_y", "0");
+	so{id}.addVariable("image_height", gHeight{id});
+	so{id}.addVariable("image_width", gWidth{id});
+	so{id}.addVariable("image_x", "{gallery_image_offsetx}");
+	so{id}.addVariable("image_y", "{gallery_image_offsety}");
+	so{id}.addVariable("text_pos", "{gallery_text_pos}");
+	so{id}.addVariable("textBar", "{gallery_textbar}");
+	so{id}.addVariable("textBarColor", "{gallery_textbar_color}");
+	so{id}.addVariable("textBarHeight", "{gallery_textbar_height}");
+	so{id}.addVariable("textBarAlpha", "{gallery_textbar_alpha}");
+	so{id}.addParam("quality", "high");
+	so{id}.addParam("allowFullScreen", "{gallery_allow_fullscreen}");
+	so{id}.addParam("wmode", "transparent");
+	so{id}.write("flash-gallery-{id}");
+</script>
+<!-- END gallery -->
+<!-- BEGIN slideshow -->
+<style>
+	#flash-slideshow-{id}{float:left;position:relative;width:950px;height:317px;overflow:hidden;} 
+    #flash-slideshow-{id} #slide-caption{id}{position:absolute;bottom:10px;left:0;z-index:1000;background:{slideshow_textbar_bkgnd};padding:10px 80px 10px 10px;width:950px;color:#D3E2C1;} 
+    .fade-box{width:950px;position:absolute;text-align:center;z-index:900;} 
+    .fade-box div{display:none;} 
+    #slideshow_overlay{id}{height:317px;width:950px;position:absolute;top:0px;left:0px;z-index:800;background:{slideshow_overlay_image} no-repeat;list-style:none;cursor:pointer;pointer:hand;} 
+    #show-controls{id}{position:absolute;bottom:22px;right:10px;z-index:1100; list-style: none;} 
+    #show-controls{id} li{float:left;} 
+    #show-controls{id} li a:link,#show-controls{id} li a:visited{display:block;width:16px;height:16px;background-repeat:no-repeat;background-position:0 0;} 
+    #show-controls{id} li a span{position:absolute;left:-9999px;} 
+    #show-controls{id} li#PauseButton{id}{position:absolute;right:30px;} 
+    #show-controls{id} li#PauseButton{id} a:link,#show-controls{id} li#PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #show-controls{id} li#PauseButton{id} a span{position:static;left:0;} 
+    #show-controls{id} li#PlayButton{id}{position:absolute;right:30px;} 
+    #show-controls{id} li#PlayButton{id} a:link,#show-controls{id} li#PauseButton{id} a:visited{font-size:.9em;color:#ccc;} 
+    #show-controls{id} li#PlayButton{id} a span{position:static;left:0;} 
+    /*
+	#show-controls{id} li#PreviousButton{id} a{background-image:url(icons/silk_set/resultset_previous.png);} 
+    #show-controls{id} li#NextButton{id} a{background-image:url(icons/silk_set/resultset_next.png);} 	
+	*/
+</style>
+<div id="flash-slideshow-{id}" style="background: {slideshow_background_color};">
+	<div style="position:relative;z-index:10;">
+	<script type="text/javascript">var slideshow{id}_slides = new Array();</script>
+<!-- BEGIN image -->
+		<div {image_style} id="image-{image_id}" class="fade-box">
+			<a href="javascript:oHomePageSlides{image_linkid}.goNext();">
+				<img src="{image_src}" alt="" style="{image_height}" />
+				<div class="image-caption">{image_caption}</div>
+			</a>
+		</div>
+		<script type="text/javascript">slideshow{image_linkid}_slides.push("image-{image_id}");</script>
+<!-- END image -->
+	</div>
+	<ul id="show-controls{id}">
+		<li id="PlayButton{id}" style="display: none;">
+			<a href="javascript:oHomePageSlides{id}.startSlideShow();"><span>[play]</span></a>
+		</li>
+		<li id="PauseButton{id}" style="display: none;">
+			<a href="javascript:oHomePageSlides{id}.stop();"><span>[stop]</span></a>
+		</li>
+		<!--<li class="png-fix" id="PreviousButton"><a class="png-fix" href="javascript:oHomePageSlides.goPrevious();"><span>Previous</span></a></li>
+		<li id="NextButton"><a class="png-fix" href="javascript:oHomePageSlides.goNext();"><span>Next</span></a></li>-->
+	</ul>
+	<div id="slideshow_overlay{id}">&nbsp;</div>
+	<p id="slide-counter{id}" style="display: none;">1 of {slideshow_total}</p>
+	<div id="slide-caption{id}">&nbsp;</div>
+	<script type="text/javascript">
+	{slideshow_dimensions}
+	Event.observe(window,"load",function(){
+		if($("flash-slideshow-{id}")){
+			//$("flash-slideshow-{id}").style.display = "";
+			oHomePageSlides{id}=new iSlideShow({
+			autostart:{slideshow_load_immediately},
+			start:0,
+			wait:{slideshow_timer},
+			slides:slideshow{id}_slides,
+			counter:"slide-counter{id}",
+			caption:"slide-caption{id}",
+			playButton	: "PlayButton{id}",
+			pauseButton	: "PauseButton{id}"
+			});
+			Event.observe("slideshow_overlay{id}","click",function(b){Event.stop(b);oHomePageSlides{id}.goNext()})
+		}});
+	</script>
+</div>
+<!-- END slideshow -->
+<!-- BEGIN single -->
+<div id="flash-single-{id}">
+{layout_content}
+</div>
+<!-- END single -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=FlashGallery_iframe_{id}&resize={bool_resize}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+</div>
+<!-- END layout -->

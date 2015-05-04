@@ -5,7 +5,7 @@
  * @category   Widget
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Widgets_CommentUI
@@ -30,8 +30,7 @@ class Jaws_Widgets_CommentUI
      * Public constructor that sets the gadget's name
      *
      * @access  public
-     * @param   string   $gadget    Gadget's name
-     * @return  void
+     * @param   string   $gadget  Gadget's name
      **/
     function Jaws_Widgets_CommentUI($gadget)
     {
@@ -43,7 +42,6 @@ class Jaws_Widgets_CommentUI
      *
      * @access  public
      * @param   string  $action  Edit's action
-     * @return  void
      */
     function SetEditAction($action)
     {
@@ -54,10 +52,10 @@ class Jaws_Widgets_CommentUI
      * Build a new array with filtered data
      *
      * @access  public
-     * @param   string  $filterby   Filter to use(postid, author, email, url, title, comment)
-     * @param   string  $filter     Filter data
-     * @param   string  $status     Spam status (approved, waiting, spam)
-     * @param   mixed   $limit      Data limit (numeric/boolean)
+     * @param   string  $filterby Filter to use(postid, author, email, url, title, comment)
+     * @param   string  $filter   Filter data
+     * @param   string  $status   Spam status (approved, waiting, spam)
+     * @param   mixed   $limit    Data limit (numeric/boolean)
      * @return  array   Filtered Comments
      */
     function GetDataAsArray($filterby, $filter, $status, $limit)
@@ -110,20 +108,20 @@ class Jaws_Widgets_CommentUI
         foreach ($comments as $row) {
             $newRow = array();
             $newRow['__KEY__'] = $row['id'];
-            $newRow['name']    = $row['name'];
+            $newRow['name']    = $xss->filter($row['name']);
             if (empty($row['title'])) {
-                $row['title'] = Jaws_UTF8::substr(strip_tags($xss->defilter($row['msg_txt'])),0, 50);
+                $row['title'] = preg_replace("/(\r\n|\r)/", " ", Jaws_UTF8::substr($row['msg_txt'],0, 50));
+            } else {
+                $row['title'] = preg_replace("/(\r\n|\r)/", " ", $row['title']);
             }
-
-            $row['title'] = preg_replace("/(\r\n|\r)/", " ", $row['title']);
             if (!empty($this->_editAction)) {
                 $url = str_replace('{id}', $row['id'], $this->_editAction);
-                $newRow['title'] = '<a href="'.$url.'">'.$row['title'].'</a>';
+                $newRow['title']   = '<a href="'.$url.'">'.$xss->filter($row['title']).'</a>';
             } else {
-                $newRow['title'] = $row['title'];
+                $newRow['title']   = $row['title'];
             }
             $newRow['created'] = $date->Format($row['createtime']);
-            $newRow['status']  = _t('GLOBAL_STATUS_'. strtoupper($row['status']));
+            $newRow['status']  = $row['status'];
 
             $link =& Piwi::CreateWidget('Link', _t('GLOBAL_EDIT'), $url, STOCK_EDIT);
             $actions= $link->Get().'&nbsp;';
@@ -197,5 +195,4 @@ class Jaws_Widgets_CommentUI
 
         return $gridBox->Get();
     }
-
 }

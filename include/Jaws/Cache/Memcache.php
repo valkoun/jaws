@@ -5,21 +5,21 @@
  * @category   Cache
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2008-2012 Jaws Development Group
+ * @copyright  2008-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Cache_Memcache extends Jaws_Cache
 {
     /**
      * Memcache object
-     * @access  private
+     * @access private
      */
     var $_memcache;
 
     /**
      * Constructor
      *
-     * @access  public
+     * @access public
      * @return Null
      */
     function Jaws_Cache_File()
@@ -33,12 +33,6 @@ class Jaws_Cache_Memcache extends Jaws_Cache
      * Store cache of given component/section
      *
      * @access  public
-     * @param   string  $component
-     * @param   string  $section
-     * @param   string  $params
-     * @param   $data
-     * @param   int     $lifetime
-     * @return  mixed
      */
     function set($component, $section, $params, &$data, $lifetime = 0)
     {
@@ -56,10 +50,6 @@ class Jaws_Cache_Memcache extends Jaws_Cache
      * Get cached data of given component/section
      *
      * @access  public
-     * @param   string  $component
-     * @param   string  $section
-     * @param   string  $params
-     * @return  mixed
      */
     function get($component, $section, $params = null)
     {
@@ -78,10 +68,6 @@ class Jaws_Cache_Memcache extends Jaws_Cache
      * Delete cached data of given component/section
      *
      * @access  public
-     * @param   string  $component
-     * @param   string  $section
-     * @param   string  $params
-     * @return  mixed
      */
     function delete($component = null, $section = null, $params = null)
     {

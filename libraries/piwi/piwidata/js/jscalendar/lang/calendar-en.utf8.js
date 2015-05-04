@@ -77,38 +77,6 @@ Calendar._SMN = new Array
  "Nov",
  "Dec");
 
- // full month names
-Calendar._JMN = new Array
-("Farvardin",
- "Ordibehest",
- "Khordad",
- "Tir",
- "Mordad",
- "Shahrivar",
- "Mehr",
- "Aban",
- "Azar",
- "Day",
- "Bahman",
- "Esfand");
-
-// short month names
-Calendar._JSMN = new Array
-("Farvardin",
- "Ordibehest",
- "Khordad",
- "Tir",
- "Mordad",
- "Shahrivar",
- "Mehr",
- "Aban",
- "Azar",
- "Day",
- "Bahman",
- "Esfand");
-
-
- 
 // tooltips
 Calendar._TT = {};
 Calendar._TT["INFO"] = "About the calendar";
@@ -142,9 +110,6 @@ Calendar._TT["PART_TODAY"] = " (today)";
 // %s will be replaced with the day name.
 Calendar._TT["DAY_FIRST"] = "Display %s first";
 
-Calendar._TT["SELECT_COLUMN"] = "Select all %ss of this month";
-Calendar._TT["SELECT_ROW"] = "Select all days of this week";
-
 // This may be locale-dependent.  It specifies the week-end days, as an array
 // of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
 // means Monday, etc.
@@ -160,12 +125,3 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
 Calendar._TT["WK"] = "wk";
 Calendar._TT["TIME"] = "Time:";
-
-Calendar._TT["LAM"] = "am";
-Calendar._TT["AM"] = "AM";
-Calendar._TT["LPM"] = "pm";
-Calendar._TT["PM"] = "PM";
-
-Calendar._NUMBERS = null;
-
-Calendar._DIR = 'ltr';

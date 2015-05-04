@@ -1,0 +1,70 @@
+<!-- BEGIN form -->
+<div id="form_content">
+<form METHOD="POST" action="{controller}?gadget={gadget}&amp;action={actionprefix}form_post" name="GLOBALform" id="GLOBALform" onsubmit="return validate(this);">
+<table class="actionbar" BORDER="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr>
+      <td align="right" bgcolor="#F2F2F2">
+{SUBMIT_BUTTON}
+ &nbsp; <input type="button" value="Cancel" onclick="{CLOSE_BUTTON}">
+      </td>
+    </tr>
+  </table>
+<img src="images/blank.gif" border="0" width="530" height="1" />
+<div id="gadget_form">
+  <table BORDER="0" width="100%" cellspacing="0" cellpadding="3" bordercolorlight="#C0C0C0" bordercolordark="#C0C0C0">
+    {content}
+  </table>
+ </div>
+</form>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+function validate(form) {
+	//updateRTE('description');
+	if (form.Image.value.length < 1 && form.image_code.value.length < 1 && ((form.image0Code && form.image0Code.value.length) || (form.Image0 && form.Image0.value.length) || (form.image1Code && form.image1Code.value.length) || (form.Image1 && form.Image1.value.length) || form.image2Code.value.length || form.Image2.value.length || form.image3Code.value.length || form.Image3.value.length || form.image4Code.value.length || form.Image4.value.length || form.image5Code.value.length || form.Image5.value.length)) {
+	  alert('You must first set a main panel, if you want to use Splash Panels.');
+	  if (document.getElementById('Image').style.visibility != 'hidden') {
+		form.Image.focus();
+	  } else {
+		form.image_code.focus();
+	  }
+	  return false;
+	}
+	if (!isDate(form.startdate.value)){
+	  form.startdate.focus();
+	  return false;
+	}
+	return true;
+}
+
+function validate2(form) {
+// only used for delete
+
+var c_value = "";
+for (var i=0; i < form.ID.length; i++) {
+   if (form.ID[i].checked) {
+		if (c_value == "") {
+			c_value = c_value + form.ID[i].value;
+		} else {
+			c_value = c_value + "," + form.ID[i].value;
+		}
+   }
+}
+if (c_value == "") {
+	alert("You must check 'Delete' for items you wish to Delete.");
+	return false;
+};
+
+//alert(c_value);
+form.idarray.value = c_value;
+
+if (!confirm('Are you sure?')) {
+    return false;
+}
+
+return true;
+} //end of function
+// ]]>
+</script>
+<!-- END form -->

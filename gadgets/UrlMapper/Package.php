@@ -5,14 +5,15 @@
  * @category   PackageConfig
  * @package    UrlMapper
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 $info = array(           
               'license' => 'LGPL',
               'authors' => array(array('lead', 'ion', 'Jonathan Hernandez', 'ion@suavizado.com'),
                                  array('lead', 'pfischer', 'Pablo Fischer', 'pablo@pablo.com.mx'),
-                                 array('lead', 'afz', 'Ali Fazelzadeh', 'afz@php.net'),
+                                 array('developer', 'afz', 'Ali Fazelzadeh', 'afz@php.net'),
                                  ),
               'deps'    => array(),
               );
+?>

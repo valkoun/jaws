@@ -1,11 +1,12 @@
 <?php
 /**
- * Class to manage files (remove, create, etc)
+ * Manage files (remove, create, etc)
  *
  * @category   JawsType
+ * @category   developer_feature
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_FileManagement
@@ -14,9 +15,9 @@ class Jaws_FileManagement
      * Removes a file or a complete directory.
      *
      * THANKS TO: http://aidan.dotgeek.org/lib/?file=function.rmdirr.php
-     * @access  public
-     * @param   string  $dirname File/Directory to remove
-     * @return  bool    True or false on error
+     * @access   public
+     * @param    string  $dirname File/Directory to remove
+     * @return   boolean True or false on error
      */
     function FullRemoval($dirname)
     {

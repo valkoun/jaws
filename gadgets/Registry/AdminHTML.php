@@ -5,16 +5,26 @@
  * @category   Gadget
  * @package    Registry
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class RegistryAdminHTML extends Jaws_GadgetHTML
 {
     /**
+     * Gadget constructor
+     *
+     * @access public
+     */
+    function RegistryAdminHTML()
+    {
+        $this->Init('Registry');
+    }
+
+    /**
      * Calls default action(MainMenu)
      *
-     * @access  public
-     * @return  string template content
+     * @access public
+     * @return string template content
      */
     function DefaultAction()
     {
@@ -82,11 +92,13 @@ class RegistryAdminHTML extends Jaws_GadgetHTML
     /**
      * Allows users to view and edit the registry.
      *
-     * @access  public
-     * @return  string content
+     * @access public
+     * @return string content
      */
     function View()
     {
+        $this->CheckPermission('ManageRegistry');
+
         $this->AjaxMe('script.js');
         $GLOBALS['app']->Layout->AddScriptLink('libraries/xtree/xtree.js');
 

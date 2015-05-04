@@ -1,0 +1,270 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+		var msgbox=$('msgbox_{msg-id}');if((msgbox.className!='error-message')&&(msgbox.className!='warning-message')&&(window.hideResponseBox)){hideResponseBox(msgbox);};
+    </script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN products_admin -->
+{menubar}
+<div>
+<form action="{base_script}" name="Admin" onsubmit="searchProductParent(); return false;" method="post">
+<input type="hidden" name="gadget" value="Store" />
+<input type="hidden" name="action" value="{account}Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <nobr><label for="status">{status}</label>{status_field}&nbsp;{search_field}&nbsp;{search}</nobr>
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_productparent}</td>
+		</tr>
+	</table>
+</div>
+</form>
+</div>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getProductParentData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('products_datagrid', new storeadminajax); -->
+<!-- </script> -->
+<!-- END products_admin -->
+
+<!-- BEGIN attributes_admin -->
+{menubar}
+<form action="{base_script}" name="Admin" onsubmit="searchAttribute(); return false;" method="post">
+<input type="hidden" name="gadget" value="Store" />
+<input type="hidden" name="action" value="Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <label for="status">{status}:</label>{status_field}&nbsp;{search_field}&nbsp;{search}
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_attribute}</td>
+		</tr>
+	</table>
+</div>
+</form>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getAttributeData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('attributes_datagrid', new storeadminajax); -->
+<!-- </script> -->
+<!-- END attributes_admin -->
+
+<!-- BEGIN attribute_types_admin -->
+{menubar}
+<form action="{base_script}" name="Admin" onsubmit="searchAttributeType(); return false;" method="post">
+<input type="hidden" name="gadget" value="Store" />
+<input type="hidden" name="action" value="Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <label for="status">{status}:</label>{status_field}&nbsp;{search_field}&nbsp;{search}
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_attribute_types}</td>
+		</tr>
+	</table>
+</div>
+</form>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getAttributeTypeData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('attribute_types_datagrid', new storeadminajax); -->
+<!-- </script> -->
+<!-- END attribute_types_admin -->
+
+<!-- BEGIN sales_admin -->
+{menubar}
+<form action="{base_script}" name="Admin" onsubmit="searchSale(); return false;" method="post">
+<input type="hidden" name="gadget" value="Store" />
+<input type="hidden" name="action" value="Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <label for="status">{status}:</label>{status_field}&nbsp;{search_field}&nbsp;{search}
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_sales}</td>
+		</tr>
+	</table>
+</div>
+</form>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getSaleData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('sales_datagrid', new storeadminajax); -->
+<!-- </script> -->
+<!-- END sales_admin -->
+
+<!-- BEGIN brands_admin -->
+{menubar}
+<form action="{base_script}" name="Admin" onsubmit="searchBrand(); return false;" method="post">
+<input type="hidden" name="gadget" value="Store" />
+<input type="hidden" name="action" value="Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <label for="status">{status}:</label>{status_field}&nbsp;{search_field}&nbsp;{search}
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_brands}</td>
+		</tr>
+	</table>
+</div>
+</form>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getBrandData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('brands_datagrid', new storeadminajax); -->
+<!-- </script> -->
+<!-- END brands_admin -->
+
+<!-- BEGIN gadget_product -->
+{menubar}
+<script type="text/javascript">
+    var confirmPostDelete    		= "{confirmPostDelete}";
+    var confirmProductDelete    	= "{confirmProductDelete}";
+    var confirmAttributeDelete    	= "{confirmAttributeDelete}";
+    var confirmRssHide    			= "{confirmRssHide}";
+</script>
+<div {workarea-style}id="workarea">
+		{content}
+</div>
+<!-- END gadget_product -->
+<!-- BEGIN settings -->
+{menubar}
+<div align="center">
+<form action="{base_script}" method="post" onsubmit="return false;">
+<input type="hidden" name="gadget" value="Properties" />
+<input type="hidden" name="action" value="SaveSettings" />
+<fieldset style="width: 300px; display: block;">
+	<legend>{settings}</legend>
+	<div style="padding: 5px;">
+	<strong>{key0_label}</strong> {key0_entry}
+	</div>
+	<div style="padding: 5px;">
+	<strong>{key0a_label}</strong> {key0a_entry}
+	</div>
+	<div style="padding: 5px;">
+	<strong>{key1_label}</strong> {key1_entry}
+	</div>
+	<div style="padding: 5px;">
+	<strong>{key4_label}</strong> {key4_entry}
+	</div>
+	<div style="padding: 5px;">
+	<strong>{key2_label}</strong> {key2_entry}
+	</div>
+	<div style="padding: 5px;">
+	<strong>{key3_label}</strong> {key3_entry}
+	</div>
+</fieldset>
+{save_button}
+</form>
+</div>
+<!-- END settings -->

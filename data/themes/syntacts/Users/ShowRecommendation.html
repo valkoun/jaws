@@ -1,0 +1,43 @@
+<!-- BEGIN account_recommendation -->
+<!-- BEGIN recommendation_item -->
+<div class="news-item news-item{item_count} news-{type}" id="recommendation-{display_id}" onmouseout="if ($('recommendation-{edit_or_delete}-{display_id}')){$('recommendation-{edit_or_delete}-{display_id}').style.visibility = 'hidden';};" onmouseover="if ($('recommendation-{edit_or_delete}-{display_id}')){$('recommendation-{edit_or_delete}-{display_id}').style.visibility = 'visible';};">
+	<!-- BEGIN recommendation_edit -->
+	<div class="news-edit menu news-edit-menu ym-hlist" id="recommendation-edit-{display_id}">
+		<div class="content">
+			<ul style="text-align: left;">
+				<li id="recommendation-menu-{display_id}" class="menu_li_item menu_first menu_last">
+					<a href="javascript:void(0);" target="_self" class="menu_a news-menu-title">
+					<!--[if gt IE 6]><!-->&#9660;</a><!--<![endif]--> 
+					<!--[if lte IE 6]><table><tr><td><![endif]-->
+					<ul class="ul_sub_menu">
+						<!-- BEGIN item -->
+						<li id="recommendation-menu-{display_id}{num}" class="menu_li_item">
+							<a href="{url}" target="_self" class="sub_menu_a">{title}<!--[if gt IE 6]><!--></a><!--<![endif]-->							
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<!-- END item -->
+					</ul>
+					<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END recommendation_edit -->
+	<!-- BEGIN recommendation_delete -->
+	<div class="news-delete" id="recommendation-delete-{display_id}"><a href="javascript:void(0);" onclick="DeleteRecommendation({id}, 'recommendation', '{display_id}');">X</a></div>
+	<!-- END recommendation_delete -->
+	<div class="news-image">{image}</div>
+	<div class="news-body">
+		<div class="news-title">{title}</div>
+		<div class="news-info"{news_info_style}>
+			<span class="news-name">{link_start}{name}{link_end}<span class="news-preactivity">{preactivity}</span></span>
+			<div class="news-preview" id="recommendation-preview-{display_id}"{preview_style}>{message_preview}</div>
+			<div class="news-message" id="recommendation-full-{display_id}"{full_style}>{message}</div>
+		</div>
+		<div class="news-created news-timestamp"{news_info_style}>{created}{activity}{replies_total}{social_link}</div>
+		{social_html}
+	</div>
+</div>
+<div class="news-separator">&nbsp;</div>
+<!-- END recommendation_item -->
+<!-- END account_recommendation -->

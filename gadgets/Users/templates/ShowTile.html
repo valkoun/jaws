@@ -1,0 +1,96 @@
+<!-- BEGIN account_news -->
+<!-- BEGIN news_item -->
+<div class="tiles-item tiles-item{item_count} tiles-{type}" id="tiles-{display_id}" onmouseout="if ($('tiles-{edit_or_delete}-{display_id}')){$('tiles-{edit_or_delete}-{display_id}').style.visibility = 'hidden';};" onmouseover="if ($('tiles-{edit_or_delete}-{display_id}')){$('tiles-{edit_or_delete}-{display_id}').style.visibility = 'visible';};">
+	<script type="text/javascript">
+	var replyChannel{poll_id} = pusher.subscribe("private-reply_channel_{poll_id}");
+	replyChannel{poll_id}.bind("new_reply", function(data) {
+		if ($('working_notification')) {
+			$('working_notification').style.display = 'none';
+		}
+		response = usersSync.getphotocomment(data['id'], data['gadget'], true);
+		if ($('working_notification')) {
+			$('working_notification').style.display = 'inline';
+		}
+		if (response['id']) {
+			if ($('tiles-{display_id}') && $('tiles-{display_id}').down('.total-tilecomments')) {
+				var tilecomments_total = $('tiles-{display_id}').down('.total-tilecomments').innerHTML;
+				$('tiles-{display_id}').down('.total-tilecomments').innerHTML = (parseInt(tilecomments_total.replace(" comments", ''), 10)+1) + " comments";
+			}
+			var tiles_comments_html = '<div class="tilecomment tilecomment-new" id="tilecomment-'+response['id']+'" onmouseout="if ($(\'tilecomment-delete-'+response['id']+'\')){$(\'tilecomment-delete-'+response['id']+'\').style.visibility = \'hidden\';};" onmouseover="if ($(\'tilecomment-delete-'+response['id']+'\')){$(\'tilecomment-delete-'+response['id']+'\').style.visibility = \'visible\';};">';
+			tiles_comments_html += '<div id="tilecomment-delete-'+response['id']+'" class="tilecomment-delete"><a onclick="DeletePhotoComment('+response['id']+', \'reply\');" href="javascript:void(0);">X</a></div>';		
+			tiles_comments_html += response['image']+'<div class="tilecomment-body"><span class="tilecomment-name">'+(response['link'] && response['link'] != '' ? '<a href="'+response['link']+'" class="tilecomment-name">' : '')+response['name']+(response['link'] && response['link'] != '' ? '</a>' : '')+'</span>&nbsp;<span class="tilecomment-preview" id="tilecomment-preview-'+response['id']+'"'+response['preview_style']+'>'+response['preview_comment']+'</span><span class="tilecomment-message" id="tilecomment-full-'+response['id']+'"'+response['full_style']+'>'+response['comment']+'</span>';
+			tiles_comments_html += '</div><div class="tilecomment-created tiles-timestamp">'+response['created']+'</div>';
+			tiles_comments_html += '</div>';
+			$('tiles-comments-{display_id}').innerHTML = $('tiles-comments-{display_id}').innerHTML + tiles_comments_html;
+		}
+	});
+	</script>
+	<div class="tiles-{realtype}-holder" id="tiles-{realtype}-holder-{display_id}">
+		<span class="tiles-{realtype}-text" id="tiles-{realtype}-text-{display_id}">{realtype_string}</span>
+	</div>
+	<!-- BEGIN news_edit -->
+	<div class="tiles-edit menu tiles-edit-menu" id="tiles-edit-{display_id}">
+		<div class="content">
+			<ul class="ul_top_menu" style="text-align: left;">
+				<li id="tiles-menu-{display_id}" class="menu_li_item menu_first menu_super menu_last">
+					<a href="javascript:void(0);" target="_self" class="menu_a tiles-menu-title">
+					<!--[if gt IE 6]><!--></a><!--<![endif]--> 
+					<!--[if lte IE 6]><table><tr><td><![endif]-->
+					<ul class="ul_sub_menu">
+						<!-- BEGIN item -->
+						<li id="tiles-menu-{display_id}{num}" class="menu_li_item">
+							<a href="{url}" target="_self" class="sub_menu_a">{title}<!--[if gt IE 6]><!--></a><!--<![endif]-->							
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<!-- END item -->
+					</ul>
+					<!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END news_edit -->
+	<!-- BEGIN news_delete -->
+	<div class="tiles-delete" id="tiles-delete-{display_id}"><a href="javascript:void(0);" onclick="DeletePhotoComment({id}, 'update', '{display_id}');">X</a></div>
+	<!-- END news_delete -->
+	<div class="tiles-image">{image}</div>
+	<div class="tiles-body">
+		<div class="tiles-title">{title}</div>
+		<div class="tiles-info"{news_info_style}>
+			<span class="tiles-name">{link_start}{name}{link_end}<span class="tiles-preactivity">{preactivity}</span></span>
+			<div class="tiles-preview" id="tiles-preview-{display_id}"{preview_style}>{message_preview}</div>
+			<div class="tiles-message" id="tiles-full-{display_id}"{full_style}>{message}</div>
+		</div>
+		<div class="tiles-created tiles-timestamp"{news_info_style}>{created}{activity}{replies_total}{social_link}</div>
+		{social_html}
+		<!-- BEGIN comments -->
+		<div class="tiles-comments" id="tiles-comments-{display_id}">
+			{view_replies}
+			<!-- BEGIN comment -->
+			<div class="tilecomment{class}" id="tilecomment-{display_id}" onmouseout="if ($('tilecomment-delete-{display_id}')){$('tilecomment-delete-{display_id}').style.visibility = 'hidden';};" onmouseover="if ($('tilecomment-delete-{display_id}')){$('tilecomment-delete-{display_id}').style.visibility = 'visible';};">
+				<!-- BEGIN comment_delete -->
+				<div id="tilecomment-delete-{display_id}" class="tilecomment-delete"><a onclick="DeletePhotoComment({id}, 'reply', '{display_id}');" href="javascript:void(0);">X</a></div>
+				<!-- END comment_delete -->
+				{image}<div class="tilecomment-body"><span class="tilecomment-name">{link_start}{link_start}{name}{link_end}</span>&nbsp;
+				<span class="tilecomment-message" id="tilecomment-preview-{display_id}"{preview_style}>{message_preview}</span>
+				<span class="tilecomment-message" id="tilecomment-full-{display_id}"{full_style}>{message}</span>
+				</div>
+				<div class="tilecomment-created tiles-timestamp">{created}</div>
+			</div>
+			<!-- END comment -->
+		</div>
+		<div class="tilecomments-form" id="tilecomments-form-{display_id}">
+			<div class="tilecomment-holder" id="tilecomment-holder-{display_id}">
+			<input class="tilecomment-click" id="tilecomment-click-{display_id}" value="Reply to this..." onclick="showPhotoCommentForm('{display_id}');" />
+			</div>
+			<div class="tilecomment-area" id="tilecomment-area-{display_id}">
+			<textarea class="tilecomment-entry" id="tilecomment-entry-{display_id}" onblur="if (this.value == '') {hidePhotoCommentForm('{display_id}');};"></textarea>
+			</div>
+			<div class="tilecomment-buttons" id="tilecomment-buttons-{display_id}">{comment_submit}</div>
+		</div>
+		<!-- END comments -->
+	</div>
+</div>
+<div class="tiles-separator">&nbsp;</div>
+<!-- END news_item -->
+<!-- END account_news -->

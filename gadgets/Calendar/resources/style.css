@@ -1,0 +1,23 @@
+* {padding: 0; margin: 0;}
+
+#fullcalendar {
+	font-size: 14px;
+	font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+	width: 100%;
+	margin: 0 auto;
+}
+#fullcalendar .fc-header-title {
+	font-size: 1.5em;
+}
+
+.calendar-iframe {
+	background: none repeat scroll 0 0 #FFFFFF;
+	border: 0 none;
+	height: 700px;
+	padding: 10px;
+	width: 750px;
+}
+
+.news-event-actions {
+	white-space: nowrap;
+}

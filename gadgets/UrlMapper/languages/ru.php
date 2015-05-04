@@ -24,7 +24,6 @@ define('_RU_URLMAPPER_MAPS_ADD_TITLE', "Добавить карту");
 define('_RU_URLMAPPER_MAPS_EDIT_TITLE', "Изменить карту");
 define('_RU_URLMAPPER_MAPS_ROUTE', "Маршрут");
 define('_RU_URLMAPPER_MAPS_REGEXP', "Регулярное выражение");
-define('_RU_URLMAPPER_MAPS_EXTENSION', "Расширение");
 define('_RU_URLMAPPER_MAPS_PARAM_NAME', "Имя");
 define('_RU_URLMAPPER_MAPS_PARAM_TYPE', "Тип");
 define('_RU_URLMAPPER_MAPS_PARAM_LENGTH', "Длина");

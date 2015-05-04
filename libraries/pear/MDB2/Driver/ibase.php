@@ -58,7 +58,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
 
     var $string_quoting = array('start' => "'", 'end' => "'", 'escape' => "'", 'escape_pattern' => '\\');
 
-    var $identifier_quoting = array('start' => '"', 'end' => '"', 'escape' => false);
+    var $identifier_quoting = array('start' => '', 'end' => '', 'escape' => false);
 
     var $transaction_id = 0;
 
@@ -96,7 +96,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
         $this->supported['primary_key'] = true;
         $this->supported['result_introspection'] = true;
         $this->supported['prepared_statements'] = true;
-        $this->supported['identifier_quoting'] = true;
+        $this->supported['identifier_quoting'] = false;
         $this->supported['pattern_escaping'] = true;
         $this->supported['new_link'] = false;
 
@@ -222,28 +222,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
         }
         return array($error, $native_code, $native_msg);
     }
-    // {{{ escape()
 
-    /**
-     * Quotes a string so it can be safely used in a query. It will quote
-     * the text so it can safely be used within a query.
-     *
-     * @param   string  the input string to quote
-     * @param   bool    escape wildcards
-     *
-     * @return  string  quoted string
-     *
-     * @access  public
-     */
-    function escape($text, $escape_wildcards = false)
-    {
-        //Remove a NULL-character (may break queries when inserted):
-        $text = str_replace("\x00", '', $text);
-        
-        return parent::escape($text, $escape_wildcards);
-    }
-
-    // }}}
     // }}}
     // {{{ quoteIdentifier()
 
@@ -262,8 +241,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
         if ($check_option && !$this->options['quote_identifier']) {
             return $str;
         }
-
-        return parent::quoteIdentifier(strtoupper($str), $check_option);
+        return strtoupper($str);
     }
 
     // }}}
@@ -643,7 +621,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
     // }}}
     // {{{ standaloneQuery()
 
-    /**
+   /**
      * execute a query as DBA
      *
      * @param string $query the SQL query
@@ -877,7 +855,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
             if (null === $placeholder_type) {
                 $placeholder_type_guess = $query[$p_position];
             }
-
+            
             $new_pos = $this->_skipDelimitedStrings($query, $position, $p_position);
             if (PEAR::isError($new_pos)) {
                 return $new_pos;
@@ -886,7 +864,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
                 $position = $new_pos;
                 continue; //evaluate again starting from the new position
             }
-
+            
             if ($query[$position] == $placeholder_type_guess) {
                 if (null === $placeholder_type) {
                     $placeholder_type = $query[$p_position];
@@ -996,7 +974,7 @@ class MDB2_Driver_ibase extends MDB2_Driver_Common
         //$seq = $table.(empty($field) ? '' : '_'.$field);
         return $this->currID($table);
     }
-
+    
     // }}}
     // {{{ currID()
 

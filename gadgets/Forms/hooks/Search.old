@@ -1,0 +1,71 @@
+<?php
+/**
+ * Forms - Search gadget hook
+ *
+ * @category   GadgetHook
+ * @package    Forms
+ * @author     Alan Valkoun <valkoun@gmail.com>
+ * @copyright  2008 Alan Valkoun
+ */
+class FormsSearchHook
+{
+    /**
+     * Gets the gadget's search fields
+     */
+    function GetSearchFields() {
+        return array(
+                    array('[title]', '[description]', '[sm_description]', '[Clause]', '[recipient]', '[custom_action]'),
+                    );
+    }
+
+    /**
+     * Returns an array with the results of a search
+     *
+     * @access  public
+     * @param   string  $pSql  Prepared search (WHERE) SQL
+     * @return  array   An array of entries that matches a certain pattern
+     */
+    function Hook($pSql = '')
+    {
+        $params = array('OwnerID' => 0);
+
+        $sql = '
+            SELECT
+               [ID], [sort_order], [title], [sm_description], [description], 
+			   [Clause], [image], [recipient], [parent], [custom_action], 
+			   [fast_url], [Active], [OwnerID], [Created], [Updated], [submit_content]
+            FROM [[forms]] 
+            WHERE [OwnerID] = {OwnerID}
+            ';
+
+        $sql .= $pSql;
+        $sql .= ' ORDER BY [ID] DESC';
+
+        $types = array('integer', 'integer', 'text', 'text', 'text', 
+			'text', 'text', 'text', 'integer', 'text', 
+			'text', 'text', 'integer', 'timestamp', 'timestamp', 'text');
+
+        $result = $GLOBALS['db']->queryAll($sql, $params, $types);
+        if (Jaws_Error::IsError($result)) {
+            return array();
+        }
+
+        $date  = $GLOBALS['app']->loadDate();
+        $pages = array();
+        foreach ($result as $p) {
+            $page = array();
+            $page['title'] = $p['title'];
+			$url = $GLOBALS['app']->Map->GetURLFor('Forms', 'Form', array('id' => $p['fast_url']));
+
+            $page['url']     = $url;
+            $page['image']   = $GLOBALS['app']->GetJawsURL() . '/gadgets/Forms/images/logo.png';
+			$page['snippet'] = (strlen(strip_tags($p['description'])) > 247 ? substr(strip_tags($p['description']),0,247) : strip_tags($p['description']));
+            $page['date']    = $date->ToISO($p['updated']);
+
+            $stamp           = str_replace(array('-', ':', ' '), '', $p['updated']);
+            $pages[$stamp]   = $page;
+        }
+
+        return $pages;
+    }
+}

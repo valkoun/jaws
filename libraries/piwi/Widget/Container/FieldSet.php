@@ -123,7 +123,7 @@ class FieldSet extends Container
 
         if (!empty($this->_legend)) {
             $legend_id = !empty($this->_legendID) ? $this->_legendID : $this->_id.'_legend';
-            $this->_XHTML .= '<legend id="' . $legend_id . '"><span>' . $this->_legend . "</span></legend>\n";
+            $this->_XHTML .= '<legend id="' . $legend_id . '">' . $this->_legend . "</legend>\n";
         }
 
         if ($this->_direction == 'vertical') {

@@ -1,43 +1,30 @@
 <?php
 /**
- * Class to manage translation of strings
+ * Translate class
  *
- * @category   JawsType
+ * @category   Languages
  * @package    Core
  * @author     Jorge A Gallegos <kad@gulags.org>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Jon Wood <jon@substance-it.co.uk>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
+
+define('JAWS_COMMON', 0);
+define('JAWS_GADGET', 1);
+define('JAWS_PLUGIN', 2);
+
 class Jaws_Translate
 {
     /**
      * Default language to use
      *
-     * @access  private
-     * @var     string
+     * @access private
+     * @var    string
      */
     var $_defaultLanguage = 'en';
-
-    /**
-     * load user translated files
-     *
-     * @access  private
-     * @var     bool
-     */
-    var $_load_user_translated = true;
-
-    /**
-     * Constructor
-     *
-     * @access  public
-     */
-    function Jaws_Translate($load_user_translated = true)
-    {
-        $this->_load_user_translated = $load_user_translated;
-    }
-
+    
     /**
      * Initializes the Translate
      */
@@ -62,24 +49,27 @@ class Jaws_Translate
     /**
      * Translate a string.
      *
-     * @access  public
+     * @access public
      * @static
-     * @param   string $string The ID of the string to translate.
-     * @param   array $replacements An array replacements to make in the string.
-     * @return  string The tranlsated string, with replacements made.
+     * @param string $string The ID of the string to translate.
+     * @param array $replacements An array replacements to make in the string.
+     * @return string The tranlsated string, with replacements made.
      */
     function Translate($lang, $string, $replacements = array())
     {
-        $lang = strtoupper(empty($lang)? $this->_defaultLanguage : $lang);
-        $base_translate = "_EN_$string";
-        $orig_translate = "_{$lang}_$string";
-        $data_translate = "_{$lang}_DATA_$string";
-        if (defined($data_translate)) {
-            $string = constant($data_translate);
-        } elseif (defined($orig_translate)) {
-            $string = constant($orig_translate);
-        } elseif (defined($base_translate)) {
-            $string = constant($base_translate)."*";
+        $language = strtoupper($this->_defaultLanguage);
+        // Quick hack until we can _ from the beginning of translation IDs.
+        if ($string[0] != '_') {
+            $string = '_' . $string;
+        }
+
+        $translated = '_' . (empty($lang) ? $language : strtoupper($lang)) . $string;
+        $not_translated = true;
+        if (defined($translated)) {
+            $string = constant($translated);
+            $not_translated = false;
+        } elseif (defined('_EN' . $string)) {
+            $string = constant('_EN' . $string);
         }
 
         $count = count($replacements);
@@ -93,9 +83,17 @@ class Jaws_Translate
             $originalString = $string;
             $string = preg_replace('/[\s\{[0-9]+\}]*/', '', $string);
             if ($originalString != $string) {
-                $GLOBALS['log']->Log(JAWS_LOG_DEBUG,
-                                     'A placeholder was not replaced while trying to translate ' . $string);
+                if (isset($GLOBALS['log'])) {
+                    $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'A placeholder was not replaced while trying to translate ' . $string);
+                }
             }
+        }
+
+        if ($not_translated && $string != '') {
+            if ($string[0] == '_') {
+                $string = substr($string, 1);
+            }
+            $string .= '*';
         }
 
         return $string;
@@ -107,13 +105,13 @@ class Jaws_Translate
      * Loaded translations are kept in $GLOBALS['i18n'], so that they aren't
      * reloaded.
      *
-     * @access  public
-     * @param   string  $module The translation to load
-     * @param   string  $type   Type of module(JAWS_COMPONENT_OTHERS, JAWS_COMPONENT_GADGET, JAWS_COMPONENT_PLUGIN)
-     * @param   string  $lang   Optional language code
-     * @return  void
+     * @access public
+     * @static
+     * @param string module The translation to load.
+     * @param string type   Type of modulr(JAWS_COMMON, JAWS_GADGET, JAWS_PLUGIN)
+     * @return void
      */
-    function LoadTranslation($module, $type = JAWS_COMPONENT_OTHERS, $lang = null)
+    function LoadTranslation($module, $type = JAWS_COMMON, $lang = null)
     {
         $language = $this->_defaultLanguage;
         if ($module == 'Date' && isset($GLOBALS['app'])) {
@@ -136,17 +134,17 @@ class Jaws_Translate
 
         // Only attempt to load a translation if it isn't already loaded.
         if (in_array(array($module, $type), $GLOBALS['i18n'][$language])) {
-            return;
+            return true;
         }
 
         switch ($type) {
-            case JAWS_COMPONENT_GADGET:
+            case JAWS_GADGET:
                 $orig_i18n = JAWS_PATH . "gadgets/$module/languages/$language.php";
                 $data_i18n = JAWS_DATA . "languages/$language/gadgets/$module.php";
                 $fall_back = JAWS_PATH . "gadgets/$module/languages/en.php";
                 break;
 
-            case JAWS_COMPONENT_PLUGIN:
+            case JAWS_PLUGIN:
                 $orig_i18n = JAWS_PATH . "plugins/$module/languages/$language.php";
                 $data_i18n = JAWS_DATA . "languages/$language/plugins/$module.php";
                 $fall_back = JAWS_PATH . "plugins/$module/languages/en.php";
@@ -158,31 +156,39 @@ class Jaws_Translate
                 $fall_back = JAWS_PATH . "languages/en/$module.php";
         }
 
-        $GLOBALS['i18n'][$language][] = array($module, $type);
-        if ($this->_load_user_translated && file_exists($data_i18n)) {
+        
+        if (file_exists($data_i18n)) {
             require_once $data_i18n;
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded data translation for $module, language $language");
-        }
-
-        if (file_exists($orig_i18n)) {
+            $GLOBALS['i18n'][$language][] = array($module, $type);
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded translation for $module, language $language");
+            }
+        } elseif (file_exists($orig_i18n)) {
             require_once $orig_i18n;
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded translation for $module, language $language");
+            $GLOBALS['i18n'][$language][] = array($module, $type);
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded translation for $module, language $language");
+            }
         } else {
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "No translation could be found for $module for language $language");
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "No translation could be found for $module for language $language");
+            }
         }
 
         if ($language != 'en') {
             if (file_exists($fall_back)) {
                 require_once $fall_back;
                 $GLOBALS['i18n']['en'][] = array($module, $type);
-                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded fallback translation for $module, language en");
+                if (isset($GLOBALS['log'])) {
+                    $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loaded fallback translation for $module, language en");
+                }
             } else {
-                $GLOBALS['log']->Log(JAWS_LOG_DEBUG,
-                                     "No fallback translation could be found for $module for language en");
+                if (isset($GLOBALS['log'])) {
+                    $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "No fallback translation could be found for $module for language en");
+                }
             }
         }
     }
-
 }
 
 /**
@@ -190,9 +196,9 @@ class Jaws_Translate
  *
  * Passes it's arguments to Jaws_Translate::Translate to do the actual translation.
  *
- * @access  public
- * @param   string        string The string to translate.
- * @return  string
+ * @access public
+ * @param string        string The string to translate.
+ * @return string
  */
 function _t($string)
 {
@@ -214,10 +220,10 @@ function _t($string)
  *
  * Passes it's arguments to Jaws_Translate::Translate to do the actual translation.
  *
- * @access  public
- * @param   string        lang The language.
- * @param   string        string The string to translate.
- * @return  string
+ * @access public
+ * @param string        lang The language.
+ * @param string        string The string to translate.
+ * @return string
  */
 function _t_lang($lang, $string)
 {

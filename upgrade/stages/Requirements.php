@@ -6,7 +6,7 @@
  * @package    UpgradeStage
  * @author     Ali Fazelzadeh <afz@php.net>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 define('MIN_PHP_VERSION', '4.3.6');
@@ -44,7 +44,7 @@ class Upgrader_Requirements extends JawsUpgraderStage
      */
     function Display()
     {
-        $tpl = new Jaws_Template('stages/Requirements/templates/');
+        $tpl = new Jaws_Template(UPGRADE_PATH . 'stages/Requirements/templates/');
         $tpl->load('display.html', false, false);
         $tpl->setBlock('Requirements');
 
@@ -60,17 +60,17 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $modules = get_loaded_extensions();
         $modules = array_map('strtolower', $modules);
 
-        _log(JAWS_LOG_DEBUG,"Checking requirements...");
+        log_upgrade("Checking requirements...");
         // PHP version
         $tpl->setBlock('Requirements/req_item');
         $tpl->setVariable('item', _t('UPGRADE_REQ_PHP_VERSION'));
         $tpl->setVariable('item_requirement', _t('UPGRADE_REQ_GREATER_THAN', MIN_PHP_VERSION));
         $tpl->setVariable('item_actual', phpversion());
         if (version_compare(phpversion(), MIN_PHP_VERSION, ">=") == 1) {
-            _log(JAWS_LOG_DEBUG,"PHP installed version looks ok (>= ".MIN_PHP_VERSION.")");
+            log_upgrade("PHP installed version looks ok (>= ".MIN_PHP_VERSION.")");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"PHP installed version (".phpversion().") is not supported");
+            log_upgrade("PHP installed version (".phpversion().") is not supported");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -78,15 +78,15 @@ class Upgrader_Requirements extends JawsUpgraderStage
 
         // config directory
         $tpl->setBlock('Requirements/req_item');
-        $result = $this->_check_path('config', 'r');
+        $result = $this->_check_path(str_replace('/data', '', JAWS_DATA) . 'config', 'r');
         $tpl->setVariable('item', _t('UPGRADE_REQ_DIRECTORY', 'config'));
         $tpl->setVariable('item_requirement', _t('UPGRADE_REQ_READABLE'));
-        $tpl->setVariable('item_actual', $this->_get_perms('config'));
+        $tpl->setVariable('item_actual', $this->_get_perms(str_replace('/data', '', JAWS_DATA) . 'config'));
         if ($result) {
-            _log(JAWS_LOG_DEBUG,"config directory has read-permission privileges");
+            log_upgrade("config directory has read-permission privileges");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"config directory doesn't have read-permission privileges");
+            log_upgrade("config directory doesn't have read-permission privileges");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -94,15 +94,15 @@ class Upgrader_Requirements extends JawsUpgraderStage
 
         // data directory
         $tpl->setBlock('Requirements/req_item');
-        $result = $this->_check_path('data', 'rw');
+        $result = $this->_check_path(JAWS_DATA, 'rw');
         $tpl->setVariable('item', _t('UPGRADE_REQ_DIRECTORY', 'data'));
         $tpl->setVariable('item_requirement', _t('UPGRADE_REQ_WRITABLE'));
-        $tpl->setVariable('item_actual', $this->_get_perms('data'));
+        $tpl->setVariable('item_actual', $this->_get_perms(JAWS_DATA));
         if ($result) {
-            _log(JAWS_LOG_DEBUG,"data directory has read and write permission privileges");
+            log_upgrade("data directory has read and write permission privileges");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"data directory doesn't have read and write permission privileges");
+            log_upgrade("data directory doesn't have read and write permission privileges");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -120,10 +120,10 @@ class Upgrader_Requirements extends JawsUpgraderStage
         }
         $tpl->setVariable('item_actual', $actual);
         if ($db_state) {
-            _log(JAWS_LOG_DEBUG,"Available database drivers: $actual");
+            log_upgrade("Available database drivers: $actual");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"No database driver found");
+            log_upgrade("No database driver found");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -135,10 +135,10 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $tpl->setVariable('item_requirement', _t('GLOBAL_YES'));
         $tpl->setVariable('item_actual', (in_array('xml', $modules)? _t('GLOBAL_YES') : _t('GLOBAL_NO')));
         if (in_array('xml', $modules)) {
-            _log(JAWS_LOG_DEBUG,"xml support is enabled");
+            log_upgrade("xml support is enabled");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"xml support is not enabled");
+            log_upgrade("xml support is not enabled");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -146,7 +146,7 @@ class Upgrader_Requirements extends JawsUpgraderStage
 
         // Try to create and set permission for data subdirectories
         foreach ($this->_data_subdirs as $path) {
-            Jaws_Utils::mkdir(JAWS_PATH. $path);
+            Jaws_Utils::mkdir(str_replace('data/', JAWS_DATA, $path));
         }
 
         // Check data subdirectories
@@ -156,10 +156,10 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $tpl->setVariable('item_requirement', _t('UPGRADE_REQ_WRITABLE'));
         $tpl->setVariable('item_actual', implode('<br/>', $this->_get_perms($this->_data_subdirs)));
         if ($result) {
-            _log(JAWS_LOG_DEBUG,"data directory has read and write permission privileges");
+            log_upgrade("data directory has read and write permission privileges");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"data directory doesn't have read and write permission privileges");
+            log_upgrade("data directory doesn't have read and write permission privileges");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -172,10 +172,10 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $check = (bool) ini_get('file_uploads');
         $tpl->setVariable('item_actual', ($check ? _t('GLOBAL_YES'): _t('GLOBAL_NO')));
         if ($check) {
-            _log(JAWS_LOG_DEBUG,"PHP accepts file uploads");
+            log_upgrade("PHP accepts file uploads");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"PHP doesn't accept file uploads");
+            log_upgrade("PHP doesn't accept file uploads");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -188,10 +188,10 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $safe_mode = (bool) ini_get('safe_mode');
         $tpl->setVariable('item_actual', ($safe_mode ? _t('UPGRADE_REQ_ON'): _t('UPGRADE_REQ_OFF')));
         if ($safe_mode) {
-            _log(JAWS_LOG_DEBUG,"PHP has safe-mode turned on");
+            log_upgrade("PHP has safe-mode turned on");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"PHP has safe-mode turned off");
+            log_upgrade("PHP has safe-mode turned off");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -206,10 +206,10 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $actual = empty($actual)? 'No' : $actual;
         $tpl->setVariable('item_actual', $actual);
         if (in_array('gd', $modules) || in_array('magickwand', $modules)) {
-            _log(JAWS_LOG_DEBUG,"PHP has GD or ImageMagick turned on");
+            log_upgrade("PHP has GD or ImageMagick turned on");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"PHP has GD or ImageMagick turned off");
+            log_upgrade("PHP has GD or ImageMagick turned off");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -221,10 +221,26 @@ class Upgrader_Requirements extends JawsUpgraderStage
         $tpl->setVariable('item_requirement', _t('GLOBAL_YES'));
         $tpl->setVariable('item_actual', (in_array('exif', $modules)? _t('GLOBAL_YES') : _t('GLOBAL_NO')));
         if (in_array('exif', $modules)) {
-            _log(JAWS_LOG_DEBUG,"exif support is enabled");
+            log_upgrade("exif support is enabled");
             $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
         } else {
-            _log(JAWS_LOG_DEBUG,"exif support is not enabled");
+            log_upgrade("exif support is not enabled");
+            $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
+        }
+        $tpl->setVariable('result', $result_txt);
+        $tpl->parseBlock('Requirements/rec_item');
+
+        // data/themes directory
+        $tpl->setBlock('Requirements/rec_item');
+        $result = $this->_check_path(JAWS_DATA . 'themes', 'rw');
+        $tpl->setVariable('item', _t('UPGRADE_REQ_DIRECTORY', 'data/themes'));
+        $tpl->setVariable('item_requirement', _t('UPGRADE_REQ_WRITABLE'));
+        $tpl->setVariable('item_actual', $this->_get_perms(JAWS_DATA . 'themes'));
+        if ($result) {
+            log_upgrade("data/themes directory exists");
+            $result_txt = '<span style="color: #0b0;">'._t('UPGRADE_REQ_OK').'</span>';
+        } else {
+            log_upgrade("data/themes directory doesn't exists");
             $result_txt = '<span style="color: #b00;">'._t('UPGRADE_REQ_BAD').'</span>';
         }
         $tpl->setVariable('result', $result_txt);
@@ -245,16 +261,16 @@ class Upgrader_Requirements extends JawsUpgraderStage
         if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<') == 1) {
             $text = _t('UPGRADE_REQ_RESPONSE_PHP_VERSION', MIN_PHP_VERSION);
             $type = JAWS_ERROR_ERROR;
-            _log(JAWS_LOG_DEBUG,$text);
+            log_upgrade($text);
             return new Jaws_Error($text, 0, $type);
         }
 
-        if (!$this->_check_path('config', 'r')) {
+        if (!$this->_check_path(str_replace('/data', '', JAWS_DATA) . 'config', 'r')) {
             $text = _t('UPGRADE_REQ_RESPONSE_DIR_PERMISSION', 'config');
             $type = JAWS_ERROR_ERROR;
         }
 
-        if (!$this->_check_path('data', 'rw')) {
+        if (!$this->_check_path(JAWS_DATA, 'rw')) {
             if (isset($text)) {
                 $text = _t('UPGRADE_REQ_RESPONSE_DIR_PERMISSION', _t('UPGRADE_REQ_BAD'));
             } else {
@@ -269,7 +285,7 @@ class Upgrader_Requirements extends JawsUpgraderStage
         }
 
         if (isset($text)) {
-            _log(JAWS_LOG_DEBUG,$text);
+            log_upgrade($text);
             return new Jaws_Error($text, 0, $type);
         }
 
@@ -283,14 +299,14 @@ class Upgrader_Requirements extends JawsUpgraderStage
         if (!$db_state) {
             $text = _t('UPGRADE_REQ_RESPONSE_EXTENSION', implode(' | ', array_keys($this->_db_drivers)));
             $type = JAWS_ERROR_ERROR;
-            _log(JAWS_LOG_DEBUG,$text);
+            log_upgrade($text);
             return new Jaws_Error($text, 0, $type);
         }
 
         if (!in_array('xml', $modules)) {
             $text = _t('UPGRADE_REQ_RESPONSE_EXTENSION', 'XML');
             $type = JAWS_ERROR_ERROR;
-            _log(JAWS_LOG_DEBUG,$text);
+            log_upgrade($text);
             return new Jaws_Error($text, 0, $type);
         }
 
@@ -307,19 +323,19 @@ class Upgrader_Requirements extends JawsUpgraderStage
      */
     function _check_path($paths, $properties)
     {
-        $paths = !is_array($paths)? array($paths) : $paths;
+		$paths = !is_array($paths)? array((substr(strtolower($paths), 0, 5) == 'data/' ? str_replace('data/', JAWS_DATA, $paths) : $paths)) : $paths;
         foreach ($paths as $path) {
-            $path = JAWS_PATH . $path;
-            if ($properties == 'rw') {
-                if (!is_readable($path) || !Jaws_Utils::is_writable($path)) {
+            $path = (substr(strtolower($path), 0, 5) == 'data/' ? str_replace('data/', JAWS_DATA, $path) : $path);
+			if ($properties == 'rw') {
+                if (!file_exists($path) || !is_dir($path) || !is_readable($path) || !Jaws_Utils::is_writable($path)) {
                     return false;
                 }
             } else if ($properties == 'r') {
-                if (!is_readable($path) || !is_dir($path)) {
+                if (!file_exists($path) || !is_dir($path) || !is_readable($path)) {
                     return false;
                 }
             } else {
-                if (!is_dir($path)) {
+                if (!file_exists($path) || !is_dir($path)) {
                     return false;
                 }
             }
@@ -328,19 +344,12 @@ class Upgrader_Requirements extends JawsUpgraderStage
         return true;
     }
 
-    /**
-     * Get permissions string
-     *
-     * @access  private
-     * @param   string  $paths         Path(s) to check
-     * @return  string  permissions string
-     */
     function _get_perms($paths)
     {
-        $paths = !is_array($paths)? array($paths) : $paths;
+		$paths = !is_array($paths)? array((substr(strtolower($paths), 0, 5) == 'data/' ? str_replace('data/', JAWS_DATA, $paths) : $paths)) : $paths;
         $paths_perms = array();
         foreach ($paths as $path) {
-            $path = JAWS_PATH . $path;
+            $path = (substr(strtolower($path), 0, 5) == 'data/' ? str_replace('data/', JAWS_DATA, $path) : $path);
             $perms = @decoct(@fileperms($path) & 0777);
             if (strlen($perms) < 3) {
                 $paths_perms[] = '---------';

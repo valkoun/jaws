@@ -7,7 +7,7 @@
  * PHP versions 4 and 5
  *
  * <LICENSE>
- * Copyright (c) 2005-2011, Alexander Wirtz
+ * Copyright (c) 2005-2009, Alexander Wirtz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,9 +38,9 @@
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     CVS: $Id: Globalweather.php 313787 2011-07-27 15:30:32Z eru $
+ * @version     CVS: $Id: Globalweather.php 277074 2009-03-12 23:16:41Z eru $
  * @link        http://pear.php.net/package/Services_Weather
  * @link        http://www.capescience.com/webservices/globalweather/index.shtml
  * @example     examples/globalweather-basic.php    globalweather-basic.php
@@ -68,9 +68,9 @@ require_once "Services/Weather/Common.php";
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     Release: 1.4.6
+ * @version     Release: 1.4.5
  * @link        http://pear.php.net/package/Services_Weather
  * @link        http://www.capescience.com/webservices/globalweather/index.shtml
  * @example     examples/globalweather-basic.php    globalweather-basic.php
@@ -148,8 +148,8 @@ class Services_Weather_Globalweather extends Services_Weather_Common {
             return $error;
         }
 
-        $this->_stationSoap = new WebService_GlobalWeather_StationInfo;
-        $this->_weatherSoap = new WebService_GlobalWeather_GlobalWeather;
+        $this->_stationSoap = &new WebService_GlobalWeather_StationInfo;
+        $this->_weatherSoap = &new WebService_GlobalWeather_GlobalWeather;
 
         return true;
     }
@@ -301,7 +301,7 @@ class Services_Weather_Globalweather extends Services_Weather_Common {
 
         $locationReturn = array();
 
-        if ($this->_cacheEnabled && ($location = $this->_getCache("GW-".$id, "location"))) {
+        if ($this->_cacheEnabled && ($location = $this->_cache->get("GW-".$id, "location"))) {
             // Get data from cache
             $this->_location = $location;
             $locationReturn["cache"] = "HIT";
@@ -324,7 +324,8 @@ class Services_Weather_Globalweather extends Services_Weather_Common {
 
             if ($this->_cacheEnabled) {
                 // ...and cache it
-                $this->_saveCache("GW-".$id, $this->_location, "", "location");
+                $expire = constant("SERVICES_WEATHER_EXPIRES_LOCATION");
+                $this->_cache->extSave("GW-".$id, $this->_location, "", $expire, "location");
             }
             $locationReturn["cache"] = "MISS";
         }
@@ -379,7 +380,7 @@ class Services_Weather_Globalweather extends Services_Weather_Common {
         $units    = $this->getUnitsFormat($unitsFormat);
 
         $weatherReturn = array();
-        if ($this->_cacheEnabled && ($weather = $this->_getCache("GW-".$id, "weather"))) {
+        if ($this->_cacheEnabled && ($weather = $this->_cache->get("GW-".$id, "weather"))) {
             // Same procedure...
             $this->_weather = $weather;
             $weatherReturn["cache"] = "HIT";
@@ -403,7 +404,8 @@ class Services_Weather_Globalweather extends Services_Weather_Common {
 
             if ($this->_cacheEnabled) {
                 // ...and cache it
-                $this->_saveCache("GW-".$id, $this->_weather, "", "weather");
+                $expire = constant("SERVICES_WEATHER_EXPIRES_WEATHER");
+                $this->_cache->extSave("GW-".$id, $this->_weather, "", $expire, "weather");
             }
             $weatherReturn["cache"] = "MISS";
         }

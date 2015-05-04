@@ -5,14 +5,14 @@
  * @category   Cache
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2008-2012 Jaws Development Group
+ * @copyright  2008-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Cache
 {
     /**
      * Cache driver
-     * @access  private
+     * @access private
      */
     var $_Driver;
 
@@ -26,7 +26,9 @@ class Jaws_Cache
         $this->_Driver = $this->Registry->Get('/config/cache/driver');
         $driverFile = JAWS_PATH . 'include/Jaws/Cache/'. $this->_Driver . '.php';
         if (!file_exists($driverFile)) {
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loading cache driver $driverFile failed.");
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loading cache driver $driverFile failed.");
+            }
             $this->_Driver = 'File';
             $driverFile = JAWS_PATH . 'include/Jaws/Cache/'. $this->_Driver . '.php';
         }

@@ -5,7 +5,7 @@
  * @category   Gadget
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_GadgetHTML extends Jaws_Gadget
@@ -14,43 +14,33 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      * Are we running Ajax?
      *
      * @access  private
-     * @var     bool
+     * @var     boolean
      */
     var $_usingAjax = false;
 
     /**
-     * Constructor
+     * Refactor Init, Jaws_GadgetHTML::Init() loads the Piwi stuff
      *
-     * @access  public
-     * @param   string $gadget Gadget's name(same as the filesystem name)
-     * @return  void
+     * @access  protected
+     * @param   string    $value Name of the gadget's model
      */
-    function Jaws_GadgetHTML($gadget)
+    function Init($model)
     {
-        parent::Jaws_Gadget($gadget);
+        parent::Init($model);
+        // Load Piwi if it's a web app
         if (APP_TYPE == 'web') {
             // Add ShowGadgetInfo action
             $this->StandaloneAction('ShowGadgetInfo','');
 
             // Add Ajax actions.
             $this->StandaloneAction('Ajax', '');
+            $this->StandaloneAction('AjaxCommonFiles', '');
             $this->StandaloneAdminAction('Ajax', '');
+            $this->StandaloneAdminAction('AjaxCommonFiles', '');
 
             // Add _404 as normal action
             $this->NormalAction('_404');
         }
-    }
-
-    /**
-     * Refactor Init, Jaws_GadgetHTML::Init() loads the Piwi stuff
-     *
-     * @access  public
-     * @param   string $gadget Gadget's name(same as the filesystem name)
-     * @return  void
-     */
-    function Init($gadget)
-    {
-        $this->Jaws_GadgetHTML($gadget);
     }
 
     /**
@@ -97,7 +87,7 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      *
      * @access  public
      * @param   string  $action to Verify
-     * @return  bool    True if action is standalone, if not, returns false
+     * @return  boolean True if action is standalone, if not, returns false
      */
     function IsStandAlone($action)
     {
@@ -112,7 +102,7 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      *
      * @access  public
      * @param   string  $action to Verify
-     * @return  bool    True if action is standalone of the controlpanel if not, returns false
+     * @return  boolean True if action is standalone of the controlpanel if not, returns false
      */
     function IsStandAloneAdmin($action)
     {
@@ -142,11 +132,12 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      * ?>
      * </code>
      *
-     * @access  public
+     * @access public
      */
     function Ajax()
     {
         $name = $this->GetName();
+        $objects = array();
         require_once JAWS_PATH . 'include/Jaws/Ajax.php';
 
         if (JAWS_SCRIPT == 'admin') {
@@ -158,19 +149,9 @@ class Jaws_GadgetHTML extends Jaws_Gadget
             require_once JAWS_PATH.'gadgets/' . $name . '/Ajax.php';
             $ajaxClass = $name . 'Ajax';
         }
+        $objects[] = new $ajaxClass($model);
 
-        $objAjax = new $ajaxClass($model);
-        $request =& Jaws_Request::getInstance();
-        $jpspan  = $request->get('jpspan', 'get');
-        if (isset($jpspan)) {
-            $this->InitAjax($objAjax);
-        } else {
-            $output = '';
-            $method = $request->get('method', 'get');
-            $params = $request->getAll('post');
-            $output = call_user_func_array(array($objAjax, $method), $params);
-            return Jaws_UTF8::json_encode($output);
-        }
+        $this->InitAjax($objects);
     }
 
     /**
@@ -182,39 +163,63 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      * @return  string  The reply.
      * @since   0.6
      */
-    function InitAjax($object = null)
+    function InitAjax($objects = array())
     {
-        if (is_object($object)) {
+		if (count($objects)) { 
+			// Load the HTML_AJAX library 
+			require_once 'HTML/AJAX/Server.php'; 
+			
+			// Create a server object, set the URL to submit to, and export some objects. 
+			$server = new HTML_AJAX_Server(); 
+			$server->setSerializer('JSON'); 
+			$server->ajax->php4CompatCase = true; 
+			//$server->ajax->serverUrl = $GLOBALS['app']->getSiteURL('', false, 'https') . '/'. BASE_SCRIPT.'?gadget='.$this->_Name.'&action=Ajax'; 
+			$server->ajax->serverUrl = BASE_SCRIPT.'?gadget='.$this->_Name.'&action=Ajax'; 
+			
+			foreach ($objects as $object) { 
+				$server->registerClass($object); 
+			} 
+			
+			$server->handleRequest(); 
+/*
             // Load the JPSpan library
             require_once JAWS_PATH . 'libraries/jpspan/JPSpan.php';
             require_once JAWS_PATH . 'libraries/jpspan/JPSpan/Server/PostOffice.php';
 
-            // Create a server object, set the URL to submit to, and export object.
+            // Create a server object, set the URL to submit to, and export some objects.
             $server = new JPSpan_Server_Postoffice();
             $server->setServerUrl(BASE_SCRIPT.'?gadget='.$this->_Name.'&action=Ajax');
-            $server->addHandler($object);
-
-            // Display the client code.
-            define('JPSPAN_INCLUDE_COMPRESS', true);
-            $client = $server->displayClient();
-
-            header('Content-type: text/javascript; charset: UTF-8');
-            header('Content-Type: application/x-javascript');
-            header("Vary: Accept-Encoding");
-            //2592000 = 30 * 24 * 3600
-            header('Cache-Control: max-age=2592000, public, must-revalidate');
-            //header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 2592000) . ' GMT');
-            if ($GLOBALS['app']->GZipEnabled()) {
-                $client = @gzencode($client, COMPRESS_LEVEL, FORCE_GZIP);
-                header('Content-Length: '.strlen($client));
-                header('Content-Encoding: '.(strpos($GLOBALS['app']->GetBrowserEncoding(), 'x-gzip')!== false? 'x-gzip' : 'gzip'));
-            } else {
-                header('Content-Length: '.strlen($client));
+            
+            foreach ($objects as $object) {
+                $server->addHandler($object);
             }
 
-            echo $client;
-            exit;
-        }
+            if (isset($_GET['client'])) {
+                // Display the client code.
+                define('JPSPAN_INCLUDE_COMPRESS', true);
+                $client = $server->displayClient();
+
+                header('Content-type: text/javascript; charset: UTF-8');
+                header('Content-Type: application/x-javascript');
+                header("Vary: Accept-Encoding");
+                header('Cache-Control: must-revalidate');
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + (60 * 60)) . ' GMT');
+                if ($GLOBALS['app']->GZipEnabled()) {
+                    $client = @gzencode($client, COMPRESS_LEVEL, FORCE_GZIP);
+                    header('Content-Length: '.strlen($client));
+                    header('Content-Encoding: '.(strpos($GLOBALS['app']->GetBrowserEncoding(), 'x-gzip')!== false? 'x-gzip' : 'gzip'));
+                } else {
+                    header('Content-Length: '.strlen($client));
+                }
+                echo $client;
+                exit;
+            } else {
+                // Process method calls, displaying any errors that occur on the client side.
+                require_once JAWS_PATH.'libraries/jpspan/JPSpan/ErrorHandler.php';
+                $server->serve();
+            }
+*/
+		} 
 
         // Yeah, so it's a hack.
         return "alert('The ".$this->GetName()." gadget does not provide a Javascript interface.')";
@@ -225,42 +230,82 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      *
      * @access  public
      * @param   string  $gadget Gadget's Name
-     * @return  bool    Returns true if the gadget is valid, otherwise will finish the execution
+     * @return  boolean Returns true if the gadget is valid, otherwise will finish the execution
      */
     function IsValid($gadget)
     {
         // Check if file exists
         // Hack until we decide if $gadget.php will be a proxy file
         if (!file_exists(JAWS_PATH . 'gadgets/'.$gadget.'/HTML.php')) {
-            Jaws_Error::Fatal('Gadget file doesn\'t exists');
+            Jaws_Error::Fatal('Gadget file doesn\'t exists', __FILE__, __LINE__);
         }
 
         parent::IsValid($gadget);
     }
 
     /**
+     * Load the most common JS files to use in Ajax
+     *
+     * @access protected
+     */
+    function AjaxCommonFiles()
+    {
+        $content = file_get_contents(JAWS_PATH . 'include/Jaws/Ajax/ErrorHandler.js');
+        $content.= file_get_contents(JAWS_PATH . 'include/Jaws/Ajax/Ajax.js');
+
+        header('Content-type: text/javascript; charset: UTF-8');
+        header('Content-Type: application/x-javascript');
+        header("Vary: Accept-Encoding");
+        header('Cache-Control: must-revalidate');
+        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + (60 * 60)) . ' GMT');
+        if ($GLOBALS['app']->GZipEnabled()) {
+            $content = gzencode($content, COMPRESS_LEVEL, FORCE_GZIP);
+            header('Content-Length: '.strlen($content));
+            header('Content-Encoding: '.(strpos($GLOBALS['app']->GetBrowserEncoding(), 'x-gzip')!== false? 'x-gzip' : 'gzip'));
+        } else {
+            header('Content-Length: '.strlen($content));
+        }
+		//header('Connection: close');
+        echo $content;
+		//exit;
+    }
+
+    /**
      * Ajax the gadget adding the basic script links to build the interface
      *
      * @access  protected
-     * @param   string  $file       Optional The gadget can require a special JS file,
-     *                              it should be located under gadgets/$gadget/resources/$file
-     * @param   string  $version    Optional File version
+     * @param   string     $file (Optional) The gadget can require a special JS file, it should be located under
+     *                           gadgets/$gadget/resources/$file
      */
-    function AjaxMe($file = '', $version = '')
+    function AjaxMe($file = '')
     {
-        $this->_usingAjax = true;
-        $name = $this->GetName();
-        $GLOBALS['app']->Layout->AddScriptLink('include/Jaws/Ajax/Ajax.js');
-        $GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT.'?gadget='.
-                                               $name.
-                                               '&amp;action=Ajax&amp;jpspan');
 
-        if (!empty($file)) {
-            $GLOBALS['app']->Layout->AddScriptLink('gadgets/'.
-                                                   $name.
-                                                   '/resources/'.
-                                                   $file.
-                                                   (empty($version)? '' : "?$version"));
+		$this->_usingAjax = true; 
+		$name = $this->GetName();
+
+        /*
+		$GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT.'?gadget=' . $name . '&amp;action=Ajax&amp;client');
+        $GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT.'?gadget=' . $name . '&amp;action=AjaxCommonFiles');
+        */
+
+		if (BASE_SCRIPT == 'index.php') {
+			if ($file == 'client_script.js') {
+				$GLOBALS['app']->Layout->AddScriptLink('index.php?gadget=' . $name . '&amp;action=Ajax&amp;client=all&amp;stub=' . $name . 'Ajax');
+				$GLOBALS['app']->Layout->AddScriptLink('index.php?gadget=' . $name . '&amp;action=AjaxCommonFiles');
+			} else if ($file == 'script.js') {
+				$GLOBALS['app']->Layout->AddScriptLink('admin.php?gadget=' . $name . '&amp;action=Ajax&amp;client=all&amp;stub=' . $name . 'AdminAjax');
+				$GLOBALS['app']->Layout->AddScriptLink('admin.php?gadget=' . $name . '&amp;action=AjaxCommonFiles');
+			} else {
+				$GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT . '?gadget=' . $name . '&amp;action=Ajax&amp;client=all&amp;stub=' . $name . (JAWS_SCRIPT == 'admin' ? 'Admin' : '') . 'Ajax');
+				$GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT . '?gadget=' . $name . '&amp;action=AjaxCommonFiles');
+			}
+		} else {
+			$GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT . '?gadget=' . $name . '&amp;action=Ajax&amp;client=all&amp;stub=' . $name . (JAWS_SCRIPT == 'admin' ? 'Admin' : '') . 'Ajax');
+			$GLOBALS['app']->Layout->AddScriptLink(BASE_SCRIPT . '?gadget=' . $name . '&amp;action=AjaxCommonFiles');
+		}		
+		
+		if (!empty($file) && file_exists(JAWS_PATH . 'gadgets/' . $name . '/resources/' . $file)) {
+            $GLOBALS['app']->Layout->AddScriptLink('gadgets/' . $name . '/resources/' . $file);
         }
 
         $config = array(
@@ -268,8 +313,8 @@ class Jaws_GadgetHTML extends Jaws_Gadget
             'DATAGRID_PAGER_PREVACTION'  => 'javascript: previousValues(); return false;',
             'DATAGRID_PAGER_NEXTACTION'  => 'javascript: nextValues(); return false;',
             'DATAGRID_PAGER_LASTACTION'  => 'javascript: lastValues(); return false;',
-            'DATAGRID_DATA_ONLOADING'    => 'showWorkingNotification;',
-            'DATAGRID_DATA_ONLOADED'     => 'hideWorkingNotification;',
+            'DATAGRID_DATA_ONLOADING'   => 'showWorkingNotification;',
+            'DATAGRID_DATA_ONLOADED'    => 'hideWorkingNotification;',
         );
         Piwi::addExtraConf($config);
     }
@@ -345,7 +390,7 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      * Returns the state of usingAjax
      *
      * @access  public
-     * @return  bool
+     * @return  boolean
      */
     function usingAjax()
     {
@@ -359,7 +404,7 @@ class Jaws_GadgetHTML extends Jaws_Gadget
      * @param   string     $action    Gadget's action name
      * @param   array      $params    Params that the URL map requires
      * @param   array      $params    Params that the URL map requires
-     * @param   bool       $useExt    Append the extension? (if there's)
+     * @param   boolean    $useExt    Append the extension? (if there's)
      * @param   mixed      URIPrefix  Prefix to use: site_url (config/url), uri_location or false for nothing
      * @return  string     The mapped URL
      */
@@ -367,5 +412,4 @@ class Jaws_GadgetHTML extends Jaws_Gadget
     {
         return $GLOBALS['app']->Map->GetURLFor($this->_Name, $action, $params, $useExt, $URIPrefix);
     }
-
 }

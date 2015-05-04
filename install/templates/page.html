@@ -1,5 +1,6 @@
 <!-- BEGIN page -->
 <h1><img src="stages/{stage}/icon.png" alt="{STAGE}" width="48" height="48" />{title}</h1>
+<!-- BEGIN stagelist -->
 <ol class="stagelist">
 <!-- BEGIN completed_stage -->
  <li class="complete">{name}</li>
@@ -11,6 +12,15 @@
  <li>{name}</li>
 <!-- END stage -->
 </ol>
+<!-- END stagelist -->
+<!-- BEGIN hide_stagelist -->
+<style>
+.content {
+    padding-left: 10px;
+    margin-right: 48px;
+}
+</style>
+<!-- END hide_stagelist -->
 
 <div class="content">
 <!-- BEGIN message -->

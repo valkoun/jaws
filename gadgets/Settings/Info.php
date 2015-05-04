@@ -1,45 +1,32 @@
 <?php
 /**
- * Settings Core Gadget
+ * Manage site-wide Settings.
  *
  * @category   GadgetInfo
+ * @category 	feature
  * @package    Settings
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class SettingsInfo extends Jaws_GadgetInfo
 {
     /**
-     * Gadget version
+     * Sets info about Settings gadget
      *
-     * @var     string
-     * @access  private
+     * @access public
      */
-    var $_Version = '0.3.1';
+    function SettingsInfo()
+    {
+        parent::Init('Settings');
+        $this->GadgetName(_t('SETTINGS_NAME'));
+        $this->GadgetDescription(_t('SETTINGS_DESCRIPTION'));
+        $this->GadgetVersion('0.3.0');
+        $this->Doc('gadget/Settings');
+        $this->SetAttribute('core_gadget', true);
 
-    /**
-     * Is this gadget core gadget?
-     *
-     * @var    boolean
-     * @access  private
-     */
-    var $_IsCore = true;
-
-    /**
-     * Gadget ACLs
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_ACLs = array(
-        'BasicSettings',
-        'AdvancedSettings',
-        'MetaSettings',
-        'MailSettings',
-        'FTPSettings',
-        'ProxySettings',
-    );
-
+        $acls = array('ManageSettings');
+        $this->PopulateACLs($acls);
+    }
 }

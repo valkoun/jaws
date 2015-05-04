@@ -1,3 +1,32 @@
 #selected_gadgets {
     text-align: left;
 }
+
+/* Search */
+.simple_search .content input {width: 132px; margin-right: 2px;}
+.search .content input {width: 99%; margin-bottom: 2px;}
+.search .content p label {font-size: 8pt; font-weight: bold;}
+.search .content select {margin-left: 4px; width: 130px;}
+.wide .search .content, .wide .search .content p {display:inline;}
+.wide .search .content input {width: 200px;}
+.wide .search .actions {display:inline; width: 196px; border: none;}
+.advance_search .content h4 {padding: 4px 0;}
+.advance_search .content p label {font-size: 8pt; font-weight: bold;}
+.advance_search .content input {width: 99%; margin-bottom: 2px;}
+.advance_search .content select {margin-left: 4px; width: 130px;}
+.wide .advance_search .content input {width: 280px;}
+.wide .advance_search .content p {padding-left: 245px; clear: left;}
+.wide .advance_search .content p label {float:left; width: 240px; margin-left: -245px;}
+.wide .advance_search .actions {text-align:left;}
+.wide .advance_search .actions button {margin-left: 250px;}
+.search_results .content ul li, .autocomplete li, .all_autocomplete li {border-bottom:1px dashed #d3d7cf; padding-top: 10px; list-style:none outside none;}
+.search_results .snippet div {text-align: right;}
+.search_results .snippet div a, .autocomplete .snippet div a, .all_autocomplete .snippet div a {float: left; font-weight: bold;}
+.search_results .snippet p, .autocomplete .snippet p, .all_autocomplete .snippet p {clear:both; text-align: left;}
+.search_results .snippet {float: left; width: 480px;}
+.autocomplete .snippet, .all_autocomplete .snippet {float: left; width: 80%;}
+.search_results .gadget_logo, .autocomplete .gadget_logo, .all_autocomplete .gadget_logo {float: right;}
+.autocomplete .gadget_date, .all_autocomplete .gadget_date {display: none;}
+.autocomplete, .all_autocomplete {height: 200px; overflow-y: scroll; overflow-x: hidden; font-size: 10px;}
+.autocomplete p, .all_autocomplete p {font-size: 10px;}
+.search_results .pager span, .autocomplete .pager span, .all_autocomplete .pager span {border: 0px;}

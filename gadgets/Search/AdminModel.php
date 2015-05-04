@@ -5,7 +5,7 @@
  * @category   GadgetModel
  * @package    Search
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 require_once JAWS_PATH . 'gadgets/Search/Model.php';
@@ -13,10 +13,10 @@ require_once JAWS_PATH . 'gadgets/Search/Model.php';
 class SearchAdminModel extends SearchModel
 {
     /**
-     * Installs the gadget
+     * Install Search gadget in Jaws
      *
-     * @access  public
-     * @return  mixed   True on successful installation, Jaws_Error otherwise
+     * @access       public
+     * @return       true on successful installation, Jaws_Error otherwise
      */
     function InstallGadget()
     {
@@ -33,7 +33,7 @@ class SearchAdminModel extends SearchModel
      * Uninstalls the gadget
      *
      * @access  public
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UninstallGadget()
     {
@@ -47,12 +47,12 @@ class SearchAdminModel extends SearchModel
     }
 
     /**
-     * Updates the gadget
+     * Update the gadget
      *
      * @access  public
      * @param   string  $old    Current version (in registry)
      * @param   string  $new    New version (in the $gadgetInfo file)
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UpdateGadget($old, $new)
     {
@@ -67,11 +67,10 @@ class SearchAdminModel extends SearchModel
     }
 
     /**
-     * Sets searchable gadgets
+     * Set searchable gadgets
      *
      * @access  public
-     * @param   array   $gadgets    List of gadgets to be set as searchable
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @param   array $gadgets Array with gadgets to be set as searchable
      */
     function SetSearchableGadgets($gadgets)
     {
@@ -85,4 +84,5 @@ class SearchAdminModel extends SearchModel
         $GLOBALS['app']->Session->PushLastResponse(_t('SEARCH_SAVED'), RESPONSE_NOTICE);
         return true;
     }
+	
 }

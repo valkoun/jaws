@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<database>
+
+ <name><variable>database</variable></name>
+
+ <table>
+  <name><variable>table_prefix</variable>productparent</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>productparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>productparentsort_order</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>productparentcategory_name</name>
+        <value>Latest Products</value>
+      </field>
+
+	  <field>
+        <name>productparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>productparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>productparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>productparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>productparentfast_url</name>
+        <value>My-Products</value>
+      </field>
+   </insert>
+   </initialization>
+ </table>
+
+   <table>
+  <name><variable>table_prefix</variable>sales</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>title</name>
+        <value>Example Sale</value>
+      </field>
+
+     <field>
+        <name>startdate</name>
+        <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>enddate</name>
+        <value><variable>timestamp</variable></value>
+      </field>
+
+      <field>
+        <name>description</name>
+        <value>This sale gives 10% off.</value>
+      </field>
+
+      <field>
+        <name>discount_percent</name>
+        <value>10</value>
+      </field>
+
+      <field>
+        <name>featured</name>
+        <value>N</value>
+     </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>N</value>
+     </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+   </insert>
+  </initialization>
+
+ </table>
+
+ <table>
+  <name><variable>table_prefix</variable>productattribute</name>
+
+  <initialization>
+   <insert>
+	  <field>
+        <name>sort_order</name>
+        <value>4</value>
+      </field>
+      
+	  <field>
+        <name>feature</name>
+        <value>X-Large</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+	  <field>
+        <name>sort_order</name>
+        <value>3</value>
+      </field>
+
+      <field>
+        <name>feature</name>
+        <value>Large</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+	  <field>
+        <name>sort_order</name>
+        <value>2</value>
+      </field>
+      
+	  <field>
+        <name>feature</name>
+        <value>Medium</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+	  <field>
+        <name>sort_order</name>
+        <value>1</value>
+      </field>
+      
+	  <field>
+        <name>feature</name>
+        <value>Small</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   <insert>
+	  <field>
+        <name>sort_order</name>
+        <value>0</value>
+      </field>
+      
+	  <field>
+        <name>feature</name>
+        <value>X-Small</value>
+      </field>
+
+     <field>
+        <name>typeid</name>
+        <value>1</value>
+      </field>
+
+	  <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+
+   </initialization>
+
+ </table>
+
+  <table>
+  <name><variable>table_prefix</variable>attribute_types</name>
+
+  <initialization>
+   <insert>
+      <field>
+        <name>title</name>
+        <value>Size</value>
+      </field>
+
+	  <field>
+		<name>itype</name>
+        <value>SelectBox</value>
+	 </field>
+
+	  <field>
+		<name>required</name>
+        <value>Y</value>
+	 </field>
+
+	 <field>
+        <name>ownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>active</name>
+        <value>Y</value>
+      </field>
+
+	  <field>
+        <name>created</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>updated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+   </insert>
+   </initialization>
+
+ </table>
+
+</database>

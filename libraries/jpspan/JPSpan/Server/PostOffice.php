@@ -42,12 +42,92 @@ class JPSpan_Server_PostOffice extends JPSpan_Server {
     var $calledMethod = NULL;
     
     /**
+    * Request encoding to use (e.g. xml, php or json)
+    * @var string
+    * @access public
+    */
+    var $RequestEncoding = 'xml';
+
+    /**
     * @access public
     */
     function JPSpan_Server_PostOffice() {
         parent::JPSpan_Server();
     }
     
+    /**
+    * Serve a request
+    * @param boolean send headers
+    * @return boolean FALSE if failed (invalid request - see errors)
+    * @access public
+    */
+    function serve($sendHeaders = TRUE) {
+        require_once JPSPAN . 'Monitor.php';
+        $M = & JPSpan_Monitor::instance();
+        $this->calledClass = NULL;
+        $this->calledMethod = NULL;
+        
+        if ( $_SERVER['REQUEST_METHOD'] != 'POST' ) {
+            trigger_error('Invalid HTTP request method: '.$_SERVER['REQUEST_METHOD'],E_USER_ERROR);
+            return FALSE;
+        }
+        if ( $this->resolveCall() ) {
+            $M->setRequestInfo('class',$this->calledClass);
+            $M->setRequestInfo('method',$this->calledMethod);
+            
+            if ( FALSE !== ($Handler = & $this->getHandler($this->calledClass) ) ) {
+                $args = array();
+                $M->setRequestInfo('args',$args);
+
+                if ( $this->getArgs($args) ) {
+                    $M->setRequestInfo('args',$args);
+                    $response = call_user_func_array(
+                        array(
+                            & $Handler,
+                            $this->calledMethod
+                        ),
+                        $args
+                    );
+                    
+                } else {
+                    $response = call_user_func(
+                        array(
+                            & $Handler,
+                            $this->calledMethod
+                        )
+                    );
+                    
+                }
+
+                require_once JPSPAN . 'Serializer.php';
+
+                $M->setResponseInfo('payload',$response);
+                $M->announceSuccess();
+
+                $response = JPSpan_Serializer::serialize($response, $this->RequestEncoding);
+
+				if ( $sendHeaders ) {
+                    header('Content-Length: '.strlen($response));
+                    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); 
+                    header('Last-Modified: ' . gmdate( "D, d M Y H:i:s" ) . 'GMT'); 
+                    header('Cache-Control: no-cache, must-revalidate'); 
+                    header('Pragma: no-cache');
+                }
+
+                echo $response;
+                return TRUE;
+                
+            } else {
+            
+                trigger_error('Invalid handle for: '.$this->calledClass,E_USER_ERROR);
+                return FALSE;
+                
+            }
+            
+        }
+        return FALSE;
+    }
+
     /**
     * Resolve the call - identify the handler class and method and store
     * locally
@@ -101,6 +181,33 @@ class JPSpan_Server_PostOffice extends JPSpan_Server {
     }
 
     /**
+    * Populate the args array if there are any
+    * @param array args (reference)
+    * @return boolean TRUE if request had args
+    * @access private
+    */
+    function getArgs(& $args) {
+        require_once JPSPAN . 'RequestData.php';
+
+        switch ($this->RequestEncoding) {
+            case 'php':
+                $args = JPSpan_RequestData_Post::fetch($this->RequestEncoding);
+            break;
+            case 'json':
+                $args = JPSpan_RequestData_JSONPost::fetch($this->RequestEncoding);
+            break;
+            default:
+                $args = JPSpan_RequestData_RawPost::fetch($this->RequestEncoding);
+        }
+
+        if ( is_array($args) ) {
+            return TRUE;
+        }
+        
+        return FALSE;
+    }
+    
+    /**
     * Get the Javascript client generator
     * @return JPSpan_Generator
     * @access public
@@ -111,7 +218,8 @@ class JPSpan_Server_PostOffice extends JPSpan_Server {
         $G->init(
             new JPSpan_PostOffice_Generator(),
             $this->descriptions,
-            $this->serverUrl
+            $this->serverUrl,
+            $this->RequestEncoding
             );
         return $G;
     }
@@ -141,6 +249,13 @@ class JPSpan_PostOffice_Generator {
     var $serverUrl;
     
     /**
+    * How requests should be encoded
+    * @var string request encoding
+    * @access public
+    */
+    var $RequestEncoding;
+    
+    /**
     * Invokes code generator
     * @param JPSpan_CodeWriter
     * @return void
@@ -165,9 +280,28 @@ class JPSpan_PostOffice_Generator {
 ?>
 /**@
 * include 'remoteobject.js';
+<?php
+switch ($this->RequestEncoding) {
+    case 'xml':
+?>
+* include 'request/rawpost.js';
+* include 'encode/xml.js';
+<?php
+    break;
+    case 'json':
+?>
 * include 'request/rawpost.js';
 * include 'util/json.js';
 * include 'encode/json.js';
+<?php
+    break;
+    default:
+?>
+* include 'request/post.js';
+* include 'encode/php.js';
+<?php
+}
+?>
 */
 <?php
         $Code->append(ob_get_contents());
@@ -201,9 +335,25 @@ function <?php echo $Description->Class; ?>() {
         echo $url; ?>';
     
     oParent.__remoteClass = '<?php echo $Description->Class; ?>';
-    oParent.__request = new JPSpan_Request_RawPost(new JPSpan_Encode_JSON());
     
 <?php
+switch ($this->RequestEncoding) {
+    case 'xml':
+?>
+    oParent.__request = new JPSpan_Request_RawPost(new JPSpan_Encode_XML());
+<?php
+    break;
+    case 'json':
+?>
+    oParent.__request = new JPSpan_Request_RawPost(new JPSpan_Encode_JSON());
+<?php
+    break;
+    default:
+?>
+    oParent.__request = new JPSpan_Request_Post(new JPSpan_Encode_PHP());
+<?php
+}
+
 foreach ( $Description->methods as $method ) {
 ?>
     

@@ -41,6 +41,8 @@ define('_EN_SEARCH_WORD_FILTER_ALL', "Search for all the words");
 define('_EN_SEARCH_WORD_FILTER_EXCLUDE', "Exclude the words");
 define('_EN_SEARCH_WORD_FILTER_EXACT', "Search for the exact phrase");
 define('_EN_SEARCH_WORD_FILTER_LEAST', "Search for at least any of the words");
+define('_EN_SEARCH_INPUT_TEXT', "Search the site...");
+define('_EN_SEARCH_INPUT_TEXT_ADVANCED', "Search the site...");
 define('_EN_SEARCH_DATA_FILTER', "Data filter");
 define('_EN_SEARCH_RESULT_COUNT', "{0} results");
 

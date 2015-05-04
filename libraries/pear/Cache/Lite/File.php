@@ -11,6 +11,7 @@
 * Technical choices are described in the 'docs/technical' file
 *
 * @package Cache_Lite
+* @version $Id: File.php,v 1.4 2009/03/07 12:55:39 tacker Exp $
 * @author Fabien MARTY <fab@php.net>
 */
  
@@ -88,3 +89,5 @@ class Cache_Lite_File extends Cache_Lite
     }
 
 }
+
+?>

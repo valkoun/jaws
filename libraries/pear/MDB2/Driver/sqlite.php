@@ -126,7 +126,7 @@ class MDB2_Driver_sqlite extends MDB2_Driver_Common
         }
         $native_msg = $this->_lasterror
             ? html_entity_decode($this->_lasterror) : @sqlite_error_string($native_code);
-
+            
         // PHP 5.2+ prepends the function name to $php_errormsg, so we need
         // this hack to work around it, per bug #9599.
         $native_msg = preg_replace('/^sqlite[a-z_]+\(\)[^:]*: /', '', $native_msg);
@@ -142,7 +142,6 @@ class MDB2_Driver_sqlite extends MDB2_Driver_Common
                     '/is not unique/' => MDB2_ERROR_CONSTRAINT,
                     '/columns .* are not unique/i' => MDB2_ERROR_CONSTRAINT,
                     '/uniqueness constraint failed/' => MDB2_ERROR_CONSTRAINT,
-                    '/violates .*constraint/' => MDB2_ERROR_CONSTRAINT,
                     '/may not be NULL/' => MDB2_ERROR_CONSTRAINT_NOT_NULL,
                     '/^no such column:/' => MDB2_ERROR_NOSUCHFIELD,
                     '/no column named/' => MDB2_ERROR_NOSUCHFIELD,

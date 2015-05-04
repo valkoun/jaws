@@ -19,7 +19,6 @@ define('_FR_SEARCH_LAYOUT_SIMPLEBOX', "Champ de recherche simple");
 define('_FR_SEARCH_LAYOUT_SIMPLEBOX_DESCRIPTION', "Fournit un champs de recherche sans liste de gadgets dans lesquels rechercher.");
 define('_FR_SEARCH_LAYOUT_ADVANCEDBOX', "Champ de recherche avancé");
 define('_FR_SEARCH_LAYOUT_ADVANCEDBOX_DESCRIPTION', "Fournit un champs de recherche avancé.");
-define('_FR_SEARCH_RESULTS', "Résultats de la recherche");
 define('_FR_SEARCH_RESULTS_SUBTITLE', "{0} éléments ont été trouvés contenant <strong>{1}</strong>");
 define('_FR_SEARCH_RESULTS_IN_GADGETS', "{0} éléments trouvés pour <strong>{1}</strong> dans {2}");
 define('_FR_SEARCH_NO_RESULTS', "Aucun élément n'a été trouvé contenant <strong>{0}</strong>");

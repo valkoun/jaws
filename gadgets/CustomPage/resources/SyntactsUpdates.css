@@ -1,0 +1,233 @@
+body {
+font-family: 'Lucida Grande', 'Lucida Sans', sans-serif;
+margin: 0;
+}
+h1 {
+margin: 0;
+}
+#working_notification {
+position: absolute;
+}
+#top_header {
+vertical-align: top;
+}
+#top_header div {
+/* float: left; */
+text-align: center;
+padding-right: 20px;
+vertical-align: top;
+}
+#top_header #header_select {
+padding: 15px;
+background: #F7F7F7;
+}
+#ticket_select {
+font-size: 16px;
+}
+.holder {
+margin-bottom: 25px;
+}
+.puzzle_area {
+float: left;
+}
+.puzzle {
+float: none;
+padding: 10px;
+/*
+margin-top: 25px;
+margin-bottom: 25px;
+*/
+border: 1pt solid #EEEEEE;
+}
+.puzzle .piece {
+float: left;
+height: 90px;
+width: 90px;
+border: 1pt solid #CCCCCC;
+margin:5px;
+padding:3px;
+color: #666666;
+font-size: 11px;
+text-align: center;
+cursor: pointer;
+cursor: hand;
+overflow: hidden;
+}
+.message_type {
+display: none;
+}
+.handle {
+background: #EEEEEE;
+cursor:move;
+color:#FFFFFF;
+font-size:9px;
+min-height:12px;
+padding:3px;
+text-align:center;
+}
+.handle_title {
+font-size: 11px; 
+display: block; 
+text-align: center;
+}
+.row_handle {
+background:none repeat scroll 0 0 #F5F5F5;
+border:1pt solid #E5E5E5;
+cursor:move;
+float:left;
+font-size:10px;
+padding:5px;
+width:160px;
+}
+.row_title {
+float:left;
+text-align: center;
+}
+/*
+.commentscloud {
+background:url("http://syntacts.com/images/number_badge_bkgnd.png") no-repeat scroll 0 0 transparent;
+color:#FFFFFF;
+float:right;
+font-weight:bold;
+height:24px;
+padding:5px 0 0 8px;
+text-align:center;
+width:auto;
+}
+*/
+.commentstotal {
+color:#AAAAAA;
+float:right;
+font-size:30px;
+font-weight:bold;
+padding:0 10px 0 8px;
+text-align:center;
+width:auto;
+}
+.row_search {
+float:none;
+clear: both;
+text-align: center;
+margin: 3px;
+}
+.row_actions {
+float:none;
+clear: both;
+text-align: center;
+margin: 3px;
+}
+.row_actions_select {
+width: 150px;
+}
+.row_nav {
+text-align: center;
+font-size: 50px;
+font-weight: bolder;
+color: #EEEEEE;
+float: left;
+padding: 10px;
+}
+.row_nav_right {
+float:right;
+}
+.message {
+height: 600px;
+line-height:18px;
+padding-top: 3px;
+}
+.select_label {
+font-style: italic; 
+color: #999999;
+}
+
+/* Forms */
+
+.field_label {
+min-width: 120px;
+padding: 3px;
+text-align: left;
+float: left;
+}
+
+.field_entry {
+padding: 3px;
+text-align: left;
+float: left;
+}
+
+.field_entry input[type="text"], .field_entry textarea {
+width: 350px;
+}
+.field_entry textarea {
+height: 60px;
+}
+
+/* Message Colors */
+
+.puzzle .newmessage {
+background: #FFFFCC;
+color: #666666;
+font-weight: bold;
+}
+.puzzle .newmessage .handle {
+background: #F2ECA3;
+}
+
+.puzzle .importantmessage {
+background: #FF6666;
+border-color: #990000;
+color: #FFFFFF;
+text-decoration: blink;
+}
+.puzzle .importantmessage .handle {
+background: #990000;
+}
+
+.puzzle .Store {
+background: #CCFFCC;
+border-color: #B2DFB2;
+}
+.puzzle .Store .handle {
+background: #B2DFB2;
+}
+
+.puzzle .support {
+background: #CCFFFF;
+border-color: #B1D5E6;
+}
+.puzzle .support .handle {
+background: #B1D5E6;
+}
+
+.puzzle .newmessage {
+border-color: #000000;
+border-width: 2pt;
+color: #000000;
+height: 88px;
+width: 88px;
+}
+
+.puzzle .importantmessage {
+color: #FFFFFF;
+}
+
+.puzzle .readmessage {
+background: #FFFFFF;
+color: #666666;
+}
+
+.puzzle .open {
+border-color: #579C4E;
+}
+
+.puzzle .answered {
+border-color: #000000;
+}
+
+.puzzle .closed {
+border-color: #AAAAAA;
+}
+
+.puzzle .inprogress {
+border-color: #0000FF;
+}

@@ -6,11 +6,21 @@
  * @package    Policy
  * @author     Amir Mohammad Saied <amir@gluegadget.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class PolicyAdminHTML extends Jaws_GadgetHTML
 {
+    /**
+     * Constructor
+     *
+     * @access  public
+     */
+    function PolicyAdminHTML()
+    {
+        $this->Init('Policy');
+    }
+
     /**
      * Calls default admin action (IPBlocking)
      *
@@ -19,18 +29,8 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
      */
     function Admin()
     {
-        if ($this->GetPermission('IPBlocking')) {
-            return $this->IPBlocking();
-        } elseif ($this->GetPermission('AgentBlocking')) {
-            return $this->AgentBlocking();
-        } elseif ($this->GetPermission('Encryption')) {
-            return $this->Encryption();
-        } elseif ($this->GetPermission('AntiSpam')) {
-            return $this->AntiSpam();
-        }
-
-        $this->CheckPermission('AdvancedPolicies');
-        return $this->AdvancedPolicies();
+        $this->CheckPermission('ManagePolicy');
+        return $this->IPBlocking();
     }
 
     /**
@@ -38,7 +38,7 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
      *
      * @access  public
      * @param   string  $action Selected Action
-     * @return  XHTML template content
+     * @return  template content
      */
     function SideBar($action)
     {
@@ -54,27 +54,27 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         if ($this->GetPermission('IPBlocking')) {
             $sidebar->AddOption('IPBlocking', _t('POLICY_IP_BLOCKING'), 
                                 BASE_SCRIPT . '?gadget=Policy&amp;action=IPBlocking',
-                                'images/stock/stop.png');
+                                $GLOBALS['app']->GetJawsURL() . '/images/stock/stop.png');
         }
         if ($this->GetPermission('AgentBlocking')) {
             $sidebar->AddOption('AgentBlocking', _t('POLICY_AGENT_BLOCKING'),
                                 BASE_SCRIPT . '?gadget=Policy&amp;action=AgentBlocking',
-                                'images/stock/stop.png');
+                                $GLOBALS['app']->GetJawsURL() . '/images/stock/stop.png');
         }
         if ($this->GetPermission('Encryption')) {
             $sidebar->AddOption('Encryption', _t('POLICY_ENCRYPTION'),
                                 BASE_SCRIPT . '?gadget=Policy&amp;action=Encryption',
-                                'gadgets/Policy/images/encryption.png');
+                                $GLOBALS['app']->GetJawsURL() . '/gadgets/Policy/images/encryption.png');
         }
         if ($this->GetPermission('AntiSpam')) {
             $sidebar->AddOption('AntiSpam', _t('POLICY_ANTISPAM'),
                                 BASE_SCRIPT . '?gadget=Policy&amp;action=AntiSpam',
-                                'gadgets/Policy/images/antispam.png');
+                                $GLOBALS['app']->GetJawsURL() . '/gadgets/Policy/images/antispam.png');
         }
         if ($this->GetPermission('AdvancedPolicies')) {
             $sidebar->AddOption('AdvancedPolicies', _t('POLICY_ADVANCED_POLICIES'),
                                 BASE_SCRIPT . '?gadget=Policy&amp;action=AdvancedPolicies',
-                                'gadgets/Policy/images/policies.png');
+                                $GLOBALS['app']->GetJawsURL() . '/gadgets/Policy/images/policies.png');
         }
 
         $sidebar->Activate($action);
@@ -166,16 +166,14 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('sidebar', $this->SideBar('IPBlocking'));
         $tpl->SetVariable('blocked_ips_datagrid', $this->IPsDatagrid());
 
-        $default = $GLOBALS['app']->Registry->Get('/gadgets/Policy/block_undefined_ip') == 'true';
-        $blockUndefined =& Piwi::CreateWidget('CheckButtons', 'ipblocking');
-        $blockUndefined->AddOption(_t('POLICY_IP_BLOCK_UNDEFINED'),
-                              'true',
-                              'block_undefined_ip',
-                              $default);
-        $blockUndefined->AddEvent(ON_CLICK, 'javascript: setBlockUndefinedIP();');
-        $tpl->SetVariable('enabled_option', $blockUndefined->Get());
+        $blockByIP =& Piwi::CreateWidget('CheckButtons', 'ipblocking');
+        $blockByIP->AddOption(_t('POLICY_IP_ENABLE_BLOCKING'), 'true', 'blockByIP',
+                              $GLOBALS['app']->Registry->Get('/gadgets/Policy/block_by_ip') == "true");
+        $blockByIP->AddEvent(ON_CLICK, 'javascript: setBlockByIP();');
+        $tpl->SetVariable('enabled_option', $blockByIP->Get());
 
         $tpl->SetVariable('legend_title', _t('POLICY_IP_RANGE'));
+
         $fromIPAddress =& Piwi::CreateWidget('Entry', 'from_ipaddress', '');
         $fromIPAddress->setSize(24);
         $tpl->SetVariable('lbl_from_ipaddress', _t('GLOBAL_FROM'));
@@ -186,15 +184,6 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('lbl_to_ipaddress', _t('GLOBAL_TO'));
         $tpl->SetVariable('to_ipaddress', $toIPAddress->Get());
 
-        $blocked =& Piwi::CreateWidget('Combo', 'blocked');
-        $blocked->SetID('blocked');
-        $blocked->setStyle('width: 120px;');
-        $blocked->AddOption(_t('GLOBAL_NO'),  0);
-        $blocked->AddOption(_t('GLOBAL_YES'), 1);
-        $blocked->SetDefault('1');
-        $tpl->SetVariable('lbl_blocked', _t('POLICY_BLOCKED'));
-        $tpl->SetVariable('blocked', $blocked->Get());
-
         if ($this->GetPermission('ManageIPs')) {
             $btnSave =& Piwi::CreateWidget('Button', 'btn_save', _t('GLOBAL_SAVE'), STOCK_SAVE);
             $btnSave->AddEvent(ON_CLICK, 'javascript: saveIPRange();');
@@ -204,7 +193,6 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
             $btnCancel->AddEvent(ON_CLICK, 'javascript: stopAction();');
             $tpl->SetVariable('btn_cancel', $btnCancel->Get());
 
-            $tpl->SetVariable('incompleteFields',     _t('GLOBAL_ERROR_INCOMPLETE_FIELDS'));
             $tpl->SetVariable('confirmIPRangeDelete', _t('POLICY_RESPONSE_CONFIRM_DELETE_IP'));
         }
 
@@ -296,29 +284,18 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('sidebar', $this->SideBar('AgentBlocking'));
         $tpl->SetVariable('blocked_agents_datagrid', $this->AgentsDatagrid());
 
-        $default = $GLOBALS['app']->Registry->Get('/gadgets/Policy/block_undefined_agent') == 'true';
-        $blockUndefined =& Piwi::CreateWidget('CheckButtons', 'agentblocking');
-        $blockUndefined->AddOption(_t('POLICY_AGENT_BLOCK_UNDEFINED'),
-                              'true',
-                              'block_undefined_agent',
-                              $default);
-        $blockUndefined->AddEvent(ON_CLICK, 'javascript: setBlockUndefinedAgent();');
-        $tpl->SetVariable('enabled_option', $blockUndefined->Get());
+        $blockByAgent =& Piwi::CreateWidget('CheckButtons', 'agentblocking');
+        $blockByAgent->AddOption(_t('POLICY_AGENT_ENABLE_BLOCKING'), 'true', 'blockByAgent',
+                                 $GLOBALS['app']->Registry->Get('/gadgets/Policy/block_by_agent') == "true");
+        $blockByAgent->AddEvent(ON_CLICK, 'javascript: setBlockByAgent();');
+        $tpl->SetVariable('enabled_option', $blockByAgent->Get());
 
         $tpl->SetVariable('legend_title', _t('POLICY_AGENT'));
+
         $agentEntry =& Piwi::CreateWidget('Entry', 'agent', '');
         $agentEntry->setSize(24);
         $tpl->SetVariable('lbl_agent', _t('POLICY_AGENT'));
         $tpl->SetVariable('agent', $agentEntry->Get());
-
-        $blocked =& Piwi::CreateWidget('Combo', 'blocked');
-        $blocked->SetID('blocked');
-        $blocked->setStyle('width: 120px;');
-        $blocked->AddOption(_t('GLOBAL_NO'),  0);
-        $blocked->AddOption(_t('GLOBAL_YES'), 1);
-        $blocked->SetDefault('1');
-        $tpl->SetVariable('lbl_blocked', _t('POLICY_BLOCKED'));
-        $tpl->SetVariable('blocked', $blocked->Get());
 
         if ($this->GetPermission('ManageAgents')) {
             $btnSave =& Piwi::CreateWidget('Button', 'btn_save', _t('GLOBAL_SAVE'), STOCK_SAVE);
@@ -329,7 +306,6 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
             $btnCancel->AddEvent(ON_CLICK, 'javascript: stopAction();');
             $tpl->SetVariable('btn_cancel', $btnCancel->Get());
 
-            $tpl->SetVariable('incompleteFields',   _t('GLOBAL_ERROR_INCOMPLETE_FIELDS'));
             $tpl->SetVariable('confirmAgentDelete', _t('POLICY_RESPONSE_CONFIRM_DELETE_AGENT'));
         }
 
@@ -373,7 +349,6 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $keyAge->AddOption(_t('GLOBAL_DATE_DAYS',    1),  86400);
         $keyAge->AddOption(_t('GLOBAL_DATE_WEEKS',   1), 604800);
         $keyAge->SetDefault($GLOBALS['app']->Registry->Get('/crypt/key_age'));
-        $keyAge->SetEnabled($this->GetPermission('ManageEncryptionKey'));
         $tpl->SetVariable('lbl_key_age', _t('POLICY_ENCRYPTION_KEY_AGE'));
         $tpl->SetVariable('key_age', $keyAge->Get());
 
@@ -384,7 +359,6 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $keyLen->AddOption(_t('POLICY_ENCRYPTION_512BIT'),  '512');
         $keyLen->AddOption(_t('POLICY_ENCRYPTION_1024BIT'), '1024');
         $keyLen->SetDefault($GLOBALS['app']->Registry->Get('/crypt/key_len'));
-        $keyLen->SetEnabled($this->GetPermission('ManageEncryptionKey'));
         $tpl->SetVariable('lbl_key_len', _t('POLICY_ENCRYPTION_KEY_LEN'));
         $tpl->SetVariable('key_len', $keyLen->Get());
 
@@ -445,27 +419,15 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('filter', $filters->Get());
 
         //Captcha
-        $captcha =& Piwi::CreateWidget('Combo', 'captcha');
-        $captcha->AddOption(_t('GLOBAL_DISABLED'), 'DISABLED');
-        $captcha->AddOption(_t('POLICY_ANTISPAM_CAPTCHA_ALWAYS'), 'ALWAYS');
-        $captcha->AddOption(_t('POLICY_ANTISPAM_CAPTCHA_ANONYMOUS'), 'ANONYMOUS');
-        $captchaValue = $GLOBALS['app']->Registry->Get('/gadgets/Policy/captcha');
-        $captcha->SetDefault($captchaValue);
-        $captcha->AddEvent(ON_CHANGE, "javascript: toggleCaptcha();");
+        $captchas =& Piwi::CreateWidget('Combo', 'captcha');
+        $captchas->AddOption(_t('GLOBAL_DISABLED'), 'DISABLED');
+        $cs = $model->GetCaptchas();
+        foreach ($cs as $c) {
+            $captchas->AddOption($c, $c);
+        }
+        $captchas->SetDefault($GLOBALS['app']->Registry->Get('/gadgets/Policy/captcha'));
         $tpl->SetVariable('lbl_captcha', _t('POLICY_ANTISPAM_CAPTCHA'));
-        $tpl->SetVariable('captcha', $captcha->Get());
-
-        //Captcha driver
-        $captchaDriver =& Piwi::CreateWidget('Combo', 'captcha_driver');
-        $dCaptchas = $model->GetCaptchas();
-        foreach ($dCaptchas as $dCaptcha) {
-            $captchaDriver->AddOption($dCaptcha, $dCaptcha);
-        }
-        $captchaDriver->SetDefault($GLOBALS['app']->Registry->Get('/gadgets/Policy/captcha_driver'));
-        if ($captchaValue === 'DISABLED') {
-            $captchaDriver->SetEnabled(false);
-        }
-        $tpl->SetVariable('captcha_driver', $captchaDriver->Get());
+        $tpl->SetVariable('captcha', $captchas->Get());
 
         //Email Protector
         $useEmailProtector =& Piwi::CreateWidget('Combo', 'obfuscator');
@@ -598,5 +560,4 @@ class PolicyAdminHTML extends Jaws_GadgetHTML
         $tpl->ParseBlock('AdvancedPolicies');
         return $tpl->Get();
     }
-
 }

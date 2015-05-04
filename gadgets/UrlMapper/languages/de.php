@@ -3,7 +3,7 @@
  * Meta Data
  *
  * "Project-Id-Version: UrlMapper"
- * "Last-Translator: C.Tuemer <info@exceptionz.net>"
+ * "Last-Translator: "
  * "Language-Team: DE"
  * "MIME-Version: 1.0"
  * "Content-Type: text/plain; charset=UTF-8"
@@ -13,7 +13,6 @@
 define('_DE_URLMAPPER_NAME', "URL Manager");
 define('_DE_URLMAPPER_DESCRIPTION', "Verwaltet wie die Urls gedruckt und aufgerufen werden");
 define('_DE_URLMAPPER_ACL_MANAGEURLMAPPER', "Verwalte den URL Mapper");
-define('_DE_URLMAPPER_ACL_EDITMAPS', "URL-Maps bearbeiten");
 define('_DE_URLMAPPER_SELECT_A_GADGET', "Gadget auswählen");
 define('_DE_URLMAPPER_MAP_NAME', "Map");
 define('_DE_URLMAPPER_ADD_MAP', "Hinzufügen einer Map");
@@ -21,10 +20,7 @@ define('_DE_URLMAPPER_NO_MAPS', "Keine Maps gefunden");
 define('_DE_URLMAPPER_MAPS', "Maps");
 define('_DE_URLMAPPER_MAP_NO_ACTIONS', "Keine Aktion für diese Map");
 define('_DE_URLMAPPER_MAPS_ADD_TITLE', "Hinzufügen einer Map");
-define('_DE_URLMAPPER_MAPS_EDIT_TITLE', "Map bearbeiten");
 define('_DE_URLMAPPER_MAPS_ROUTE', "Map route");
-define('_DE_URLMAPPER_MAPS_REGEXP', "Regulärer Ausdruck");
-define('_DE_URLMAPPER_MAPS_EXTENSION', "Erweiterung");
 define('_DE_URLMAPPER_MAPS_PARAM_NAME', "Name");
 define('_DE_URLMAPPER_MAPS_PARAM_TYPE', "Typ");
 define('_DE_URLMAPPER_MAPS_PARAM_LENGTH', "Länge");
@@ -33,10 +29,12 @@ define('_DE_URLMAPPER_MAPS_PARAM_TYPE_STRING', "String");
 define('_DE_URLMAPPER_MAPS_PARAM_TYPE_ANY', "Alphanumerisch");
 define('_DE_URLMAPPER_MAPS_PARAM_TYPE_NUM', "Numerisch");
 define('_DE_URLMAPPER_MAPS_EDITING', "Bearbeiten");
-define('_DE_URLMAPPER_MAPS_CONFIRM_DELETE', "Diese Map löschen?");
+define('_DE_URLMAPPER_SETTINGS_MAP_TO_USE', "Zu benutzende Map");
+define('_DE_URLMAPPER_SETTINGS_MAP_TO_USE_BOTH', "Lade standard & benutzerdefinierte Maps");
+define('_DE_URLMAPPER_SETTINGS_MAP_TO_USE_CORE', "Lade nur standard Maps");
+define('_DE_URLMAPPER_SETTINGS_MAP_TO_USE_CUSTOM', "Lade nur benutzerdefinierte Maps");
 define('_DE_URLMAPPER_SETTINGS_MAP_ENABLED', "Benutze Maps");
 define('_DE_URLMAPPER_SETTINGS_MAP_USE_ALIASES', "Benutze Aliases");
-define('_DE_URLMAPPER_CUSTOM_MAP_PRECEDENCE', "Benutzerdefinierte Maps haben Vorrang");
 define('_DE_URLMAPPER_SETTINGS_MAP_EXTENSION', "Zu benutzende Erweiterung in Maps");
 define('_DE_URLMAPPER_ALIASES', "Aliases");
 define('_DE_URLMAPPER_ALIASES_ALIAS', "Alias");

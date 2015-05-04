@@ -1,1 +1,423 @@
-var PiwiGrid={init:function(b,a){b.rowsSize=0;b.firstPage=PiwiGrid.firstPage;b.previousPage=PiwiGrid.previousPage;b.nextPage=PiwiGrid.nextPage;b.lastPage=PiwiGrid.lastPage;b.getFirstPagerValues=PiwiGrid.getFirstPagerValues;b.getPreviousPagerValues=PiwiGrid.getPreviousPagerValues;b.getNextPagerValues=PiwiGrid.getNextPagerValues;b.getLastPagerValues=PiwiGrid.getLastPagerValues;b.updatePageCounter=PiwiGrid.updatePageCounter;b.updatePageCounterView=PiwiGrid.updatePageCounterView;b.addItem=PiwiGrid.addItem;b.deleteItem=PiwiGrid.deleteItem;b.addRow=PiwiGrid.addRow;b.deleteRow=PiwiGrid.deleteRow;b.repaint=PiwiGrid.repaint;b.reset=PiwiGrid.reset;b.fillWithArray=PiwiGrid.fillWithArray;b.body=a;b.pagerStatus="pagerStatusOf_"+b.id;b.tablePagerStatus="pagerTableStatusOf_"+b.id;b.usePager=false;b.usingCookies=true;b.evenColor="white";b.oddColor="#edf3fe";b.pageBy=10;b.currentPage=0;b.currentPageXHTML="0-10";b.pagerMode="NORMAL";b.multipleSelection=false;b.selectedAll=false;b.getSelectedRows=PiwiGrid.getSelectedRows;b.selectRow=PiwiGrid.selectRow;b.unselectRow=PiwiGrid.unselectRow;b.mouseOverRow=PiwiGrid.onMouseOver;b.mouseOutRow=PiwiGrid.onMouseOut;b.hidePageCounter=PiwiGrid.hidePageCounter;b.showPageCounter=PiwiGrid.showPageCounter;b.setCurrentPage=PiwiGrid.setCurrentPage;b.cleanCurrentPage=PiwiGrid.cleanCurrentPage;b.getCookieName=PiwiGrid.getCookieName;b.getCurrentPage=PiwiGrid.getCurrentPage},useMultipleSelection:function(b,a){b.multipleSelection=a},usePager:function(b,a){b.usePager=a},pagerMode:function(b,a){b.pagerMode=a},currentPage:function(b,a){b.setCurrentPage(a)},pageBy:function(b,a){b.pageBy=a},rowsSize:function(b,a){b.rowsSize=a},evenColor:function(b,a){b.evenColor=a},oddColor:function(b,a){b.oddColor=a},addRow:function(b){var a=this.body;a.appendChild(b);this.addItem()},fillWithArray:function(c){var b=this.body;if(this.onLoadingData&&c.length>0){this.onLoadingData()}for(var f=0;f<c.length;f++){var e=document.createElement("tr");if(c[f]["__ID__"]!=undefined){e.setAttribute("id",this.id+"_id_"+c[f]["__ID__"])}if(this.multipleSelection){var d=document.createElement("td");if(c[f]["__KEY__"]!=undefined){var a=document.createElement("input");a.setAttribute("type","checkbox");a.setAttribute("name",(this.id+"_checkbox[]"));a.setAttribute("className",(this.id+"_checkbox"));a.setAttribute("class",(this.id+"_checkbox"));a.setAttribute("value",c[f]["__KEY__"]);a.onclick=function(){PiwiGrid.selectRow(this)};d.appendChild(a)}else{d.innerHTML="&nbsp;"}e.appendChild(d)}for(key in c[f]){if(typeof(c[f][key])!="function"){if(key!="__KEY__"&&key!="__ID__"){var d=document.createElement("td");d.innerHTML=c[f][key];e.appendChild(d)}}}b.appendChild(e)}if(this.onLoadedData&&c.length>0){this.onLoadedData()}},deleteRow:function(b){if(this.rowsSize>0){var a=this.body;a.removeChild(b);this.deleteItem()}},reset:function(){var a=this.body;var b=a.getElementsByTagName("tr");while(b.length!=0){a.deleteRow(0)}},repaint:function(){var b=this.body;var e=b.getElementsByTagName("tr");var d=e.length;var a=this.evenColor;for(var c=0;c<d;c++){e[c].style.backgroundColor=a;if(c%2==0){a=this.oddColor}else{a=this.evenColor}}},updatePageCounterView:function(){switch(this.pagerMode){case"NORMAL":var a=document.getElementById(this.pagerStatus);var c=document.getElementById(this.tablePagerStatus);if(parseInt(this.rowsSize)>parseInt(this.pageBy)){a.innerHTML=" "+this.currentPageXHTML+" ("+this.rowsSize+") ";try{c.style.display="table"}catch(b){c.style.display="block"}}else{c.style.display="none"}break}},updatePageCounter:function(){if(this.getCurrentPage()>0){var d=this.getFirstPagerValues();var c=this.getPreviousPagerValues();var a=this.getNextPagerValues();var b=this.getLastPagerValues();if((c+2*this.pageBy)==a){this.currentPageXHTML=(a-this.pageBy+1)+"&nbsp;-&nbsp;"+(parseInt(a))}else{if(a==this.rowsSize){this.setCurrentPage(c);this.currentPageXHTML=(c+1)+"&nbsp;-&nbsp;"+this.rowsSize}else{this.currentPageXHTML=(a+1)+"&nbsp;-&nbsp;"+this.rowsSize}}}else{this.currentPageXHTML="1 &nbsp;-&nbsp;"+(parseInt(this.pageBy))}this.updatePageCounterView()},addItem:function(){this.rowsSize++;this.updatePageCounter()},deleteItem:function(){this.rowsSize--;this.updatePageCounter()},getFirstPagerValues:function(){return 0},getPreviousPagerValues:function(){var a=parseInt(this.getCurrentPage())-parseInt(this.pageBy);if(a<0){a=parseInt(this.getCurrentPage())}return a},getNextPagerValues:function(){var a=parseInt(this.getCurrentPage())+parseInt(this.pageBy);if(a>=this.rowsSize){a=parseInt(this.getCurrentPage())}return a},getLastPagerValues:function(){var a=this.rowsSize-this.rowsSize%parseInt(this.pageBy);if(a==this.rowsSize){a=this.rowsSize-parseInt(this.pageBy)}return a},firstPage:function(){var a=this.getFirstPagerValues();if(a!=this.getCurrentPage()){this.setCurrentPage(a);this.currentPageXHTML=(parseInt(this.getCurrentPage())+1)+"&nbsp;-&nbsp;"+(parseInt(a)+parseInt(this.pageBy));this.updatePageCounterView()}},previousPage:function(){var a=this.getPreviousPagerValues();if(a!=this.getCurrentPage()){this.setCurrentPage(a);this.currentPageXHTML=(parseInt(this.getCurrentPage())+1)+"&nbsp;-&nbsp;"+(parseInt(a)+parseInt(this.pageBy));this.updatePageCounterView()}},nextPage:function(){var a=this.getNextPagerValues();if(a!=this.getCurrentPage()){this.setCurrentPage(a);if((parseInt(a)+parseInt(this.pageBy))>this.rowsSize){this.currentPageXHTML=(parseInt(this.getCurrentPage())+1)+"&nbsp;-&nbsp;"+this.rowsSize}else{this.currentPageXHTML=(parseInt(this.getCurrentPage())+1)+"&nbsp;-&nbsp;"+(parseInt(a)+parseInt(this.pageBy))}this.updatePageCounterView()}},lastPage:function(){var a=this.getLastPagerValues();if(a!=this.getCurrentPage()){this.setCurrentPage(a);this.currentPageXHTML=(parseInt(this.getCurrentPage())+1)+"&nbsp;-&nbsp;"+this.rowsSize;this.updatePageCounterView()}},getSelectedRows:function(){if(this.multipleSelection){var g=this.body;var h=g.getElementsByTagName("input");var c=h.length;var b=this.id+"_checkbox";var j=new Array();var a=0;for(var d=0;d<c;d++){var f=h[d];var e=f.getAttribute("class");if(e==b){if(f.checked){j[a]=f.value;a++}}}return j}},multiSelect:function(h){if(h.multipleSelection){var g=h.body;var f=g.getElementsByTagName("input");var e=f.length;var b=h.id+"_checkbox";for(var c=0;c<e;c++){var a=f[c];var d=a.getAttribute("class");if(d==b){if(h.selectedAll){a.checked=false;h.selectRow(a)}else{a.checked=true;h.selectRow(a)}}}if(h.selectedAll){h.selectedAll=false}else{h.selectedAll=true}}},selectRow:function(a){if(a.checked==false){this.unselectRow(a)}else{if(this.onRowSelected){this.onRowSelected(a,a.parentNode.parentNode)}if(a.parentNode.parentNode.originalColor==undefined){a.parentNode.parentNode.originalColor=a.parentNode.parentNode.style.backgroundColor}a.parentNode.parentNode.style.backgroundColor="#ffffcc";a.parentNode.parentNode.selected=true}},unselectRow:function(a){if(this.onRowUnselected){this.onRowUnselected(a,inpurt.parentNode.parentNode)}a.parentNode.parentNode.style.backgroundColor=a.parentNode.parentNode.originalColor;a.parentNode.parentNode.selected=false},onMouseOver:function(a){if(!a.selected){if(a.originalColor==undefined){a.originalColor=a.style.backgroundColor}a.style.backgroundColor="#ffffcc";a.hasMouseOver=true}},onMouseOut:function(a){if(!a.selected){a.style.backgroundColor=a.originalColor;a.hasMouseOver=false}},hidePageCounter:function(){if(this.usePager){var a=document.getElementById(this.tablePagerStatus);a.style.display="none"}},showPageCounter:function(){if(this.usePager){var a=document.getElementById(this.tablePagerStatus);a.style.display="table"}},getCurrentPage:function(){if(this.usingCookies==true){var d=this.getCookieName()+"=";var c=document.cookie.split(";");for(var b=0;b<c.length;b++){var a=c[b];while(a.charAt(0)==" "){a=a.substring(1,a.length)}if(a.indexOf(d)==0){return a.substring(d.length,a.length)}}}return this.currentPage},setCurrentPage:function(c){this.currentPage=c;if(this.usingCookies==true){var b=new Date();b.setTime(b.getTime()+(300000));var a="; expires="+b.toGMTString();document.cookie=this.getCookieName()+"="+c+a+"; path=/"}},cleanCurrentPage:function(){var b="";var a="";document.cookie=this.getCookieName()+"="+b+a+"; path=/"},getCookieName:function(){return this.id}};
+var PiwiGrid = {
+
+    init: function(tableElement, tableBody) {
+        tableElement.rowsSize = 0;
+        tableElement.firstPage = PiwiGrid.firstPage;
+        tableElement.previousPage = PiwiGrid.previousPage;
+        tableElement.nextPage = PiwiGrid.nextPage;
+        tableElement.lastPage = PiwiGrid.lastPage;
+        tableElement.getFirstPagerValues = PiwiGrid.getFirstPagerValues;
+        tableElement.getPreviousPagerValues = PiwiGrid.getPreviousPagerValues;
+        tableElement.getNextPagerValues = PiwiGrid.getNextPagerValues;
+        tableElement.getLastPagerValues = PiwiGrid.getLastPagerValues;
+        tableElement.updatePageCounter = PiwiGrid.updatePageCounter;
+        tableElement.updatePageCounterView = PiwiGrid.updatePageCounterView;
+        tableElement.addItem = PiwiGrid.addItem;
+        tableElement.deleteItem = PiwiGrid.deleteItem;
+        tableElement.addRow = PiwiGrid.addRow;
+        tableElement.deleteRow = PiwiGrid.deleteRow;
+        tableElement.repaint = PiwiGrid.repaint;
+        tableElement.reset = PiwiGrid.reset;
+        tableElement.fillWithArray = PiwiGrid.fillWithArray;
+        tableElement.body = tableBody;
+        tableElement.pagerStatus = 'pagerStatusOf_' + tableElement.id;
+        tableElement.tablePagerStatus = 'pagerTableStatusOf_' + tableElement.id;
+        tableElement.usePager = false;
+        tableElement.usingCookies = true;
+        tableElement.evenColor = 'white';
+        tableElement.oddColor = '#edf3fe';
+        tableElement.pageBy = 10;
+        tableElement.currentPage = 0;
+        tableElement.currentPageXHTML = '0-10';
+        tableElement.pagerMode = 'NORMAL';
+        tableElement.multipleSelection = false;
+        tableElement.selectedAll = false;
+        tableElement.getSelectedRows = PiwiGrid.getSelectedRows;
+        tableElement.selectRow = PiwiGrid.selectRow;
+        tableElement.unselectRow = PiwiGrid.unselectRow;
+        tableElement.mouseOverRow = PiwiGrid.onMouseOver;
+        tableElement.mouseOutRow = PiwiGrid.onMouseOut;
+        tableElement.hidePageCounter = PiwiGrid.hidePageCounter;
+        tableElement.showPageCounter = PiwiGrid.showPageCounter;
+        tableElement.setCurrentPage = PiwiGrid.setCurrentPage;
+        tableElement.cleanCurrentPage = PiwiGrid.cleanCurrentPage;
+        tableElement.getCookieName = PiwiGrid.getCookieName;
+        tableElement.getCurrentPage = PiwiGrid.getCurrentPage;
+    },
+
+    useMultipleSelection: function(tableElement, useMultiple) {
+        tableElement.multipleSelection = useMultiple;
+    },
+
+    usePager: function(tableElement, pager) {
+        tableElement.usePager = pager;
+    },
+
+    pagerMode: function(tableElement, mode) {
+        tableElement.pagerMode = mode;
+    },
+
+    currentPage: function(tableElement, page) {
+        //tableElement.currentPage = page;
+        tableElement.setCurrentPage(page);
+    },
+
+    pageBy: function(tableElement, size) {
+        tableElement.pageBy = size;
+    },
+
+    rowsSize: function(tableElement, rowsSize) {
+        tableElement.rowsSize = rowsSize;
+    },
+
+    evenColor: function(tableElement, color) {
+        tableElement.evenColor = color;
+    },
+
+    oddColor: function(tableElement, color) {
+        tableElement.oddColor = color;
+    },
+
+    addRow: function(trElement) {
+        var tbody = this.body;
+        tbody.appendChild(trElement);
+        this.addItem();
+    },
+
+    fillWithArray: function(inputArray) {
+        var tbody = this.body;
+        if (this.onLoadingData && inputArray.length > 0) {
+            this.onLoadingData();
+        }
+
+        for (var y=0; y<inputArray.length; y++) {
+            var row = document.createElement('tr');
+            if (inputArray[y]['__ID__'] != undefined) {
+                row.setAttribute('id', this.id + '_id_' + inputArray[y]['__ID__']);
+            }
+            if (this.multipleSelection) {
+                var column = document.createElement('td');
+                if (inputArray[y]['__KEY__'] != undefined) {
+                    var check  = document.createElement('input');
+                    check.setAttribute('type', 'checkbox');
+                    check.setAttribute('name', (this.id + '_checkbox[]'));
+                    check.setAttribute('className', (this.id + '_checkbox'));
+                    check.setAttribute('class', (this.id + '_checkbox'));
+                    check.setAttribute('value', inputArray[y]['__KEY__']);
+                    check.onclick = function() {
+                        PiwiGrid.selectRow(this);
+                    }
+                    column.appendChild(check);
+                } else {
+                    column.innerHTML = '&nbsp;';
+                }
+                row.appendChild(column);
+            }
+
+            for(key in inputArray[y]) {
+                if (typeof(inputArray[y][key]) != 'function') {
+                    if (key != '__KEY__' && key != '__ID__') {
+                        var column = document.createElement('td');
+                        column.innerHTML = inputArray[y][key];
+                        row.appendChild(column);
+                    }
+                }
+            }
+            tbody.appendChild(row);
+        }
+
+        if (this.onLoadedData && inputArray.length > 0) {
+            this.onLoadedData();
+        }
+    },
+
+    deleteRow: function(trElement) {
+        if (this.rowsSize > 0) {
+            var tbody = this.body;
+            tbody.removeChild(trElement);
+            this.deleteItem();
+        }
+    },
+
+    reset: function() {
+        var tbody = this.body;
+        var rows  = tbody.getElementsByTagName('tr');
+        while(rows.length != 0) {
+            tbody.deleteRow(0);
+        }
+    },
+
+    repaint: function() {
+        var tbody  = this.body;
+        var rows   = tbody.getElementsByTagName('tr');
+        var length = rows.length;
+        var color  = this.evenColor;
+        for(var i=0; i<length; i++) {
+            rows[i].style.backgroundColor = color;
+            if (i % 2 == 0) {
+                color = this.oddColor;
+            } else {
+                color = this.evenColor;
+            }
+        }
+    },
+
+    updatePageCounterView: function() {
+        switch(this.pagerMode) {
+            case 'NORMAL':
+            var counterStatus = document.getElementById(this.pagerStatus);
+            var tableCounter  = document.getElementById(this.tablePagerStatus);
+            if (parseInt(this.rowsSize) > parseInt(this.pageBy)) {
+                counterStatus.innerHTML = ' ' + this.currentPageXHTML + ' (' + this.rowsSize + ') ';
+                try {
+                    tableCounter.style.display = 'table';
+                } catch(e) {
+                    tableCounter.style.display = 'block';
+                }
+            } else {
+                tableCounter.style.display = 'none';
+            }
+            break;
+        }
+    },
+
+    updatePageCounter: function() {
+        if (this.getCurrentPage() > 0) {
+            var first = this.getFirstPagerValues();
+            var prev  = this.getPreviousPagerValues();
+            var next  = this.getNextPagerValues();
+            var last  = this.getLastPagerValues();
+            if ((prev + 2*this.pageBy) == next) {
+                this.currentPageXHTML = (next - this.pageBy + 1) + '&nbsp;-&nbsp;' + (parseInt(next));
+            } else {
+                if (next == this.rowsSize) {
+                    this.setCurrentPage(prev);
+                    this.currentPageXHTML = (prev + 1) + '&nbsp;-&nbsp;' + this.rowsSize;
+                } else {
+                    this.currentPageXHTML = (next + 1) + '&nbsp;-&nbsp;' + this.rowsSize;
+                }
+            }
+        } else {
+            this.currentPageXHTML = '1 &nbsp;-&nbsp;' + (parseInt(this.pageBy));
+        }
+        this.updatePageCounterView();
+    },
+
+    addItem: function() {
+        this.rowsSize++;
+        this.updatePageCounter();
+    },
+
+    deleteItem: function() {
+        this.rowsSize--;
+        this.updatePageCounter();
+    },
+
+    getFirstPagerValues: function() {
+        return 0;
+    },
+
+    getPreviousPagerValues: function() {
+        var result = parseInt(this.getCurrentPage()) - parseInt(this.pageBy);
+        if (result < 0) {
+            result = parseInt(this.getCurrentPage());
+        }
+        return result;
+    },
+
+    getNextPagerValues: function() {
+        var result = parseInt(this.getCurrentPage()) + parseInt(this.pageBy);
+        if (result >= this.rowsSize) {
+            result = parseInt(this.getCurrentPage());
+        }
+        return result;
+    },
+
+    getLastPagerValues: function() {
+        var result = this.rowsSize - this.rowsSize % parseInt(this.pageBy);
+        if (result == this.rowsSize) {
+            result = this.rowsSize - parseInt(this.pageBy);
+        }
+        return result;
+    },
+
+    firstPage: function() {
+        var values = this.getFirstPagerValues();
+        if (values != this.getCurrentPage()) {
+            this.setCurrentPage(values);
+            this.currentPageXHTML = (parseInt(this.getCurrentPage())+1) + '&nbsp;-&nbsp;' + (parseInt(values) + parseInt(this.pageBy));
+            this.updatePageCounterView();
+        }
+    },
+
+    previousPage: function() {
+        var values = this.getPreviousPagerValues();
+        if (values != this.getCurrentPage()) {
+            this.setCurrentPage(values);
+            this.currentPageXHTML = (parseInt(this.getCurrentPage())+1) + '&nbsp;-&nbsp;' + (parseInt(values) + parseInt(this.pageBy));
+            this.updatePageCounterView();
+        }
+    },
+
+    nextPage: function() {
+        var values = this.getNextPagerValues();
+        if (values != this.getCurrentPage()) {
+            this.setCurrentPage(values);
+            if ((parseInt(values) + parseInt(this.pageBy)) > this.rowsSize) {
+                this.currentPageXHTML = (parseInt(this.getCurrentPage())+1) + '&nbsp;-&nbsp;' + this.rowsSize;
+            } else {
+                this.currentPageXHTML = (parseInt(this.getCurrentPage())+1) + '&nbsp;-&nbsp;' + (parseInt(values) +
+                                                                                            parseInt(this.pageBy));
+            }
+            this.updatePageCounterView();
+        }
+    },
+
+    lastPage: function() {
+        var values = this.getLastPagerValues();
+        if (values != this.getCurrentPage()) {
+            this.setCurrentPage(values);
+            this.currentPageXHTML = (parseInt(this.getCurrentPage())+1) + '&nbsp;-&nbsp;' + this.rowsSize;
+            this.updatePageCounterView();
+        }
+    },
+
+    getSelectedRows: function() {
+        if (this.multipleSelection) {
+            var gridBody = this.body;
+            var cboxes   = gridBody.getElementsByTagName('input');
+            var length   = cboxes.length;
+            var realName = this.id + '_checkbox';
+            var rows     = new Array();
+            var counter  = 0;
+            for(var i=0; i<length; i++) {
+                var input     = cboxes[i];
+                var className = input.getAttribute('class');
+                if (className == realName) {
+                    if (input.checked) {
+                        rows[counter] = input.value;
+                        counter++;
+                    }
+                }
+            }
+            return rows;
+        }
+    },
+
+    multiSelect: function(gridTable) {
+        if (gridTable.multipleSelection) {
+            var gridBody = gridTable.body;
+            var cboxes   = gridBody.getElementsByTagName('input');
+            var length   = cboxes.length;
+            var realName = gridTable.id + '_checkbox';
+            for(var i=0; i<length; i++) {
+                var input     = cboxes[i];
+                var className = input.getAttribute('class');
+                if (className == realName) {
+                    if (gridTable.selectedAll) {
+                        input.checked = false;
+                        gridTable.selectRow(input);
+                    } else {
+                        input.checked = true;
+                        gridTable.selectRow(input);
+                    }
+                }
+            }
+            if (gridTable.selectedAll) {
+                gridTable.selectedAll = false;
+            } else {
+                gridTable.selectedAll = true;
+            }
+        }
+    },
+
+    selectRow: function(input) {
+        if (input.checked == false) {
+            this.unselectRow(input);
+        } else {
+            if (this.onRowSelected) {
+                this.onRowSelected(input, input.parentNode.parentNode);
+            }
+            if (input.parentNode.parentNode.originalColor == undefined) {
+                input.parentNode.parentNode.originalColor = input.parentNode.parentNode.style.backgroundColor;
+            }
+            input.parentNode.parentNode.style.backgroundColor = '#ffffcc';
+            input.parentNode.parentNode.selected = true;
+        }
+    },
+
+    unselectRow: function(input) {
+        if (this.onRowUnselected) {
+            this.onRowUnselected(input, inpurt.parentNode.parentNode);
+        }
+        input.parentNode.parentNode.style.backgroundColor = input.parentNode.parentNode.originalColor;
+        input.parentNode.parentNode.selected = false;
+    },
+
+    onMouseOver: function(row) {
+        if (!row.selected) {
+            if (row.originalColor == undefined) {
+                row.originalColor = row.style.backgroundColor;
+            }
+            row.style.backgroundColor = '#ffffcc';
+            row.hasMouseOver = true;
+        }
+    },
+
+    onMouseOut: function(row) {
+        if (!row.selected) {
+            row.style.backgroundColor = row.originalColor;
+            row.hasMouseOver = false;
+        }
+    },
+
+    hidePageCounter: function() {
+        if (this.usePager) {
+            var tableCounter  = document.getElementById(this.tablePagerStatus);
+            tableCounter.style.display = 'none';
+        }
+    },
+
+    showPageCounter: function() {
+        if (this.usePager) {
+            var tableCounter  = document.getElementById(this.tablePagerStatus);
+            tableCounter.style.display = 'table';
+        }
+    },
+
+    getCurrentPage: function() {
+        if (this.usingCookies == true) {
+            var cookieName = this.getCookieName() + "=";
+            var cookies    = document.cookie.split(';');
+            for(var i=0; i<cookies.length; i++) {
+                var cookie = cookies[i];
+                while (cookie.charAt(0) == ' ') cookie = cookie.substring(1, cookie.length);
+                if (cookie.indexOf(cookieName) == 0) return cookie.substring(cookieName.length, cookie.length);
+            }
+        }
+        return this.currentPage;
+    },
+
+    setCurrentPage: function(page) {
+        this.currentPage = page;
+        if (this.usingCookies == true) {
+            //Expires on..
+            var date = new Date();
+            date.setTime(date.getTime()+(300000)); //5 minutes
+            var expires = "; expires="+date.toGMTString();
+            //Set cookie
+            document.cookie = this.getCookieName() + "=" + page + expires + "; path=/";
+        }
+    },
+
+    cleanCurrentPage: function() {
+        var value   = "";
+        var expires = "";
+        //Set cookie
+        document.cookie = this.getCookieName() + "=" + value + expires + "; path=/";
+    },
+
+    getCookieName: function() {
+        return this.id;
+    }
+}

@@ -1,20 +1,4 @@
 /**
- * Shortcut function for using instead of getElementById
- */
-if (typeof Prototype  == 'undefined') {
-    $ = function(element) {
-        return document.getElementById(element);
-    }
-}
-
-/**
- * Shortcut function for using instead of getElementsByName
- */
-function $N(name, doc) {
-  return $A((doc || document).getElementsByName(name));
-}
-
-/**
  * Repaints a combo
  */
 function paintCombo(combo, oddColor, evenColor)
@@ -39,8 +23,8 @@ function paintCombo(combo, oddColor, evenColor)
  */
 function changeEditorValue(name, value)
 {
-    var usingMCE = typeof tinyMCE  == 'undefined' ? false : true;
-    var usingCKE = typeof CKEDITOR == 'undefined' ? false : true;
+    var usingMCE = typeof tinyMCE == 'undefined' ? false : true;
+    var usingFCK = typeof FCKeditorAPI == 'undefined' ? false : true;
     if (usingMCE) {
         var editor = tinyMCE.get(name);
         if (editor) {
@@ -48,12 +32,12 @@ function changeEditorValue(name, value)
          } else {
             $(name).value = value;
          }
-    } else if (usingCKE) {
-        var editor = CKEDITOR.instances[name];
-        if (editor.status == 'unloaded') {
+    } else if (usingFCK) {
+        var editor = FCKeditorAPI.GetInstance(name);
+        if (editor.Status == FCK_STATUS_NOTLOADED) {
             $(name).value = value;
         } else {
-            editor.setData(value);
+            editor.SetData(value);
         }
     } else {
         $(name).value = value;
@@ -65,75 +49,19 @@ function changeEditorValue(name, value)
  */
 function getEditorValue(name)
 {
-    var usingMCE = typeof tinyMCE  == 'undefined' ? false : true;
-    var usingCKE = typeof CKEDITOR == 'undefined' ? false : true;
+    var usingMCE = typeof tinyMCE == 'undefined' ? false : true;
+    var usingFCK = typeof FCKeditorAPI == 'undefined' ? false : true;
     if (usingMCE) {
         var editor = tinyMCE.get(name);
         return editor.getContent();
-    } else if (usingCKE) {
-        var editor = CKEDITOR.instances[name];
-        if (editor.status != 'unloaded') {
-            return editor.getData();
+    } else if (usingFCK) {
+        var editor = FCKeditorAPI.GetInstance(name);
+        if (editor.Status != FCK_STATUS_NOTLOADED) {
+            return editor.GetXHTML(true);   // "true" means you want it formatted.
         }
     }
 
     return $(name).value;
-}
-
-/**
- * Javascript htmlspecialchars_decode
- *
- * @see https://raw.github.com/kvz/phpjs/master/functions/strings/htmlspecialchars_decode.js
- */
-String.prototype.defilter = function(quote_style) {
-    var optTemp = 0,
-        i = 0,
-        noquotes = false;
-
-    if (typeof quote_style === 'undefined') {
-        quote_style = 3;
-    }
-
-    var str = this.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-    var OPTS = {
-        'ENT_NOQUOTES': 0,
-        'ENT_HTML_QUOTE_SINGLE': 1,
-        'ENT_HTML_QUOTE_DOUBLE': 2,
-        'ENT_COMPAT': 2,
-        'ENT_QUOTES': 3,
-        'ENT_IGNORE': 4
-    };
-
-    if (quote_style === 0) {
-        noquotes = true;
-    }
-
-    // Allow for a single string or an array of string flags
-    if (typeof quote_style !== 'number') {
-        quote_style = [].concat(quote_style);
-        for (i = 0; i < quote_style.length; i++) {
-            // Resolve string input to bitwise e.g. 'PATHINFO_EXTENSION' becomes 4
-            if (OPTS[quote_style[i]] === 0) {
-                noquotes = true;
-            } else if (OPTS[quote_style[i]]) {
-                optTemp = optTemp | OPTS[quote_style[i]];
-            }
-        }
-        quote_style = optTemp;
-    }
-
-    if (quote_style & OPTS.ENT_HTML_QUOTE_SINGLE) {
-        str = str.replace(/&#0*39;/g, "'"); // PHP doesn't currently escape if more than one 0, but it should
-        // str = str.replace(/&apos;|&#x0*27;/g, "'"); // This would also be useful here, but not a part of PHP
-    }
-
-    if (!noquotes) {
-        str = str.replace(/&quot;/g, '"');
-    }
-
-    // Put this in last place to avoid escape being double-decoded
-    str = str.replace(/&amp;/g, '&');
-    return str;
 }
 
 /**
@@ -423,170 +351,14 @@ function resetCombo(combo)
  */
 function initDatePicker(name)
 {
-    dpTable = $(name + '_table');
-    var script = dpTable.nextSibling;
-    var newScript = document.createElement('script');
-    newScript.type = "text/javascript";
-    newScript.text = script.text;
-    Element.remove(script);
-    dpTable.parentNode.appendChild(newScript);
-}
-
-/**
- * Show Dialog Box
- */
-function showDialogBox(name, dTitle, url, dHeight, dWidth)
-{
-    var dRect = document.viewport.getDimensions();
-    var dLeft = (dWidth  > dRect.width )? 0 : Math.round(dRect.width  / 2 - dWidth  / 2) + 'px';
-    var dTop  = (dHeight > dRect.height)? 0 : Math.round(dRect.height / 2 - dHeight / 2) + 'px';
-
-    if ($(name) == undefined) {
-        var overlay = new Element('div', {'id':name+'_overlay', 'class':'dialog_box_overlay'}).hide();
-        var iframe  = new Element('iframe', {'id':name+'_iframe', frameborder:0});
-        var close   = new Element('span', {'class': 'dialog_box_close'});
-        var title   = new Element('div', {'class':'dialog_box_title'}).insert(dTitle).insert(close);
-        var dialog  = new Element('div', {'id':name, 'class':'dialog_box'}).insert(title).insert(iframe).hide();
-        iframe.observe('load', function() {
-            hideWorkingNotification();
-            dialog.show();
-            Event.observe(iframe.contentWindow.document, 'keydown', function(e) {
-                if (e.keyCode == Event.KEY_ESC) {
-                    hideDialogBox(name);
-                }
-            });
-        });
-        iframe.observe('cached:load', function() {
-            hideWorkingNotification();
-            dialog.show();
-        });
-        close.observe('click', function() {hideDialogBox(name);});
-        overlay.observe('mousedown', function(e) {Event.stop(e);});
-        document.observe('keydown', function(e) {
-            if (dialog.visible() && e.keyCode == Event.KEY_ESC) {
-                hideDialogBox(name);
-            }
-        });
-        document.body.insert(overlay);
-        document.body.insert(dialog);
-    }
-
-    $(name+'_overlay').show();
-    showWorkingNotification();
-    $(name+'_iframe').setStyle({height:dHeight+'px', width:dWidth+'px'});
-    $(name).setStyle({left:dLeft, top:dTop});
-    if ($(name+'_iframe').src == url) {
-        $(name+'_iframe').fire('cached:load');
-    } else {
-        $(name+'_iframe').src = url;
-    }
-}
-
-/**
- * Hide Dialog Box
- */
-function hideDialogBox(name)
-{
-    $(name).hide();
-    $(name+'_overlay').hide();
-}
-
-/**
- * Server error handler
- */
-function Jaws_Ajax_ServerError(error) 
-{
-    //Take the error and parse to see if it's a JawsServerError or a bug in the code
-    var errorMessage = error.message;
-    //JawsServerError pattern
-    var pattern = /^\[(.*?)\]\s+(-)\s+(.*?)/;
-    //Test..
-    if (pattern.test(errorMessage)) {
-        var errorSplitted = errorMessage.split(pattern);
-        var errorCode     = errorSplitted[1];
-        errorMessage      = errorSplitted[4];
-        switch(errorCode) {
-        case 'NOPERMISSION': //Not granted?
-            alert(errorMessage);
-            break;
-        case 'NOSESSION': //No session?
-            // FIXME, using href of base tag instead of admin.php or if empty parsing URL
-            window.location = 'admin.php';
-            break;
-        case 'NOTLOGGED': //Session expired?
-            alert(errorMessage + '...');
-            // FIXME, using href of base tag instead of admin.php or if empty parsing URL
-            window.location = 'admin.php';
-            break;            
-        }
-    }
-}
-
-/**
- * Show the response
- */
-function showResponse(message, goTop)
-{
-    if (typeof(goTop) == 'undefined' || goTop) {
-        new Effect.ScrollTo($(document.body));
-    }
-
-    messages = new Array();
-    if (message[0] == undefined) {
-        messages[0] = message;
-    } else {
-        messages = message;
-    }
-
-    $('msgbox-wrapper').innerHTML = '';
-    for(var i = 0; i < messages.length; i++) {
-        var messageDiv = document.createElement('div');
-        $('msgbox-wrapper').appendChild(messageDiv);
-        messageDiv.innerHTML = messages[i]['message'];
-        messageDiv.className = messages[i]['css'];
-        messageDiv.id = 'msgbox_'+i;
-        new Effect.Appear(messageDiv);
-        hideResponseBox(messageDiv);
-    }
-}
-
-/**
- * Hide response boxes - Fast Code
- */
-function hideResponseBox(name, timehide)
-{
-    if (typeof(timehide) == 'undefined') {
-        timehide = '3000';
-    }
-
-    setTimeout('hideResponseBoxCallback("' + name.id + '")', timehide);
-}
-
-/**
- * Hide response boxes - JS Action (callback)
- */
-function hideResponseBoxCallback(name)
-{
-    new Effect.Fade(name);
-}
-
-/**
- * Show working notification.
- */
-function showWorkingNotification(msg)
-{
-    if (!msg) {
-        msg = loading_message;
-    }
-    $('working_notification').innerHTML = msg;
-    $('working_notification').style.visibility = 'visible';
-    loading_message = default_loading_message;
-}
-
-/**
- * Hide working notification
- */
-function hideWorkingNotification()
-{
-    $('working_notification').style.visibility = 'hidden';
+    Calendar.setup({
+        inputField: name,
+        ifFormat: "%Y-%m-%d %H:%M:%S",
+        button: name + "_button",
+        singleClick: true,
+        weekNumbers: false,
+        firstDay: 0,
+        date: $(name).value,
+        showsTime: true,
+        multiple: false});
 }

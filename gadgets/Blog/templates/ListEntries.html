@@ -1,0 +1,21 @@
+<!-- BEGIN list_entries -->
+<div align="center">
+<form action="{base_script}" name="ListEntries" onsubmit="return searchPost();" method="post">
+<input type="hidden" name="gadget" value="Blog" />
+<input type="hidden" id="action" name="action" value="ListEntries" />
+{menubar}
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td align="right" nowrap="nowrap">{show} {show_field} {category} {category_field} {status} {status_field} {search_field} {search}</td>
+  </tr>
+</table>
+</div>
+</form>
+{entries}
+</div>
+<script type="text/javascript">
+var deleteConfirm = "{deleteConfirm}";
+getData();
+</script>
+<!-- END list_entries -->

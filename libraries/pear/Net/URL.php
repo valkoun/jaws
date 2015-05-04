@@ -32,7 +32,7 @@
 // | Author: Richard Heyes <richard at php net>                            |
 // +-----------------------------------------------------------------------+
 //
-// $Id: URL.php 256023 2008-03-25 01:28:39Z davidc $
+// $Id: URL.php,v 1.49 2007/06/28 14:43:07 davidc Exp $
 //
 // Net_URL Class
 
@@ -56,13 +56,13 @@ class Net_URL
     * Username
     * @var string
     */
-    var $user;
+    var $username;
 
     /**
     * Password
     * @var string
     */
-    var $pass;
+    var $password;
 
     /**
     * Host
@@ -293,9 +293,8 @@ class Net_URL
     {
         if (!empty($this->querystring)) {
             foreach ($this->querystring as $name => $value) {
-                if ($this->getOption('encode_query_keys')) {
-                    $name = rawurlencode($name);
-                }
+                // Encode var name
+                $name = rawurlencode($name);
 
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
@@ -483,3 +482,4 @@ class Net_URL
     }
 
 }
+?>

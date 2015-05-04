@@ -1,16 +1,17 @@
 <!-- BEGIN menu -->
-<div class="gadget menu gmenu_{gid}">
-  <!-- BEGIN group_title --><h2>{title}</h2><!-- END group_title -->
+<div class="gadget menu" id="gmenu_{gid}">
+  <!-- BEGIN group_title --><h2 id="layout_{actionName)_title">{title}</h2><!-- END group_title -->
   <div class="content">
     {menus_tree}
   </div>
 </div>
 <!-- END menu -->
 <!-- BEGIN levels -->
-<ul>
+<ul{ul_class}>
 <!-- BEGIN menu_item -->
-  <li<!-- BEGIN class --> class="menu_item<!-- BEGIN current --> menu_current<!-- END current --><!-- BEGIN super --> menu_super<!-- END super --><!-- BEGIN first --> menu_first<!-- END first --><!-- BEGIN last --> menu_last<!-- END last -->"<!-- END class -->>
-    <a href="{url}" target="{target}">{image}<span>{title}</span></a>{sub_menu}
+  <li id="menu_{mid}"<!-- BEGIN class --> class="menu_li_item<!-- BEGIN current --> menu_current<!-- END current --><!-- BEGIN super --> menu_super<!-- END super --><!-- BEGIN first --> menu_first<!-- END first --><!-- BEGIN last --> menu_last<!-- END last -->"<!-- END class -->>
+	<a href="{url}" target="{target}"{a_class}>{title}<!--[if gt IE 6]><!--></a><!--<![endif]-->
+    <!--[if lte IE 6]><table><tr><td><![endif]-->{sub_menu}<!--[if lte IE 6]></td></tr></table></a><![endif]-->
   </li>
 <!-- END menu_item -->
 </ul>

@@ -1,0 +1,68 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+        var msgbox = $('msgbox_{msg-id}');
+        if((msgbox.className != 'error-message') && (msgbox.className != 'warning-message') && (window.hideResponseBox)) {
+            hideResponseBox(msgbox);
+        }
+    </script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN galleries_admin -->
+{menubar}
+<div>
+<form action="{base_script}" name="Admin" method="post">
+<input type="hidden" name="gadget" value="FlashGallery" />
+<input type="hidden" name="action" value="{account}Admin" />
+<input type="hidden" name="status" value="" id="status" />
+<input type="hidden" name="search" value="" id="search" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+      <script type="text/javascript">
+      Event.observe(window, "load",function(){getGalleryData();});
+      </script>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_gallery}</td>
+		</tr>
+	</table>
+</div>
+</form>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+</div>
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('galleries_datagrid', new flashgalleryadminajax); -->
+<!-- </script> -->
+<!-- END galleries_admin -->
+
+<!-- BEGIN gadget_page -->
+{menubar}
+<div style="float: left; vertical-align: top;">
+	{left_menu}
+</div>
+<script type="text/javascript">
+  var confirmPostDelete    = "{confirmPostDelete}";
+</script>
+<div {workarea-style}id="workarea">
+		{content}
+</div>
+<div style="clear: all;">&nbsp;</div>
+<!-- END gadget_page -->

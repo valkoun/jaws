@@ -1,0 +1,265 @@
+<!-- BEGIN layout -->
+<form method="POST" action="{form_action}" onsubmit="return validateForm{form_id}(this);">
+	<div align="left">
+		<div id="forms-title-{form_id}" class="forms-title"><h1>{form_title}</h1></div>
+		<div id="forms-body-{form_id}" class="forms-body" style="padding-top: 10px; padding-bottom: 10px;">
+			<!-- BEGIN image -->
+			<div id="forms-img-{form_id}" class="forms-img"><IMG SRC="{form_image}" border="0" align="left" hspace="5" vspace="5"></div>
+			<!-- END image -->
+			<!-- BEGIN summary -->
+			<div id="forms-summary-{form_id}" class="forms-summary">{form_summary}</div>
+			<!-- END summary -->
+			<div id="forms-description-{form_id}" class="forms-description">{form_description}</div>
+		</div>
+	</div>
+&nbsp;
+	<div align="left" id="forms-content-{form_id}" class="forms-content">
+	  <table border="0" cellpadding="2" width="100%" cellspacing="" height="1">
+		<tr>
+		  <td width="100%" align="left" valign="top" colspan="2"><img border="0" SRC="{JAWS_URL}/images/blank.gif" width="175" height="1"></td>
+		</tr>
+		<tr>
+		  <td valign="top" colspan="2">
+
+			<table width="100%" border="0" cellpadding="2" cellspacing="0">
+			<!-- BEGIN question -->
+				<!-- BEGIN shown -->
+				<tr>
+					<td valign="top" width="27%" align="right" style="padding: 5px;">
+					<label for="{question_name}">{current_question}</label>
+					<!-- BEGIN required -->
+						<br /><i>(Required)</i>
+					<!-- END required -->
+					</td>
+					<td valign="top" width="79%" style="padding: 5px;">
+						<!-- BEGIN selectbox -->
+						<select name="{question_name}" SIZE="1">
+							<!-- BEGIN selectbox_option -->
+							<option{selected}>{value_title}</option>
+							<!-- END selectbox_option -->
+						</select>
+						<!-- END selectbox -->
+
+						<!-- BEGIN radiobtn -->
+						<!-- BEGIN radiobtn_option -->
+						<input type="radio" value="{value_title}" name="{question_name}"{checked}>&nbsp;{value_title}<br />
+						<!-- END radiobtn_option -->
+						<!-- END radiobtn -->
+
+						<!-- BEGIN checkbox -->
+						<!-- BEGIN checkbox_option -->
+						<input type="checkbox" value="{value_title}" name="{question_name}"{checked}>&nbsp;{value_title}<br />
+						<!-- END checkbox_option -->
+						<!-- END checkbox -->
+
+						<!-- BEGIN textbox -->
+						<input type="text" name="{question_name}" value="{value_data}" size="37">
+						<!-- END textbox -->
+
+						<!-- BEGIN textarea -->
+						<textarea rows="3" name="{question_name}" cols="28">{value_data}</textarea>
+						<!-- END textarea -->
+
+					</td>
+				</tr>
+				<!-- END shown -->
+				<!-- BEGIN hidden -->
+				<!-- BEGIN hidden_option -->
+				<input type="hidden" value="{value_title}" name="{question_name}">
+				<!-- END hidden_option -->
+				<!-- END hidden -->
+			<!-- END question -->
+			</table>
+		  </td>
+		</tr>
+		<!-- BEGIN captcha -->
+		<tr>
+		  <td valign="top" colspan="2">
+			<table width="100%" border="0" cellpadding="2" cellspacing="0">
+				<tbody>
+				<tr>
+					<td valign="top" width="27%" align="right" style="padding: 5px;">
+						<label>{lbl_captcha}:</label><br /><small>{captcha_msg}</small>
+					</td>
+					<td valign="top" width="79%" style="padding: 5px;">
+						<span>{captcha}</span>{captchavalue}
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</tr>
+		<!-- END captcha -->
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td style="text-align: right padding: 5px;"><input type="submit" value="Submit Form"></td>
+		</tr>
+	  </table>
+	</div>
+	<div id="forms-footer-{form_id}" class="forms-footer">
+		{form_clause}
+	</div>
+
+<input type="hidden" name="subject" value="{form_title}">
+<input type="hidden" name="recipient" value="{form_recipient}">
+<input type="hidden" value="{form_submit_content}" name="submit_content">
+<input type="text" class="syntacts_special" value="" name="syntacts_special" style="background: none repeat scroll 0% 0% transparent; border: 0pt none;">
+
+</form>
+
+<script type="text/javascript">
+<!--
+function validateForm{form_id}(form) {
+var rtn;
+rtn = true;
+
+<!-- BEGIN required_script -->
+if (rtn && form.elements["{question_name}"] && form.elements["{question_name}"].value.length < 1) {
+	<!-- BEGIN input -->
+	alert('You must fill out the "{current_question}" field. This field is required.');
+	<!-- END input -->
+	<!-- BEGIN select -->
+	alert('You must select an option for the "{current_question}" field. This field is required.');
+	<!-- END select -->
+	form.elements["{question_name}"].focus();
+	rtn=false;
+}
+<!-- END required_script -->
+
+// Try to catch an E-mail entry, and validate it
+
+if (rtn && form.Email) {
+	if (form.Email.value.length > 0) {
+	  if (!isEmail(form.Email.value)) {
+	  alert('Please enter a valid email address.');
+	  form.Email.focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['__FROM_EMAIL____REQUIRED__']) {
+	if (form.elements['__FROM_EMAIL____REQUIRED__'].value.length > 0) {
+	  if (!isEmail(form.elements['__FROM_EMAIL____REQUIRED__'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['__FROM_EMAIL____REQUIRED__'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Email Address']) {
+	if (form.elements['Email Address'].value.length > 0) {
+	  if (!isEmail(form.elements['Email Address'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Email Address'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Your Email Address']) {
+	if (form.elements['Your Email Address'].value.length > 0) {
+	  if (!isEmail(form.elements['Your Email Address'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Your Email Address'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Email:']) {
+	if (form.elements['Email:'].value.length > 0) {
+	  if (!isEmail(form.elements['Email:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Email:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Email Address:']) {
+	if (form.elements['Email Address:'].value.length > 0) {
+	  if (!isEmail(form.elements['Email Address:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Email Address:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Your Email Address:']) {
+	if (form.elements['Your Email Address:'].value.length > 0) {
+	  if (!isEmail(form.elements['Your Email Address:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Your Email Address:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['E-mail']) {
+	if (form.elements['E-mail'].value.length > 0) {
+	  if (!isEmail(form.elements['E-mail'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['E-mail'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['E-mail:']) {
+	if (form.elements['E-mail:'].value.length > 0) {
+	  if (!isEmail(form.elements['E-mail:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['E-mail:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['E-mail Address:']) {
+	if (form.elements['E-mail Address:'].value.length > 0) {
+	  if (!isEmail(form.elements['E-mail Address:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['E-mail Address:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Your E-mail Address:']) {
+	if (form.elements['Your E-mail Address:'].value.length > 0) {
+	  if (!isEmail(form.elements['Your E-mail Address:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Your E-mail Address:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['E-mail Address']) {
+	if (form.elements['E-mail Address:'].value.length > 0) {
+	  if (!isEmail(form.elements['E-mail Address:'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['E-mail Address:'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+if (rtn && form.elements['Your E-mail Address']) {
+	if (form.elements['Your E-mail Address'].value.length > 0) {
+	  if (!isEmail(form.elements['Your E-mail Address'].value)) {
+	  alert('Please enter a valid email address.');
+	  form.elements['Your E-mail Address'].focus();
+	  rtn=false;
+	  }
+	}
+}
+
+return rtn;
+} //end of function
+
+//-->
+</script>
+<!-- END layout -->

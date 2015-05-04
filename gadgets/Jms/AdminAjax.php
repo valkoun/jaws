@@ -1,15 +1,25 @@
 <?php
 /**
- * Jms AJAX API
+ * JMS (Jaws Management System) AJAX API
  *
  * @category   Ajax
- * @package    Jms
+ * @package    JMS
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class JmsAdminAjax extends Jaws_Ajax
 {
+    /**
+     * Constructor
+     *
+     * @access  public
+     */
+    function JmsAdminAjax(&$model)
+    {
+        $this->_Model =& $model;
+    }
+
     /**
      * Get a list of installed / not installed gadgets
      *
@@ -94,7 +104,7 @@ class JmsAdminAjax extends Jaws_Ajax
      * Returns a list of gadgets activated in a certain plugin
      *
      * @access  public
-     * @param   string  $plugin     Plugin's name
+     * @param   string  $plugin Plugin's name
      * @return  array   List of gadgets
      */
     function GetGadgetsOfPlugin($plugin)
@@ -126,8 +136,8 @@ class JmsAdminAjax extends Jaws_Ajax
      * Returns true or false if a plugin can be used always
      *
      * @access  public
-     * @param   string  $plugin   Plugin's name
-     * @return  bool    Can be used or no
+     * @param   string   $plugin   Plugin's name
+     * @return  boolean  Can be used or no
      */
     function UseAlways($plugin)
     {
@@ -137,11 +147,11 @@ class JmsAdminAjax extends Jaws_Ajax
     }
 
     /**
-     * Installs gadget
+     * Installs a gadget
      *
      * @access  public
      * @param   string  $gadget  Gadget's name
-     * @return  array   Response array (notice or error)
+     * @return  array   Response
      */
     function InstallGadget($gadget)
     {
@@ -160,7 +170,7 @@ class JmsAdminAjax extends Jaws_Ajax
                 if (!Jaws_Gadget::IsGadgetInstalled($r)) {
                     $info = $GLOBALS['app']->loadGadget($r, 'Info');
                     if (Jaws_Error::IsError($info)) {
-                        $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_ENABLED_FAILURE', $g), RESPONSE_ERROR);
+                        $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_ENABLED_FAILURE', $r), RESPONSE_ERROR);
                         return $GLOBALS['app']->Session->PopLastResponse();
                     }
 
@@ -187,11 +197,65 @@ class JmsAdminAjax extends Jaws_Ajax
     }
 
     /**
+     * Updates a gadget
+     *
+     * @access  public
+     * @param   string  $gadget  Gadget's name
+     * @return  array   Response
+     */
+    function UpdateGadget($gadget)
+    {
+        $this->CheckSession('Jms', 'ManageGadgets');
+		if (Jaws_Gadget::IsGadgetUpdated($gadget)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('GADGETS_UPDATED_NO_NEED', $gadget), RESPONSE_NOTICE);
+            return $GLOBALS['app']->Session->PopLastResponse();
+		}
+		
+        $gInfo = $GLOBALS['app']->loadGadget($gadget, 'Info');
+        if (Jaws_Error::IsError($gInfo)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_ENABLED_FAILURE', $gadget), RESPONSE_ERROR);
+            return $GLOBALS['app']->Session->PopLastResponse();
+        }
+
+        $req = $gInfo->GetRequirements();
+        if (is_array($req)) {
+            $problem = array();
+            foreach ($req as $r) {
+                if (!Jaws_Gadget::IsGadgetInstalled($r)) {
+                    $info = $GLOBALS['app']->loadGadget($r, 'Info');
+                    if (Jaws_Error::IsError($info)) {
+                        $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_ENABLED_FAILURE', $r), RESPONSE_ERROR);
+                        return $GLOBALS['app']->Session->PopLastResponse();
+                    }
+
+                    $problem[] = $info->getName();
+                }
+            }
+
+            if (count($problem) > 0) {
+                $p = implode($problem, ', ');
+                $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_REQUIRES_X_GADGET', $gInfo->getName(), $p), RESPONSE_ERROR);
+                return $GLOBALS['app']->Session->PopLastResponse();
+            }
+        }
+
+        $return = Jaws_Gadget::UpdateGadget($gadget);
+        if (Jaws_Error::IsError($return)) {
+            $GLOBALS['app']->Session->PushLastResponse($return->GetMessage(), RESPONSE_ERROR);
+        } elseif (!$return) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_UPDATED_FAILURE', $gInfo->getName()), RESPONSE_ERROR);
+        } else {
+            $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_UPDATED_OK', $gInfo->getName()), RESPONSE_NOTICE);
+        }
+        return $GLOBALS['app']->Session->PopLastResponse();
+    }
+
+    /**
      * Installs a plugin
      *
      * @access  public
      * @param   string  $plugin  Plugin's name
-     * @return  array   Response array (notice or error)
+     * @return  array   Response
      */
     function InstallPlugin($plugin)
     {
@@ -213,7 +277,7 @@ class JmsAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   string  $gadget  Gadget's name
-     * @return  array   Response array (notice or error)
+     * @return  array   Response
      */
     function UninstallGadget($gadget)
     {
@@ -240,7 +304,7 @@ class JmsAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   string  $plugin  Plugin's name
-     * @return  array   Response array (notice or error)
+     * @return  array   Response
      */
     function UninstallPlugin($plugin)
     {
@@ -262,7 +326,7 @@ class JmsAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   string  $gadget  Gadget's name
-     * @return  array   Response array (notice or error)
+     * @return  array   Response
      */
     function PurgeGadget($gadget)
     {
@@ -284,14 +348,6 @@ class JmsAdminAjax extends Jaws_Ajax
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
-    /**
-     * Disables gadget
-     *
-     * @access  private
-     * @param   string  $gadget     gadget name
-     * @param   string  $type
-     * @return  mixed   True if susccessful, else Jaws_Error on error
-     */
     function _commonDisableGadget($gadget, $type)
     {
         if ($GLOBALS['app']->Registry->Get('/config/main_gadget') == $gadget) {
@@ -346,7 +402,6 @@ class JmsAdminAjax extends Jaws_Ajax
      * @access  public
      * @param   string  $plugin    Plugin's name
      * @param   mixed   $selection Can be an array of gadget or a: '*' meaning all gadgets should be used
-     * @return  array   Response array (notice or error)
      */
     function UpdatePluginUsage($plugin, $selection)
     {
@@ -372,5 +427,4 @@ class JmsAdminAjax extends Jaws_Ajax
         $GLOBALS['app']->Session->PushLastResponse(_t('JMS_PLUGINS_SAVED'), RESPONSE_NOTICE);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
-
 }

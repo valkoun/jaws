@@ -5,7 +5,7 @@
  * @package    UrlMapper
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 /**
@@ -13,9 +13,31 @@
  */
 var UrlMapperCallback = {
     /**
+     * Adds a new map
+     */
+    addmap: function(response) {
+        if (response[0]['css'] == 'notice-message') {
+            enableMapEditingArea(false);
+            showActionMaps();
+        }
+        showResponse(response);
+    },
+
+    /**
      * Updates a map
      */
     updatemap: function(response) {
+        if (response[0]['css'] == 'notice-message') {
+            enableMapEditingArea(false);
+            showActionMaps();
+        }
+        showResponse(response);
+    },
+
+    /**
+     * Deletes a map
+     */
+    deletemap: function(response) {
         if (response[0]['css'] == 'notice-message') {
             enableMapEditingArea(false);
             showActionMaps();
@@ -73,7 +95,7 @@ function rebuildAliasCombo()
     var aliases = urlmapperSync.getaliases();
     if (aliases != false) {
         var i =0;
-        aliases.each(function(value, index) {
+        aliases.each(function(value, index) {  
             var op = new Option(' + ' + value['alias_url'], value['id']);
             if (i % 2 == 0) {
                 op.style.backgroundColor = evenColor;
@@ -142,10 +164,36 @@ function updateProperties(form)
  */
 function saveMap()
 {
-    urlmapperAsync.updatemap(selectedMap,
-                             $('custom_map_route').value,
-                             $('custom_map_ext').value,
-                             $('map_order').value);
+    if (selectedMap) {
+        urlmapperAsync.updatemap(selectedMap,
+                                 $('map_route').value,
+                                 $('map_regexp').value,
+                                 $('map_ext').value);
+    } else {
+        urlmapperAsync.addmap($('gadgets_combo').value,
+                              $('actions_combo').value,
+                              $('map_route').value,
+                              $('map_regexp').value,
+                              $('map_ext').value);
+    }
+}
+
+/**
+ * Prepares the UI to add a map
+ */
+function addMap(element, mid)
+{
+    enableMapEditingArea(true);
+
+    selectedMap = null;
+    $('legend_title').innerHTML = addMap_title;
+
+    unselectDataGridRow();
+
+    var mapInfo = urlmapperSync.getmap(mid);
+    $('map_route').value  = mapInfo['map'];
+    $('map_regexp').value = mapInfo['regexp'];
+    $('map_ext').value    = mapInfo['extension'];
 }
 
 /**
@@ -157,19 +205,25 @@ function editMap(element, mid)
 
     selectedMap = mid;
     $('legend_title').innerHTML = editMap_title;
+
     selectDataGridRow(element.parentNode.parentNode);
 
     var mapInfo = urlmapperSync.getmap(selectedMap);
     $('map_route').value  = mapInfo['map'];
+    $('map_regexp').value = mapInfo['regexp'];
     $('map_ext').value    = mapInfo['extension'];
-    $('map_order').value  = mapInfo['order'];
+}
 
-    if (mapInfo['custom_map'] == null || mapInfo['custom_map'] == '') {
-        $('custom_map_route').value  = mapInfo['map'];
-    } else {
-        $('custom_map_route').value  = mapInfo['custom_map'];
+/**
+ * Deletes a map
+ */
+function deleteMap(element, mid)
+{
+    selectDataGridRow(element.parentNode.parentNode);
+    if (confirm(confirmMapDelete)) {
+        urlmapperAsync.deletemap(mid);
     }
-    $('custom_map_ext').value = mapInfo['custom_extension'];
+    unselectDataGridRow();
 }
 
 /**
@@ -177,15 +231,12 @@ function editMap(element, mid)
  */
 function showActionMaps()
 {
-    if ($('gadgets_combo').value.blank() ||
-        $('actions_combo').value.blank())
-    {
-        return false;
-    }
+    if (jawsTrim($('gadgets_combo').value) == '' ||
+        jawsTrim($('actions_combo').value) == '') return;
 
     resetGrid('maps_datagrid', '');
     //Get maps of this action and gadget
-    var result = urlmapperSync.getactionmaps($('gadgets_combo').value, $('actions_combo').value);
+    var result = urlmapperSync.getmapsofaction($('gadgets_combo').value, $('actions_combo').value);
     resetGrid('maps_datagrid', result);
     enableMapEditingArea(false);
 }
@@ -195,25 +246,8 @@ function showActionMaps()
  */
 function rebuildActionCombo()
 {
-    var combo = $('actions_combo');
-    var selectedGadget = $('gadgets_combo').value;
-    var actions = urlmapperSync.getgadgetactions(selectedGadget);
-
-    combo.options.length = 0;
-    if (actions != false) {
-        var i =0;
-        actions.each(function(text, index) {
-            var op = new Option(text, text);
-            if (i % 2 == 0) {
-                op.style.backgroundColor = evenColor;
-            } else {
-                op.style.backgroundColor = oddColor;
-            }
-            combo.options[combo.options.length] = op;
-            i++;
-        });
-    }
-
+    $('actions_combo').options.length = 0;
+    fillActionCombo();
     enableMapEditingArea(false);
     resetGrid('maps_datagrid', '');
 }
@@ -224,22 +258,49 @@ function rebuildActionCombo()
 function enableMapEditingArea(status)
 {
     if (status) {
-        $('custom_map_route').disabled  = false;
-        $('custom_map_ext').disabled    = false;
+        $('map_route').disabled  = false;
+        $('map_regexp').disabled = false;
+        $('map_ext').disabled    = false;
         $('btn_save').disabled   = false;
         $('btn_cancel').disabled = false;
     } else {
         selectedMap = null;
         unselectDataGridRow();
-        $('map_order').value  = '';
         $('map_route').value  = '';
+        $('map_regexp').value = '';
         $('map_ext').value    = '';
-        $('custom_map_route').value  = '';
-        $('custom_map_ext').value    = '';
-        $('custom_map_route').disabled  = true;
-        $('custom_map_ext').disabled    = true;
+        $('map_route').disabled  = true;
+        $('map_regexp').disabled = true;
+        $('map_ext').disabled    = true;
         $('btn_save').disabled   = true;
         $('btn_cancel').disabled = true;
+    }
+}
+
+/**
+ * Check the selected gadget and fills the actions combo
+ */
+function fillActionCombo()
+{
+    var selectedGadget = $('gadgets_combo').value;
+    var actions        = urlmapperSync.getgadgetactions(selectedGadget);
+
+    var counter = 0;
+    for(action in actions) {
+        if (typeof(actions[action]) == 'function') {
+            continue;
+        }
+
+        var op   = new Option();
+        op.value = action;
+        op.text  = actions[action];
+        if (counter % 2 == 0) {
+            op.style.backgroundColor = evenColor;
+        } else {
+            op.style.backgroundColor = oddColor;
+        }
+        $('actions_combo').options[$('actions_combo').options.length] = op;    
+        counter++;
     }
 }
 

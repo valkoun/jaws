@@ -1,0 +1,87 @@
+<!-- BEGIN quickmenu -->
+<style>
+#quickmenu_controls {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+background:transparent url({JAWS_URL}gadgets/ControlPanel/images/layout-controls-bg.png) repeat scroll 0 0;
+bottom:0;
+color:#FFFFFF;
+direction:ltr;
+font-family:"Lucida Grande",Myriad,"Andale Sans","Luxi Sans","Bitstream Vera Sans",Tahoma,"Toga Sans",Helvetica,Arial,sans-serif;
+font-size:12px;
+height:100px;
+left:0;
+padding-top:20px;
+position:fixed;
+text-align:center;
+width:100%;
+z-index:50;
+}
+#pb-productslider .pb-productimage a:link, #pb-productslider .pb-productimage a:visited {
+color: #000000;
+padding-top: 0px;
+}
+#productbrowser {
+height:100px;
+line-height:12px;
+}
+#pb-productbrowsercontainer {
+height:100px;
+}
+#pb-productslider {
+height:100px;
+}
+#pb-productslider .pb-productimage {
+height:100px;
+width:73px;
+}
+#pb-productslidertrack {
+top:75px;
+}
+#container {
+padding-bottom: 130px;
+}
+#pb-productslidertrack { background:url({PATH}gadgets/ControlPanel/images/productbrowser_scrollbar_20070622.png) no-repeat;}
+#pb-productsliderhandleimage { background:url({PATH}gadgets/ControlPanel/images/productbrowser_scroller_20080115.png) no-repeat;}
+#pb-iphone-leftarrow { background:url({PATH}gadgets/ControlPanel/images/pb_arrows_04_left.png) no-repeat top; }
+#pb-iphone-rightarrow { background:url({PATH}gadgets/ControlPanel/images/pb_arrows_04_right.png) no-repeat top; }
+#quickmenu_centered {
+position: absolute;
+visibility: hidden;
+height: 100px;
+width: 800px;
+}
+</style>
+<div id="quickmenu_controls">
+	<div id="quickmenu_centered">
+		<div id="productbrowser">
+		<div id="pb-productbrowsercontainer">
+			<ul id="pb-productslider">
+	 <!-- BEGIN main -->
+		   <!-- BEGIN item -->
+		   <li class="pb-productimage" id="pb-{realname}"><a class="main-item" href="{url}" title="{desc}" style="border: 0pt;">
+			<img class="main-item-icon" src="{icon}" title="{desc}" alt="{name}" style="height: 32px; width: 32px; max-height:32px; min-width:32px;" />
+			{name}
+		   </a></li>
+		   <!-- END item -->
+	 <!-- END main -->
+			</ul>
+			<div id="pb-productslidertrack">
+				<div id="pb-productsliderhandle"></div>
+				<div id="pb-productsliderhandleimage"></div>
+				
+				<span id="pb-cat1"></span>
+				<span id="pb-cat2"></span>
+				<span id="pb-cat3"></span>
+				<span id="pb-cat4"></span>
+				
+			</div>
+			<div id="pb-leftarrow"></div>
+			<div id="pb-rightarrow"></div>
+
+		</div>
+		</div>
+	</div>
+</div>
+<!-- END quickmenu -->

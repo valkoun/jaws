@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<database>
+
+ <name><variable>database</variable></name>
+
+ <table>
+  <name><variable>table_prefix</variable>filebrowser_communities</name>
+  <declaration>
+
+   <field>
+    <name>id</name>
+    <type>integer</type>
+    <notnull>true</notnull>
+    <autoincrement>true</autoincrement>
+   </field>
+
+   <field>
+    <name>dir_relative</name>
+    <type>text</type>
+    <length>120</length>
+    <notnull>true</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>source</name>
+    <type>text</type>
+    <length>80</length>
+    <notnull>true</notnull>
+    <default></default>
+   </field>
+
+   <field>
+    <name>md5value</name>
+    <type>text</type>
+    <length>32</length>
+    <notnull>true</notnull>
+    <default></default>
+   </field>
+
+   <index>
+    <name><variable>table_prefix</variable>filebrowser_communities_dr</name>
+    <field>
+     <name>dir_relative</name>
+    </field>
+   </index>
+
+   <index>
+    <name><variable>table_prefix</variable>filebrowser_communities_s</name>
+    <field>
+     <name>source</name>
+    </field>
+   </index>
+
+   <index>
+    <name><variable>table_prefix</variable>filebrowser_communities_m</name>
+    <field>
+     <name>md5value</name>
+    </field>
+   </index>
+
+  </declaration>
+ </table>
+
+</database>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+	  <title>Prototype UI : functional test : Carousel : HTML content test</title>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="language" content="en" />
+    <script src="../../../lib/prototype.js" type="text/javascript"></script>
+    <script src="../../../lib/effects.js" type="text/javascript"></script>
+    <script src="../../../dist/carousel.js" type="text/javascript"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAbHKtlYQg6w5AJ9d2_shprxS5ZATd7rDQX6YedDIeUW_jNp1rVxT7Liym2m7UtpgdPmnnwi2cTxl4Vw"></script>
+    <link href="../../../themes/carousel/prototype-ui.css" rel="stylesheet" type="text/css" />
+	  <style type="text/css">
+      form p {
+        display: inline;
+      }
+
+      form fieldset {
+        border: none;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Prototype UI : functional test : Carousel : HTML content test</h1>	
+    <h2>Horizontal</h2>
+    <div style="width: 500px; padding: 20px;">
+    <div id="horizontal_carousel">
+		<script>
+	  		document.getElementById('horizontal_carousel').style.visibility = 'hidden';
+		</script>
+	  <div class="previous_button"></div>  
+      <div class="carousel_container" id="carousel_container">
+        <div class="carousel_holder" id="carousel_holder">
+          <div class="carousel_item" id="carousel_item1">
+<div id="layout-maps-head" class="gadget layout_head">
+<h2 id="layout_Display_1__title"><a href="">Featured Lakes</a></h2>
+</div>
+<div id="layout-maps-body" class="gadget layout_body">
+	<div id="map-1" style="height: 225px; color: #000000;" ></div>
+	<script type="text/javascript">
+if ($('map-1').parentNode) {
+ 	$('map-1').style.width = parseInt($('map-1').parentNode.offsetWidth);
+} else {
+ 	$('map-1').style.width = 500;
+}
+</script>
+
+	<script type="text/javascript">
+    //<![CDATA[
+
+    var map;
+    var xml;
+    var geocoder = null;
+    var addresses = [];
+    var markers = [];
+	var addressMarker = new Array(2);
+    var numGeocoded = 0;
+	var tempImage;
+	var gmarkers = [];
+	var gOverMarkers = [];
+    var bounds = new GLatLngBounds();
+
+	// Create a base icon for all of our markers that specifies the
+	// shadow, icon dimensions, etc.
+	var baseIcon = new GIcon(G_DEFAULT_ICON);
+	baseIcon.shadow = "http://jaws-project.com/libraries/rounded_php/rounded_shadow_over.png";
+	baseIcon.iconSize = new GSize(40, 34);
+	baseIcon.shadowSize = new GSize(79, 34);
+	baseIcon.iconAnchor = new GPoint(0, 34);
+	baseIcon.infoWindowAnchor = new GPoint(9, 2);
+
+
+	function downloadURL() {
+		GDownloadUrl("http://jaws-project.com/index.php?googlemapsxml/1", function(data) {
+		  xml = GXml.parse(data);
+		  markers = xml.documentElement.getElementsByTagName("marker");
+		  addresses = new Array(markers.length);
+		  if (numGeocoded < addresses.length) {
+			addresses[numGeocoded] = new Array(13);
+			addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("address");
+			addresses[numGeocoded][1] = markers[numGeocoded].childNodes[0].nodeValue;
+			addresses[numGeocoded][2] = parseInt(markers[numGeocoded].getAttribute("fs"));
+			addresses[numGeocoded][3] = parseInt(markers[numGeocoded].getAttribute("sfs"));
+			addresses[numGeocoded][4] = parseInt(markers[numGeocoded].getAttribute("bw"));
+			addresses[numGeocoded][5] = parseInt(markers[numGeocoded].getAttribute("ra"));
+			addresses[numGeocoded][6] = markers[numGeocoded].getAttribute("fc");
+			addresses[numGeocoded][7] = markers[numGeocoded].getAttribute("fg");
+			addresses[numGeocoded][8] = markers[numGeocoded].getAttribute("bc");
+			addresses[numGeocoded][9] = markers[numGeocoded].getAttribute("hfc");
+			addresses[numGeocoded][10] = markers[numGeocoded].getAttribute("hfg");
+			addresses[numGeocoded][11] = markers[numGeocoded].getAttribute("hbc");
+			addresses[numGeocoded][12] = markers[numGeocoded].getAttribute("title");
+			geocoder.getLocations(addresses[numGeocoded][0], addressResolved);
+		  }
+		});
+    }
+
+	function geocodeAll() {
+		  if (numGeocoded < addresses.length) {
+			addresses[numGeocoded] = new Array(13);
+			addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("address");
+			addresses[numGeocoded][1] = markers[numGeocoded].childNodes[0].nodeValue;
+			addresses[numGeocoded][2] = parseInt(markers[numGeocoded].getAttribute("fs"));
+			addresses[numGeocoded][3] = parseInt(markers[numGeocoded].getAttribute("sfs"));
+			addresses[numGeocoded][4] = parseInt(markers[numGeocoded].getAttribute("bw"));
+			addresses[numGeocoded][5] = parseInt(markers[numGeocoded].getAttribute("ra"));
+			addresses[numGeocoded][6] = markers[numGeocoded].getAttribute("fc");
+			addresses[numGeocoded][7] = markers[numGeocoded].getAttribute("fg");
+			addresses[numGeocoded][8] = markers[numGeocoded].getAttribute("bc");
+			addresses[numGeocoded][9] = markers[numGeocoded].getAttribute("hfc");
+			addresses[numGeocoded][10] = markers[numGeocoded].getAttribute("hfg");
+			addresses[numGeocoded][11] = markers[numGeocoded].getAttribute("hbc");
+			addresses[numGeocoded][12] = markers[numGeocoded].getAttribute("title");
+			geocoder.getLocations(addresses[numGeocoded][0], addressResolved);
+		  }
+    }
+
+   function addressResolved(response) {
+     var delay = 0;
+     if (response.Status.code == 620) {
+       // Too fast, try again, with a small pause
+       delay = 500;
+     } else {
+       if (response.Status.code == 200) {
+		// Success; do something with the address.
+        
+         place = response.Placemark[0];
+         point = new GLatLng(place.Point.coordinates[1],
+                             place.Point.coordinates[0]);
+         //marker = new GMarker(point);
+		 map.addOverlay(createMarker(point, numGeocoded));
+		 map.addOverlay(createMarker(point, numGeocoded, true));
+       }
+       // Move onto the next address; this skips bad addresses, too.
+       if (gOverMarkers[numGeocoded]) {
+		gOverMarkers[numGeocoded].hide();
+       }
+	   numGeocoded += 1;
+	 }
+     window.setTimeout(geocodeAll, delay);
+   }
+
+	// Creates a marker whose info window displays the letter corresponding
+	// to the given index.
+	function createMarker(point, num, over) {
+	  // Create a lettered icon for this point using our icon class
+	  var markerLabel = addresses[num][12];
+	  var markerInfo = addresses[num][1];
+	  var letteredIcon = new GIcon(baseIcon);
+	  var fs = addresses[num][2]; // font-size
+	  var sfs = addresses[num][3]; // font-size
+	  var bw = addresses[num][4]; // border width
+	  var ra = addresses[num][5]; // corner radius
+	  if (!over) {
+		  over = false;
+		  var fc = addresses[num][6]; //font color
+		  var fg = addresses[num][7]; //foreground color
+		  var bc = addresses[num][8]; // border color
+		  //if (markerLabel.indexOf(" ") > markerLabel.indexOf(",")) {
+			//var markerTitle = markerLabel.substr(0, markerLabel.indexOf(",")) + "%20>>";
+		  //} else if (markerLabel.indexOf(" ") < markerLabel.indexOf(",")) {
+			//var markerTitle = markerLabel.substr(0, markerLabel.indexOf(" ")) + "%20>>";
+		  //} else {
+			//var markerTitle = markerLabel + "%20>>";
+		  //}
+		  var markerTitle = markerLabel;
+		  var fWidth = Math.round(markerTitle.length*(Math.round(fs/1.1)))+3;
+		  if (fWidth >= Math.round(markerLabel.length*(Math.round(fs/1.3)))+3) {
+			fWidth = Math.round(markerLabel.length*(Math.round(fs/1.3)))+3;
+		  }
+		  var fHeight = Math.round(fs*3);
+		  var iconUrl = "http://jaws-project.com/libraries/rounded_php/rounded.php?sh=r&w=" + fWidth + "&r=" + ra + "&fg=" + fg + "&bg=FFF&bgt=1&bw=" + bw + "&bc=" + bc + "&bt=0&ta=1&fs=" + fs + "&fc=" + fc + "&text=" + markerTitle;
+	  } else {
+		  var fc = addresses[num][9]; //font color
+		  var fg = addresses[num][10]; //foreground color
+		  var bc = addresses[num][11]; // border color
+		  var markerTitle = addresses[num][0];
+		  var fWidth = Math.round(markerTitle.length*(Math.round(fs/1.3)))+3;
+		  var fHeight = Math.round(fs*3)+Math.round(sfs*2);
+		  var iconUrl = "http://jaws-project.com/libraries/rounded_php/rounded.php?sh=r&w=" + fWidth + "&r=" + ra + "&fg=" + fg + "&bg=FFF&bgt=1&bw=" + bw + "&bc=" + bc + "&bt=0&ta=1&fs=" + fs + "&fc=" + fc + "&text=" + markerTitle + "&sfs=" + sfs + "&subtext=EXPAND%20>>";
+	  }
+	  
+	  letteredIcon.image = iconUrl;
+	  letteredIcon.imageMap = [0, 0, fWidth-1, 0, fWidth-1, fHeight-1, 0, fHeight-1];
+	  letteredIcon.iconSize = new GSize(fWidth, fHeight);
+	  letteredIcon.iconAnchor = new GPoint(0, fHeight);
+	  letteredIcon.printImage = iconUrl + "&format=gif";
+	  letteredIcon.mozPrintImage = iconUrl + "&format=gif";
+	  
+	  if (over == false) {
+		markerOptions = { icon:letteredIcon };
+	  } else {
+		markerOptions = { icon:letteredIcon, zIndexProcess:orderOfCreation };
+	  }
+	  var marker = new GMarker(point, markerOptions);
+      bounds.extend(point);
+
+	  GEvent.addListener(marker, "click", function() {
+		marker.openInfoWindowHtml(markerInfo);
+	    //gOverMarkers[num].show();
+	  });
+	  
+	  if (over == true) {
+		  gOverMarkers.push(marker);
+		  GEvent.addListener(marker, "mouseout", function() {
+		  	 gOverMarkers[num].hide()
+		  });
+		  GEvent.addListener(marker, "mouseover", function() {
+			 gOverMarkers[num].show();
+		  });
+	  } else {
+          gmarkers.push(marker);
+		  GEvent.addListener(marker, "mouseover", function() {
+			 gOverMarkers[num].show();
+		  });
+		  GEvent.addListener(marker, "mouseout", function() {
+			 gOverMarkers[num].hide();
+		  });
+	  }
+	  map.setZoom(map.getBoundsZoomLevel(bounds));
+	  map.setCenter(bounds.getCenter());
+	  return marker;
+	}
+	
+      if (GBrowserIsCompatible()) {
+        map = new GMap2(document.getElementById("map-1"));
+        map.enableScrollWheelZoom();
+		//map.addControl(new GLargeMapControl());
+        //map.addControl(new GMapTypeControl());
+		map.setUIToDefault();
+		map.addControl(new GOverviewMapControl(new GSize((parseInt(document.getElementById('map-1').offsetWidth)/6), (parseInt(document.getElementById('map-1').offsetWidth)/6)))); // minimap in the down right corner
+        map.setCenter(new GLatLng(0, 0), 0);
+        map.setMapType(G_PHYSICAL_MAP);
+
+        geocoder = new GClientGeocoder();
+        geocoder.setCache(null);
+        window.setTimeout(downloadURL, 50);
+      }
+
+	function orderOfCreation (marker) {
+		return 1;
+	}
+
+	/*
+	    // Add 10 markers to the map at random locations
+        var bounds = map.getBounds();
+        var southWest = bounds.getSouthWest();
+        var northEast = bounds.getNorthEast();
+        var lngSpan = northEast.lng() - southWest.lng();
+        var latSpan = northEast.lat() - southWest.lat();
+        for (var i = 0; i < 10; i++) {
+          var latlng = new GLatLng(southWest.lat() + latSpan * Math.random(),
+            southWest.lng() + lngSpan * Math.random());
+          map.addOverlay(createMarker(latlng, i));
+        }
+	*/
+    //]]>    
+	</script>
+</div>
+          </div>
+          <div class="carousel_item" id="carousel_item2">
+					<a href="javascript:void(0);" onclick="window.open('http://scwtours.com/data/files/cabin07_img01.jpg');">
+					<img id="carousel_item2Image" class="custom_page-main-image"  border="0" src="http://scwtours.com/data/files/cabin07_img01.jpg"></a>
+          </div>
+          <div class="carousel_item" id="carousel_item3">
+<div class="gadget custom_index">
+  <h2></h2>
+  <div id="custom-index-List" class="content">
+    <ul class="custom_indexList">
+          <li class="custom_indexItem"><a class="custom_indexTitle" href="http://scwtours.com/index.php?page/Featured-Virtual-Tours.html">Featured Virtual Tours</a><br /><span class="custom_indexDesc" align=\"justify\">Here are several Virtual Tours of our Featured Lake Homes.</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="custom_indexDateStr">Last Update: <span class="custom_indexDate">14 day(s) ago</span></span></li>
+          <li class="custom_indexItem"><a class="custom_indexTitle" href="http://scwtours.com/index.php?page/Home.html">Welcome</a><br /><span class="custom_indexDesc" align=\"justify\">�
+Where do you find the best Lake Homes?
+�
+We have High-Definition Virtual Tours for every single property that we feature. That means you can get inspired by the floorplan; see the detail in the home's craftsmanship; or preview the waterfront v&nbsp;<a href="index.php?page/Home.html">... Read More</a></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="custom_indexDateStr">Last Update: <span class="custom_indexDate">18 hour(s) ago</span></span></li>
+        </ul>
+  </div>
+</div>
+<script>
+function sizeFrameHome() {
+	return true;
+}
+</script>
+
+          </div>
+          <div class="carousel_item" id="carousel_item4">
+            <img alt="Window" src="../../assets/images/carousel.png" /><br />
+            <img alt="Pwc" src="../../assets/images/carousel_logo.png" /><br />
+            Display anything in a carousel (3)
+          </div>
+          <div class="carousel_item" id="carousel_item5">
+            <img alt="Window" src="../../assets/images/window.png" /><br />
+            <img alt="Pwc" src="../../assets/images/window_logo.png" /><br />
+            Windows and Dialogs (4)
+          </div>
+          <div class="carousel_item" id="carousel_item6">
+            <img alt="Window" src="../../assets/images/carousel.png" /><br />
+            <img alt="Pwc" src="../../assets/images/carousel_logo.png" /><br />
+            Display anything in a carousel (5)
+          </div>
+          <div class="carousel_item" id="carousel_item7">
+            <img alt="Window" src="../../assets/images/window.png" /><br />
+            <img alt="Pwc" src="../../assets/images/window_logo.png" /><br />
+            Windows and Dialogs (6)
+          </div>
+        </div>
+      </div>
+      <div class="next_button"></div>
+    </div>
+    </div>
+	<p style="clear: both;"></p>
+    <form action="#" method="post">
+	    <fieldset>
+        <p>scroll to</p>
+        <input type="text" id="index" size="2" />
+        <input type="button" value="Go" onclick="hCarousel.scrollTo($F('index'))" />
+      </fieldset>
+    </form>
+    <h2>Vertical</h2>
+    <div id="vertical_carousel">
+      <div class="previous_button"></div>  
+      <div class="container">
+        <ul>
+          <li>
+            <img alt="Window" src="../../assets/images/window.png" /><br />
+            <img alt="Pwc" src="../../assets/images/window_logo.png" /><br />
+            Windows and Dialogs (0)
+          </li>
+          <li>
+            <img alt="Window" src="../../assets/images/carousel.png" /><br />
+            <img alt="Pwc" src="../../assets/images/carousel_logo.png" /><br />
+            Display anything in a carousel (1)
+          </li>
+          <li>
+            <img alt="Window" src="../../assets/images/window.png" /><br />
+            <img alt="Pwc" src="../../assets/images/window_logo.png" /><br />
+            Windows and Dialogs (2)
+          </li>
+          <li>
+            <img alt="Window" src="../../assets/images/carousel.png" /><br />
+            <img alt="Pwc" src="../../assets/images/carousel_logo.png" /><br />
+            Display anything in a carousel (3)
+          </li>
+          <li>
+            <img alt="Window" src="../../assets/images/window.png" /><br />
+            <img alt="Pwc" src="../../assets/images/window_logo.png" /><br />
+            Windows and Dialogs (4)
+          </li>
+          <li>
+            <img alt="Window" src="../../assets/images/carousel.png" /><br />
+            <img alt="Pwc" src="../../assets/images/carousel_logo.png" /><br />
+            Display anything in a carousel (5)
+          </li>
+          <li>
+            <img alt="Window" src="../../assets/images/window.png" /><br />
+            <img alt="Pwc" src="../../assets/images/window_logo.png" /><br />
+            Windows and Dialogs (6)
+          </li>
+        </ul>
+      </div>
+      <div class="next_button"></div>
+    </div>
+    <script type="text/javascript">
+    // <![CDATA[
+      function runTest() {
+        hCarousel = new UI.Carousel("horizontal_carousel", {container: ".carousel_container", scrollInc: "auto"});
+        vCarousel = new UI.Carousel("vertical_carousel", {direction: "vertical"});
+      }
+
+    //Event.observe(window, "load", runTest);
+	/*
+	document.observe("dom:loaded", function() {
+		document.getElementById('glider').style.visibility = 'hidden';
+	});
+	*/
+	Event.observe(window, 'load', function() {
+		document.getElementById('horizontal_carousel').style.visibility = 'visible';
+		var gliderWidth = parseInt(document.getElementById('horizontal_carousel').parentNode.offsetWidth);
+		document.getElementById('horizontal_carousel').style.width = gliderWidth+'px'; 
+		heightToSection1('horizontal_carousel');
+		document.getElementById('carousel_container').style.width = (gliderWidth-110)+'px'; 
+		heightToSection1('carousel_container');
+		heightToSection1('carousel_holder');
+		document.getElementById('carousel_item1').style.width = (gliderWidth-110)+'px'; 
+		//document.getElementById('section1').style.height = parseInt(document.getElementById('glider').parentNode.offsetHeight)+'px';
+		for (g=2; g<7; g++) {
+			glideTarget = 'carousel_item'+g;
+			glideImage = 'carousel_item'+g+'Image';
+			if (document.getElementById(glideTarget)) {
+				document.getElementById(glideTarget).style.width = parseInt(document.getElementById('carousel_item1').offsetWidth)+'px'; 
+				heightToSection1(glideTarget);
+				if (document.getElementById(glideImage)) {
+					document.getElementById(glideTarget).style.textAlign = 'center';
+					heightToSection1(glideImage);
+				};
+			};		
+		};	
+		runTest();
+	});
+	function heightToSection1(target) {
+		document.getElementById(target).style.height = parseInt(document.getElementById('carousel_item1').offsetHeight)+'px';
+	}
+    // ]]>
+</script>
+  </body>
+</html>

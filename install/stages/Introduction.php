@@ -6,7 +6,7 @@
  * @package    Install
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Installer_Introduction extends JawsInstallerStage
@@ -19,7 +19,7 @@ class Installer_Introduction extends JawsInstallerStage
      */
     function Display()
     {
-        $tpl = new Jaws_Template('stages/Introduction/templates');
+        $tpl = new Jaws_Template(INSTALL_PATH . 'stages/Introduction/templates');
         $tpl->Load('display.html', false, false);
         $tpl->SetBlock('Introduction');
         $tpl->SetVariable('welcome',    _t('INSTALL_INTRO_WELCOME'));
@@ -29,8 +29,8 @@ class Installer_Introduction extends JawsInstallerStage
         $tpl->SetVariable('mail_info',  _t('INSTALL_INTRO_MAIL'));
         $tpl->SetVariable('language',   _t('GLOBAL_LANGUAGE'));
         $tpl->SetVariable('next',       _t('GLOBAL_NEXT'));
-        if (is_writable(JAWS_PATH . 'data/logs') && is_dir(JAWS_PATH . 'data/logs')) {
-            $tpl->SetVariable('log_use', _t('INSTALL_INTRO_LOG', 'data/logs/install.txt'));
+        if (is_writable(JAWS_DATA . 'logs') && is_dir(JAWS_DATA . 'logs')) {
+            $tpl->SetVariable('log_use', _t('INSTALL_INTRO_LOG', 'data/logs/install.log'));
             $tpl->SetBlock('Introduction/logcheckbox');
             $tpl->ParseBlock('Introduction/logcheckbox');
         } else {

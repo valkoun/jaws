@@ -6,22 +6,10 @@
  * @author Stefan Esser
  * @url http://www.phpguru.org/article.php?ne_id=60
  */
-$_SERVER['REQUEST_METHOD']  = array_key_exists('REQUEST_METHOD', $_SERVER)?
-                                               strtoupper($_SERVER['REQUEST_METHOD']):
-                                               'GET';
-$_SERVER['CONTENT_TYPE']    = array_key_exists('CONTENT_TYPE', $_SERVER)?
-                                               $_SERVER['CONTENT_TYPE']:
-                                               '';
-$_SERVER['HTTP_USER_AGENT'] = array_key_exists('HTTP_USER_AGENT', $_SERVER)?
-                                               $_SERVER['HTTP_USER_AGENT']:
-                                               '';
-$_SERVER['HTTP_REFERER']    = array_key_exists('HTTP_REFERER', $_SERVER)?
-                                               $_SERVER['HTTP_REFERER']:
-                                               '';
 if (ini_get('register_globals')) {
     // Might want to change this perhaps to a nicer error
     if (isset($_REQUEST['GLOBALS'])) {
-        Jaws_Error::Fatal('GLOBALS overwrite attempt detected');
+        Jaws_Error::Fatal('GLOBALS overwrite attempt detected', __LINE__, __FILE__);
     }
 
     // Variables that shouldn't be unset
@@ -70,48 +58,28 @@ if (get_magic_quotes_gpc()) {
 }
 
 /**
- * Short description
+ * A wrapper for HTTP request data (GET and POST) for filtering and sanitizing input, etc.
  *
- * Long description
- *
- * @category   Jaws
- * @package    Jaws_Request
- * @author     Helgi Ãžormar ÃžorbjÃ¶rnsson <dufuz@php.net>
- * @copyright  2006 Helgi Ãžormar ÃžorbjÃ¶rnsson
+ * @category   JawsType
+ * @category   developer_feature
+ * @package    Core
+ * @author     Helgi Þormar Þorbjörnsson <dufuz@php.net>
+ * @copyright  2006 Helgi Þormar Þorbjörnsson
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  */
 class Jaws_Request
 {
-    /**
-     * @var array
-     */
     var $_filters;
-
-    /**
-     * @var array
-     */
     var $_params;
-
-    /**
-     * @var array
-     */
     var $_priority;
-
-    /**
-     * @var array
-     */
     var $_includes;
-
-    /**
-     * @var array
-     */
     var $_allowedTypes = array('get', 'post', 'cookie');
 
     /**
      * Constructor
      *
-     * @access  public
-     * @return  void
+     * @return void
+     * @access public
      */
     function Jaws_Request()
     {
@@ -120,34 +88,24 @@ class Jaws_Request
         $this->_priority = array();
         $this->_includes = array();
         $this->data['get']    = $_GET;
+        $this->data['post']   = $_POST;
         $this->data['cookie'] = $_COOKIE;
-        // support json encoded pos data
-        if (false !== strpos($_SERVER['CONTENT_TYPE'], 'application/json')) {
-            $json = file_get_contents('php://input');
-            $this->data['post'] = Jaws_UTF8::json_decode($json);
-        } else {
-            $this->data['post'] = $_POST;
-        }
-
-        array_walk_recursive($this->data, array(&$this, 'nullstrip'));
 
         // Strict mode
-        /*
-        if (true) {
+        /*if (true) {
             unset($_GET);
             unset($_POST);
             unset($_REQUEST);
-            unset($_COOKIE);
-        }
-        */
+//             unset($_COOKIE);
+        }*/
     }
 
     /**
      * Creates the Jaws_Request instance if it doesn't exist
      * else it returns the already created one.
      *
-     * @return  object returns the instance
-     * @access  public
+     * @return object returns the instance
+     * @access public
      */
     function &getInstance()
     {
@@ -158,16 +116,12 @@ class Jaws_Request
 
         $signature = serialize(array('request'));
         if (!isset($instances[$signature])) {
-            $instances[$signature] = new Jaws_Request();
+            $instances[$signature] = new Jaws_Request;
         }
 
         return $instances[$signature];
     }
 
-    /**
-     * @param   string  $type
-     * @return  mixed
-     */
     function isTypeValid($type)
     {
         $type = strtolower($type);
@@ -179,14 +133,14 @@ class Jaws_Request
     }
 
     /**
-     * Adds a filter that will be runned on output requested data
+     * Adds a filter that will be runned on all output beside getRaw()
      *
-     * @access  public
-     * @param   string  $name       Name of the filter
-     * @param   string  $function   The function that will be executed
-     * @param   string  $params     Path of the included if it's needed for the function
-     * @param   string  $include    Filename that include the filter function
-     * @return  void
+     * @param string name of the filter
+     * @param string the function that will be executed
+     * @param string path of the included if it's needed for the function
+     *
+     * @return void
+     * @access public
      */
     function addFilter($name, $function, $params = null, $include = '')
     {
@@ -199,94 +153,103 @@ class Jaws_Request
     }
 
     /**
-     * Strip null character
-     *
-     * @access  public
-     * @param   string  $value  Referenced value
-     * @return  void
-     */
-    function nullstrip(&$value)
-    {
-        if (is_string($value)) {
-            $value = preg_replace(array('/\0+/', '/(\\\\0)+/'), '', $value);
-        }
-    }
-
-    /**
-     * Strip ambiguous characters
-     *
-     * @access  public
-     * @param   string  $value
-     * @return  string  The striped data
-     */
-    function strip_ambiguous($value)
-    {
-        if (is_string($value)) {
-            return preg_replace('/%00/', '', $value);
-        }
-    }
-
-    /**
      * Filter data with added filter functions
      *
-     * @access  public
-     * @param   string  $value Referenced value
-     * @return  string  The filtered data
+     * @param string    value
+     * @return string   The filtered data
+     * @access public
      */
-    function filter(&$value)
+    function filter($value)
     {
-        if (is_string($value)) {
-            foreach ($this->_priority as $filter) {
-                $function = $this->_filters[$filter];
-                if (isset($this->_includes[$filter]) && file_exists($this->_includes[$filter])) {
-                    include_once $this->_includes[$filter];
-                }
+        //FIXME: add new filter for remove null character
+        $value = preg_replace('/\0+/', '', $value);
+        $value = preg_replace('/(\\\\0)+/', '', $value);
 
-                $params = array();
-                $params[] = $value;
-                if (is_array($this->_params[$filter])) {
-                    $params = array_merge($params, $this->_params[$filter]);
-                } else {
-                    $params[] = $this->_params[$filter];
-                }
-
-                $value = call_user_func_array($function, $params);
+        foreach ($this->_priority as $filter) {
+            $function = $this->_filters[$filter];
+            if (
+                isset($this->_includes[$filter]) &&
+                file_exists($this->_includes[$filter])
+            ) {
+                include_once $this->_includes[$filter];
             }
+
+            $params = array();
+            $params[] = $value;
+            if (is_array($this->_params[$filter])) {
+                $params = array_merge($params, $this->_params[$filter]);
+            } else {
+                $params[] = $this->_params[$filter];
+            }
+
+            $value = call_user_func_array($function, $params);
         }
+
+        return $value;
     }
 
     /**
-     * Does the recursion on the data being fetched
+     * Fetches the keys of request data
      *
-     * @access  private
-     * @param   mixed   $key            The key being fetched, it can be an array with multiple keys in it to fetch and
-     *                                  then an array will be returned accourdingly.
-     * @param   string  $type           Which super global is being fetched from
-     * @param   bool    $filter         Returns filtered data or not
-     * @param   bool    $json_decode    Decode JSON data or not
-     * @return  mixed   Null if there is no data else an string|array with the processed data
+     * @param string	$type	which super global is being fetched from
+     *
+     * @access public
      */
-    function _get($key, $type = '', $filter = true, $json_decode = false)
+    function getKeys($type = null)
     {
-        $type = empty($type)? strtolower($_SERVER['REQUEST_METHOD']) : $type;
+        $keys = array();
+		if (!is_null($type)) {
+			$keys[$type] = array();
+			$type = $this->isTypeValid($type);
+			if (!$type) {
+				return $keys;
+			}
+			foreach ($this->data[$type] as $key => $val) {
+				$keys[$type][] = $key;
+			}
+		} else {
+			$keys['post'] = array();
+			$keys['get'] = array();
+			foreach ($this->data['get'] as $key => $val) {
+				$keys['get'][] = $key;
+			}
+			foreach ($this->data['post'] as $key => $val) {
+				$keys['post'][] = $key;
+			}
+		}
+
+        return $keys;
+    }
+	
+    /**
+     * Fetches the data with out filter, it's like using
+     * the super globals straight.
+     *
+     * @param string the key being fetched
+     * @param string which super global is being fetched from
+     *
+     * @access public
+     */
+    function getRaw($key, $type = 'get')
+    {
+        $type = $this->isTypeValid($type);
+        if (!$type) {
+            return null;
+        }
+
         if (is_array($key)) {
             $result = array();
-            foreach ($key as $k) {
-                $result[$k] = $this->_get($k, $type, $filter, $json_decode);
+            foreach ($key as $v) {
+                $result[$v] = $this->getRaw($v, $type);
             }
 
             return $result;
-        }
+        } elseif (isset($this->data[$type][$key])) {
+            $value = $this->data[$type][$key];
 
-        if (isset($this->data[$type][$key])) {
-            $value = $json_decode? Jaws_UTF8::json_decode($this->data[$type][$key]) : $this->data[$type][$key];
-            if ($filter) {
-                if (is_array($value)) {
-                    array_walk_recursive($value, array(&$this, 'filter'));
-                } else {
-                    $this->filter($value);
-                }
-            }
+            //FIXME: add new filter for remove null character
+            $value = preg_replace('/\0+/', '', $value);
+            $value = preg_replace('/(\\\\0)+/', '', $value);
 
             return $value;
         }
@@ -295,78 +258,92 @@ class Jaws_Request
     }
 
     /**
-     * Fetches the data, filters it and then it returns it.
+     * Fetches the data with out filter, it's like using
+     * the super globals straight.
      *
-     * @access  public
-     * @param   mixed   $key            The key being fetched, it can be an array with multiple keys in it to fetch and then
-     *                                  an array will be returned accourdingly.
-     * @param   mixed   $types          Which super global is being fetched from, it can be an array
-     * @param   bool    $filter         Returns filtered data or not
-     * @param   bool    $json_decode    Decode JSON data or not
-     * @return  mixed   Returns string or an array depending on the key, otherwise Null if key not exist
+     * @param string which super global is being fetched from
+     *
+     * @access public
      */
-    function get($key, $types = '', $filter = true, $json_decode = false)
+    function getRawAll($type = 'get')
     {
-        $result = null;
-        if (empty($types)) {
-            switch (strtolower($_SERVER['REQUEST_METHOD'])) {
-                case 'get':
-                    $types = array('get', 'post');
-                    break;
-
-                case 'post':
-                    $types = array('post', 'get');
-                    break;
-
-                default:
-                    return null;
-            }
-        } elseif (!is_array($types)) {
-            $types = array($types);
+        $type = $this->isTypeValid($type);
+        if (!$type) {
+            return null;
         }
 
-        foreach ($types as $type) {
-            $result = $this->_get($key, $type, $filter, $json_decode);
-            if (!is_null($result)) {
-                break;
-            }
+        if (isset($this->data[$type])) {
+            return $this->data[$type];
         }
 
-        return $result;
+        return null;
     }
 
     /**
-     * Fetches the filtered data with out filter, it's like using the super globals straight.
+     * Fetches the data, filters it and then it returns it.
      *
-     * @access  public
-     * @param   string  $type   Which super global is being fetched from
-     * @param   bool    $filter Returns filtered data or not
-     * @return  array   Filtered Data array
+     * @param string|array the key being fetched, it can be an array
+     *                     with multiple keys in it to fetch and then
+     *                     an array will be returned accourdingly.
+     *                     Works recursivly, ala $_GET['foo']['bar']['foobar']['helgi']
+     * @param string       which super global is being fetched from
+     *
+     * @return string|array The filtered data, string or an array depending on the key
+     * @access public
      */
-    function getAll($type = '', $filter = true)
+    function get($key, $type = 'get', $filter = true)
     {
-        $type = empty($type)? strtolower($_SERVER['REQUEST_METHOD']) : $type;
-        if (!isset($this->data[$type]) || empty($this->data[$type])) {
-            return array();
+        $type = $this->isTypeValid($type);
+        if (!$type) {
+            return null;
         }
 
         if ($filter) {
-            return array_map(array($this, '_get'),
-                             array_keys($this->data[$type]));
+            return $this->_get($key, $type);
         } else {
-            return $this->data[$type];
+            return $this->getRaw($key, $type);
         }
     }
 
-    /** Creates a new key or updates an old one, doesn't support recursive stuff atm
-     * One idea would be to have set('get', 'foo/bar/foobar', 'sm00ke') and resolve the path
-     * another would be to allow arrays like crazy but still
+    /**
+     * Does the recursion on the data being fetched
      *
-     * @param   string  $type
-     * @param   string  $key
-     * @param   mixed   $value
-     * @return  bool
+     * @param array      Array filled with keys, recursion
+     * @param string     Which super global is being fetched from
+     * @param integer    The depth level
+     * @param null|array The data that will be processed, if it's NULL
+     *                   then it will populate it with the internal data
+     *                   storage
+     *
+     * @return null|array null if there is no data else an array with the processed data
+     * @access private
      */
+    function _get($key, $type)
+    {
+        if (is_array($key)) {
+            $result = array();
+            foreach ($key as $k) {
+                $result[$k] = $this->_get($k, $type);
+            }
+
+            return $result;
+        }
+
+        if (isset($this->data[$type][$key])) {
+            $value = $this->data[$type][$key];
+            if (is_array($value)) {
+                return array_map(array(&$this, 'filter'), $value);
+            } else {
+                return $this->filter($value);
+            }
+        }
+
+        return null;
+    }
+
+    /* Creates a new key or updates an old one, doesn't support recursive stuff atm. */
+    /* One idea would be to have set('get', 'foo/bar/foobar', 'sm00ke') and resolve the path */
+    /* another would be to allow arrays like crazy but still */
     function set($type, $key, $value)
     {
         $type = $this->isTypeValid($type);
@@ -381,10 +358,10 @@ class Jaws_Request
     /**
      * Reset super global request variables
      *
-     * @access  public
-     * @param   string  $type   Which super global is being reset,
-     *                          if no passed value reset all super global request vaiables
-     * @return  bool    True
+     * @param string which super global is being reset,
+     *               if passed value id empty reset all super global request vaiables
+     *
+     * @access public
      */
     function reset($type = '')
     {

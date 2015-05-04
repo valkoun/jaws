@@ -4,7 +4,7 @@
  * @category   Ajax
  * @package    Languages
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 /**
@@ -23,6 +23,10 @@ var LanguagesCallback = {
             changeColorOfTranslatedTerms();
         }
         showResponse(response);
+    },
+    
+	savesettings: function(response) {
+        showResponse(response);
     }
 }
 
@@ -39,10 +43,8 @@ function refresh()
  */
 function save_lang()
 {
-    if (!$('lang_code').value.blank() &&
-        !$('lang_name').value.blank())
-    {
-        lang_str = $('lang_code').value.trim() + ';' + $('lang_name').value.trim();
+    if (jawsTrim($('lang_code').value) != '' && jawsTrim($('lang_name').value) != '') {
+        lang_str = jawsTrim($('lang_code').value) + ';' + jawsTrim($('lang_name').value);
         languagesAsync.savelanguage(lang_str);
     }
 }
@@ -108,11 +110,7 @@ function change_lang_option()
         $('component').disabled  = true;
         $('lang_code').value = '';
         $('lang_name').value = '';
-        if ($('btn_lang')) {
-            setButtonTitle(add_language_title);
-        } else {
-            $('lang_name').disabled  = true;
-        }
+        setButtonTitle(add_language_title);
         $('lang_code').focus();
         stopAction();
         return;
@@ -122,19 +120,13 @@ function change_lang_option()
         $('component').disabled  = false;
         $('lang_code').value = $('lang').options[$('lang').selectedIndex].value;
         $('lang_name').value = $('lang').options[$('lang').selectedIndex].text;
-        if ($('btn_lang')) {
-            setButtonTitle(save_language_title);
-        } else {
-            $('lang_name').disabled  = true;
-        }
+        setButtonTitle(save_language_title);
     }
 
     lang = $('lang').value;
     component = $('component').value;
 
-    if (!$('lang').value.blank() && 
-        !$('component').value.blank())
-    {
+    if (jawsTrim($('lang').value) != '' && jawsTrim($('component').value) != '') {
         $('btn_save').style.visibility = 'visible';
         $('btn_cancel').style.visibility = 'visible';
         $('lang_strings').innerHTML = languagesSync.getlangdataui($('component').value, $('lang').value);
@@ -147,20 +139,20 @@ function change_lang_option()
  */
 function save_lang_data()
 {
-    if (lang.blank() || component.blank()) {
+    if (jawsTrim(lang) == '' || jawsTrim(component) == '') {
         // display message there
         return;
     }
 
-    var data = new Array();
-    var meta_elements = $('meta_lang').getElementsByTagName('input');
-    data['meta'] = new Array();
+    var data = new Object();
+    var meta_elements = document.getElementById('meta_lang').getElementsByTagName('input');
+    data['meta'] = new Object();
     for(var i = 0; i < meta_elements.length; i++) {
         data['meta'][meta_elements[i].name] = meta_elements[i].value;
     }
 
-    var strings_elements = $('tbl_strings').getElementsByTagName('textarea');
-    data['strings'] = new Array();
+    var strings_elements = document.getElementById('tbl_strings').getElementsByTagName('textarea');
+    data['strings'] = new Object();
     for(var i = 0; i < strings_elements.length; i++) {
         data['strings'][strings_elements[i].name] = strings_elements[i].value;
     }
@@ -169,6 +161,24 @@ function save_lang_data()
     LangDataChanged = false;
     data = null;
 }
+
+/**
+ * Save settings
+ */
+function saveSettings()
+{
+	var language_choices = $('language_choices').value.split(',');
+    var gadgets   = new Object();
+    
+	for(var g = 0; g < language_choices.length; g++) {
+		if (document.getElementById(language_choices[g])) {
+			//alert('current gadget : ' + language_choices[g] + ' value : ' + document.getElementById(language_choices[g]).value);
+			gadgets[language_choices[g]] = document.getElementById(language_choices[g]).value;
+		}
+	}
+   languagesAsync.savesettings(gadgets);
+}
+
 
 /**
  * Stops doing a certain action

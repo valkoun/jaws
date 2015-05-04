@@ -1,6 +1,10 @@
 <!-- BEGIN Aliases -->
 {menubar}
-<div id="main">
+<script type="text/javascript">
+  var selectGadget = "{selectGadget}";
+</script>
+<div id="working_area">
+<div align="center">
 <table>
 <tr><td valign="top">
 <form name="menu_form" method="post" action="{base_script}" onclick="return false;">
@@ -18,8 +22,8 @@
 </td></tr>
 </table>
 </div>
+</div>
 <script type="text/javascript">
-var selectGadget = "{selectGadget}";
 $('alias_id').value = '-';
 $('custom_url').value   = '';
 $('alias').value = '';

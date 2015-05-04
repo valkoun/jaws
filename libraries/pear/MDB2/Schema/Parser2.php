@@ -1,6 +1,8 @@
-<?php /* vim: se et ts=4 sw=4 sts=4 fdm=marker: */
+<?php
 /**
- * Copyright (c) 1998-2010 Manuel Lemos, Tomas V.V.Cox,
+ * PHP versions 4 and 5
+ *
+ * Copyright (c) 1998-2008 Manuel Lemos, Tomas V.V.Cox,
  * Stig. S. Bakken, Lukas Smith, Igor Feghali
  * All rights reserved.
  *
@@ -37,13 +39,13 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP version 5
+ * Author: Igor Feghali <ifeghali@php.net>
  *
  * @category Database
  * @package  MDB2_Schema
  * @author   Igor Feghali <ifeghali@php.net>
  * @license  BSD http://www.opensource.org/licenses/bsd-license.php
- * @version  SVN: $Id: Parser2.php 302413 2010-08-17 20:46:14Z ifeghali $
+ * @version  CVS: $Id: Parser2.php,v 1.12 2008/11/30 03:34:00 clockwerx Exp $
  * @link     http://pear.php.net/packages/MDB2_Schema
  */
 
@@ -98,10 +100,8 @@ class MDB2_Schema_Parser2 extends XML_Unserializer
 
     var $init = array();
 
-    function __construct($variables, $fail_on_invalid_names = true,
-        $structure = false, $valid_types = array(), $force_defaults = true,
-        $max_identifiers_length = null
-    ) {
+    function __construct($variables, $fail_on_invalid_names = true, $structure = false, $valid_types = array(), $force_defaults = true)
+    {
         // force ISO-8859-1 due to different defaults for PHP4 and PHP5
         // todo: this probably needs to be investigated some more and cleaned up
         $this->options['encoding'] = 'ISO-8859-1';
@@ -119,14 +119,12 @@ class MDB2_Schema_Parser2 extends XML_Unserializer
         $this->variables = $variables;
         $this->structure = $structure;
 
-        $this->val =& new MDB2_Schema_Validate($fail_on_invalid_names, $valid_types, $force_defaults);
+        $this->val = new MDB2_Schema_Validate($fail_on_invalid_names, $valid_types, $force_defaults);
         parent::XML_Unserializer($this->options);
     }
 
-    function MDB2_Schema_Parser2($variables, $fail_on_invalid_names = true,
-        $structure = false, $valid_types = array(), $force_defaults = true,
-        $max_identifiers_length = null
-    ) {
+    function MDB2_Schema_Parser2($variables, $fail_on_invalid_names = true, $structure = false, $valid_types = array(), $force_defaults = true)
+    {
         $this->__construct($variables, $fail_on_invalid_names, $structure, $valid_types, $force_defaults);
     }
 
@@ -564,6 +562,7 @@ class MDB2_Schema_Parser2 extends XML_Unserializer
             'start' => '',
             'description' => '',
             'comments' => '',
+            'on' => array('table' => '', 'field' => '')
         );
 
         if (!empty($sequence['name'])) {
@@ -621,3 +620,5 @@ class MDB2_Schema_Parser2 extends XML_Unserializer
         return $this->error;
     }
 }
+
+?>

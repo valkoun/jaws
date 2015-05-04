@@ -63,11 +63,6 @@
         </field>
 
         <field>
-            <name>image</name>
-            <type>blob</type>
-        </field>
-
-        <field>
             <name>visible</name>
             <type>integer</type>
             <length>1</length>

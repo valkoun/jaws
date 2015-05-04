@@ -1,0 +1,38 @@
+<!-- BEGIN template -->
+<html>
+<head>
+<base href="{BASE_URL}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style2{.dir}.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+</head>
+<body>
+<form name="form1" action="{base_script}" method="post">
+<input type="hidden" id="gadget" name="gadget" value="" />
+<table id="controls">
+    <tr><th>{gadgets}</th></tr>
+    <tr><td>
+        <div id="gadget-list">
+        <!-- BEGIN gadget -->
+        <div class="gadget-item" id="{id}" title="{desc}" onmouseover="this.class = 'gadget-item gadget-selected'; this.className = 'gadget-item gadget-selected';" onmouseout="this.class = 'gadget-item'; this.className = 'gadget-item';" onclick="parent.parent.location.href = '{link}';"><img src="{icon}" width="48px" alt="icon"/>{gadget}</div>
+        <!-- END gadget -->
+        </div></td>
+    </tr>
+</table>
+</form>
+</body>
+</html>
+<!-- END template -->

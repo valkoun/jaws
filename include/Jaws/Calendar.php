@@ -5,21 +5,17 @@
  * @category   Calendar
  * @package    Core
  * @author     Jonathan Hernandez  <ion@suavizado.com>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
-/**
- * Start calendar in a specific day of week:
- * 0: Sunday
- * 1: Monday
- * ..
- * 6: Saturday
- */
+
+// Start calendar in a specific day of week:
+// 0: Sunday
+// 1: Monday
+// ..
+// 6: Saturday
 define ('START_WEEKDAY', 0);
 
-/**
- * Class to show a simple calendar
- */
 class Jaws_Calendar
 {
     var $Items;
@@ -35,9 +31,8 @@ class Jaws_Calendar
      */
     function Jaws_Calendar($templateDir)
     {
-        $objDate = $GLOBALS['app']->loadDate();
-        $this->Items = array();
-        $this->Today = $objDate->GetDateInfo(time());
+        $this->Items        = array();
+        $this->Today        = getdate();
         $this->_TemplateDir = $templateDir;
     }
 
@@ -74,20 +69,14 @@ class Jaws_Calendar
         $tpl->SetBlock('calendar');
         $tpl->setVariable('title', _t('BLOG_LAYOUT_CALENDAR'));
 
-        $objDate = $GLOBALS['app']->loadDate();
         // Obtain first week day of month
-        $date = $objDate->GetDateInfo($year, $month, 1, 12, 0, 0);
+        $date = getdate(mktime(12, 0, 0, $month, 1, $year));
         $first = $date['wday'];
         if (($first == 0) && (START_WEEKDAY != 0)) {
              $first += 7;
         }
         // Move to date to first week day.
-        $date = $objDate->GetDateInfo($year, $month, START_WEEKDAY + 1 - $first, 12, 0, 0);
-
-        // type cast to int
-        $date['year'] = (int)$date['year'];
-        $date['mon']  = (int)$date['mon'];
-        $date['mday'] = (int)$date['mday'];
+        $date = getdate(mktime(12, 0, 0, $month, START_WEEKDAY + 1 - $first,$year));
 
         // Set header
         if (isset($this->Arrow['left'])) {
@@ -100,7 +89,8 @@ class Jaws_Calendar
             $tpl->setVariable('right_arrow', $right_arrow);
         }
 
-        $tpl->SetVariable('month', $objDate->MonthString($month));
+        $date_c = $GLOBALS['app']->loadDate();
+        $tpl->SetVariable('month', $date_c->MonthString($month));
         $tpl->SetVariable('year', $year);
 
 
@@ -108,7 +98,7 @@ class Jaws_Calendar
         $wd = START_WEEKDAY;
         for ($i = 0; $i <= 6; $i++) {
             $tpl->SetBlock('calendar/weekday');
-            $tpl->SetVariable('weekday', $objDate->DayShortString($wd));
+            $tpl->SetVariable('weekday', $date_c->DayShortString($wd));
             $tpl->ParseBlock('calendar/weekday');
             $wd < 6 ? $wd++ : $wd = 0;
         }
@@ -170,12 +160,7 @@ class Jaws_Calendar
                 } else {
                     $tpl->SetVariable('day', $date['mday']);
                 }
-                $date = $objDate->GetDateInfo($date['year'], $date['mon'], $date['mday']+1, 12, 0, 0);
-                // type cast to int
-                $date['year'] = (int)$date['year'];
-                $date['mon']  = (int)$date['mon'];
-                $date['mday'] = (int)$date['mday'];
-
+                $date = getdate(mktime(12, 0, 0, $date['mon'], $date['mday']+1 ,$date['year']));
                 $tpl->ParseBlock('calendar/week/day');
             }
 
@@ -185,5 +170,4 @@ class Jaws_Calendar
         $tpl->ParseBlock('calendar');
         return $tpl->Get();
     }
-
 }

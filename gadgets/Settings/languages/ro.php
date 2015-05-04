@@ -32,7 +32,7 @@ define('_RO_SETTINGS_USE_GRAVATAR', "Foloseste gravatar");
 define('_RO_SETTINGS_SAVED', "Setarile au fost salvate.");
 define('_RO_SETTINGS_EDITOR', "Editor");
 define('_RO_SETTINGS_EDITOR_CLASSIC', "Editorul clasic Jaws");
-define('_RO_SETTINGS_EDITOR_TINYMCE', "Un editor prietenesc similar cu Word / OpenWriter");
+define('_RO_SETTINGS_EDITOR_FRIENDLY', "Un editor prietenesc similar cu Word / OpenWriter");
 define('_RO_SETTINGS_SHOW_VIEWSITE', "Arata icoana vizualizare sit");
 define('_RO_SETTINGS_BASIC_SETTINGS', "Setari de baza");
 define('_RO_SETTINGS_ADVANCED_SETTINGS', "Setari avansate");

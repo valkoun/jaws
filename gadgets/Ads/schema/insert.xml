@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<database>
+
+ <name><variable>database</variable></name>
+
+ <table>
+  <name><variable>table_prefix</variable>adparent</name>
+  <initialization>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Automotive</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Automotive</value>
+      </field>
+   </insert>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>1</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Dining</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Dining</value>
+      </field>
+   </insert>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>2</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Household</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Household</value>
+      </field>
+   </insert>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>3</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Personal</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Personal</value>
+      </field>
+   </insert>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>4</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Recreation</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Recreation</value>
+      </field>
+   </insert>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>5</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Retail</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Retail</value>
+      </field>
+   </insert>
+   
+   <insert>
+      <field>
+        <name>adparentparent</name>
+        <value>0</value>
+      </field>
+
+     <field>
+        <name>adparentsort_order</name>
+        <value>6</value>
+      </field>
+
+     <field>
+        <name>adparentcategory_name</name>
+        <value>Travel</value>
+      </field>
+
+	  <field>
+        <name>adparentownerid</name>
+        <value>0</value>
+      </field>
+
+      <field>
+        <name>adparentactive</name>
+        <value>N</value>
+      </field>
+
+	  <field>
+        <name>adparentcreated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+
+	  <field>
+        <name>adparentupdated</name>
+	     <value><variable>timestamp</variable></value>
+      </field>
+      
+	  <field>
+        <name>adparentfast_url</name>
+        <value>Travel</value>
+      </field>
+   </insert>
+   
+   </initialization>
+ </table>
+
+</database>

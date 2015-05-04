@@ -1,0 +1,36 @@
+<!-- BEGIN Tms -->
+{menubar}
+<script type="text/javascript">
+  var confirmEnableTheme    = "{confirmEnableTheme}";
+  var confirmUninstallTheme = "{confirmUninstallTheme}";
+  var noAvailableData       = "{noAvailableData}";
+</script>
+<table style="width: 100%; padding: 0px; border-spacing: 0.1px;">
+  <tr>
+    <td id="themes_list_area" valign="top">
+      {combo_themes}
+    </td>
+    <td id="themes_info_area" valign="top" rowspan="2">
+      <div id="theme_area"></div>
+    </td>
+  </tr>
+  <tr>
+    <td id="extra_options" valign="top">
+      <!-- BEGIN UploadTheme -->
+      <form id="theme_upload_form" name="theme_upload_form" action="{base_script}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="gadget" value="Tms" />
+        <input type="hidden" name="action" value="UploadTheme" />
+        <label for="theme_upload">{lbl_theme_upload}:</label><br />{theme_upload}
+      </form>
+      <!-- END UploadTheme -->
+      <label for="only_show">{only_show_t}:</label><br />{only_show}
+    </td>
+  </tr>
+</table>
+<div id="buttons_area">{buttons}</div>
+<script type="text/javascript">
+$('{combo_name}').selectedIndex = -1;
+$('only_show').selectedIndex = 0;
+Event.observe(window, "load",function(){updateView();});
+</script>
+<!-- END Tms -->

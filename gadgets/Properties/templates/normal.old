@@ -1,0 +1,370 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+        var msgbox = $('msgbox_{msg-id}');
+        if((msgbox.className != 'error-message') && (msgbox.className != 'warning-message') && (window.hideResponseBox)) {
+            hideResponseBox(msgbox);
+        }
+    </script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN properties -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+	<div class="content">
+		{content}
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget properties">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max(document.body.offsetHeight, document.body.scrollHeight);var fr{id} = document.createElement("IFRAME");fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Properties_iframe_{id}");fr{id}.setAttribute("name", "inneriframe{id}");fr{id}.setAttribute("id", "inneriframe{id}");fr{id}.style.width = 1+"px";fr{id}.style.height = 1+"px";fr{id}.style.display = "none";document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END properties -->
+
+<!-- BEGIN index -->
+<div class="gadget custom_index">
+  <h2>{title}</h2>
+  <div id="properties-index-{id}" class="content">
+    <ul class="custom_indexList">
+    <!-- BEGIN item -->
+      <li class="custom_indexItem"><a class="custom_indexTitle" href="{link}">{title}</a><br /><span class="custom_indexDesc" align=\"justify\">{desc}</span><span class="custom_indexDateStr">{update_string}<span class="custom_indexDate">{updated}</span></span></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max(document.body.offsetHeight, document.body.scrollHeight);var fr{id} = document.createElement("IFRAME");fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Properties_iframe_{id}");fr{id}.setAttribute("name", "inneriframe{id}");fr{id}.setAttribute("id", "inneriframe{id}");fr{id}.style.width = 1+"px";fr{id}.style.height = 1+"px";fr{id}.style.display = "none";document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-properties-head" class="layout_head">
+<h2 id="layout_{actionName}_title"><a href="{link}">{layout_title}</a></h2>
+</div>
+<div id="layout-properties-body" class="layout_body">
+<!-- BEGIN propertieslayout -->
+	<div id="properties-{id}" style="height: {properties_height}px; color: #000000;"></div>
+	{properties_dimensions}
+	<script type="text/javascript">
+    //<![CDATA[
+	var map;var xml;
+    var geocoder = null;
+    var addresses = [];
+    var markers = [];
+	var addressMarker = new Array(2);
+    var numGeocoded = 0;
+	var tempImage;
+	var gmarkers = [];
+	var gOverMarkers = [];
+    var bounds = new GLatLngBounds();
+	var oProgressBar;
+	
+	// Create a base icon for all of our markers that specifies the
+	// shadow, icon dimensions, etc.
+	var baseIcon = new GIcon(G_DEFAULT_ICON);
+	baseIcon.shadow = "{JAWS_URL}libraries/rounded_php/rounded_shadow_over_sm.png";
+	baseIcon.iconSize = new GSize(40, 34);
+	baseIcon.shadowSize = new GSize(40, 34);
+	baseIcon.iconAnchor = new GPoint(0, 34);
+	baseIcon.infoWindowAnchor = new GPoint(9, 2);
+
+
+	function downloadURL() {
+		GDownloadUrl("./{properties_xml_url}", function(data) {
+		  xml = GXml.parse(data);
+		  markers = xml.documentElement.getElementsByTagName("marker");
+		  addresses = new Array(markers.length);
+		  oProgressBar.start(markers.length);
+		  if (numGeocoded < addresses.length) {
+			addresses[numGeocoded] = new Array(14);
+			addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("address");
+			addresses[numGeocoded][1] = markers[numGeocoded].childNodes[0].nodeValue;
+			addresses[numGeocoded][2] = parseInt(markers[numGeocoded].getAttribute("fs"));
+			addresses[numGeocoded][3] = parseInt(markers[numGeocoded].getAttribute("sfs"));
+			addresses[numGeocoded][4] = parseInt(markers[numGeocoded].getAttribute("bw"));
+			addresses[numGeocoded][5] = parseInt(markers[numGeocoded].getAttribute("ra"));
+			addresses[numGeocoded][6] = markers[numGeocoded].getAttribute("fc");
+			addresses[numGeocoded][7] = markers[numGeocoded].getAttribute("fg");
+			addresses[numGeocoded][8] = markers[numGeocoded].getAttribute("bc");
+			addresses[numGeocoded][9] = markers[numGeocoded].getAttribute("hfc");
+			addresses[numGeocoded][10] = markers[numGeocoded].getAttribute("hfg");
+			addresses[numGeocoded][11] = markers[numGeocoded].getAttribute("hbc");
+			addresses[numGeocoded][12] = markers[numGeocoded].getAttribute("title");
+			addresses[numGeocoded][13] = markers[numGeocoded].getAttribute("ext");
+			addresses[numGeocoded][14] = markers[numGeocoded].getAttribute("url");
+			addresses[numGeocoded][15] = markers[numGeocoded].getAttribute("target");
+			addresses[numGeocoded][16] = markers[numGeocoded].getAttribute("sub");
+			geocoder.getLocations(addresses[numGeocoded][0], addressResolved);
+		  }
+		});
+    }
+
+	function geocodeAll() {
+		  if (numGeocoded < addresses.length) {
+			addresses[numGeocoded] = new Array(14);
+			addresses[numGeocoded][0] = markers[numGeocoded].getAttribute("address");
+			addresses[numGeocoded][1] = markers[numGeocoded].childNodes[0].nodeValue;
+			addresses[numGeocoded][2] = parseInt(markers[numGeocoded].getAttribute("fs"));
+			addresses[numGeocoded][3] = parseInt(markers[numGeocoded].getAttribute("sfs"));
+			addresses[numGeocoded][4] = parseInt(markers[numGeocoded].getAttribute("bw"));
+			addresses[numGeocoded][5] = parseInt(markers[numGeocoded].getAttribute("ra"));
+			addresses[numGeocoded][6] = markers[numGeocoded].getAttribute("fc");
+			addresses[numGeocoded][7] = markers[numGeocoded].getAttribute("fg");
+			addresses[numGeocoded][8] = markers[numGeocoded].getAttribute("bc");
+			addresses[numGeocoded][9] = markers[numGeocoded].getAttribute("hfc");
+			addresses[numGeocoded][10] = markers[numGeocoded].getAttribute("hfg");
+			addresses[numGeocoded][11] = markers[numGeocoded].getAttribute("hbc");
+			addresses[numGeocoded][12] = markers[numGeocoded].getAttribute("title");
+			addresses[numGeocoded][13] = markers[numGeocoded].getAttribute("ext");
+			addresses[numGeocoded][14] = markers[numGeocoded].getAttribute("url");
+			addresses[numGeocoded][15] = markers[numGeocoded].getAttribute("target");
+			addresses[numGeocoded][16] = markers[numGeocoded].getAttribute("sub");
+			geocoder.getLocations(addresses[numGeocoded][0], addressResolved);
+		  } else {
+			oProgressBar.remove();
+		  }
+    }
+
+	function addressResolved(response) {
+     var delay = 0;
+     if (response.Status.code == 620) {
+       // Too fast, try again, with a small pause
+       delay = 500;
+     } else {
+       if (response.Status.code == 200) {
+		// Success; do something with the address.
+        
+         place = response.Placemark[0];
+         point = new GLatLng(place.Point.coordinates[1],
+                             place.Point.coordinates[0]);
+         //marker = new GMarker(point);
+		 map.addOverlay(createMarker(point, numGeocoded));
+		 map.addOverlay(createMarker(point, numGeocoded, true));
+       }
+       // Move onto the next address; this skips bad addresses, too.
+       if (gOverMarkers[numGeocoded]) {
+		gOverMarkers[numGeocoded].hide();
+      }
+	   oProgressBar.updateLoader(1);
+       numGeocoded += 1;
+	 }
+     window.setTimeout(geocodeAll, delay);
+   }
+
+	// Creates a marker whose info window displays the letter corresponding
+	// to the given index.
+	function createMarker(point, num, over) {
+	  // Create a lettered icon for this point using our icon class
+	  var markerLabel = addresses[num][12];
+	  var markerText = addresses[num][13];
+	  var subTitle = addresses[num][16];
+	  var markerTarget = addresses[num][15];
+	  if (markerTarget == 'infowindow') {
+		var markerInfo = addresses[num][1];
+	  } else {
+		var markerURL = addresses[num][14];
+	  }
+	  var letteredIcon = new GIcon(baseIcon);
+	  var fs = addresses[num][2]; // font-size
+	  var sfs = addresses[num][3]; // font-size
+	  var bw = addresses[num][4]; // border width
+	  var ra = addresses[num][5]; // corner radius
+	  if (!over) {
+		  over = false;
+		  var fc = addresses[num][6]; //font color
+		  var fg = addresses[num][7]; //foreground color
+		  var bc = addresses[num][8]; // border color
+		  //if (markerLabel.indexOf(" ") > markerLabel.indexOf(",")) {
+			//var markerTitle = markerLabel.substr(0, markerLabel.indexOf(",")) + "%20>>";
+		  //} else if (markerLabel.indexOf(" ") < markerLabel.indexOf(",")) {
+			//var markerTitle = markerLabel.substr(0, markerLabel.indexOf(" ")) + "%20>>";
+		  //} else {
+			//var markerTitle = markerLabel + "%20>>";
+		  //}
+		  var markerTitle = markerLabel;
+		  var titleDim = getWidth(markerTitle, fs);
+		  var fWidth = titleDim[0]+15;
+		  if (fWidth < 28) {
+			fWidth = 28;
+		  }
+		  var fHeight = titleDim[1]+10;
+		  var iconUrl = "{JAWS_URL}libraries/rounded_php/rounded.php?sh=r&w=" + fWidth + "&r=" + ra + "&fg=" + fg + "&bg=FFF&bgt=1&bw=" + bw + "&bc=" + bc + "&bt=0&ta=1&fs=" + fs + "&fc=" + fc + "&text=" + markerTitle;
+	  } else {
+		  var fc = addresses[num][9]; //font color
+		  var fg = addresses[num][10]; //foreground color
+		  var bc = addresses[num][11]; // border color
+		  var markerTitle = markerText;
+		  if (!subTitle || subTitle == null) {
+			if (markerTarget == 'infowindow') {
+				subtext = "EXPAND%20>>";
+			} else {
+				subtext = "VIEW PROPERTY%20>>";
+			}
+		  } else {
+			subtext = subTitle;
+		  }
+		  var titleDim = getWidth(markerTitle, fs);
+		  var subDim = getWidth(subtext, sfs);
+		  if (titleDim[0] < subDim[0]) {
+			var fWidth = subDim[0]+15;
+		  } else {
+			var fWidth = titleDim[0]+15;
+		  }
+		  var fHeight = titleDim[1]+subDim[1]+10;
+		  var iconUrl = "{JAWS_URL}libraries/rounded_php/rounded.php?sh=r&w=" + fWidth + "&r=" + ra + "&fg=" + fg + "&bg=FFF&bgt=1&bw=" + bw + "&bc=" + bc + "&bt=0&ta=1&fs=" + fs + "&fc=" + fc + "&text=" + markerTitle + "&sfs=" + sfs + "&subtext=" + subtext;
+	  }
+	  
+	  letteredIcon.image = iconUrl;
+	  letteredIcon.imageMap = [0, 0, fWidth-1, 0, fWidth-1, fHeight-1, 0, fHeight-1];
+	  letteredIcon.iconSize = new GSize(fWidth, fHeight);
+	  letteredIcon.iconAnchor = new GPoint(0, fHeight);
+	  letteredIcon.printImage = iconUrl + "&format=gif";
+	  letteredIcon.mozPrintImage = iconUrl + "&format=gif";
+	  
+	  if (over == false) {
+		markerOptions = { icon:letteredIcon };
+	  } else {
+		markerOptions = { icon:letteredIcon, zIndexProcess:orderOfCreation };
+	  }
+	  var marker = new GMarker(point, markerOptions);
+      bounds.extend(point);
+
+	  GEvent.addListener(marker, "click", function() {
+		if (markerTarget == 'infowindow') {
+			marker.openInfoWindowHtml(markerInfo);
+		} else {
+			if (markerTarget == 'javascript:void(0);') {
+				markerURL;
+			} else {
+				if (markerTarget == '_self') {
+					location.href = markerURL;
+				} else {
+					window.open(markerURL);
+				}
+			}
+		}
+	  });
+	  
+	  if (over == true) {
+		  gOverMarkers.push(marker);
+		  GEvent.addListener(marker, "mouseout", function() {
+			 gOverMarkers[num].hide()
+		  });
+		  GEvent.addListener(marker, "mouseover", function() {
+			 gOverMarkers[num].show();
+		  });
+	  } else {
+		  gmarkers.push(marker);
+		  GEvent.addListener(marker, "mouseover", function() {
+			 gOverMarkers[num].show();
+		  });
+		  GEvent.addListener(marker, "mouseout", function() {
+			 gOverMarkers[num].hide();
+		  });
+	  }
+	  map.setZoom(map.getBoundsZoomLevel(bounds));
+	  map.setCenter(bounds.getCenter());
+	  return marker;
+	}
+	
+	function orderOfCreation (marker) {
+		return 1;
+	}
+
+	/*
+	    // Add 10 markers to the map at random locations
+        var bounds = map.getBounds();
+        var southWest = bounds.getSouthWest();
+        var northEast = bounds.getNorthEast();
+        var lngSpan = northEast.lng() - southWest.lng();
+        var latSpan = northEast.lat() - southWest.lat();
+        for (var i = 0; i < 10; i++) {
+          var latlng = new GLatLng(southWest.lat() + latSpan * Math.random(),
+            southWest.lng() + lngSpan * Math.random());
+          map.addOverlay(createMarker(latlng, i));
+        }
+	*/
+	function getWidth (text, size) {
+		var spanElement = document.createElement('span');
+		var nobrElement = document.createElement('nobr');
+		spanElement.style.whiteSpace = "nowrap";
+		spanElement.style.fontSize = size/2.5 + "mm";
+		nobrElement.innerHTML = text;
+		spanElement.appendChild(nobrElement);
+		document.body.appendChild(spanElement);
+		var width = spanElement.offsetWidth;
+		var height = spanElement.offsetHeight;
+		document.body.removeChild(spanElement);
+		var dimensions = new Array();
+		dimensions[0] = width;
+		dimensions[1] = height;
+		return dimensions;
+	}
+    
+		// Re-anable alerts
+		KillAlerts = false;
+		 
+		if (GBrowserIsCompatible()) {
+			map = new GMap2(document.getElementById("properties-{id}"));
+			map.enableScrollWheelZoom();
+			//map.addControl(new GLargeMapControl());
+			//map.addControl(new GMapTypeControl());
+			map.setUIToDefault();
+			map.addControl(new GOverviewMapControl(new GSize((parseInt(document.getElementById('properties-{id}').offsetWidth)/6), (parseInt(document.getElementById('properties-{id}').offsetWidth)/6))));
+			// minimap in the down right corner
+			map.setCenter(new GLatLng(0, 0), 0);
+			//map.setMapType(G_HYBRID_MAP);
+			// Progress Bar relies on GMap2 reference
+			oProgressBar = new ProgressbarControl(map, {width:150});
+			oProgressBar.start(0);
+			geocoder = new GClientGeocoder();
+			geocoder.setCache(null);
+			window.setTimeout(downloadURL, 50);
+		} else {
+			if (G_INCOMPAT) {
+				// Key is NOT valid.
+			} else {
+				// Can't tell if the Google API Key is valid, due to the browser not being compatible with the Google Maps API.
+			}
+		}
+	//]]>     
+	</script>
+<!-- END propertieslayout -->
+</div>
+<!-- END layout -->

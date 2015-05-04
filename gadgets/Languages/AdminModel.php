@@ -5,24 +5,18 @@
  * @category   GadgetModel
  * @package    Languages
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
+define('EMPTY_STRING', "-EMPTY-");
+
 class LanguagesAdminModel extends Jaws_Model
 {
     /**
-     * Special empty string
-     *
-     * @var     string
-     * @access  private
-     */
-    var $_EMPTY_STRING = '-EMPTY-';
-
-    /**
      * Installs the gadget
      *
-     * @access  public
-     * @return  mixed   True on successful installation, Jaws_Error otherwise
+     * @access 	public
+     * @return 	mixed 	True on successful installation, Jaws_Error otherwise
      */
     function InstallGadget()
     {
@@ -35,8 +29,9 @@ class LanguagesAdminModel extends Jaws_Model
             return new Jaws_Error(_t('GLOBAL_ERROR_FAILED_CREATING_DIR', $new_dir), _t('LANGUAGES_NAME'));
         }
 
+        $GLOBALS['app']->Registry->NewKey('/gadgets/language_visitor_choices', '');
         $GLOBALS['app']->Registry->NewKey('/gadgets/Languages/base_lang', 'en');
-        $GLOBALS['app']->Registry->NewKey('/gadgets/Languages/update_default_lang', 'false');
+        $GLOBALS['app']->Registry->NewKey('/gadgets/Languages/use_data_lang', 'true');
         $GLOBALS['app']->Registry->NewKey('/gadgets/Languages/pluggable', 'false');
         return true;
     }
@@ -47,7 +42,7 @@ class LanguagesAdminModel extends Jaws_Model
      * @access  public
      * @param   string  $old    Current version (in registry)
      * @param   string  $new    New version (in the $gadgetInfo file)
-     * @return  mixed   True on Success or Jaws_Error on Failure
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UpdateGadget($old, $new)
     {
@@ -61,8 +56,7 @@ class LanguagesAdminModel extends Jaws_Model
         }
 
         // Registry keys
-        $GLOBALS['app']->Registry->DeleteKey('/gadgets/Languages/use_data_lang');
-        $GLOBALS['app']->Registry->NewKey('/gadgets/Languages/update_default_lang', 'false');
+        $GLOBALS['app']->Registry->NewKey('/gadgets/Languages/use_data_lang', 'true');
 
         // ACL keys
         $GLOBALS['app']->ACL->NewKey('/ACL/gadgets/Languages/ModifyLanguageProperties', 'false');
@@ -71,15 +65,15 @@ class LanguagesAdminModel extends Jaws_Model
     }
 
     /**
-     * Add/Edit language's profile(local/international name, ...)
-     *
      * @access  public
+     *
      * @param   string  $lang_str   Language code and name
-     * @return  bool    True on Success or False on failure
+     * @return  boolean Success/Failure (Jaws_Error)
      */
     function SaveLanguage($lang_str)
     {
-        if ($lang_str == $lang_str) {
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        if ($lang_str == $xss->parse($lang_str)) {
             $lang_code = substr($lang_str, 0, strpos($lang_str, ';'));
             if (preg_match("/^([a-z]{2})$|^([a-z]{2}[-][a-z]{2})$/", $lang_code)) {
                 $lang_name = substr($lang_str, strpos($lang_str, ';')+1);
@@ -136,16 +130,10 @@ class LanguagesAdminModel extends Jaws_Model
     }
 
     /**
-     * Get grouped Jaws component list
      *
-     * @access  public
-     * @return  array   List of components
      */
     function GetComponents()
     {
-        /**
-         *
-         */
         function GetModulesList($type = 'gadgets')
         {
             $modules = array();
@@ -164,9 +152,9 @@ class LanguagesAdminModel extends Jaws_Model
         }
 
         $components = array();
-        $components[JAWS_COMPONENT_OTHERS] = array('Global', 'Date', 'Install', 'Upgrade');
-        $components[JAWS_COMPONENT_GADGET] = GetModulesList('gadgets');
-        $components[JAWS_COMPONENT_PLUGIN] = GetModulesList('plugins');
+        $components[JAWS_COMMON] = array('Global', 'Date', 'Install', 'Upgrade');
+        $components[JAWS_GADGET] = GetModulesList('gadgets');
+        $components[JAWS_PLUGIN] = GetModulesList('plugins');
         return $components;
     }
 
@@ -174,22 +162,18 @@ class LanguagesAdminModel extends Jaws_Model
      * Returns an array of module language data
      *
      * @access  public
-     * @param   string  $module
-     * @param   string  $type
-     * @param   string  $langTo
-     * @param   string  $langFrom
-     * @return  mixed   A list of module language string or false on error
+     * @return  array   A list of module language string
      */
     function GetLangData($module, $type, $langTo, $langFrom)
     {
         switch ($type) {
-            case JAWS_COMPONENT_GADGET:
+            case JAWS_GADGET:
                 $data_file = JAWS_DATA . "languages/$langTo/gadgets/$module.php";
                 $orig_file = JAWS_PATH . "gadgets/$module/languages/$langTo.php";
                 $from_file = JAWS_PATH . "gadgets/$module/languages/$langFrom.php";
                 break;
 
-            case JAWS_COMPONENT_PLUGIN:
+            case JAWS_PLUGIN:
                 $data_file = JAWS_DATA . "languages/$langTo/plugins/$module.php";
                 $orig_file = JAWS_PATH . "plugins/$module/languages/$langTo.php";
                 $from_file = JAWS_PATH . "plugins/$module/languages/$langFrom.php";
@@ -202,19 +186,24 @@ class LanguagesAdminModel extends Jaws_Model
                 $from_file = JAWS_PATH . "languages/$langFrom/$module.php";
         }
 
+        $use_data_lang = $GLOBALS['app']->Registry->Get('/gadgets/Languages/use_data_lang') == 'true';
+        if (!$use_data_lang || !file_exists($data_file)) {
+            $data_file = $orig_file;
+        }
+
         if (!file_exists($from_file)) {
             return false;
         }
 
         $data = array();
-        if (file_exists($orig_file)) {
-            require_once $orig_file;
-            $contents = file_get_contents($orig_file);
-        }
-
         if (file_exists($data_file)) {
             require_once $data_file;
             $contents = file_get_contents($data_file);
+            $data['writable'] = is_writable($data_file);
+            $data['file'] = $data_file;
+        } else {
+            $data['writable'] = is_writable(dirname($data_file));
+            $data['file'] = dirname($data_file);
         }
 
         @require_once $from_file;
@@ -242,43 +231,34 @@ class LanguagesAdminModel extends Jaws_Model
             }
             $cons = str_replace('_' . strtoupper($langFrom) . '_', '', $k);
             $data['strings'][$cons][$langFrom] = $v;
-            $toValue = '';
-            if (defined('_' . strtoupper($langTo) . '_DATA_' . $cons)) {
-                $toValue = constant('_' . strtoupper($langTo) . '_DATA_' . $cons);
-                if ($toValue == '') {
-                    $toValue = $this->_EMPTY_STRING;
-                }
-            } elseif (defined('_' . strtoupper($langTo) . '_' . $cons)) {
+            if (defined('_' . strtoupper($langTo) . '_' . $cons)) {
                 $toValue = constant('_' . strtoupper($langTo) . '_' . $cons);
                 if ($toValue == '') {
-                    $toValue = $this->_EMPTY_STRING;
+                    $toValue = EMPTY_STRING;
                 }
+                $data['strings'][$cons][$langTo] = $toValue;
+            } else {
+                $data['strings'][$cons][$langTo] = '';
             }
-            $data['strings'][$cons][$langTo] = $toValue;
         }
         return $data;
     }
 
     /**
-     * Save language data into file
-     *
      * @access  public
-     * @param   string  $module
-     * @param   string  $type
-     * @param   string  $langTo
-     * @param   array   $data
-     * @return  bool    True on Success or False on failure
+     *
+     * @return  boolean Success/Failure (Jaws_Error)
      */
     function SetLangData($module, $type, $langTo, $data = null)
     {
         $module_name = $module;
         switch ($type) {
-            case JAWS_COMPONENT_GADGET:
+            case JAWS_GADGET:
                 $data_file = JAWS_DATA . "languages/$langTo/gadgets/$module.php";
                 $orig_file = JAWS_PATH . "gadgets/$module/languages/$langTo.php";
                 break;
 
-            case JAWS_COMPONENT_PLUGIN:
+            case JAWS_PLUGIN:
                 $data_file = JAWS_DATA . "languages/$langTo/plugins/$module.php";
                 $orig_file = JAWS_PATH . "plugins/$module/languages/$langTo.php";
                 $module_name = 'Plugins_' . $module;
@@ -289,81 +269,42 @@ class LanguagesAdminModel extends Jaws_Model
                 $orig_file = JAWS_PATH . "languages/$langTo/$module.php";
         }
 
-        $update_default_lang = $GLOBALS['app']->Registry->Get('/gadgets/Languages/update_default_lang') == 'true';
-        if (file_exists($orig_file)) {
-            require_once $orig_file;
+        $use_data_lang = $GLOBALS['app']->Registry->Get('/gadgets/Languages/use_data_lang') == 'true';
+        if (!$use_data_lang) {
+            $data_file = $orig_file;
         }
 
-        // user translation
-        $tpl  = new Jaws_Template('gadgets/Languages/templates/');
+        $tpl = new Jaws_Template('gadgets/Languages/templates/');
         $tpl->Load('FileTemplate.html');
         $tpl->SetBlock('template');
         $tpl->SetVariable('project', $module_name);
-        $tpl->SetVariable('language', strtoupper($langTo));
-
-        // orig translation
-        $tpl2 = new Jaws_Template('gadgets/Languages/templates/');
-        $tpl2->Load('FileTemplate.html');
-        $tpl2->SetBlock('template');
-        $tpl2->SetVariable('project', $module_name);
-        $tpl2->SetVariable('language', strtoupper($langTo));
+        $tpl->SetVariable('language', strtoupper($langTo));            
 
         // Meta
         foreach ($data['meta'] as $k => $v) {
-            $v = str_replace('"', '\"', $v);
-            // user translation
             $tpl->SetBlock('template/meta');
             $tpl->SetVariable('key', $k);
-            $tpl->SetVariable('value', $v);
+            $tpl->SetVariable('value', str_replace('"', '\"', $v));
             $tpl->ParseBlock('template/meta');
-            // orig translation
-            $tpl2->SetBlock('template/meta');
-            $tpl2->SetVariable('key', $k);
-            $tpl2->SetVariable('value', $v);
-            $tpl2->ParseBlock('template/meta');
         }
 
         // Strings
-        $change_detected = false;
         foreach ($data['strings'] as $k => $v) {
             if ($v == '') {
                 continue;
-            } elseif ($v === $this->_EMPTY_STRING) {
+            } elseif ($v === EMPTY_STRING) {
                 $v = '';
             }
 
-            $orig_cons = '_' . strtoupper($langTo) . '_' . $k;
-            $data_cons = '_' . strtoupper($langTo) . '_DATA_' . $k;
-            $v = preg_replace("$\r\n|\n$", "\n", $v);
-            $changed = !defined($orig_cons) || constant($orig_cons) !== $v;
-            $v = str_replace(array('"', "\n"), array('\"', '\n'), $v);
+            $tpl->SetBlock('template/string');
+            $tpl->SetVariable('key', '_' . strtoupper($langTo) . '_' . $k);
 
-            if ($changed) {
-                $change_detected = true;
-                $tpl->SetBlock('template/string');
-                $tpl->SetVariable('key', $data_cons);
-                $tpl->SetVariable('value', $v);
-                $tpl->ParseBlock('template/string');
-            }
-
-            // orig translation
-            $tpl2->SetBlock('template/string');
-            $tpl2->SetVariable('key', $orig_cons);
-            $tpl2->SetVariable('value', $v);
-            $tpl2->ParseBlock('template/string');
+            $v = preg_replace("$\r\n|\n$", '\n', $v);
+            $tpl->SetVariable('value', str_replace('"', '\"', $v));
+            $tpl->ParseBlock('template/string');
         }
 
         $tpl->ParseBlock('template');
-        $tpl2->ParseBlock('template');
-
-        // update original translation
-        if ($update_default_lang) {
-            // update default language translation,
-            // so we can delete customized language's file
-            if (Jaws_Utils::file_put_contents($orig_file, $tpl2->Get())) {
-                $change_detected = false;
-            }
-        }
 
         // Writable
         if(file_exists($data_file)) {
@@ -378,19 +319,45 @@ class LanguagesAdminModel extends Jaws_Model
             return false;
         }
 
-        if ($change_detected) {
-            if (Jaws_Utils::file_put_contents($data_file, $tpl->Get())) {
-                $GLOBALS['app']->Session->PushLastResponse(_t('LANGUAGES_UPDATED', $module), RESPONSE_NOTICE);
-                return true;
-            } else {
-                $GLOBALS['app']->Session->PushLastResponse(_t('LANGUAGES_NOT_UPDATED', $module), RESPONSE_ERROR);
-                return false;
-            }
-        } else {
-            Jaws_Utils::Delete($data_file);
+        if (Jaws_Utils::file_put_contents($data_file, $tpl->Get())) {
             $GLOBALS['app']->Session->PushLastResponse(_t('LANGUAGES_UPDATED', $module), RESPONSE_NOTICE);
             return true;
+        } else {
+            $GLOBALS['app']->Session->PushLastResponse(_t('LANGUAGES_NOT_UPDATED', $module), RESPONSE_ERROR);
+            return false;
         }
     }
-
+    
+	/**
+     * Save config settings
+     *
+     * @access  public
+     * @param   string  $gadgets   Languages
+     * @return  boolean Success/Failure
+     */
+    function SaveSettings($gadgets)
+    {
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+		$language_choices = '';
+		$language_visitor_choices = $GLOBALS['app']->Registry->Get('/gadgets/language_visitor_choices');
+		foreach ($gadgets as $gadget => $g_value) {
+			if (!in_array($gadget, explode(',', $language_visitor_choices)) && $g_value == '1') {
+				if ($language_visitor_choices == '') {
+					$language_choices = $gadget;
+				} else {
+					$language_choices = $language_visitor_choices.','.$gadget;
+				}
+			} else if (in_array($gadget, explode(',', $language_visitor_choices)) && $g_value == '0') {
+				$language_choices = str_replace(','.$gadget, '', $language_visitor_choices);
+			}
+		}
+		$res5 = $GLOBALS['app']->Registry->Set('/gadgets/language_visitor_choices', $language_choices);
+		if ($res5 === true) {
+            $GLOBALS['app']->Registry->Commit('Languages');
+            $GLOBALS['app']->Registry->Commit('core');
+            $GLOBALS['app']->ACL->Commit('core');
+            return true;
+        }
+        return new Jaws_Error(_t('LANGUAGES_SETTINGS_CANT_UPDATE'), _t('LANGUAGES_NAME'));
+    }
 }

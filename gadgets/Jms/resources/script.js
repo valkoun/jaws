@@ -4,7 +4,7 @@
  * @category   Ajax
  * @package    Jms
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 /**
@@ -113,7 +113,7 @@ function showButtons()
  */
 function editGadget(gadget)
 {
-    if (gadget.blank()) {
+    if (jawsTrim(gadget) == '') {
         return false;
     }
 
@@ -137,7 +137,7 @@ function editGadget(gadget)
  */
 function editPlugin(plugin)
 {
-    if (plugin.blank()) {
+    if (jawsTrim(plugin) == '') {
         return false;
     }
 
@@ -313,7 +313,7 @@ function savePluginUsage()
     }
 
     var inputs = $('work_area').getElementsByTagName('input');
-    var gadgets   = new Array();
+    var gadgets   = new Object();
     var counter = 0;
     for(var i=0; i<inputs.length; i++) {
         if (inputs[i].checked) {
@@ -334,6 +334,16 @@ function installComponent()
         jmsAsync.installgadget(selectedGadget);
     } else {
         jmsAsync.installplugin(selectedPlugin);
+    }
+}
+
+/**
+ * Updates a component
+ */
+function updateComponent()
+{
+    if (pluginsMode == false) {
+        jmsAsync.updategadget(selectedGadget);
     }
 }
 

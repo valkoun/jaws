@@ -1,0 +1,88 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+        var msgbox = $('msgbox_{msg-id}');
+        if((msgbox.className != 'error-message') && (msgbox.className != 'warning-message') && (window.hideResponseBox)) {
+            hideResponseBox(msgbox);
+        }
+    </script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+<!-- BEGIN page -->
+<!-- BEGIN content -->
+<div id="custom-page-{id}" class="gadget custom_page">
+	<div class="content">
+		{content}
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=CustomPage_iframe_{id}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END page -->
+
+<!-- BEGIN index -->
+<div class="gadget custom_index">
+  <h2>{title}</h2>
+  <div id="custom-index-{id}" class="content">
+    <ul class="custom_indexList">
+    <!-- BEGIN item -->
+      <li class="custom_indexItem"><a class="custom_indexTitle" href="{link}">{title}</a><br /><span class="custom_indexDesc" align=\"justify\">{desc}</span><span class="custom_indexDateStr">{update_string}<span class="custom_indexDate">{updated}</span></span></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=CustomPage_iframe_{id}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-custompage-head" class="gadget layout_head">
+<h2 id="layout_{actionName}_title"><a href="{link}">{layout_title}</a></h2>
+</div>
+<div id="layout-custompage-body" class="gadget layout_body">
+{layout_content}
+</div>
+<!-- END layout -->

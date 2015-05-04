@@ -1,17 +1,15 @@
 <?php
 /**
- * Jaws Simple editor
+ * Widget that interacts with piwi to create the Jaws Editor
  *
  * @category   Widget
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 require_once JAWS_PATH . 'libraries/piwi/Widget/Container/Container.php';
-/**
- * Widget that interacts with piwi to create the Jaws Editor
- */
+
 class Jaws_Widgets_TextArea extends Container
 {
     /**
@@ -40,14 +38,6 @@ class Jaws_Widgets_TextArea extends Container
     var $_Container;
 
     /**
-     * Width of the editor
-     * examples: 100%, 600
-     *
-     * @var mixed
-     */
-    var $_Width = '100%';
-
-    /**
      * @access  private
      * @var     object
      * @see     function  GetValue
@@ -72,11 +62,6 @@ class Jaws_Widgets_TextArea extends Container
      * Main Constructor
      *
      * @access  public
-     * @param   $gadget
-     * @param   $name
-     * @param   string  $value
-     * @param   string  $label
-     * @return  void
      */
     function Jaws_Widgets_TextArea($gadget, $name, $value = '', $label = '')
     {
@@ -84,14 +69,16 @@ class Jaws_Widgets_TextArea extends Container
         $this->_Value  = $value;
         $this->_Gadget = $gadget;
         $this->_ToolbarControl =& Piwi::CreateWidget('Toolbar');
-        $this->_ToolbarControl->SetID('toolbar_'.$name);
-
         $this->TextArea =& Piwi::CreateWidget('TextArea', $name, $value, '', '14', '106');
         $this->TextArea->SetStyle('width: 99%;');
         $this->_Label =& Piwi::CreateWidget('Label', $label, $this->TextArea);
 
+        // Add container
         $this->_Container =& Piwi::CreateWidget('VBox');
         $this->_Container->AddFile('include/Jaws/Widgets/TextArea.js');
+        $this->_Container->PackStart($this->_Label);
+        $this->_Container->PackStart($this->_ToolbarControl);
+        $this->_Container->PackStart($this->TextArea);
 
         parent::init();
         $this->setID($name);
@@ -100,9 +87,8 @@ class Jaws_Widgets_TextArea extends Container
     /**
      * Set the ID
      *
-     * @param   string  $id     ID name
+     * @param   string  $id    ID name
      * @access  public
-     * @return  void
      */
     function SetID($id)
     {
@@ -116,21 +102,35 @@ class Jaws_Widgets_TextArea extends Container
     }
 
     /**
+     * Set the width of the editor
+     *
+     * @access  public
+     * @param   string  $width  Width
+     */
+    function SetWidth($width)
+    {
+        $currentStyle = $this->_Container->getStyle();
+        if (empty($currentStyle)) {
+            $currentStyle = 'width: '. $width.';';
+        } else {
+            if (strpos($currentStyle, 'width:') === false) {
+                if (substr($currentStyle, -1) != ';') {
+                    $currentStyle = $currentStyle . ';';
+                }
+                $currentStyle = $currentStyle . 'width: '. $width.';';
+            }
+        }
+        $this->_Container->SetStyle($currentStyle);
+    }
+
+    /**
      * Build the XHTML
      *
      * @access  public
-     * @return  void
+     * @return  string  XHTML
      */
     function buildXHTML()
     {
-        $label = $this->_Label->GetValue();
-        if (!empty($label)) {
-            $this->_Container->PackStart($this->_Label);
-        }
-        $this->_Container->PackStart($this->_ToolbarControl);
-        $this->_Container->PackStart($this->TextArea);
-        $this->_Container->SetWidth($this->_Width);
-
         $this->extraBuild();
         $this->_XHTML = $this->_Container->Get();
     }
@@ -138,9 +138,8 @@ class Jaws_Widgets_TextArea extends Container
     /**
      * Add a new plugin Webcontrol to the toolbar
      *
-     * @param   object  $control    Control to Add
+     * @param   object  $control Control to Add
      * @access  public
-     * @return  void
      */
     function AddControl($control)
     {
@@ -153,7 +152,7 @@ class Jaws_Widgets_TextArea extends Container
      * Get the value of the textarea
      *
      * @access  public
-     * @return  string  Value of the TextArea
+     * @return  string Value of the TextArea
      */
     function GetValue()
     {
@@ -163,8 +162,8 @@ class Jaws_Widgets_TextArea extends Container
     /**
      * Gets the label of the textarea
      *
-     * @access  public
-     * @return  string  The label to be displayed with the box.
+     * @access public
+     * @return string The label to be displayed with the box.
      */
     function GetLabel()
     {
@@ -174,9 +173,9 @@ class Jaws_Widgets_TextArea extends Container
     /**
      * Sets the label displayed with the textarea
      *
-     * @access  public
-     * @param   string  $label The label to display.
-     * @return  void
+     * @access public
+     * @param  string $label The label to display.
+     * @return null
      */
     function SetLabel($label)
     {
@@ -184,22 +183,9 @@ class Jaws_Widgets_TextArea extends Container
     }
 
     /**
-     * Set width of editor
-     *
-     * @access  public
-     * @param   arrayed $width
-     * @return  void
-     */
-    function setWidth($width)
-    {
-        $this->_Width = $width;
-    }
-
-    /**
      * Build the complete JawsEditor looking for the WebControls
      *
      * @access  private
-     * @return  void
      */
     function extraBuild()
     {
@@ -208,23 +194,27 @@ class Jaws_Widgets_TextArea extends Container
             if (empty($plugin)) {
                 continue;
             }
+            
+            $file   = JAWS_PATH . 'plugins/' . $plugin . '/' . $plugin . '.php';
+            $use_in = '/plugins/parse_text/' . $plugin . '/use_in';
+            $GLOBALS['app']->Registry->LoadFile($plugin, 'plugins');
+            if (file_exists($file) &&
+                (
+                 in_array($this->_Gadget, explode(',', $GLOBALS['app']->Registry->Get($use_in))) ||
+                 $GLOBALS['app']->Registry->Get($use_in) == '*'
+                 )
+                ) {
+                require_once $file;
+                $plugintmp = new $plugin();
+                $plugincontrol = $plugintmp->GetWebControl($this->_Name);
 
-            $objPlugin = $GLOBALS['app']->LoadPlugin($plugin);
-            if (!Jaws_Error::IsError($objPlugin)) {
-                $use_in = '/plugins/parse_text/' . $plugin . '/use_in';
-                if ($GLOBALS['app']->Registry->Get($use_in) == '*' ||
-                    in_array($this->_Gadget, explode(',', $GLOBALS['app']->Registry->Get($use_in))))
-                {
-                    $plugincontrol = $objPlugin->GetWebControl($this->_Name);
-                    if (is_object($plugincontrol)) {
-                        $plugincontrolValue = $plugincontrol->Get();
-                        if (!empty($plugincontrolValue)) {
-                            $this->AddControl($plugincontrol);
-                        }
+                if (is_object($plugincontrol)) {
+                    $plugincontrolValue = $plugincontrol->Get();
+                    if (!empty($plugincontrolValue)) {
+                        $this->AddControl($plugincontrol);
                     }
                 }
             }
         }
     }
-
 }

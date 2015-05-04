@@ -30,6 +30,7 @@ div.fields label {
     display: block;
     text-align: left;
     float: right;
+    font-size: 100%;
     font-weight: bold;
     cursor: pointer;
     width: 15em;
@@ -37,22 +38,4 @@ div.fields label {
 
 div.fields select {
     max-width: 320px;
-}
-
-.meta-name {
-    width: 6em;
-    direction:ltr;
-}
-.meta-value {
-    width: 17em;
-    direction:ltr;
-    margin-left: 0.4em;
-    margin-right: 0.4em;
-}
-.add-button {
-    margin-top: 5px;
-    direction: ltr;
-}
-.add-button input, .add-button button {
-    margin-right: 15.6em;
 }

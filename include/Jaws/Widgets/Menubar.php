@@ -1,12 +1,11 @@
 <?php
 /**
- * Nice menubar for admin stuff
+ * Widget that prints a menubar with many options
  *
  * @category   Widget
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Widgets_Menubar
@@ -27,54 +26,44 @@ class Jaws_Widgets_Menubar
     var $_Name;
 
     /**
-     * css class name
-     *
-     * @access  private
-     * @var     string
-     */
-    var $_CSS_Class_Name = 'jaws-menubar';
-
-    /**
      * Main Constructor
      *
      * @access  public
      */
     function Jaws_Widgets_Menubar($name = 'menu')
     {
-        $this->_Name = strtolower($name);
         $this->_Options = array();
+        $this->_Name    = $name;
     }
 
     /**
      * Add a new option
      *
-     * @access  public
-     * @param   string  $action     Action's shorname(NOT URL)
-     * @param   string  $name       Title to print
-     * @param   string  $url        Url to point
-     * @param   string  $icon       Icon/Stock to use
-     * @param   string  $onclick    Javascript OnClick function
-     * @param   bool    $selected   If the option is marked as selected
-     * @return  void
+     * @access   public
+     * @param    string  $action Action's shorname(NOT URL)
+     * @param    string  $name Title to print
+     * @param    string  $url  Url to point
+     * @param    string  $icon Icon/Stock to use
+     * @param    string  $onclick Javascript OnClick function
+     * @param    boolean $selected If the option is marked as selected
      */
     function AddOption($action, $name, $url = '', $icon = '', $selected = false, $onclick = null)
     {
+        // Little fix to avoid javascript: 
         if (strpos($url, 'javascript:') !== false) {
             $onclick = str_replace('javascript:', '', $url);
-            $url = '';
+            $url = '#';
         }
-
-        if (empty($url)) {
-            $url = 'javascript:void(0);';
-        }
-
+		if ($icon != '') {
+			$icon = (substr(strtolower($icon), 0, strlen(strtolower($GLOBALS['app']->GetJawsURL()))) != strtolower($GLOBALS['app']->GetJawsURL()) ? $GLOBALS['app']->GetJawsURL() . '/' . $icon : $icon);
+		}
         $this->_Options[$action] = array(
-                                         'action'   => strtolower($action),
-                                         'name'     => $name,
-                                         'url'      => $url,
-                                         'icon'     => $icon,
+                                         'action' => $action,
+                                         'name' => $name,
+                                         'url'  => $url,
+                                         'icon' => $icon,
                                          'selected' => $selected,
-                                         'onclick'  => $onclick
+                                         'onclick' => $onclick
                                          );
     }
 
@@ -83,7 +72,6 @@ class Jaws_Widgets_Menubar
      *
      * @access  public
      * @param   string  $name  Actions's name to activate
-     * @return  void
      */
     function Activate($name)
     {
@@ -93,48 +81,54 @@ class Jaws_Widgets_Menubar
     }
 
     /**
-     * Set prefix css class name
-     *
-     * @access  public
-     * @param   string  $class Prefix class's name
-     * @return  void
-     */
-    function SetClass($class)
-    {
-        $this->_CSS_Class_Name = strtolower($class);
-    }
-
-    /**
      * Build the menubar with its options
      *
      * @access  private
-     * @return  string
      */
     function Get()
     {
-        $result = "\n". '<div id="'.$this->_CSS_Class_Name. '-'. $this->_Name. '" class="'. $this->_CSS_Class_Name. '">'. "<ul>\n";
+        $menubar = "\n" . '<div class="clearfix"><ul id="jaws-menubar-' . $this->_Name . '" class="jaws-menubar">' . "\n";
+
         foreach ($this->_Options as $option) {
-            $result.= '<li id="menu-option-'. $option['action']. '"';
+            $menubar .= '   <li id="menu-option-' . $option['action']. '"';
+            if (!empty($option['url'])) {
+                if (!is_null($option['onclick']) && $option['onclick'] == 'void(0);') {
+                    $menubar .= ' onclick="' . $option['onclick'] . '" ';
+                } elseif (strpos($option['url'], 'javascript:') === false && $option['url'] != '#') {
+                    $menubar .= ' onclick="window.location=\'' . $option['url'] . '\';" ';
+                } else {
+                    // Deprecated style
+                    //$menubar .= ' onclick="' . $option['url'] . '" ';
+                    $menubar .= ' onclick="void(0);" ';
+                }
+            }
             if ($option['selected']) {
-                $result.= ' class="'. $this->_CSS_Class_Name. '-selected" ';
+                $menubar .= ' class="selected" ';
             }
 
-            $result.= '>';
-            if (empty($option['onclick'])) {
-                $result.= '<a href="'. $option['url']. '">';
-            } else {
-                $result.= '<a href="'. $option['url']. '" onclick="'. $option['onclick']. '">';
+            $menubar .= '>';
+            if (!empty($option['url'])) {
+                if (!is_null($option['onclick'])) {
+                    $menubar .= '    <a href="#" onclick="' . $option['onclick'] . '; return false;">';
+                } elseif (strpos($option['url'], 'javascript:') === false) {
+                    $menubar .= '    <a href="' . $option['url'] . '">';
+                } else {
+                    // Deprecated style
+                    $menubar .= '    <a href="javascript:void(0);" onclick="' . $option['url'] . '">';
+                }
             }
 
             if (!empty($option['icon'])) {
-                $result.= '<img alt="'. $option['name']. '" src="'. $option['icon']. '" width="16" height="16" /> ';
+                $menubar .= '<img alt="' . $option['name'] . '" src="' . $option['icon'] . '" width="16" height="16" /> ';
             }
-
-            $result.= $option['name'] . "</a></li>\n";
+            $menubar .= $option['name'];
+            if (!empty($option['url'])) {
+                $menubar .= "</a>";
+            }
+            $menubar .= "   </li>\n";
         }
 
-        $result.= "</ul></div>\n";
-        return $result;
+        $menubar .= "</ul></div>\n";
+        return $menubar;
     }
-
 }

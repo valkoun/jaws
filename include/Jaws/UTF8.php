@@ -6,7 +6,7 @@
  * @category   JawsType
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_UTF8
@@ -14,9 +14,9 @@ class Jaws_UTF8
     /**
      * Detect if the string is UTF8 or not
      *
-     * @param   string $string String to evaluate
-     * @access  public
-     * @return  bool    True if UTF8 encoding is detected, false if not
+     * @param  string $string String to evaluate
+     * @access public
+     * @return boolean True if UTF8 encoding is detected, false if not
      */
     function IsUTF8($str)
     {
@@ -34,9 +34,9 @@ class Jaws_UTF8
 
     /**
      * Encode text to UTF8
-     * @param   string $str String to encode
-     * @access  public
-     * @return  string Encoded string
+     * @param  string $str String to encode
+     * @access public
+     * @return string Encoded string
      */
     function UTF8Encode($str)
     {
@@ -45,9 +45,9 @@ class Jaws_UTF8
 
     /**
      * Decode text to UTF8
-     * @param   string $str String to decode
-     * @access  public
-     * @return  string Decoded string
+     * @param  string $str String to decode
+     * @access public
+     * @return string Decoded string
      */
     function UTF8Decode($str)
     {
@@ -1024,4 +1024,122 @@ class Jaws_UTF8
         }
     }
 
+	/**
+      * convert a string from one UTF-16 char to one UTF-8 char
+      *
+      * Normally should be handled by mb_convert_encoding, but
+      * provides a slower PHP-only method for installations
+      * that lack the multibye string extension.
+      *
+      * @param    string  $utf16  UTF-16 character
+      * @return string  UTF-8 character
+      * @access private
+      */
+  	function utf162utf8($utf16)
+      {
+          // oh please oh please oh please oh please oh please
+          if(function_exists('mb_convert_encoding')) {
+              return mb_convert_encoding($utf16, 'UTF-8', 'UTF-16');
+          }
+  
+          $bytes = (ord($utf16[0]) << 8) | ord($utf16[1]);
+  
+          switch(true) {
+              case ((0x7F & $bytes) == $bytes):
+                  // this case should never be reached, because we are in ASCII range
+                  // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+                  return chr(0x7F & $bytes);
+  
+              case (0x07FF & $bytes) == $bytes:
+                  // return a 2-byte UTF-8 character
+                  // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+                  return chr(0xC0 | (($bytes >> 6) & 0x1F))
+                      . chr(0x80 | ($bytes & 0x3F));
+  
+              case (0xFFFF & $bytes) == $bytes:
+                  // return a 3-byte UTF-8 character
+                  // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+                  return chr(0xE0 | (($bytes >> 12) & 0x0F))
+                      . chr(0x80 | (($bytes >> 6) & 0x3F))
+                      . chr(0x80 | ($bytes & 0x3F));
+          }
+  
+          // ignoring UTF-32 for now, sorry
+          return '';
+      }
+  
+	/**
+      * convert a string from one UTF-8 char to one UTF-16 char
+      *
+      * Normally should be handled by mb_convert_encoding, but
+      * provides a slower PHP-only method for installations
+      * that lack the multibye string extension.
+      *
+      * @param    string  $utf8 UTF-8 character
+      * @return string  UTF-16 character
+      * @access private
+      */
+  	function utf82utf16($utf8)
+      {
+          // oh please oh please oh please oh please oh please
+          if(function_exists('mb_convert_encoding')) {
+              return mb_convert_encoding($utf8, 'UTF-16', 'UTF-8');
+          }
+  
+          switch(strlen($utf8)) {
+              case 1:
+                  // this case should never be reached, because we are in ASCII range
+                  // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+                  return $utf8;
+  
+              case 2:
+                  // return a UTF-16 character from a 2-byte UTF-8 char
+                  // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+                  return chr(0x07 & (ord($utf8[0]) >> 2))
+                      . chr((0xC0 & (ord($utf8[0]) << 6))
+                          | (0x3F & ord($utf8[1])));
+  
+              case 3:
+                  // return a UTF-16 character from a 3-byte UTF-8 char
+                  // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+                  return chr((0xF0 & (ord($utf8[0]) << 4))
+                          | (0x0F & (ord($utf8[1]) >> 2)))
+                      . chr((0xC0 & (ord($utf8[1]) << 6))
+                          | (0x7F & ord($utf8[2])));
+          }
+  
+          // ignoring UTF-32 for now, sorry
+          return '';
+      }
+ 
+
+	/**
+     * Returns array of strings before and after last needle in haystack with right and left inclusive params
+     * example usage: strxchr('filename.txt', ".", 0, 1); returns 'filename'
+     *
+     * @access  public
+     * @param  string $haystack to search in
+     * @param  string $needle to find
+     * @param  boolean int $l_inclusive (optional) is the needle included on the left string
+     * @param  boolean int $r_inclusive (optional) is the needle included on the right string
+     * @return  array   strings to the left and right string of last needle
+	 */
+	//
+	function strxchr($haystack, $needle, $l_inclusive = 0, $r_inclusive = 0)
+	{
+	   //Note our use of !==. Now work if the position of $needle in $haystack was the 0th (first) character.
+	   if (Jaws_UTF8::strrpos($haystack, $needle) !== false) {
+	       //Everything before last $needle in $haystack.
+	       $left = Jaws_UTF8::substr($haystack, 0, Jaws_UTF8::strrpos($haystack, $needle) + $l_inclusive);
+	       //Switch value of $r_inclusive from 0 to 1 and viceversa.
+	       $r_inclusive = ($r_inclusive == 0) ? 1 : 0;
+	       //Everything after last $needle in $haystack.
+	       $right = Jaws_UTF8::substr(strrchr($haystack, $needle), $r_inclusive);
+	       //Return $left and $right into an array.
+	       $a = array($left, $right);
+	       return $a;
+	   } else {
+	       return false;
+	   }
+	}
 }

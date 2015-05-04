@@ -1,47 +1,49 @@
 <?php
 /**
- * Responses warning
- */
-define('RESPONSE_WARNING', 'RESPONSE_WARNING');
-/**
- * Responses error
- */
-define('RESPONSE_ERROR',   'RESPONSE_ERROR');
-/**
- * Responses notice
- */
-define('RESPONSE_NOTICE',  'RESPONSE_NOTICE');
-/**
- *
- */
-define('SESSION_RESERVED_ATTRIBUTES', "sid,salt,type,user,user_name,superadmin,concurrent_logins,acl,updatetime");
-
-/**
- * Class to manage User session.
+ * Manage user session. Authenticate, login/logout, and store/retrieve custom session data.
  *
  * @category   Session
+ * @category   developer_feature
  * @package    Core
  * @author     Ivan -sk8- Chavero <imcsk8@gluch.org.mx>
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
+define('SESSION_ERROR_SYNC', "Can't sync session");
+define('SESSION_ERROR_MULTSESSIONS', "Multiple sessions in DB");
+define('SESSION_RESERVED_ATTRIBUTES', "session_id,type,user_id,updatetime,username,logged,user_type,acl");
+
+// Responses
+define('RESPONSE_WARNING', 'RESPONSE_WARNING');
+define('RESPONSE_ERROR',   'RESPONSE_ERROR');
+define('RESPONSE_NOTICE',  'RESPONSE_NOTICE');
+
 class Jaws_Session
 {
-    /**
-     * Authentication model
-     * @var     object $_AuthModel
-     * @access  private
-     */
-    var $_AuthModel;
-
     /**
      * Authentication method
      * @var     string $_AuthMethod
      * @access  private
      */
     var $_AuthMethod;
+
+    /**
+     * Logged flag
+     * @var     boolean $_Logged
+     * @access  private
+     * @see     Logged()
+     */
+    var $_Logged;
+
+    /**
+     * Last error message
+     * @var     string $_Error
+     * @access  private
+     * @see     GetError()
+     */
+    var $_Error;
 
     /**
      * Attributes array
@@ -52,48 +54,41 @@ class Jaws_Session
     var $_Attributes = array();
 
     /**
-     * Attributes array trash
-     * @var     array $_AttributesTrash
-     * @access  private
-     * @see     SetAttribute(), GetAttibute()
-     */
-    var $_AttributesTrash = array();
-
-    /**
      * Changes flag
-     * @var     bool    $_HasChanged
+     * @var     boolean $_HasChanged
      * @access  private
      */
     var $_HasChanged;
 
     /**
-     * Session unique identifier
+     * session unique identifier
      * @var     string $_SessionID
      * @access  private
      */
     var $_SessionID;
 
     /**
-     * Is session exists in browser or application
-     * @var     bool    $_SessionExists
-     * @access  private
+     * Session is only for admins
+     *
+     * @access  public
+     * @var     boolean
      */
-    var $_SessionExists = true;
+    var $_OnlyAdmins = false;
 
     /**
      * An interface for available drivers
      *
      * @access  public
-     * @return  object  Jaws_Session type object
      */
     function &factory()
     {
         $SessionType = ucfirst(strtolower(APP_TYPE));
         $sessionFile = JAWS_PATH . 'include/Jaws/Session/'. $SessionType .'.php';
         if (!file_exists($sessionFile)) {
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loading session $SessionType failed.");
-            return new Jaws_Error("Loading session $SessionType failed.",
-                                  __FUNCTION__);
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, "Loading session $SessionType failed.");
+            }
+            return new Jaws_Error("Loading session $SessionType failed.", 'SESSION', JAWS_ERROR_ERROR);
         }
 
         include_once $sessionFile;
@@ -104,442 +99,426 @@ class Jaws_Session
 
     /**
      * Initializes the Session
-     *
-     * @access  public
-     * @return  void
      */
     function Init()
     {
         $this->_AuthMethod = $GLOBALS['app']->Registry->Get('/config/auth_method');
-        $authFile = JAWS_PATH . 'include/Jaws/Auth/' . $this->_AuthMethod . '.php';
+        $authFile = JAWS_PATH . 'include/Jaws/AuthScripts/' . $this->_AuthMethod . '.php';
         if (empty($this->_AuthMethod) || !file_exists($authFile)) {
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR,
-                                 $this->_AuthMethod . ' Error: ' . $authFile .
-                                 ' file doesn\'t exists, using DefaultAuth');
-            $this->_AuthMethod = 'Default';
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, $method . ' Error: ' . $authFile . ' file doesn\'t exists, using DefaultAuth');
+            }
+            $this->_AuthMethod = 'DefaultAuthentication';
         }
 
         // Try to restore session...
         $this->_HasChanged = false;
 
+        // Load cache
+        include_once JAWS_PATH . 'include/Jaws/Session/Cache.php';
+        $this->_cache = new Jaws_Session_Cache;
+
         // Delete expired sessions
-        if (mt_rand(1, 32) == mt_rand(1, 32)) {
-            $this->DeleteExpiredSessions();
+        $last_expired_file = JAWS_DATA . 'last_expired';
+        $last_expired = @file_get_contents($last_expired_file);
+        if ($last_expired === false || 
+           ($last_expired < (time() - ($GLOBALS['app']->Registry->Get('/policy/session_idle_timeout') * 60))))
+        {
+            Jaws_Utils::file_put_contents($last_expired_file, time());
+            $this->_cache->DeleteExpiredSessions();
         }
+    }
+
+    /**
+     * Set the session type for admins
+     *
+     * @access  public
+     */
+    function OnlyAdmins()
+    {
+        $this->_OnlyAdmins = true;
+    }
+
+    /**
+     * Gets the session mode
+     *
+     * @access  public
+     * @return  string  Session mode
+     */
+    function GetMode()
+    {
+        return $this->_Mode;
     }
 
     /**
      * Login
      *
-     * @param   string  $username   Username
-     * @param   string  $password   Password
-     * @param   bool    $remember   Remember me
-     * @param   string  $authmethod Authentication method
-     * @return  mixed   An Array of user's attributes if success, otherwise Jaws_Error
+     * @param   string  $username Username
+     * @param   string  $password Password
+     * @param   boolean $remember Remember me
+     * @param   boolean $override Admin override
+     * @return  boolean True if succeed.
      */
-    function Login($username, $password, $remember, $authmethod = '')
+    function Login($username, $password, $remember, $override = false)
     {
-        $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'LOGGIN IN');
-        if (!$this->_SessionExists) {
-            return Jaws_Error::raiseError(_t('GLOBAL_ERROR_SESSION_NOTFOUND'),
-                                          __FUNCTION__,
-                                          JAWS_ERROR_NOTICE);
+        if (isset($GLOBALS['log'])) {
+            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'LOGGIN IN');
         }
 
-        if ($username !== '' && $password !== '') {
-            if (!empty($authmethod)) {
-                $authmethod = preg_replace('#[^[:alnum:]_-]#', '', $authmethod);
+        if (($username !== '' && $password !== '') || $override === true) {
+            if ($override === false) {
+				require_once JAWS_PATH . 'include/Jaws/AuthScripts/' . $this->_AuthMethod . '.php';
+				$authFunc = $this->_AuthMethod;
+				$result = $authFunc($username, $password, $this->_OnlyAdmins);
             } else {
-                $authmethod = $this->_AuthMethod;
-            }
+				$result = true;
+			}
+			if (!Jaws_Error::isError($result) || $override === true) {
+				//if (!empty($this->_SessionID)) {
+                    $this->Logout();
+                //}
 
-            require_once JAWS_PATH . 'include/Jaws/Auth/' . $authmethod . '.php';
-            $className = 'Jaws_Auth_' . $authmethod;
-            $this->_AuthModel = new $className();
-            $result = $this->_AuthModel->Auth($username, $password);
-            if (!Jaws_Error::isError($result)) {
-                $result = $this->_AuthModel->GetAttributes();
-                if (!Jaws_Error::isError($result)) {
-                    $existSessions = 0;
-                    if (!empty($result['concurrent_logins'])) {
-                        $existSessions = $this->GetUserSessions($result['id'], true);
-                    }
+				$this->Create($username, $remember);
+                $this->_Logged = true;
 
-                    if (empty($existSessions) || $result['concurrent_logins'] > $existSessions)
-                    {
-                        $this->Create($result, $remember);
-                        return true;
-                    } else {
-                        $result = Jaws_Error::raiseError(_t('GLOBAL_ERROR_LOGIN_CONCURRENT_REACHED'),
-                                                         __FUNCTION__,
-                                                         JAWS_ERROR_NOTICE);
-                    }
-                }
+                // Update login time
+                $user_id = $this->GetAttribute('user_id');
+                $userModel = new Jaws_User;
+                $userModel->updateLoginTime($user_id);
+				
+				return true;
             }
 
             return $result;
         }
 
-        return Jaws_Error::raiseError(_t('GLOBAL_ERROR_LOGIN_WRONG'),
-                                      __FUNCTION__,
-                                      JAWS_ERROR_NOTICE);
+        return new Jaws_Error(_t('GLOBAL_ERROR_LOGIN_WRONG'));
     }
 
     /**
      * Return session login status
-     *
      * @access  public
-     * @return  bool    login status
      */
     function Logged()
     {
-        return $this->GetAttribute('logged');
+		//Can non-admins be logged?
+        if ($this->_OnlyAdmins === true) {
+            $user_type = $this->GetAttribute('user_type');
+            //Only admins eh??.. so if you are not an admin you are not logged..
+            if ($user_type == 2) {
+                return false;
+            }
+        }
+        return $this->_Logged;
     }
 
     /**
-     * Logout from session and reset session values
+     * Logout
      *
-     * @access  public
-     * @return  void
+     * Logout from session
+     * delete session from the system
      */
     function Logout()
     {
-        $this->Reset();
-        $this->Synchronize($this->_SessionID);
-        $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session logout');
+        $this->SetAttribute('logged', false);
+        $this->_cache->Delete($this->_SessionID);
+        $this->_SessionID = '';
+        $this->_Attributes = array();
+        if (isset($GLOBALS['log'])) {
+            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session succesfully destroyed');
+        }
+    }
+
+    /**
+     * Return last error message
+     * @access  public
+     */
+    function GetError()
+    {
+        return $this->_Error;
     }
 
     /**
      * Loads Jaws Session
      *
-     * @access  protected
-     * @param   string  $sid Session identifier
-     * @return  bool    True if can load session, false if not
+     * @param   string $session_id Session ID
+     * @return  boolean True if can load session, false if not
      */
-    function Load($sid)
+    function Load($session_id)
     {
-        $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loading session');
-        $this->_SessionID = '';
-        @list($sid, $salt) = explode('-', $sid);
-        $session = $this->GetSession((int)$sid);
+        if (isset($GLOBALS['log'])) {
+            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loading session');
+        }
+
+        $session = $this->_cache->GetSession($session_id);
         if (is_array($session)) {
-            $checksum = md5($session['user'] . $session['data']);
-            $expTime = time() - 60 * (int) $GLOBALS['app']->Registry->Get('/policy/session_idle_timeout');
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $checksum = md5($session['user_id'] . $session['data'] . $user_agent);
+            if ($checksum === $session['checksum']) {
+                // check referrer of request
+                $referrer = @parse_url($_SERVER['HTTP_REFERER']);
+                if ($referrer && isset($referrer['host'])) {
+                    $referrer = $referrer['host'];
+                } else {
+                    $referrer = $_SERVER['HTTP_HOST'];
+                }
+				
+				include_once JAWS_PATH . 'include' . DIRECTORY_SEPARATOR . 'Jaws' . DIRECTORY_SEPARATOR . 'Snoopy.php';
+				$site_url = $GLOBALS['app']->GetSiteURL('', false, 'http');
+				$site_ssl_url = $GLOBALS['app']->GetSiteURL('', false, 'https');
+				
+				$good_referers = array(
+					strtolower($_SERVER['HTTP_HOST']),
+					strtolower($_SERVER['SERVER_NAME']),
+					str_replace(array('http://', 'https://'), '', strtolower($site_url)),
+					str_replace(array('http://', 'https://'), '', strtolower($site_ssl_url)),
+					'ajax.googleapis.com',
+					'authorize.net',
+					'secure.authorize.net',
+					'paypal.com',
+					'merchant.paypal.com',
+					'sandbox.paypal.com',
+					'www.sandbox.paypal.com',
+					'www.paypal.com',
+					'sandbox.checkout.google.com',
+					'checkout.google.com',
+					'google.com'
+				);
 
-            $this->_SessionID  = $session['sid'];
-            $this->_Attributes = unserialize($session['data']);
-
-            // check session longevity
-            if ($session['updatetime'] < ($expTime - $session['longevity'])) {
-                $GLOBALS['app']->Session->Logout();
-                $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'Previous session has expired');
-                return false;
-            }
-
-            // user expiry date
-            $expiry_date = $this->GetAttribute('expiry_date');
-            if (!empty($expiry_date) && $expiry_date <= time()) {
-                $GLOBALS['app']->Session->Logout();
-                $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'This username is expired');
-                return false;
-            }
-
-            // logon hours
-            $logon_hours = $this->GetAttribute('logon_hours');
-            if (!empty($logon_hours)) {
-                $wdhour = explode(',', $GLOBALS['app']->UTC2UserTime(time(), 'w,G', true));
-                $lhByte = hexdec($logon_hours{$wdhour[0]*6 + intval($wdhour[1]/4)});
-                if ((pow(2, fmod($wdhour[1], 4)) & $lhByte) == 0) {
-                    $GLOBALS['app']->Session->Logout();
-                    $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'Logon hours terminated');
-                    return false;
+                $this->_Attributes = unserialize($session['data']);
+                $this->_SessionID = $session_id;
+                if (!$this->GetAttribute('logged') || in_array(strtolower($referrer), $good_referers) || $session['referrer'] === md5($referrer)) {
+                    if (isset($GLOBALS['log'])) {
+                        $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session was OK');
+                    }
+                } else {
+                    if (isset($GLOBALS['log'])) {
+                        $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session found but referrer changed. Un-setting session, and logging out.');
+                    }
+					require_once JAWS_PATH . 'include/Jaws/Header.php';
+					Jaws_Header::Location($GLOBALS['app']->GetSiteURL('', false, 'http').'/index.php?gadget=Users&action=Logout');
+					exit;
+                    /*
+					Jaws_Error::Fatal('Jaws prevented execute this request for security reason<br />'.
+                                      'because referrer of this session changed',
+                                      __FILE__, __LINE__);
+					*/
+                }
+            } else {
+                $this->_cache->Delete($session_id);
+                if (isset($GLOBALS['log'])) {
+                    $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session found but checksum fail');
                 }
             }
-
-            // concurrent logins
-            if ($session['updatetime'] < $expTime) {
-                $logins = $this->GetAttribute('concurrent_logins');
-                $existSessions = $this->GetUserSessions($this->GetAttribute('user'), true);
-                if (!empty($existSessions) && !empty($logins) && $existSessions >= $logins) {
-                    $GLOBALS['app']->Session->Logout();
-                    $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'Maximum number of concurrent logins reached');
-                    return false;
-                }
-            }
-
-            // browser agent
-            $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
-            $agent = $xss->filter($_SERVER['HTTP_USER_AGENT']);
-            if ($agent !== $session['agent']) {
-                $GLOBALS['app']->Session->Logout();
-                $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'Previous session agent has been changed');
-                return false;
-            }
-
-            // salt & checksum
-            if (($salt !== $this->GetAttribute('salt')) || ($checksum !== $session['checksum'])) {
-                $GLOBALS['app']->Session->Logout();
-                $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'Previous session salt has been changed');
-                return false;
-            }
-
-            // check referrer of request
-            $referrer = @parse_url($_SERVER['HTTP_REFERER']);
-            if ($referrer && isset($referrer['host'])) {
-                $referrer = $referrer['host'];
-            } else {
-                $referrer = $_SERVER['HTTP_HOST'];
-            }
-
-            if (!$this->GetAttribute('logged') ||
-                (JAWS_SCRIPT != 'admin') ||
-                $referrer == $_SERVER['HTTP_HOST'] ||
-                $session['referrer'] === md5($referrer))
-            {
-                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session was OK');
-                return true;
-            } else {
-                $GLOBALS['app']->Session->Logout();
-                $GLOBALS['log']->Log(JAWS_LOG_NOTICE, 'Session found but referrer changed');
-                return false;
+        } else {
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'No previous session exists');
             }
         }
 
-        $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'No previous session exists');
+        return !empty($this->_SessionID);
+    }
+
+    /**
+     * Create a new session for a given username
+     * @param   string  $username Username
+     * @param   boolean $remember Remember me
+     * @return  boolean True if can create session.
+     */
+    function Create($username, $remember = false)
+    {
+        $info = array();
+        if (empty($username)) {
+            $info['id']        = 0;
+            $info['username']  = '';
+            $info['user_type'] = 2;
+            $info['nickname']     = '';
+            $info['email']     = '';
+            $info['url']       = '';
+            $info['language']  = '';
+            $info['theme']     = '';
+            $info['editor']    = '';
+            $info['timezone']  = null;
+            $groups = array();
+        } else {
+            require_once JAWS_PATH . 'include/Jaws/User.php';
+            $userModel = new Jaws_User;
+            $info = $userModel->GetUserInfoByName($username, true, true, true);
+            if (Jaws_Error::IsError($info) || !isset($info['username'])) {
+                return false;
+            }
+
+            $groups = $userModel->GetGroupsOfUser($username);
+            if (Jaws_Error::IsError($groups)) {
+                return false;
+            }
+        }
+        $session_id = md5(uniqid(rand(), true)) . time() . floor(microtime()*1000);
+        //Don't know if session_id, user_id and modification time
+        //should be on the _Attributes array since they are part of
+        // the structure of session and session_user_data tables
+        //session_id stays in the hash but only for knowing wich session
+        //was the last to alter the session_user_data table.
+        $this->_SessionID = $session_id;
+        /**
+         * We need to make sure Attributes is clean cause there's the possibility
+         * that user was logged as another user (anonymous for example) with different
+         * attributes (first Load check WebSession)
+         */
+        $this->_Attributes = array();
+        $this->SetAttribute('logged', !empty($username));
+        $this->SetAttribute('session_id', $session_id);
+        $this->SetAttribute('user_id', $info['id']);
+        $this->SetAttribute('user_type', (int)$info['user_type']);
+        $this->SetAttribute('groups', $groups);
+        $this->SetAttribute('type', APP_TYPE);
+        $this->SetAttribute('longevity', $remember?
+                            (int)$GLOBALS['app']->Registry->Get('/policy/session_remember_timeout')*3600 : 0);
+        $this->SetAttribute('updatetime', time());
+        $this->SetAttribute('username', $info['username']);
+
+        if (isset($info['last_login'])) {
+            $this->SetAttribute('last_login', $info['last_login']);
+        } else {
+            $this->SetAttribute('last_login', $GLOBALS['db']->Date());
+        }
+
+        //profile
+        $this->SetAttribute('nickname', $info['nickname']);
+        $this->SetAttribute('email', $info['email']);
+        $this->SetAttribute('url',   $info['url']);
+
+        //preferences
+        $info['timezone'] = (trim($info['timezone']) == "") ? null : $info['timezone'];
+        $this->SetAttribute('language', $info['language']);
+        $this->SetAttribute('theme',    $info['theme']);
+        $this->SetAttribute('editor',   $info['editor']);
+        $this->SetAttribute('timezone', $info['timezone']);
+
+        if ($this->Synchronize()) {
+            return true;
+        }
+
         return false;
     }
 
     /**
-     * Create a new session for a given data
-     *
-     * @access  protected
-     * @param   array   $info       User's attributes
-     * @param   bool    $remember   Remember me
-     * @return  bool    True if can create session
-     */
-    function Create($info = array(), $remember = false)
-    {
-        if (empty($info)) {
-            $info['id']          = '';
-            $info['internal']    = false;
-            $info['username']    = '';
-            $info['superadmin']  = false;
-            $info['groups']      = array();
-            $info['nickname']    = '';
-            $info['logon_hours'] = '';
-            $info['expiry_date'] = 0;
-            $info['concurrent_logins'] = 0;
-            $info['email']      = '';
-            $info['url']        = '';
-            $info['avatar']     = '';
-            $info['language']   = '';
-            $info['theme']      = '';
-            $info['editor']     = '';
-            $info['timezone']   = null;
-        }
-
-        $this->_Attributes = array();
-        $this->SetAttribute('user',        $info['id']);
-        $this->SetAttribute('internal',    $info['internal']);
-        $this->SetAttribute('salt',        uniqid(mt_rand(), true));
-        $this->SetAttribute('type',        APP_TYPE);
-        $this->SetAttribute('username',    $info['username']);
-        $this->SetAttribute('superadmin',  $info['superadmin']);
-        $this->SetAttribute('groups',      $info['groups']);
-        $this->SetAttribute('logon_hours', $info['logon_hours']);
-        $this->SetAttribute('expiry_date', $info['expiry_date']);
-        $this->SetAttribute('concurrent_logins', $info['concurrent_logins']);
-        $this->SetAttribute('longevity',  $remember?
-                                          (int)$GLOBALS['app']->Registry->Get('/policy/session_remember_timeout')*3600 : 0);
-        $this->SetAttribute('logged',     !empty($info['id']));
-        //profile
-        $this->SetAttribute('nickname',   $info['nickname']);
-        $this->SetAttribute('email',      $info['email']);
-        $this->SetAttribute('url',        $info['url']);
-        $this->SetAttribute('avatar',     $info['avatar']);
-        //preferences
-        $this->SetAttribute('language',   $info['language']);
-        $this->SetAttribute('theme',      $info['theme']);
-        $this->SetAttribute('editor',     $info['editor']);
-        $this->SetAttribute('timezone',  (trim($info['timezone']) == "") ? null : $info['timezone']);
-
-        $this->_SessionID = $this->Synchronize($this->_SessionID);
-        return true;
-    }
-
-    /**
      * Reset current session
-     *
-     * @access  protected
-     * @return  bool    True if can reset it
+     * @return  boolean True if can reset it
      */
     function Reset()
     {
+        $username = $this->GetAttribute('username');
         $this->_Attribute = array();
-        $this->SetAttribute('user',        '');
-        $this->SetAttribute('salt',        uniqid(mt_rand(), true));
-        $this->SetAttribute('type',        APP_TYPE);
-        $this->SetAttribute('internal',    false);
-        $this->SetAttribute('username',    '');
-        $this->SetAttribute('superadmin',  false);
-        $this->SetAttribute('groups',      array());
-        $this->SetAttribute('logon_hours', '');
-        $this->SetAttribute('expiry_date', 0);
-        $this->SetAttribute('concurrent_logins', 0);
-        $this->SetAttribute('longevity',  0);
-        $this->SetAttribute('logged',     false);
-        $this->SetAttribute('nickname',   '');
-        $this->SetAttribute('email',      '');
-        $this->SetAttribute('url',        '');
-        $this->SetAttribute('avatar',     '');
-        $this->SetAttribute('language',   '');
-        $this->SetAttribute('theme',      '');
-        $this->SetAttribute('editor',     '');
-        $this->SetAttribute('timezone',   null);
-        return true;
+        $this->SetAttribute('session_id', $this->_SessionID);
+        $this->SetAttribute('type', APP_TYPE);
+        $this->SetAttribute('updatetime', time());
+        $this->SetAttribute('username', $username);
+        $this->SetAttribute('logged', false);
+        $this->SetAttribute('user_type', 0);
+        $this->SetAttribute('groups',   array());
+        $this->SetAttribute('nickname',    '');
+        $this->SetAttribute('email',    '');
+        $this->SetAttribute('url',      '');
+        $this->SetAttribute('language', '');
+        $this->SetAttribute('theme',    '');
+        $this->SetAttribute('editor',   '');
+        $this->SetAttribute('timezone', null);
+        if ($this->Synchronize()) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Set a session attribute
      *
-     * @access  public
-     * @param   string  $name       Attribute name
-     * @param   mixed   $value      Attribute value
-     * @param   bool    $trashed    Trashed attribute(eliminated end of current request)
-     * @return  bool    True if can set value
+     * @param   string $name attribute name
+     * @param   string $value attribute value
+     * @return  boolean True if attribute has changed
      */
-    function SetAttribute($name, $value, $trashed = false)
+    function SetAttribute($name, $value)
     {
-        if ($trashed) {
-            $this->_AttributesTrash[$name] = $value;
-        } else {
-            $this->_HasChanged = !array_key_exists($name, $this->_Attributes) || ($this->_Attributes[$name] != $value);
+        if (
+            !isset($this->_Attributes[$name]) ||
+            (isset($this->_Attributes[$name]) && $this->_Attributes[$name] != $value)
+        ) {
             if (is_array($value) && $name == 'LastResponses') {
                 $this->_Attributes['LastResponses'][] = $value;
             } else {
                 $this->_Attributes[$name] = $value;
             }
+            $this->_HasChanged = true;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
      * Get a session attribute
      *
-     * @access  public
-     * @param   string  $name attribute name
-     * @return  mixed   Value of the attribute or Null if not exist
+     * @param   string $name attribute name
+     * @return  string value of the attribute
      */
     function GetAttribute($name)
     {
-        // Deprecated: in next major version will be removed
-        if ($name == 'user_id') {
-            $name = 'user';
-        }
-
         if (array_key_exists($name, $this->_Attributes)) {
             return $this->_Attributes[$name];
-        } elseif (array_key_exists($name, $this->_AttributesTrash)) {
-            return $this->_AttributesTrash[$name];
         }
 
         return null;
     }
 
     /**
-     * Get value of given session's attributes
-     *
-     * @access  public
-     * @param   mixed   $argv Optional variable list of attributes name
-     * @return  array   Value of the attributes
-     */
-    function GetAttributes($argv)
-    {
-        $names = func_get_args();
-        // for support array of keys array
-        if (isset($names[0][0]) && is_array($names[0][0])) {
-            $names = $names[0];
-        }
-
-        if (empty($names)) {
-            return $this->_Attributes;
-        }
-
-        $attributes = array();
-        foreach ($names as $name) {
-            $attributes[$name] = $this->GetAttribute($name);
-        }
-
-        return $attributes;
-    }
-
-    /**
      * Delete a session attribute
      *
-     * @access  public
-     * @param   string  $name       Attribute name
-     * @param   bool    $trashed    Move ttribute to trash before delete
-     * @return  bool    True if can delete value
+     * @param   string $name attribute name
+     * @return  boolean True if attribute has been deleted
      */
-    function DeleteAttribute($name, $trashed = false)
+    function DeleteAttribute($name)
     {
         if (array_key_exists($name, $this->_Attributes)) {
-            if ($trashed) {
-                $this->_AttributesTrash[$name] = $this->_Attributes[$name];
-            }
             unset($this->_Attributes[$name]);
             $this->_HasChanged = true;
-        } elseif (!$trashed && array_key_exists($name, $this->_AttributesTrash)) {
-            unset($this->_AttributesTrash[$name]);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
      * Get permission on a given gadget/task
      *
-     * @access  public
-     * @param   string  $gadget     Gadget name
-     * @param   string  $task       Task(s) name
-     * @param   bool    $together   And/Or tasks permission result, default true
-     * @return  bool    True if granted, else False
+     * @param   string $gadget Gadget name
+     * @param   string $task Task name
+     * @return  boolean True if granted, else False
      */
-    function GetPermission($gadget, $task, $together = true)
+    function GetPermission($gadget, $task)
     {
-        $result = $together? true : false;
-        $user = $this->GetAttribute('username');
-        $groups = $this->GetAttribute('groups');
-        $tasks = array_filter(array_map('trim', explode(',', $task)));
-        foreach ($tasks as $task) {
-            if ($together) {
-                $result = $result &&
-                          $GLOBALS['app']->ACL->GetFullPermission($user, $groups, $gadget,
-                                                                  $task, $this->IsSuperAdmin());
-            } else {
-                $result = $result ||
-                          $GLOBALS['app']->ACL->GetFullPermission($user, $groups, $gadget,
-                                                                  $task, $this->IsSuperAdmin());
-            }
+        if ($this->IsSuperAdmin() === true) {
+            return true;
         }
 
-        return $result;
+        $groups = $this->GetAttribute('groups');
+        $user = $this->GetAttribute('username');
+        if (!isset($GLOBALS['app']->ACL)) {
+			$GLOBALS['app']->loadClass('ACL', 'Jaws_ACL');			
+		}
+		return $GLOBALS['app']->ACL->GetFullPermission($user, $groups, $gadget, $task);
     }
 
     /**
      * Check permission on a given gadget/task
      *
-     * @access  public
-     * @param   string  $gadget         Gadget name
-     * @param   string  $task           Task(s) name
-     * @param   bool    $together       And/Or tasks permission result, default true
-     * @param   string  $errorMessage   Error message to return
-     * @return  mixed   True if granted, else throws an Exception(Jaws_Error::Fatal)
+     * @param   string $gadget Gadget name
+     * @param   string $task Task name
+     * @param   string $errorMessage Error message to return
+     * @return  boolean True if granted, else throws an Exception(Jaws_Error::Fatal)
      */
-    function CheckPermission($gadget, $task, $together = true, $errorMessage = '')
+    function CheckPermission($gadget, $task, $errorMessage = '')
     {
-        if ($this->GetPermission($gadget, $task, $together)) {
+        if ($this->GetPermission($gadget, $task)) {
             return true;
         }
 
@@ -548,314 +527,111 @@ class Jaws_Session
                 ' don\'t have permission to execute '.$gadget.'::'.$task;
         }
 
-        Jaws_Error::Fatal($errorMessage);
+        Jaws_Error::Fatal($errorMessage, __FILE__, __LINE__);
     }
 
     /**
-     * Returns is a current user is superadmin
+     * Returns true if user is a super-admin (aka superroot)
      *
      * @access  public
-     * @return  bool    True if user is a superadmin
+     * @return  boolean
      */
     function IsSuperAdmin()
     {
-        return $this->GetAttribute('logged') && $this->GetAttribute('superadmin');
+        if ($this->GetAttribute('user_type') === 0) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Synchronize current session
+     * Returns true if user is an admin (or super-admin)
      *
      * @access  public
-     * @return  mixed   Session ID if success, otherwise Jaws_Error or false
+     * @return  boolean
      */
+    function IsAdmin()
+    {
+        if ($this->GetAttribute('user_type') <= 1) {
+            return true;
+        }
+        return false;
+    }
+
     function Synchronize()
     {
-        // agent
-        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
-        $agent = $xss->filter($_SERVER['HTTP_USER_AGENT']);
-        // ip
-        $ip = 0;
-        if (preg_match('/\b(?:\d{1,3}\.){3}\d{1,3}\b/', $_SERVER['REMOTE_ADDR'])) {
-            $ip = ip2long($_SERVER['REMOTE_ADDR']);
-            $ip = ($ip < 0)? ($ip + 0xffffffff + 1) : $ip;
-        }
-        // referrer
-        $referrer = @parse_url($_SERVER['HTTP_REFERER']);
-        if ($referrer && isset($referrer['host']) && ($referrer['host'] != $_SERVER['HTTP_HOST'])) {
-            $referrer = $referrer['host'];
-        } else {
-            $referrer = '';
+        if (isset($GLOBALS['log'])) {
+            $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Synchronizing session');
         }
 
-        if (!empty($this->_SessionID)) {
-            // Now we sync with a previous session only if has changed
-            if ($GLOBALS['app']->Session->_HasChanged) {
-                $params = array();
-                $serialized = serialize($GLOBALS['app']->Session->_Attributes);
-                $params['sid']        = $this->_SessionID;
-                $params['data']       = $serialized;
-                $params['user']       = $GLOBALS['app']->Session->GetAttribute('user');
-                $params['longevity']  = $GLOBALS['app']->Session->GetAttribute('longevity');
-                $params['referrer']   = md5($referrer);
-                $params['checksum']   = md5($params['user'] . $serialized);
-                $params['ip']         = $ip;
-                $params['agent']      = $agent;
-                $params['updatetime'] = time();
-
-                $sql = '
-                    UPDATE [[session]] SET
-                        [user]       = {user},
-                        [data]       = {data},
-                        [longevity]  = {longevity},
-                        [referrer]   = {referrer},
-                        [checksum]   = {checksum},
-                        [ip]         = {ip},
-                        [agent]      = {agent},
-                        [updatetime] = {updatetime}
-                    WHERE [sid] = {sid}';
-
-                $result = $GLOBALS['db']->query($sql, $params);
-                if (!Jaws_Error::IsError($result)) {
-                    $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session synchronized succesfully');
-                    return $this->_SessionID;
-                }
-            } else {
-                $params = array();
-                $params['sid']        = $this->_SessionID;
-                $params['updatetime'] = time();
-                $sql = '
-                    UPDATE [[session]] SET
-                        [updatetime] = {updatetime}
-                    WHERE [sid] = {sid}';
-                $result = $GLOBALS['db']->query($sql, $params);
-                if (!Jaws_Error::IsError($result)) {
-                    $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Session synchronized succesfully(only modification time)');
-                    return $this->_SessionID;
-                }
-            }
-        } else {
-            //A new session, we insert it to the DB
-            $updatetime = time();
-            $GLOBALS['app']->Session->SetAttribute('groups', array());
-            $serialized = serialize($GLOBALS['app']->Session->_Attributes);
-
-            $params = array();
-            $params['data']       = $serialized;
-            $params['longevity']  = $GLOBALS['app']->Session->GetAttribute('longevity');
-            $params['app_type']   = APP_TYPE;
-            $params['user']       = $GLOBALS['app']->Session->GetAttribute('user');
-            $params['referrer']   = md5($referrer);
-            $params['checksum']   = md5($params['user'] . $serialized);
-            $params['ip']         = $ip;
-            $params['agent']      = $agent;
-            $params['updatetime'] = $updatetime;
-            $params['createtime'] = $updatetime;
-
-            $sql = '
-                INSERT INTO [[session]]
-                    ([user], [type], [longevity], [data], [referrer], [checksum],
-                     [ip], [agent], [createtime], [updatetime])
-                VALUES
-                    ({user}, {app_type}, {longevity}, {data}, {referrer}, {checksum},
-                     {ip}, {agent}, {createtime}, {updatetime})';
-
-            $result = $GLOBALS['db']->query($sql, $params);
-            if (!Jaws_Error::IsError($result)) {
-                $result = $GLOBALS['db']->lastInsertID('session', 'sid');
-                if (!Jaws_Error::IsError($result) && !empty($result)) {
-                    return $result;
-                }
+        $res = $this->_cache->Synchronize();
+        if ($res) {
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'New session created');
             }
         }
 
-        return false;
+        return $res;
     }
 
     /**
-     * Delete a session
+     * Push a simple response (no CSS and special data)
      *
      * @access  public
-     * @param   int     $sid  Session ID
-     * @return  bool    True if success, otherwise False
+     * @param   string  $msg    Response's message
      */
-    function Delete($sid)
+    function PushSimpleResponse($msg, $resource = 'SimpleResponse')
     {
-        $sql = 'DELETE FROM [[session]] WHERE [sid] = {sid}';
-        $result = $GLOBALS['db']->query($sql, array('sid' => $sid));
-        if (Jaws_Error::IsError($result)) {
-            return false;
-        }
-
-        return true;
+		/*
+		$request =& Jaws_Request::getInstance();
+		if (!$GLOBALS['app']->deleteSyntactsCacheFile(array($request->get('gadget', 'get')))) {
+			Jaws_Error::Fatal("Cache file couldn't be deleted");
+		}
+		*/
+        $this->SetAttribute($resource, $msg);
     }
 
     /**
-     * Deletes all sessions of an user
+     * Prints (returns) the last simple response
      *
      * @access  public
-     * @param   string  $user   User's ID
-     * @return  bool    True if success, otherwise False
+     * @param   string  $resource Resource's name
+     * @param   boolean $removePoppedResource
+     * @return  mixed   Last simple response
      */
-    function DeleteUserSessions($user)
-    {
-        //Get the sessions ID of the user
-        $sql = 'DELETE FROM [[session]] WHERE [user] = {user}';
-        $result = $GLOBALS['db']->query($sql, array('user' => (string)$user));
-        if (Jaws_Error::IsError($result)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Delete expired sessions
-     *
-     * @access  public
-     * @return  bool    True if success, otherwise False
-     */
-    function DeleteExpiredSessions()
-    {
-        $params = array();
-        $params['expired'] = time() - ($GLOBALS['app']->Registry->Get('/policy/session_idle_timeout') * 60);
-        $sql = "DELETE FROM [[session]] WHERE [updatetime] < ({expired} - [longevity])";
-        $result = $GLOBALS['db']->query($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns all users's sessions count
-     *
-     * @access  public
-     * @param   int     $user       User ID
-     * @param   bool    $onlyOnline Optional only count of online sessions
-     * @return  mixed   Sessions    count/False if error occurs when runing query
-     */
-    function GetUserSessions($user, $onlyOnline = false)
-    {
-        $params = array();
-        $params['user'] = (string)$user;
-        $params['expired'] = time() - ($GLOBALS['app']->Registry->Get('/policy/session_idle_timeout') * 60);
-        $sql = '
-            SELECT COUNT([user])
-            FROM [[session]]
-            WHERE [user] = {user}';
-
-        if ($onlyOnline) {
-            $sql.= ' AND [updatetime] >= {expired}';
-        }
-
-        $count = $GLOBALS['db']->queryOne($sql, $params);
-        if (Jaws_Error::isError($count)) {
-            return false;
-        }
-
-        return (int)$count;
-    }
-
-    /**
-     * Returns the session's attributes
-     *
-     * @access  private
-     * @param   string  $sid    Session ID
-     * @return  mixed   Session's attributes if exist, otherwise False
-     */
-    function GetSession($sid)
-    {
-        $params = array();
-        $params['sid'] = $sid;
-
-        $sql = '
-            SELECT
-                [sid], [user], [data], [referrer], [checksum], [ip], [agent],
-                [updatetime], [longevity]
-            FROM [[session]]
-            WHERE
-                [sid] = {sid}';
-
-        $result = $GLOBALS['db']->queryRow($sql, $params);
-        if (!Jaws_Error::isError($result) && isset($result['sid'])) {
-            return $result;
-        }
-
-        return false;
-    }
-
-    /**
-     * Push response data
-     *
-     * @access  public
-     * @param   mixed   $data       Response data
-     * @param   string  $resource   Response name
-     * @return  void
-     */
-    function PushResponse($data, $resource = 'Response')
-    {
-        $this->SetAttribute($resource, $data);
-    }
-
-    /**
-     * Returns the response data
-     *
-     * @access  public
-     * @param   string  $resource   Resource's name
-     * @param   bool    $remove     Optional remove popped response
-     * @return  mixed   Response data, or Null if resource not found
-     */
-    function PopResponse($resource = 'Response', $remove = true)
+    function PopSimpleResponse($resource = 'SimpleResponse', $removePoppedResource = true)
     {
         $response = $this->GetAttribute($resource);
-        if ($remove) {
-            // move it into attributes trash
-            $this->DeleteAttribute($resource, true);
+        if ($removePoppedResource) {
+            $this->DeleteAttribute($resource);
+        }
+
+        if (empty($response)) {
+            return false;
         }
 
         return $response;
     }
 
     /**
-     * Push response data
-     *
-     * @deprecated
-     * @access  public
-     * @param   mixed   $data       Response data
-     * @param   string  $resource   Response name
-     * @return  void
-     */
-    function PushSimpleResponse($data, $resource = 'SimpleResponse')
-    {
-        $this->PushResponse($data, $resource);
-    }
-
-    /**
-     * Returns the response data
-     *
-     * @deprecated
-     * @access  public
-     * @param   string  $resource   Resource's name
-     * @param   bool    $remove     Optional remove popped response
-     * @return  mixed   Response data, or Null if resource not found
-     */
-    function PopSimpleResponse($resource = 'SimpleResponse', $remove = true)
-    {
-        return $this->PopResponse($resource, $remove);
-    }
-
-    /**
      * Add the last response to the session system
      *
      * @access  public
+     * @param   string  $gadget Gadget's name
      * @param   string  $msg    Response's message
-     * @param   string  $level  Response type
-     * @param   mixed   $data   Optional extra data
-     * @return  void
      */
-    function PushLastResponse($msg, $level = RESPONSE_WARNING, $data = null)
+    function PushLastResponse($msg, $level = RESPONSE_WARNING)
     {
+		/*
+		$request =& Jaws_Request::getInstance();
+		if (!$GLOBALS['app']->deleteSyntactsCacheFile(array($request->get('gadget', 'get')))) {
+			Jaws_Error::Fatal("Cache file couldn't be deleted");
+		}
+		*/
+        if (!defined($level)) {
+            $level = RESPONSE_WARNING;
+        }
+
         switch ($level) {
             case RESPONSE_ERROR:
                 $css = 'error-message';
@@ -863,56 +639,43 @@ class Jaws_Session
             case RESPONSE_NOTICE:
                 $css = 'notice-message';
                 break;
+            case RESPONSE_WARNING:
             default:
-                $level = RESPONSE_WARNING;
                 $css = 'warning-message';
                 break;
         }
 
-        $this->SetAttribute('LastResponses',
-                            array('message' => $msg,
-                                  'data'    => $data,
+		$found = false;
+        $responses = $this->GetAttribute('LastResponses');
+        if ($responses !== null) {
+			$count = count($this->_Attributes['LastResponses']);
+			reset($this->_Attributes['LastResponses']);
+			for ($i = 0; $i < $count; $i++) {
+				if (substr(strtolower($this->_Attributes['LastResponses'][$i]['message']), 0, strlen($msg)) == strtolower($msg)) {
+					$found = true;
+					$c = (strpos($this->_Attributes['LastResponses'][$i]['message'], '(') !== false ? str_replace(array('(', ')'), '', substr($this->_Attributes['LastResponses'][$i]['message'], strpos($this->_Attributes['LastResponses'][$i]['message'], '('))) : 1);
+					$this->_Attributes['LastResponses'][$i]['message'] = $msg." (".(((int)$c)+1).')';
+				}
+			}
+		}
+		
+		if ($found === false) {
+			$this->SetAttribute('LastResponses',
+                            array(
+                                  'message' => $msg,
                                   'level'   => $level,
                                   'css'     => $css
                                   )
                             );
+		}
     }
 
     /**
-     * Get the response
+     * Prints and deletes the last response of a gadget
      *
      * @access  public
-     * @param   string  $msg    Response's message
-     * @param   string  $level  Response type
-     * @param   mixed   $data   Optional extra data
-     * @return  array   Returns array include msg, data, level and css class
-     */
-    function GetResponse($msg, $level = RESPONSE_WARNING, $data = null)
-    {
-        switch ($level) {
-            case RESPONSE_ERROR:
-                $css = 'error-message';
-                break;
-            case RESPONSE_NOTICE:
-                $css = 'notice-message';
-                break;
-            default:
-                $level = RESPONSE_WARNING;
-                $css = 'warning-message';
-                break;
-        }
-
-        return array('message' => $msg,
-                     'data'    => $data,
-                     'level'   => $level,
-                     'css'     => $css);
-    }
-
-    /**
-     * Return and deletes the last response pushed
-     *
-     * @access  public
-     * @return  mixed   Last responses array if exist, otherwise False
+     * @param   string  $gadget Gadget's name
+     * @return  string  Returns the message of the last response and false if there's no response
      */
     function PopLastResponse()
     {
@@ -929,5 +692,4 @@ class Jaws_Session
 
         return $responses;
     }
-
 }

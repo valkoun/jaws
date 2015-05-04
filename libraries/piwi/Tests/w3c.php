@@ -46,9 +46,9 @@ for ($i=0; $i < 20; $i++) {
         $impares[] =  new ComboOption ("numero $i", "N�mero $i");
 }
 
-$combogroup->AddGroup ("pares", "pares", $pares);
-$combogroup->AddGroup ("impares", "impares", $impares, true);
-$combogroup->SetDefault ("N�mero 2");
+$combogroup->AddGroup ("pares", $pares);
+$combogroup->AddGroup ("impares", $impares, true);
+$combogroup->SetDefault ("pares", "N�mero 2");
 //$combogroup->Show ();
 
 $comboimage = new ComboImage ("comboimage");

@@ -57,30 +57,9 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
 {
     // {{{ properties
 
-    var $string_quoting = array(
-        'start' => "'",
-        'end' => "'",
-        'escape' => '\\',
-        'escape_pattern' => '\\',
-    );
+    var $string_quoting = array('start' => "'", 'end' => "'", 'escape' => '\\', 'escape_pattern' => '\\');
 
-    var $identifier_quoting = array(
-        'start' => '`',
-        'end' => '`',
-        'escape' => '`',
-    );
-
-    /**
-     * The ouptut of mysqli_errno() in _doQuery(), if any.
-     * @var integer
-     */
-    var $_query_errno;
-
-    /**
-     * The ouptut of mysqli_error() in _doQuery(), if any.
-     * @var string
-     */
-    var $_query_error;
+    var $identifier_quoting = array('start' => '`', 'end' => '`', 'escape' => '`');
 
     var $sql_comments = array(
         array('start' => '-- ', 'end' => "\n", 'escape' => false),
@@ -203,10 +182,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
      */
     function errorInfo($error = null)
     {
-        if ($this->_query_errno) {
-            $native_code = $this->_query_errno;
-            $native_msg  = $this->_query_error;
-        } elseif ($this->connection) {
+        if ($this->connection) {
             $native_code = @mysqli_errno($this->connection);
             $native_msg  = @mysqli_error($this->connection);
         } else {
@@ -740,7 +716,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
         $limit = $this->limit;
         $this->offset = $this->limit = 0;
         $query = $this->_modifyQuery($query, $is_manip, $limit, $offset);
-
+        
         $result =& $this->_doQuery($query, $is_manip, $connection, $this->database_name);
         if (!PEAR::isError($result)) {
             $result = $this->_affectedRows($connection, $result);
@@ -805,15 +781,10 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
             $result = mysqli_query($connection, $query);
         }
 
-        if (!$result) {
-            // Store now because standaloneQuery throws off $this->connection.
-            $this->_query_errno = mysqli_errno($connection);
-            if (0 !== $this->_query_errno) {
-                $this->_query_error = mysqli_error($connection);
-                $err = $this->raiseError(null, null, null,
-                    'Could not execute statement', __FUNCTION__);
-                return $err;
-            }
+        if (!$result && 0 !== mysqli_errno($connection)) {
+            $err =& $this->raiseError(null, null, null,
+                'Could not execute statement', __FUNCTION__);
+            return $err;
         }
 
         if ($this->options['multi_query']) {
@@ -980,7 +951,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
             $server_info = $this->getServerVersion();
             if (is_array($server_info)) {
                 $server_version = $server_info['major'].'.'.$server_info['minor'].'.'.$server_info['patch'];
-
+            
                 if (!version_compare($server_version, '4.1.0', '<')) {
                     $this->supported['sub_selects'] = true;
                     $this->supported['prepared_statements'] = true;
@@ -1000,7 +971,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
                 }
 
                 if (!version_compare($server_version, '5.0.3', '<')) {
-                    $this->varchar_max_length = ($this->dsn['charset'] == 'utf8')? 21844 : 65532;
+                    $this->varchar_max_length = 65532;
                 }
 
                 if (!version_compare($server_version, '5.0.2', '<')) {
@@ -1109,7 +1080,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
             if (null === $placeholder_type) {
                 $placeholder_type_guess = $query[$p_position];
             }
-
+            
             $new_pos = $this->_skipDelimitedStrings($query, $position, $p_position);
             if (PEAR::isError($new_pos)) {
                 return $new_pos;
@@ -1118,7 +1089,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
                 $position = $new_pos;
                 continue; //evaluate again starting from the new position
             }
-
+            
             //make sure this is not part of an user defined variable
             $new_pos = $this->_skipUserDefinedVariable($query, $position);
             if ($new_pos != $position) {
@@ -1355,8 +1326,7 @@ class MDB2_Driver_mysqli extends MDB2_Driver_Common
     function lastInsertID($table = null, $field = null)
     {
         // not using mysql_insert_id() due to http://pear.php.net/bugs/bug.php?id=8051
-        // not casting to integer to handle BIGINT http://pear.php.net/bugs/bug.php?id=17650
-        return $this->queryOne('SELECT LAST_INSERT_ID()');
+        return $this->queryOne('SELECT LAST_INSERT_ID()', 'integer');
     }
 
     // }}}
@@ -1723,7 +1693,6 @@ class MDB2_Statement_mysqli extends MDB2_Statement_Common
             $query = 'EXECUTE '.$this->statement;
         }
         if (!empty($this->positions)) {
-            $paramReferences = array();
             $parameters = array(0 => $this->statement, 1 => '');
             $lobs = array();
             $i = 0;
@@ -1765,18 +1734,15 @@ class MDB2_Statement_mysqli extends MDB2_Statement_Common
                     }
                 } else {
                     if (is_resource($value) || $type == 'clob' || $type == 'blob') {
-                        $paramReferences[$i] = null;
-                        // mysqli_stmt_bind_param() requires parameters to be passed by reference
-                        $parameters[] =& $paramReferences[$i];
+                        $parameters[] = null;
                         $parameters[1].= 'b';
                         $lobs[$i] = $parameter;
                     } else {
-                        $paramReferences[$i] = $this->db->quote($value, $type, false);
-                        if (PEAR::isError($paramReferences[$i])) {
-                            return $paramReferences[$i];
+                        $quoted = $this->db->quote($value, $type, false);
+                        if (PEAR::isError($quoted)) {
+                            return $quoted;
                         }
-                        // mysqli_stmt_bind_param() requires parameters to be passed by reference
-                        $parameters[] =& $paramReferences[$i];
+                        $parameters[] = $quoted;
                         $parameters[1].= $this->db->datatype->mapPrepareDatatype($type);
                     }
                     ++$i;

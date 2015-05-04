@@ -23,15 +23,6 @@ class Link extends Bin
     var $_link;
 
     /**
-     * Link target
-     *
-     * @var    string 
-     * @access private
-     * @see    setTarget
-     */
-    var $_target;
-
-    /**
      * Link text
      *
      * @var    string 
@@ -50,6 +41,15 @@ class Link extends Bin
     var $_image;
 
     /**
+     * Link target
+     *
+     * @var    string
+     * @access private
+     * @see    setTarget
+     */
+    var $_target;
+
+    /**
      * Hide the text an only use image?
      *
      * @var    string $_alt;
@@ -64,15 +64,20 @@ class Link extends Bin
      * @param   string $text  Link Text
      * @param   string $href  Link Reference
      * @param   string $image Link Image
+     * @param   string $target Link Target
      * @access  public
      */
-    function Link($text, $href, $image = '')
+    function Link($text, $href, $image = '', $target = '')
     {
         $this->_text  = $text;
         $this->_link  = $href;
+        $this->_target  = $target;
         $this->_image = (substr($image,0,1) == '?' ||
                          substr($image,0,7) == 'http://' ||
                          substr($image,0,8) == 'https://')? $image : Piwi::getVarConf('LINK_PRIFIX') . $image;
+        if ($this->_image == Piwi::getVarConf('LINK_PRIFIX')) {
+			$this->_image = '';
+		}
         if (!empty($this->_image)) {
             $this->_hideText = true;
         }
@@ -91,6 +96,17 @@ class Link extends Bin
     }
 
     /**
+     * Set the link target
+     *
+     * @access   public
+     * @param    string Target
+     */
+    function setTarget($target)
+    {
+        $this->_target = $target;
+    }
+
+    /**
      * Set the image 
      *
      * @access   public
@@ -101,7 +117,7 @@ class Link extends Bin
         $this->_image = (substr($image,0,1) == '?' ||
                          substr($image,0,7) == 'http://' ||
                          substr($image,0,8) == 'https://')? $image : Piwi::getVarConf('LINK_PRIFIX') . $image;
-        if (!empty($this->_image)) {
+		if (!empty($this->_image)) {
             $this->_hideText = true;
         }
     }
@@ -129,17 +145,6 @@ class Link extends Bin
     }
 
     /**
-     * Set the link target 
-     *
-     * @access   public
-     * @param    string $target Link target
-     */
-    function setTarget($target)
-    {
-        $this->_target = $target;
-    }
-
-    /**
      * Construct the widget
      *
      * @access   private
@@ -147,15 +152,10 @@ class Link extends Bin
     function buildXHTML()
     {
         if (strpos($this->_link, 'javascript') === false) {
-            $this->_XHTML = '<a href="' . $this->_link . '"';
+            $this->_XHTML = '<a href="' . $this->_link . '"'.(!empty($this->_target) && ($this->_target == '_self' || $this->_target == '_blank' || $this->_target == '_parent') ? ' target="'.$this->_target.'"' : '');
         } else {
             $this->_XHTML = '<a href="javascript:void(0);" onclick="' . $this->_link . '"';
         }
-
-        if (!empty($this->_target)) {
-            $this->_XHTML.= " target=\"{$this->_target}\"";
-        }
-
         $this->_XHTML .= $this->buildBasicXHTML();
         $this->_XHTML .= $this->buildJSEvents();
         $this->_XHTML.= '>';
@@ -176,5 +176,5 @@ class Link extends Bin
 
         $this->_XHTML.= '</a>';
     }
-
 }
+?>

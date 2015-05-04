@@ -6,64 +6,64 @@
  * @package    Policy
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Akismet 
 {
     /**
      * The Akismet API server name
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $apiServer = 'rest.akismet.com';
 
     /**
      * The port to use to connect to the Akismet API server
      * @var    integer
-     * @access  private
+     * @access private
      */
     var $apiPort = 80;
 
     /**
      * The Akismet API version to use
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $apiVersion = '1.1';
 
     /**
      * The API key to use to access Akismet services
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $apiKey = '';
 
     /**
      * The HTTP user-agent to use
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $userAgent = '';
 
     /**
      * Whether or not the API key is valid
      * @var    boolean
-     * @access  private
+     * @access private
      */
     var $apiKeyIsValid = null;
 
     /**
      * The URL of the this website
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $siteURL = '';
 
     /**
      * Whitelist of allowed $_SERVER variables to send to Akismet
      * @var array
-     * @access  private
+     * @access private
      */
     var $_allowedServerVars = array(
         'SCRIPT_URI',
@@ -116,9 +116,11 @@ class Akismet
         $jaws_version    = $GLOBALS['app']->Registry->Get('/version');
         $this->userAgent = "Jaws/{$jaws_version} | Akismet/{$this->apiVersion}";
         if (!$this->apiKeyIsValid = $this->IsApiKeyValid()) {
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR,
-                                 'Invalid Akismet Key, please check your Registry: '.
-                                 '/gadgets/Policy/akismet_key');
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR,
+                                     'Invalid Akismet Key, please check your Registry: '.
+                                     '/gadgets/Policy/akismet_key');
+            }
         }
     }
 

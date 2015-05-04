@@ -1,10 +1,5 @@
 <?php
 /**
- * Session ID name
- */
-define('JAWS_SESSION_NAME', 'JAWSSESSID');
-
-/**
  * Class to manage the session when user is running a web application
  *
  * @category   Session
@@ -12,17 +7,14 @@ define('JAWS_SESSION_NAME', 'JAWSSESSID');
  * @author     Ivan -sk8- Chavero <imcsk8@gluch.org.mx>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
+define('JAWS_SESSION_ID', 'JawsSession');
+
 class Jaws_Session_Web extends Jaws_Session
 {
-    /**
-     * Constructor
-     *
-     * @access  public
-     * @return  void
-     */
+
     function Jaws_Session_Web()
     {
         parent::Init();
@@ -32,111 +24,97 @@ class Jaws_Session_Web extends Jaws_Session
      * Initializes the Session
      *
      * @access  public
-     * @return  void
      */
     function init()
     {
-        $session = $this->GetCookie(JAWS_SESSION_NAME);
-        if (empty($session) || !$this->Load($session)) {
-            $this->_SessionExists = false;
-            $this->Create();
+        $session = $this->GetCookie(JAWS_SESSION_ID);
+        if ($session === false || !$this->Load($session)) {
+            $this->Create('');
+            $this->_Logged = false;
+        } else {
+            $this->_Logged = $this->GetAttribute('logged');
         }
+    }
+
+    /**
+     * @see Jaws_Session::Logout
+     *
+     */
+    function Logout()
+    {
+        $this->DestroyCookie(JAWS_SESSION_ID);
+        parent::Logout();
     }
 
     /**
      * @see Jaws_Session::Create
      *
-     * @access  public
-     * @param   array   $info       User attributes
-     * @param   bool    $remember   Remember me
-     * @return  void
+     * @param   string  $username Username
+     * @param   boolean $remember Remember me
+     * @return  boolean True if can create session.
      */
-    function Create($info = array(), $remember = false)
+    function Create($username, $remember = false)
     {
-        parent::Create($info, $remember);
+        parent::Create($username, $remember);
         // Create cookie
-        $this->SetCookie(JAWS_SESSION_NAME,
-                         $this->_SessionID.'-'.$this->GetAttribute('salt'),
-                         $remember? 60*(int)$GLOBALS['app']->Registry->Get('/policy/session_remember_timeout') : 0,
-                         false);
-    }
-
-    /**
-     * Logout from session
-     *
-     * @access  public
-     * @return  void
-     * @see Jaws_Session::Logout
-     */
-    function Logout()
-    {
-        parent::Logout();
-        $this->SetCookie(JAWS_SESSION_NAME,
-                         $this->_SessionID.'-'.$this->GetAttribute('salt'),
-                         0,
-                         false);
+        $this->SetCookie(JAWS_SESSION_ID, $this->_SessionID,
+                         $remember? 60*(int)$GLOBALS['app']->Registry->Get('/policy/session_remember_timeout') : 0);
     }
 
     /**
      * Create a new cookie on client
      *
-     * @access  public
-     * @param   string  $name       Cookie name
-     * @param   string  $value      Cookie value
-     * @param   int     $minutes    The time the cookie expires
-     * @param   bool    $httponly   If TRUE the cookie will be made accessible only through the HTTP protocol
-     * @return  void
+     * @param   string $name Cookie name
+     * @param   string $value Cookie value
+     * @param   string $expiration Cookie expiration minutes
      */
-    function SetCookie($name, $value, $minutes = 0, $httponly = false)
+    function SetCookie($name, $value, $minutes = 0)
     {
-        $version = $GLOBALS['app']->Registry->Get('/config/cookie/version');
-        $expires = ($minutes == 0)? 0 : (time() + $minutes*60);
-        $path    = $GLOBALS['app']->getSiteURL('/', true);
-        $domain  = '';//$GLOBALS['app']->Registry->Get('/config/cookie/domain');
         $secure  = ($GLOBALS['app']->Registry->Get('/config/cookie/secure') == 'false') ? false : true;
-        $domain .= $httponly? '; HttpOnly' : '';
-        setcookie($name, $value, $expires, $path, $domain);
+        $path    = $GLOBALS['app']->Registry->Get('/config/cookie/path');
+        $domain  = $GLOBALS['app']->Registry->Get('/config/cookie/domain');
+        $version = $GLOBALS['app']->Registry->Get('/config/cookie/version');
+        $name = $name.'_'.md5($GLOBALS['app']->getSiteURL('_'.$version));
+        setcookie($name, $value, ($minutes == 0)? 0 : (time() + $minutes*60), $GLOBALS['app']->getSiteURL('/', true));
     }
 
     /**
      * Get a cookie
-     *
-     * @access  public
-     * @param   string  $name   Cookie name
-     * @return  string
+     * @param   string $name Cookie name
      */
     function GetCookie($name)
     {
         $version = $GLOBALS['app']->Registry->Get('/config/cookie/version');
+        $name    = $name.'_'.md5($GLOBALS['app']->getSiteURL('_'.$version));
         $request =& Jaws_Request::getInstance();
         return $request->get($name, 'cookie');
     }
 
     /**
      * Destroy a cookie
-     *
-     * @access  public
-     * @param   string  $name   Cookie name
-     * @return  void
+     * @param   string $name Cookie name
      */
     function DestroyCookie($name)
     {
-        $this->SetCookie($name, false);
+        $secure  = ($GLOBALS['app']->Registry->Get('/config/cookie/secure') == 'false') ? false : true;
+        $path    = $GLOBALS['app']->Registry->Get('/config/cookie/path');
+        $domain  = $GLOBALS['app']->Registry->Get('/config/cookie/domain');
+        $version = $GLOBALS['app']->Registry->Get('/config/cookie/version');
+        $name    = $name.'_'.md5($GLOBALS['app']->getSiteURL('_'.$version));
+        setcookie($name, '', time() - 36000, $GLOBALS['app']->getSiteURL('/', true));
     }
 
     /**
      * Check permission on a given gadget/task
      *
-     * @access  public
-     * @param   string  $gadget         Gadget name
-     * @param   string  $task           Task(s) name
-     * @param   bool    $together       And/Or tasks permission result, default true
-     * @param   string  $errorMessage   Error message to return
-     * @return  mixed   True if granted, else throws an Exception(Jaws_Error::Fatal)
+     * @param   string $gadget Gadget name
+     * @param   string $task Task name
+     * @param   string $errorMessage Error message to return
+     * @return  boolean True if granted, else print HTML output telling the user he doesn't have permission
      */
-    function CheckPermission($gadget, $task, $together = true, $errorMessage = '')
+    function CheckPermission($gadget, $task, $errorMessage = '')
     {
-        if ($this->GetPermission($gadget, $task, $together)) {
+        if ($this->GetPermission($gadget, $task)) {
             return true;
         }
 

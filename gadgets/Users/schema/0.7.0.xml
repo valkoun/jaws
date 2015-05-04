@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<database>
+
+ <name><variable>database</variable></name>
+
+ <table>
+     <name><variable>table_prefix</variable>users</name>
+     <declaration>
+
+         <field>
+             <name>id</name>
+             <type>integer</type>
+             <notnull>true</notnull>
+             <autoincrement>true</autoincrement>
+         </field>
+
+         <field>
+             <name>username</name>
+             <type>text</type>
+             <length>32</length>
+             <notnull>true</notnull>
+             <default></default>
+         </field>
+
+         <field>
+             <name>passwd</name>
+             <type>text</type>
+             <length>32</length>
+             <notnull>true</notnull>
+             <default></default>
+         </field>
+
+         <field>
+           <name>type</name>
+           <type>integer</type>
+           <length>1</length>
+           <default>2</default>
+         </field>
+
+         <field>
+             <name>recovery_key</name>
+             <type>text</type>
+             <length>32</length>
+             <notnull>true</notnull>
+             <default></default>
+         </field>
+
+         <field>
+             <name>name</name>
+             <type>text</type>
+             <length>255</length>
+         </field>
+
+         <field>
+             <name>email</name>
+             <type>text</type>
+             <length>255</length>
+         </field>
+
+         <field>
+             <name>last_login</name>
+             <type>timestamp</type>
+         </field>
+
+         <field>
+             <name>createtime</name>
+             <type>timestamp</type>
+         </field>
+
+         <field>
+             <name>updatetime</name>
+             <type>timestamp</type>
+         </field>
+
+     </declaration>
+ </table>
+
+ <table>
+     <name><variable>table_prefix</variable>groups</name>
+     <declaration>
+
+         <field>
+             <name>id</name>
+             <type>integer</type>
+             <notnull>true</notnull>
+             <autoincrement>true</autoincrement>
+         </field>
+
+         <field>
+             <name>name</name>
+             <type>text</type>
+             <length>32</length>
+             <notnull>true</notnull>
+             <default></default>
+         </field>
+
+         <index>
+             <name><variable>table_prefix</variable>groups_n</name>
+             <field>
+                 <name>name</name>
+             </field>
+         </index>
+
+     </declaration>
+ </table>
+
+ <table>
+     <name><variable>table_prefix</variable>users_groups</name>
+     <declaration>
+
+         <field>
+             <name>user_id</name>
+             <type>integer</type>
+             <notnull>true</notnull>
+             <default></default>
+         </field>
+
+         <field>
+             <name>group_id</name>
+             <type>integer</type>
+             <notnull>true</notnull>
+             <default></default>
+         </field>
+
+         <index>
+             <name><variable>table_prefix</variable>users_groups_ui</name>
+             <field>
+                 <name>user_id</name>
+             </field>
+         </index>
+
+         <index>
+             <name><variable>table_prefix</variable>users_groups_gi</name>
+             <field>
+                 <name>group_id</name>
+             </field>
+         </index>
+
+     </declaration>
+ </table>
+
+</database>

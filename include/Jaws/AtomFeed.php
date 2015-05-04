@@ -1,18 +1,16 @@
 <?php
 /**
- * Simple class to create Atom feeds...
+ * A Content construct is an element with arbitrary child content
  *
  * @category   XML
- * @package    Core
+ * @package Core
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
+ 
 define('SHOW_EMAILS_IN_FEED', false);
 
-/**
- * A Content construct is an element with arbitrary child content
- */
 class AtomContentConstruct
 {
     var $ElementName, $Content, $Type, $Mode;
@@ -56,7 +54,14 @@ class AtomContentConstruct
 
 /**
  * A Date construct is an element whose child content is a W3C Date-Time string
+ *
+ * @category   XML
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  */
+ 
 class AtomDateConstruct
 {
     var $ElementName, $Date;
@@ -106,7 +111,14 @@ class AtomDateConstruct
 
 /**
  * A Link construct is an element that MUST NOT have any child content
+ *
+ * @category   XML
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  */
+ 
 class AtomLinkConstruct
 {
     var $Rel, $Type, $HRef, $Title;
@@ -154,7 +166,14 @@ class AtomLinkConstruct
 
 /**
  * A Person construct is an element that represent a person information(Name, URL, Email)
+ *
+ * @category   XML
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  */
+ 
 class AtomPersonConstruct
 {
     var $ElementName, $Name, $URL, $Email;
@@ -200,7 +219,14 @@ class AtomPersonConstruct
 
 /**
  * An Enclosure construct is an element that represent a media object
+ *
+ * @category   XML
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  */
+ 
 class AtomEnclosureConstruct
 {
     var $ElementName, $URL, $Size, $Mime;
@@ -234,6 +260,16 @@ class AtomEnclosureConstruct
     }
 }
 
+/**
+ * A Category construct
+ *
+ * @category   XML
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
+ */
+ 
 class AtomCategoryConstruct
 {
     var $ElementName, $Term, $Label, $Scheme;
@@ -255,8 +291,14 @@ class AtomCategoryConstruct
 /**
  * Represents an individual entry that is contained by the feed
  *
+ * @category   XML
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  * @access  public
  */
+ 
 class AtomEntry
 {
     var $Title, $TitleNoCData, $Link, $Author, $Contributors, $Id, $Modified, $Issued, $Created, $Summary, $Content, $Categories,
@@ -327,10 +369,10 @@ class AtomEntry
     /**
      * Add an enclosure entry
      *
-     * @access  public
-     * @param   string  $url  URL it refers
+     * @access public
+     * @param  string  $url  URL it refers
      * @param  int     $size Object size (in bytes)
-     * @param   string  $mime Mime type
+     * @param  string  $mime Mime type
      */
     function AddEnclosure($url, $size, $mime)
     {
@@ -398,8 +440,8 @@ class AtomEntry
 
     /**
      * Add a category to feed
-     * @param   string  $category  Category name
-     * @access  public
+     * @param  string  $category  Category name
+     * @access public
      */
     function AddCategory($term, $label, $schema)
     {
@@ -454,10 +496,17 @@ class AtomEntry
 }
 
 /**
- * Atom Feed document
+ * Atom, RSS 2.0, and OPML output support.
  *
+ * @category   XML
+ * @category   feature
+ * @package Core
+ * @author     Jonathan Hernandez <ion@suavizado.com>
+ * @copyright  2004-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  * @access  public
  */
+ 
 class Jaws_AtomFeed
 {
     var $Version, $Lang, $Stylesheet, $StylesheetType;
@@ -515,7 +564,7 @@ class Jaws_AtomFeed
     /**
      * Site URL
      * 
-     * @param   string $url  Site URL
+     * @param string $url  Site URL
      */
     function SetSiteURL($url) {
         $this->SiteURL = $url;
@@ -777,5 +826,4 @@ class Jaws_AtomFeed
 
         return $res;
     }
-
 }

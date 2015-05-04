@@ -50,28 +50,25 @@
         <declaration>
 
             <field>
-                <name>sid</name>
+                <name>session_id</name>
+                <type>text</type>
+                <length>48</length>
+                <notnull>true</notnull>
+                <default></default>
+            </field>
+
+            <field>
+                <name>user_id</name>
                 <type>integer</type>
                 <notnull>true</notnull>
-                <autoincrement>true</autoincrement>
+                <default>0</default>
             </field>
 
             <field>
-                <name>domain</name>
+                <name>session_type</name>
                 <type>text</type>
-                <length>48</length>
-            </field>
-
-            <field>
-                <name>user</name>
-                <type>text</type>
-                <length>48</length>
-            </field>
-
-            <field>
-                <name>type</name>
-                <type>text</type>
-                <length>32</length>
+                <length>20</length>
+                <notnull>true</notnull>
                 <default>web</default>
             </field>
 
@@ -79,30 +76,20 @@
                 <name>longevity</name>
                 <type>integer</type>
                 <length>16</length>
+                <notnull>true</notnull>
                 <default>0</default>
             </field>
 
             <field>
-                <name>ip</name>
-                <type>integer</type>
-                <length>5</length>
-            </field>
-
-            <field>
-                <name>agent</name>
+                <name>data</name>
                 <type>text</type>
-                <length>252</length>
+                <notnull>true</notnull>
             </field>
 
             <field>
                 <name>referrer</name>
                 <type>text</type>
                 <length>32</length>
-            </field>
-
-            <field>
-                <name>data</name>
-                <type>text</type>
             </field>
 
             <field>
@@ -115,6 +102,7 @@
                 <name>createtime</name>
                 <type>integer</type>
                 <length>16</length>
+                <notnull>true</notnull>
                 <default>0</default>
             </field>
 
@@ -122,17 +110,30 @@
                 <name>updatetime</name>
                 <type>integer</type>
                 <length>16</length>
+                <notnull>true</notnull>
                 <default>0</default>
             </field>
 
-            <index>
-                <name><variable>table_prefix</variable>session_user</name>
+            <field>
+                <name>language</name>
+                <type>text</type>
+                <length>10</length>
+                <notnull>true</notnull>
+                <default>en</default>
+            </field>
+            
+			<index>
+                <name><variable>table_prefix</variable>session</name>
+                <unique>true</unique>
                 <field>
-                    <name>user</name>
+                    <name>session_id</name>
                 </field>
+            </index>
 
+            <index>
+                <name><variable>table_prefix</variable>session_uid</name>
                 <field>
-                    <name>domain</name>
+                    <name>user_id</name>
                 </field>
             </index>
 
@@ -194,12 +195,16 @@
                 <name>gadget</name>
                 <type>text</type>
                 <length>32</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>event</name>
                 <type>text</type>
                 <length>32</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <index>
@@ -239,18 +244,24 @@
                 <name>gadget</name>
                 <type>text</type>
                 <length>32</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>event</name>
                 <type>text</type>
                 <length>32</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>method</name>
                 <type>text</type>
                 <length>32</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <index>
@@ -292,12 +303,14 @@
             <field>
                 <name>parent</name>
                 <type>integer</type>
+                <notnull>true</notnull>
                 <default>0</default>
             </field>
 
             <field>
                 <name>gadget_reference</name>
                 <type>integer</type>
+                <notnull>true</notnull>
                 <default>0</default>
             </field>
 
@@ -305,30 +318,39 @@
                 <name>gadget</name>
                 <type>text</type>
                 <length>80</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>name</name>
                 <type>text</type>
                 <length>255</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>email</name>
                 <type>text</type>
                 <length>255</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>url</name>
                 <type>text</type>
                 <length>120</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
                 <name>ip</name>
                 <type>text</type>
                 <length>20</length>
+                <notnull>true</notnull>
                 <default>127.0.0.1</default>
             </field>
 
@@ -336,6 +358,8 @@
                 <name>title</name>
                 <type>text</type>
                 <length>255</length>
+                <notnull>true</notnull>
+                <default></default>
             </field>
 
             <field>
@@ -357,6 +381,7 @@
             <field>
                 <name>replies</name>
                 <type>integer</type>
+                <notnull>true</notnull>
                 <default>0</default>
             </field>
 
@@ -364,7 +389,29 @@
                 <name>status</name>
                 <type>text</type>
                 <length>10</length>
+                <notnull>true</notnull>
                 <default>approved</default>
+            </field>
+
+            <field>
+                <name>ownerid</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <default>0</default>
+            </field>
+            
+			<field>
+                <name>checksum</name>
+                <type>text</type>
+                <length>32</length>
+            </field>
+
+            <field>
+                <name>sharing</name>
+                <type>text</type>
+                <length>1024</length>
+                <notnull>true</notnull>
+                <default>everyone</default>
             </field>
 
             <index>
@@ -400,6 +447,200 @@
                 <name><variable>table_prefix</variable>comments_mk</name>
                 <field>
                     <name>msg_key</name>
+                </field>
+            </index>
+
+        </declaration>
+    </table>
+
+	<table>
+        <name><variable>table_prefix</variable>comments_subscribe</name>
+        <declaration>
+
+            <field>
+                <name>id</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <autoincrement>true</autoincrement>
+            </field>
+
+            <field>
+                <name>filter_status</name>
+                <type>text</type>
+                <length>32</length>
+                <notnull>true</notnull>
+                <default>show</default>
+            </field>
+            
+            <field>
+                <name>filter_gadget</name>
+                <type>text</type>
+                <length>255</length>
+                <notnull>true</notnull>
+                <default></default>
+            </field>
+            
+            <field>
+                <name>filter_mode</name>
+                <type>text</type>
+                <length>255</length>
+                <notnull>true</notnull>
+                <default></default>
+            </field>
+            
+			<field>
+                <name>filter</name>
+                <type>text</type>
+                <length>255</length>
+                <notnull>true</notnull>
+                <default></default>
+            </field>
+
+            <field>
+                <name>created</name>
+                <type>timestamp</type>
+            </field>
+
+            <field>
+                <name>updated</name>
+                <type>timestamp</type>
+            </field>
+
+			<field>
+                <name>email</name>
+                <type>text</type>
+                <length>255</length>
+            </field>
+
+            <field>
+                <name>ownerid</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <default>0</default>
+            </field>
+            
+			<field>
+                <name>checksum</name>
+                <type>text</type>
+                <length>32</length>
+            </field>
+
+            <index>
+                <name><variable>table_prefix</variable>comments_subscribe_id</name>
+                <primary>true</primary>
+                <field>
+                    <name>id</name>
+                </field>
+            </index>
+
+        </declaration>
+    </table>
+    
+	<table>
+        <name><variable>table_prefix</variable>phpjobscheduler</name>
+        <declaration>
+
+            <field>
+                <name>id</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <autoincrement>true</autoincrement>
+            </field>
+
+            <field>
+                <name>scriptpath</name>
+                <type>text</type>
+                <length>255</length>
+            </field>
+
+            <field>
+                <name>time_interval</name>
+                <type>integer</type>
+            </field>
+
+            <field>
+                <name>fire_time</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <default>0</default>
+            </field>
+            
+            <field>
+                <name>time_last_fired</name>
+                <type>integer</type>
+            </field>
+            
+            <field>
+                <name>run_only_once</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <default>0</default>
+            </field>
+            
+            <index>
+                <name><variable>table_prefix</variable>id</name>
+                <primary>true</primary>
+                <field>
+                    <name>id</name>
+                </field>
+            </index>
+
+            <index>
+                <name><variable>table_prefix</variable>fire_time</name>
+                <field>
+                    <name>fire_time</name>
+                </field>
+            </index>
+
+        </declaration>
+    </table>
+	
+	<table>
+        <name><variable>table_prefix</variable>phpjobscheduler_logs</name>
+        <declaration>
+
+            <field>
+                <name>id</name>
+                <type>integer</type>
+                <notnull>true</notnull>
+                <autoincrement>true</autoincrement>
+            </field>
+
+            <field>
+                <name>script</name>
+                <type>text</type>
+                <length>128</length>
+            </field>
+
+            <field>
+                <name>output</name>
+                <type>text</type>
+            </field>
+
+            <field>
+                <name>execution_time</name>
+                <type>text</type>
+                <length>60</length>
+            </field>
+            
+            <field>
+                <name>time_last_fired</name>
+                <type>integer</type>
+            </field>
+            
+            <field>
+                <name>run_only_once</name>
+                <type>integer</type>
+                <length>1</length>
+                <notnull>true</notnull>
+                <default>0</default>
+            </field>
+            
+            <index>
+                <name><variable>table_prefix</variable>id</name>
+                <primary>true</primary>
+                <field>
+                    <name>id</name>
                 </field>
             </index>
 

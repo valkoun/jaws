@@ -187,7 +187,6 @@ class IFrame extends Bin
             $this->_XHTML .= " width=\"".$this->_width."\"";
         }
 
-        $this->_XHTML .= $this->buildBasicXHTML();
         $this->_XHTML .= $this->buildJSEvents();
         $this->_XHTML .= '></iframe>';
     }

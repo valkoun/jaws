@@ -1,0 +1,178 @@
+<!-- BEGIN form -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>eVision Update Request</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />  
+<!--
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}libraries/window/themes/window/window.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}libraries/window/themes/window/simplewhite.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}libraries/window/themes/shadow/mac_shadow.css" />
+-->
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}libraries/greybox/gb_styles.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/CustomPage/resources/SyntactsUpdates.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<script type="text/javascript" src="index.php?gadget=CustomPage&amp;action=Ajax&amp;client=all&amp;stub=CustomPageAjax"></script>
+<script type="text/javascript" src="index.php?gadget=CustomPage&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/CustomPage/resources/client_script.js"></script>
+<script type="text/javascript" src="index.php?gadget=CustomPage&amp;action=account_SetGBRoot"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/js/admin.js"></script>
+<!--
+<script type="text/javascript" src="{JAWS_URL}libraries/js/global2.js"></script>
+-->
+<script type="text/javascript" src="{JAWS_URL}libraries/greybox/AJS.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/greybox/AJS_fx.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/greybox/gb_scripts.js"></script>
+</head>
+<body onload="hideWorkingNotification();">
+ <!-- Working Notification -->  <div id="working_notification"></div>
+  <script type="text/javascript">
+   var loading_message = 'Loading...';
+   var navigate_away_message = 'You have unsaved changes in this page';
+  </script>
+ <!-- /Working Notification -->  <script type="text/javascript">
+  showWorkingNotification();
+  </script>
+
+</div>
+	
+<div style="min-height: 500px;">
+	<div id="top_header">
+	<div id="header_welcome">
+	</div>
+	<div id="header_select">
+	What do you want to do?&nbsp;<select name="ticket_select" id="ticket_select">
+	<option value="" class="select_label" selected="selected">Select...</option>
+	<option value="" class="select_label">----------------------------------------</option>
+	<option value="AddContent" onClick="customPageAddGadget('{site_url}/index.php?gadget=CustomPage&action=account_AddLayoutElement&mode=ticket', 'Add Content');">Add Content</option>
+	<option value="" class="select_label">----------------------------------------</option>
+	<option value="AddEmail">Add an E-mail Address</option>
+	<option value="ViewEmail">View E-mail Addresses</option>
+	<option value="" class="select_label">----------------------------------------</option>
+	</select>
+	</div>
+	<div style="clear: both; float: none;">&nbsp;</div>
+	</div>
+
+	<div id="puzzle_holder">
+	<!-- BEGIN puzzle -->
+		<div class="holder" id="holder_1">
+			<table border="0" width="0%" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="0%">
+							<div class="row_handle">
+								<div class="row_title">My Store</div>
+								<div class="commentstotal">4</div>
+								<div class="row_search">
+									<input type="text" style="width:150px; color: #999999;" id="search_store" value="Search for items" onfocus="prefillClear(this.id);" onblur="prefillClear(this.id);" />
+								</div>
+								<div style="font-size: 0.01em; clear: both; float: none;">&nbsp;</div>
+								<div class="row_actions">
+									<select class="row_actions_select" name="store_select" id="store_select">
+									<option value="ShowLatestStore" class="select_label" selected="selected">Actions</option>
+									<option value="AddStore" onClick="showWindow('AddStore');">Add to My Store</option>
+									<option value="EditStore">Update My Store</option>
+									<option value="DeleteStore">Remove from My Store</option>
+									<option value="ShowLatestStore">Show Latest Messages</option>
+									<option value="ShowUnseenStore">Show Only Unseen</option>
+									<option value="ShowStarredStore">Show Starred</option>
+									<option value="MarkAllReadStore">Mark All As Read</option>
+									</select>
+								</div>
+							</div>
+						</td>
+						<td width="0%"><div class="row_nav"><</div></td>
+						<td width="0%" valign="top">
+							<div class="puzzle" id="Store_1">
+	<!-- BEGIN pieces -->
+								<div class="piece Store readmessage" id="div_15"><div class="handle">&nbsp;</div><div class="message"><b>Girl's</b><br /><span style="font-size: large;">2</span> products removed</div></div>
+								<div class="piece Store readmessage" id="div_10"><div class="handle">&nbsp;</div><div class="message"><b>Unisex</b><br /><span style="font-size: large;">1</span> product updated</div></div>
+								<div class="piece Store readmessage" id="div_11"><div class="handle">&nbsp;</div><div class="message"><b>Junior's</b><br /><span style="font-size: large;">3</span> products updated</div></div>
+								<div class="piece Store readmessage" id="div_17"><div class="handle">&nbsp;</div><div class="message"><b>Boy's</b><br /><span style="font-size: large;">1</span> product added</div></div>
+								<div class="piece Store readmessage" id="div_14"><div class="handle">&nbsp;</div><div class="message"><b>Miscellaneous</b><br /><span style="font-size: large;">1</span> product added</div></div>
+								<div class="piece Store newmessage closed added" id="div_18"><div class="handle">CLOSED</div><div class="message"><b>Men's</b><br /><span style="font-size: large;">3</span> products added</div></div>
+								<div class="piece Store newmessage answered added" id="div_13"><div class="handle">ANSWERED</div><div class="message"><b>Women's</b><br /><span style="font-size: large;">1</span> product added</div></div>
+								<div class="piece newmessage answered" id="div_8"><div class="handle">ANSWERED</div><div class="message">How do I add a product category?</div></div>
+								<div class="piece Store newmessage open removed" id="div_16"><div class="handle">OPEN</div><div class="message"><b>Youth</b><br /><span style="font-size: large;">2</span> products removed</div></div>
+								<div class="piece Store newmessage inprogress updated" id="div_12"><div class="handle">IN PROGRESS</div><div class="message"><b>Accessories</b><br /><span style="font-size: large;">5</span> products updated</div></div>
+	<!-- END pieces -->
+								<div style="font-size: 0.01em; clear: both; float: none;">&nbsp;</div>
+							</div>
+						</td>
+						<td width="0%"><div class="row_nav row_nav_right">></div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<script type="text/javascript">
+			Event.observe(window,"load",function(){	  
+			  Sortable.create('Store_puzzle', {
+				tag:'div',overlap:'horizontal',constraint: false, handle: '.handle', only: 'piece',
+				onUpdate:function(){
+					/*
+					info.update('You\'ve made ' + (++moves) + ' move' + (moves>1 ? 's' : ''));
+					if (Sortable.sequence('puzzle').join('')=='123456789') {
+						info.update('You\'ve solved the puzzle in ' + moves + ' moves!').morph('congrats');
+					}
+					*/
+				}
+			  });
+			});
+			$$("#Store_puzzle .piece .message").each(function(element){
+				element.onclick = function(){
+					var messageType = $(element).down('div.message_type').innerHTML;
+					var messageID = element.parentNode.id;
+					messageID = parseInt(messageID.replace(/div_/gi, ""));
+					customPageEditElementAction('index.php?gadget=CustomPage&action=account_EditElementAction&id='+messageID+'&mode=ticket');
+				}; 
+				return false;
+			});
+		</script>
+	<!-- END puzzle -->
+		<div style="font-size: 0.01em; clear: both; float: none;">&nbsp;</div>
+	</div>
+
+	<div style="clear: both; float: none;">&nbsp;</div>
+	<div>&nbsp;</div>
+</div>
+<script type="text/javascript">
+function sizeFrame66() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr66 = document.createElement("IFRAME");  
+	// TODO: Use referer, not hard-coded URL
+	//fr66.setAttribute("src", "{REFERER}iframetest_resize1.html?height="+height+"&object=evision_updates_frame"); 
+	fr66.setAttribute("src", "{JAWS_URL}libraries/iframes/domain1/iframetest_resize1.html?height="+height+"&object=evision_updates_frame"); 
+	fr66.setAttribute("name", "inneriframe66");
+	fr66.setAttribute("id", "inneriframe66");
+	fr66.style.width = 1+"px";  
+	fr66.style.height = 1+"px";
+	fr66.style.display = "none";
+	document.body.appendChild(fr66);
+}
+	
+Event.observe(window,"load",function(){
+	  Sortable.create('puzzle_holder', {
+		tag:'div',overlap:'vertical',constraint: 'vertical', handle: '.row_handle', only: 'holder',
+		onUpdate:function(){
+			/*
+			var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+			window.top.updateIFrame(height, "evision_updates_frame");
+			info.update('You\'ve made ' + (++moves) + ' move' + (moves>1 ? 's' : ''));
+			if (Sortable.sequence('puzzle').join('')=='123456789') {
+				info.update('You\'ve solved the puzzle in ' + moves + ' moves!').morph('congrats');
+			}
+			*/
+		}
+	  });
+			
+	sizeFrame66(); 
+});
+</script>
+</body>
+</html>
+<!-- END form -->

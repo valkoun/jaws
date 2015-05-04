@@ -6,7 +6,7 @@
  * @package    UpgradeStage
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Upgrader_Database extends JawsUpgraderStage
@@ -168,7 +168,7 @@ class Upgrader_Database extends JawsUpgraderStage
             $modules = get_loaded_extensions();
             $modules = array_map('strtolower', $modules);
             foreach ($drivers as $driver => $driver_info) {
-                _log(JAWS_LOG_DEBUG,"Checking if ".$driver_info['title']. "(".$driver_info['ext'].") driver is available");
+                log_upgrade("Checking if ".$driver_info['title']. "(".$driver_info['ext'].") driver is available");
                 if (!in_array($driver_info['ext'], $modules)) {
                     $available = false;
                     //However... mssql support exists in some Linux distros with the sybase package
@@ -177,11 +177,11 @@ class Upgrader_Database extends JawsUpgraderStage
                     }
                     
                     if ($available === false) {
-                        _log(JAWS_LOG_DEBUG,"Driver ".$driver_info['title']. "(".$driver_info['ext'].") is NOT available");
+                        log_upgrade("Driver ".$driver_info['title']. "(".$driver_info['ext'].") is NOT available");
                         continue;
                     }
                 }
-                _log(JAWS_LOG_DEBUG,"Driver ".$driver_info['title']. "(".$driver_info['ext'].") is available");
+                log_upgrade("Driver ".$driver_info['title']. "(".$driver_info['ext'].") is available");
                 $tpl->setBlock('Database/drivers/driver');
                 $tpl->setVariable('d_name', $driver);
                 $tpl->setVariable('d_realname', $driver_info['title']);
@@ -222,12 +222,12 @@ class Upgrader_Database extends JawsUpgraderStage
         }
 
         if (isset($post['path']) && $post['path'] !== '' && !is_dir($post['path'])) {
-            _log(JAWS_LOG_DEBUG,"The database path must be exists");
+            log_upgrade("The database path must be exists");
             return new Jaws_Error(_t('UPGRADE_DB_RESPONSE_PATH'), 0, JAWS_ERROR_WARNING);
         }
 
         if (isset($post['port']) && $post['port'] !== '' && !is_numeric($post['port'])) {
-            _log(JAWS_LOG_DEBUG,"The port can only be a numeric value");
+            log_upgrade("The port can only be a numeric value");
             return new Jaws_Error(_t('UPGRADE_DB_RESPONSE_PORT'), 0, JAWS_ERROR_WARNING);
         }
 
@@ -235,7 +235,7 @@ class Upgrader_Database extends JawsUpgraderStage
             return true;
         }
 
-        _log(JAWS_LOG_DEBUG,"You must fill in all the fields apart from table prefix and port");
+        log_upgrade("You must fill in all the fields apart from table prefix and port");
         return new Jaws_Error(_t('UPGRADE_DB_RESPONSE_INCOMPLETE'), 0, JAWS_ERROR_WARNING);
     }
 
@@ -262,9 +262,9 @@ class Upgrader_Database extends JawsUpgraderStage
             require_once JAWS_PATH . 'include/Jaws/Crypt.php';
             $JCrypt = new Jaws_Crypt();
             $pvt_key = Crypt_RSA_Key::fromString($_SESSION['pvt_key'], $JCrypt->wrapper);
-            $post['dbpass'] = $JCrypt->decrypt($post['dbpass'], $pvt_key);
+            $post['dbpass'] = $JCrypt->rsa->decryptBinary($JCrypt->math->int2bin($post['dbpass']), $pvt_key);
             if (Jaws_Error::isError($post['dbpass'])) {
-                _log(JAWS_LOG_DEBUG,$post['dbpass']->getMessage());
+                log_upgrade($post['dbpass']->getMessage());
                 return new Jaws_Error($post['dbpass']->getMessage(), 0, JAWS_ERROR_ERROR);
             }
         }
@@ -302,19 +302,87 @@ class Upgrader_Database extends JawsUpgraderStage
         require_once JAWS_PATH . 'include/Jaws/DB.php';
         $GLOBALS['db'] = new Jaws_DB($_SESSION['upgrade']['Database']);
         if (Jaws_Error::IsError($GLOBALS['db'])) {
-            _log(JAWS_LOG_DEBUG,"There was a problem connecting to the database, please check the details and try again");
+            log_upgrade("There was a problem connecting to the database, please check the details and try again");
             return new Jaws_Error(_t('UPGRADE_DB_RESPONSE_CONNECT_FAILED'), 0, JAWS_ERROR_WARNING);
         }
 
-        _log(JAWS_LOG_DEBUG,"Checking current database");
+        log_upgrade("Checking current database");
         $sql = "SELECT * FROM [[registry]]";
         $result = $GLOBALS['db']->queryRow($sql);
         if (Jaws_Error::isError($result)) {
-            _log(JAWS_LOG_DEBUG,"Something wrong happened while checking the current database, error is:");
-            _log(JAWS_LOG_DEBUG,$result->getMessage());
+            log_upgrade("Something wrong happened while checking the current database, error is:");
+            log_upgrade($result->getMessage());
             return new Jaws_Error($result->getMessage(), 0, JAWS_ERROR_ERROR);
         }
-        _log(JAWS_LOG_DEBUG,"Connected to ".$_SESSION['upgrade']['Database']['driver']." database driver successfully.");
+        log_upgrade("Connected to ".$_SESSION['upgrade']['Database']['driver']." database driver successfully.");
+
+        // Create application
+        include_once JAWS_PATH . 'include/Jaws.php';
+        $GLOBALS['app'] = new Jaws();
+        $GLOBALS['app']->create();
+        $GLOBALS['app']->OverwriteDefaults(array('language' => $_SESSION['upgrade']['language']));
+        $GLOBALS['app']->loadClass('ACL', 'Jaws_ACL');
+        include_once JAWS_PATH . 'include/Jaws/Version.php';
+
+        // Input datas
+        $timestamp = $GLOBALS['db']->Date();
+
+        //registry keys
+        $GLOBALS['app']->Registry->Set('/last_update', $timestamp);
+
+        // Commit the changes so they get saved
+        $GLOBALS['app']->Registry->commit('core');
+
+        require_once JAWS_PATH . 'include/Jaws/URLMapping.php';
+        $GLOBALS['app']->Map = new Jaws_URLMapping();
+
+        $gadgets = array('ControlPanel', 'Layout', 'UrlMapper', 'Users');
+        foreach ($gadgets as $gadget) {
+            if (Jaws_Gadget::IsGadgetInstalled($gadget)) {
+				$result = Jaws_Gadget::UpdateGadget($gadget);
+				if (Jaws_Error::IsError($result)) {
+					log_upgrade("There was a problem upgrading gadget [".$gadget."]: ".var_export($result, true));
+					return new Jaws_Error(_t('UPGRADE_VER_RESPONSE_GADGET_FAILED', $gadget), 0, JAWS_ERROR_ERROR);
+				}
+			}
+        }
+
+		$jms = $GLOBALS['app']->LoadGadget('Jms', 'AdminModel');
+		$urlmapping = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+		$gadget_list = $jms->GetGadgetsList(null, true, true, null);
+		
+		//Hold.. if we dont have a selected gadget?.. like no gadgets?
+		if (count($gadget_list) <= 0) {
+			return false;
+		} else {
+	
+			reset($gadget_list);
+			
+			foreach ($gadget_list as $gadget) {
+				$urlmapping->UpdateGadgetMaps($gadget['realname']);
+			}
+		}
+		
+        log_upgrade("Cleaning previous maps cache data files - step 0.8.13->0.8.14");
+        //Make sure user don't have any data/maps stuff
+        $path = JAWS_DATA . 'maps';
+        if (!Jaws_Utils::Delete($path, false)) {
+            log_upgrade("Can't delete $path");
+        }
+
+        log_upgrade("Cleaning previous registry cache data files - step 0.8.13->0.8.14");
+        //Make sure user don't have any data/cache/registry stuff
+        $path = JAWS_DATA . 'cache/registry';
+        if (!Jaws_Utils::Delete($path, false)) {
+            log_upgrade("Can't delete $path");
+        }
+
+        log_upgrade("Cleaning previous acl cache data files - step 0.8.13->0.8.14");
+        //Make sure user don't have any data/cache/acl stuff
+        $path = JAWS_DATA . 'cache/acl';
+        if (!Jaws_Utils::Delete($path, false)) {
+            log_upgrade("Can't delete $path");
+        }
 
         return true;
     }

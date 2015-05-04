@@ -403,7 +403,7 @@ class MDB2_Driver_oci8 extends MDB2_Driver_Common
             return $this->raiseError(MDB2_ERROR_CONNECT_FAILED, null, null,
                 'unable to establish a connection', __FUNCTION__);
         }
-
+        
         if (empty($this->dsn['disable_iso_date'])) {
             $query = "ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'";
             $err =& $this->_doQuery($query, true, $connection);
@@ -412,7 +412,7 @@ class MDB2_Driver_oci8 extends MDB2_Driver_Common
                 return $err;
             }
         }
-
+        
         $query = "ALTER SESSION SET NLS_NUMERIC_CHARACTERS='. '";
         $err =& $this->_doQuery($query, true, $connection);
         if (PEAR::isError($err)) {
@@ -821,7 +821,7 @@ class MDB2_Driver_oci8 extends MDB2_Driver_Common
             if (null === $placeholder_type) {
                 $placeholder_type_guess = $query[$p_position];
             }
-
+            
             $new_pos = $this->_skipDelimitedStrings($query, $position, $p_position);
             if (PEAR::isError($new_pos)) {
                 return $new_pos;
@@ -1208,7 +1208,7 @@ class MDB2_BufferedResult_oci8 extends MDB2_Result_oci8
             }
             if (empty($this->types)) {
                 foreach (array_keys($buffer) as $key) {
-                    if (is_object($buffer[$key]) && is_a($buffer[$key], 'oci-lob')) {
+                    if (is_a($buffer[$key], 'oci-lob')) {
                         $buffer[$key] = $buffer[$key]->load();
                     }
                 }
@@ -1472,7 +1472,7 @@ class MDB2_Statement_oci8 extends MDB2_Statement_Common
                     while (!feof($fp)) {
                         $this->values[$parameter] .= fread($fp, 8192);
                     }
-                } elseif (is_object($this->values[$parameter]) && is_a($this->values[$parameter], 'OCI-Lob')) {
+                } elseif (is_a($this->values[$parameter], 'OCI-Lob')) {
                     //do nothing
                 } elseif ($this->db->getOption('lob_allow_url_include')
                           && preg_match('/^(\w+:\/\/)(.*)$/', $this->values[$parameter], $match)
@@ -1486,7 +1486,7 @@ class MDB2_Statement_oci8 extends MDB2_Statement_Common
                 $lobs[$i]['descriptor'] =& $this->values[$parameter];
                 // Test to see if descriptor has already been created for this
                 // variable (i.e. if it has been bound more than once):
-                if (!(is_object($this->values[$parameter]) && is_a($this->values[$parameter], 'OCI-Lob'))) {
+                if (!is_a($this->values[$parameter], 'OCI-Lob')) {
                     $this->values[$parameter] = @OCINewDescriptor($connection, OCI_D_LOB);
                     if (false === $this->values[$parameter]) {
                         $result = $this->db->raiseError(null, null, null,
@@ -1503,7 +1503,7 @@ class MDB2_Statement_oci8 extends MDB2_Statement_Common
             } else if ($type == OCI_B_BFILE) {
                 // Test to see if descriptor has already been created for this
                 // variable (i.e. if it has been bound more than once):
-                if (!(is_object($this->values[$parameter]) && is_a($this->values[$parameter], "OCI-Lob"))) {
+                if (!is_a($this->values[$parameter], "OCI-Lob")) {
                     $this->values[$parameter] = @OCINewDescriptor($connection, OCI_D_FILE);
                     if (false === $this->values[$parameter]) {
                         $result = $this->db->raiseError(null, null, null,

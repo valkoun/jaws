@@ -1,51 +1,43 @@
 <?php
 /**
- * Users Core Gadget
+ * Users and Groups platform.
  *
  * @category   GadgetInfo
+ * @category   feature
  * @package    Users
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class UsersInfo extends Jaws_GadgetInfo
 {
     /**
-     * Gadget version
+     * Sets info about Users gadget
      *
-     * @var     string
-     * @access  private
+     * @access  public
      */
-    var $_Version = '1.0.0';
+    function UsersInfo()
+    {
+        parent::Init('Users');
+        $this->GadgetName(_t('USERS_NAME'));
+        $this->GadgetDescription(_t('USERS_DESCRIPTION'));
+        $this->GadgetVersion('0.8.7');
+        $this->Doc('gadget/Users');
+        $this->SetAttribute('core_gadget', true);
 
-    /**
-     * Is this gadget core gadget?
-     *
-     * @var    boolean
-     * @access  private
-     */
-    var $_IsCore = true;
-
-    /**
-     * Gadget ACLs
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_ACLs = array(
-        'ManageUsers',
-        'ManageGroups',
-        'ManageProperties',
-        'ManageUserACLs',
-        'ManageGroupACLs',
-        'EditUserName',
-        'EditUserNickname',
-        'EditUserEmail',
-        'EditUserPassword',
-        'EditUserPersonal',
-        'EditUserContact',
-        'EditUserPreferences',
-        'ManageAuthenticationMethod',
-    );
-
+        $acls = array(
+            'default',
+            'ManageUsers',
+            'ManageGroups',
+            'ManageProperties',
+            'ManageMessaging',
+            'ManageUserACLs',
+            'ManageGroupACLs',
+            'EditAccountPassword',
+            'EditAccountInformation',
+            'EditAccountProfile',
+            'EditAccountPreferences',
+        );
+        $this->PopulateACLs($acls);
+    }
 }

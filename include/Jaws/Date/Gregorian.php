@@ -2,94 +2,40 @@
 /**
  * Class to manage Gregorian calendar
  *
- * @category    Jaws_Date
- * @package     Core
- * @author      Amir Mohammad Saied <amir@php.net>
- * @author      Ali Fazelzadeh <afz@php.net>
- * @copyright   2006-2012 Jaws Development Group
- * @license     http://www.gnu.org/copyleft/lesser.html
+ * @category   Jaws_Date
+ * @package    Core
+ * @author     Amir Mohammad Saied <amir@php.net>
+ * @copyright  2006-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Date_Gregorian extends Jaws_Date
 {
     /**
      *
+     * @param   int $year   Gregorian year
+     * @param   int $month  Gregorian month
+     * @param   int $day    Gregorian day
      * @access  public
-     * @param   int     $year   Gregorian year
-     * @param   int     $month  Gregorian month
-     * @param   int     $day    Gregorian day
-     * @param   int     $hour   Hour
-     * @param   int     $minute Minute
-     * @param   int     $second Second
-     * @param   string  $format Date/Time format
      * @return  array   Converted time
      */
-    function ToBaseDate($year, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0, $format = '')
+    function ToBaseDate($year, $month = 1, $day = 1)
     {
-        $args = func_get_args();
-        if (is_array($args[0])) {
-            @list($year, $month, $day, $hour, $minute, $second) = $args[0];
-            $format = isset($args[1])? $args[1] : '';
-        }
-
-        $dt = mktime($hour, $minute, $second, $month, $day, $year);
-        return !empty($format)? date($format, $dt) :
-                                array('timestamp' => $dt,
-                                      'year'      => date("Y", $dt),
-                                      'month'     => date("m", $dt),
-                                      'day'       => date("d", $dt),
-                                      'hour'      => date("H", $dt),
-                                      'minute'    => date("i", $dt),
-                                      'second'    => date("s", $dt),
-                                      'monthDays' => date("t", $dt),
-                                      'yearDay'   => date("z", $dt)
-                                    );
-    }
-
-    /**
-     * Get date information
-     *
-     * @access  public
-     * @param   int     $year   Jalali year
-     * @param   int     $month  Jalali month
-     * @param   int     $day    Jalali day
-     * @param   int     $hour   Hour
-     * @param   int     $minute Minute
-     * @param   int     $second Second
-     * @return  array   Date time information
-     */
-    function GetDateInfo($year, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0)
-    {
-        if (is_array(func_get_arg(0))) {
-            @list($year, $month, $day, $hour, $minute, $second) = func_get_arg(0);
-            $date = mktime($hour, $minute, $second, $month, $day, $year);
-        } elseif (func_num_args() > 1) {
-            $date = mktime($hour, $minute, $second, $month, $day, $year);
-        } else { // unix timestamp
-            $date = $year;
-        }
-
-        $date = getdate($date);
-        return array(
-                'seconds' => str_pad($date['seconds'], 2, '0', STR_PAD_LEFT),
-                'minutes' => str_pad($date['minutes'], 2, '0', STR_PAD_LEFT),
-                'hours'   => str_pad($date['hours'],   2, '0', STR_PAD_LEFT),
-                'mday'    => str_pad($date['mday'],    2, '0', STR_PAD_LEFT),
-                'wday'    => $date['wday'],
-                'mon'     => str_pad($date['mon'],  2, '0', STR_PAD_LEFT),
-                'year'    => str_pad($date['year'], 4, '0', STR_PAD_LEFT),
-                'yday'    => $date['yday'],
-                'weekday' => $this->DayString($date['wday']),
-                'month'   => $this->MonthString($date['mon']),
-            );
+        $dt = mktime(0, 0, 0, $month, $day, $year);
+        return array('timestamp' => $dt,
+                     'year'      => date("Y", $dt),
+                     'month'     => date("m", $dt),
+                     'day'       => date("d", $dt),
+                     'monthDays' => date("t", $dt),
+                     'yearDay'   => date("z", $dt)
+                    );
     }
 
     /**
      * Format the input date.
      *
-     * @access  public
-     * @param   string  $date   Date string
-     * @param   string  $format Format to use
-     * @return  string  The original date with a new format
+     * @param  string  $date   Date string
+     * @param  string  $format Format to use
+     * @return The original date with a new format
      */
     function Format($date, $format = null)
     {

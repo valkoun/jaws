@@ -2,24 +2,22 @@
 /**
  * Class to manage Jalali calendar
  *
- * @category    Jaws_Date
- * @package     Core
- * @author      Amir Mohammad Saied <amir@php.net>
- * @author      Ali Fazelzadeh <afz@php.net>
- * @copyright   2006-2012 Jaws Development Group
- * @license     http://www.gnu.org/copyleft/lesser.html
+ * @category   Jaws_Date
+ * @package    Core
+ * @author     Amir Mohammad Saied <amir@php.net>
+ * @autho      Ali Fazelzadeh <afz@php.net>
+ * @copyright  2006-2010 Jaws Development Group
+ * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Date_Jalali extends Jaws_Date
 {
     /**
-     * @var     array
      * @access  private
      */
     var $_LeapYear = array(1, 5, 9, 13, 17, 22, 26, 30);
 
     /**
-     * @var     array
-     * @access  private
+     * @access private
      */
     var $_JalaliDaysInMonthes = array(31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
 
@@ -28,7 +26,7 @@ class Jaws_Date_Jalali extends Jaws_Date
      *
      * @param   int     $year  Jalali year
      * @access  private
-     * @return  bool    True/False
+     * @return  boolean True/False
      */
     function IsJalaliLeapYear($year)
     {
@@ -42,13 +40,11 @@ class Jaws_Date_Jalali extends Jaws_Date
      * @param   int     $month  Jalali month
      * @param   int     $day    Jalali day
      * @access  public
-     * @return  bool    True/False
+     * @return  boolean True/False
      */
     function JalaliTotalDays($year, $month, $day)
     {
-        $ym = floor(($month-1)/12);
-        $month = $month - $ym*12;
-        $year  = $year + $ym - 1;
+        $year--;
         $leap_days = floor($year/33)*8 + floor(($year%33)/4);
 
         $day_number =  365*$year + $leap_days;
@@ -62,24 +58,14 @@ class Jaws_Date_Jalali extends Jaws_Date
     /**
      * Jalali to Gregorian Convertor
      *
+     * @param   int $year  Jalali year
+     * @param   int $month Jalali month
+     * @param   int $day   Jalali day
      * @access  public
-     * @param   int     $year   Jalali year
-     * @param   int     $month  Jalali month
-     * @param   int     $day    Jalali day
-     * @param   int     $hour   Hour
-     * @param   int     $minute Minute
-     * @param   int     $second Second
-     * @param   string  $format Date/Time Format
      * @return  array   Converted time
      */
-    function ToBaseDate($year, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0, $format = '')
+    function ToBaseDate($year, $month = 1, $day = 1)
     {
-        $args = func_get_args();
-        if (is_array($args[0])) {
-            @list($year, $month, $day, $hour, $minute, $second) = $args[0];
-            $format = isset($args[1])? $args[1] : '';
-        }
-
         if ($month == 0) {
             $year--;
             $month = 12;
@@ -92,7 +78,7 @@ class Jaws_Date_Jalali extends Jaws_Date
 
         $year = $year - 979;
         $gregorian_day = $this->JalaliTotalDays($year, $month, $day) + 79;
-        return $this->ToGregorian($gregorian_day, 1601, $hour, $minute, $second, $format);
+        return $this->ToGregorian($gregorian_day, 1601);
     }
 
     /**
@@ -112,8 +98,7 @@ class Jaws_Date_Jalali extends Jaws_Date
         $jalali_year = floor($jalali_day/12053)*33; // 12053 = 33*365 + 8
         $jalali_day %= 12053;
         $jalali_year = 979 + $jalali_year + floor(($jalali_day - 1) / 1461)*4; // 1461 = 4*365 + 1
-        $jalali_day  = ($jalali_day - 1) % 1461 + 1;
-        $jalali_wday = ($jalali_day - 2) % 7;
+        $jalali_day = ($jalali_day - 1) % 1461 + 1;
 
         $jalali_year++;
         $isLeap = (int)$this->IsJalaliLeapYear($jalali_year);
@@ -132,73 +117,21 @@ class Jaws_Date_Jalali extends Jaws_Date
             $jalali_month++;
         }
 
-        return array('year'      => str_pad($jalali_year, 4, '0', STR_PAD_LEFT),
-                     'month'     => str_pad($jalali_month + 1, 2, '0', STR_PAD_LEFT),
-                     'day'       => str_pad($jalali_day,  2, '0', STR_PAD_LEFT),
-                     'weekDay'   => $jalali_wday,
+        return array('year'      => $jalali_year,
+                     'month'     => $jalali_month + 1,
+                     'day'       => $jalali_day,
                      'monthDays' => $this->_JalaliDaysInMonthes[$jalali_month]+
                                     ($jalali_month==11 ? $isLeap : 0),
                      'yearDay'   => $year_days
                     );
     }
 
-    /**
-     * Get date information
-     *
-     * @access  public
-     * @param   int     $year   Jalali year
-     * @param   int     $month  Jalali month
-     * @param   int     $day    Jalali day
-     * @param   int     $hour   Hour
-     * @param   int     $minute Minute
-     * @param   int     $second Second
-     * @return  array   Date time information
-     */
-    function GetDateInfo($year, $month = 1, $day = 1, $hour = 0, $minute = 0, $second = 0)
-    {
-        if (is_array(func_get_arg(0))) {
-            $date = $this->ToBaseDate($year);
-            $date = $date['timestamp'];
-        } elseif (func_num_args() > 1) {
-            $date = $this->ToBaseDate($year, $month, $day, $hour, $minute, $second);
-            $date = $date['timestamp'];
-        } else { // unix timestamp
-            $date = $year;
-        }
-
-        $date = $GLOBALS['app']->UTC2UserTime($date);
-        $date_array = explode('-', date('Y-m-d-H-i-s', $date));
-        $jalali_array = $this->GregorianToJalali($date_array[0], $date_array[1], $date_array[2]);
-        $second = $date_array[5];
-        $minute = $date_array[4];
-        $hour   = $date_array[3];
-        $day    = $jalali_array['day'];
-        $wday   = $jalali_array['weekDay'];
-        $month  = $jalali_array['month'];
-        $year   = $jalali_array['year'];
-        $yday   = $jalali_array['yearDay'];
-
-        return array(
-                'seconds' => $second,
-                'minutes' => $minute,
-                'hours'   => $hour,
-                'mday'    => $day,
-                'wday'    => $wday,
-                'mon'     => $month,
-                'year'    => $year,
-                'yday'    => $yday,
-                'weekday' => $this->DayString($wday),
-                'month'   => $this->MonthString($month),
-            );
-    }
-
    /**
     * Format the input date.
     *
-    * @access  public
-    * @param   string   $date   Date string
-    * @param   string   $format Format to use
-    * @return  string   The original date with a new format
+    * @param  string  $date   Date string
+    * @param  string  $format Format to use
+    * @return The original date with a new format
     */
     function Format($date, $format = null)
     {
@@ -225,10 +158,9 @@ class Jaws_Date_Jalali extends Jaws_Date
    /**
     * Format the input date.
     *
-    * @access  public
-    * @param   string   $date   Date string
-    * @param   string   $format Format to use
-    * @return  string   The original date with a new format
+    * @param  string  $date   Date string
+    * @param  string  $format Format to use
+    * @return The original date with a new format
     */
     function DateFormat($format, $date)
     {

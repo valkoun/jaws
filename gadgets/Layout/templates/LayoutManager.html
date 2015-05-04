@@ -1,5 +1,6 @@
 <!-- BEGIN working_notification -->
-<div id="working_notification"></div>
+<!-- Working Notification -->
+<div id="working_notification" class="working_notification"></div>
 <script type="text/javascript">
     default_loading_message = "{loading-message}";
     var loading_message = default_loading_message;
@@ -19,24 +20,32 @@
 </div>
 <!-- END msgbox-wrapper -->
 <!-- BEGIN item -->
-<div class="item" id="item_{item_id}" title="{description}" style="text-decoration: {item_status};">
+<div class="item{item_class}" id="item_{item_id}" title="{description}" style="text-decoration: {item_status};">
+<!-- BEGIN requested -->
     <div class="item-icon"><img src="{icon}" width="48px" alt="icon"/></div>
-    <div class="item-delete"><a href="javascript:void(0);" onclick="{delete}"><img src="{delete-img}" alt="delete"/></a></div>
-    <div class="item-gadget">{gadget}</div>
-    <div class="item-action">
-        <a id="ea{item_id}" name="ea{item_id}" href="javascript:void(0);"
-           onclick="{void_link}editElementAction('{base_script_url}?gadget=Layout&amp;action=EditElementAction&amp;id={item_id}');">
-           {action}</a>
+    <div class="item-controls{controls_class}"{controls_style}>
+		<div class="item-nodelete"><a href="javascript:void(0);" onclick="{delete}"><img src="{delete-img}" alt="delete"/></a></div>
     </div>
+	<div class="item-gadget">{gadget}</div>
+    <div class="item-action"><a id="ea{item_id}" name="ea{item_id}" href="javascript:void(0);" onclick="{void_link}editElementAction('{base_script_url}?gadget=Layout&amp;action=EditElementAction&amp;id={item_id}');">{action}</a></div>
     <div class="item-dw">
         <label>{lbl_display_when}:</label>
         <a id="dw{item_id}" name="dw{item_id}" href="javascript:void(0);"
            onclick="{void_link}changeDisplayWhen('{base_script_url}?gadget=Layout&amp;action=ChangeDisplayWhen&amp;id={item_id}');">
            {display_when}</a>
     </div>
+<!-- END requested -->	
+<!-- BEGIN gadget -->
+    <div class="item-controls"{controls_style}>
+		<div class="item-move{move-edit}"><a href="javascript:void(0);"><img src="{move-img}" alt="move" /></a></div>
+		<div class="item-edit"{edit_style}><a id="ea{item_id}" name="ea{item_id}" href="{edit}"><img src="{edit-img}" alt="edit" /></a></div>
+		<div class="item-delete"><a href="javascript:void(0);" onclick="{delete}"><img src="{delete-img}" alt="delete"/></a></div>
+	</div>
+    {gadget}
+<!-- END gadget -->
 </div>
 <script type="text/javascript">
-  items['{section_id}']['item_{item_id}'] = true;
+  Event.observe(window, "load",function(){items['{section_id}']['item_{item_id}'] = true;});
 </script>
 <!-- END item -->
 <!-- BEGIN drag_drop -->
@@ -45,8 +54,9 @@
         var noItemsMsg       = "{empty_section}";
         var displayAlways    = "{display_always}";
         var displayNever     = "{display_never}";
+        var displayThisPage  = "Various";
         var actionsTitle     = "{actionsTitle}";
         var displayWhenTitle = "{displayWhenTitle}";
-        initUI();
+        Event.observe(window, "load",function(){initUI();});
     </script>
 <!-- END drag_drop -->

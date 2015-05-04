@@ -7,7 +7,7 @@
     vertical-align: top;
 }
 
-#policy_sidebar {
+#policy-sidebar {
     width: 200px;
     vertical-align: top;
     padding-right: 6px;
@@ -27,14 +27,14 @@
     width: 100%;
 }
 
-#policy_options {
+.policy-options {
     margin: 2px;
     padding: 4px;
     border: 1px solid #d3d7cf;
 }
 
 #entry_area {
-    width: 200px;
+    width: 192px;
 }
 
 #options_entry table {

@@ -6,7 +6,7 @@
  * @package    UrlMapper
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 require_once JAWS_PATH . 'gadgets/UrlMapper/Model.php';
@@ -16,8 +16,8 @@ class UrlMapperAdminModel extends UrlMapperModel
     /**
      * Installs the gadget
      *
-     * @access  public
-     * @return  mixed   True on successful installation, Jaws_Error otherwise
+     * @access       public
+     * @return       true on successful installation, Jaws_Error otherwise
      */
     function InstallGadget()
     {
@@ -38,12 +38,12 @@ class UrlMapperAdminModel extends UrlMapperModel
     }
 
     /**
-     * Updates the gadget
+     * Update the gadget
      *
      * @access  public
      * @param   string  $old    Current version (in registry)
      * @param   string  $new    New version (in the $gadgetInfo file)
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UpdateGadget($old, $new)
     {
@@ -65,496 +65,166 @@ class UrlMapperAdminModel extends UrlMapperModel
                 //not important
             }
 
-            // Install listener for Add/Update/Removing gadget's maps
-            $GLOBALS['app']->Listener->NewListener($this->_Name, 'onBeforeUninstallingGadget', 'RemoveGadgetMaps');
-            $GLOBALS['app']->Listener->NewListener($this->_Name, 'onAfterEnablingGadget',      'AddGadgetMaps');
-            $GLOBALS['app']->Listener->NewListener($this->_Name, 'onAfterUpdatingGadget',      'UpdateGadgetMaps');
         }
 
-        if (version_compare($old, '0.3.1', '<')) {
-            $result = $this->installSchema('0.3.1.xml', '', '0.3.0.xml');
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
+        $result = $this->installSchema('schema.xml', '', '0.3.0.xml');
+        if (Jaws_Error::IsError($result)) {
+            return $result;
         }
 
-        if (version_compare($old, '0.3.2', '<')) {
-            $sql = 'DELETE FROM [[url_maps]]';
-            $result = $GLOBALS['db']->query($sql);
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
+		// Install listener for Add/Update/Removing gadget's maps
+		$GLOBALS['app']->Listener->NewListener($this->_Name, 'onBeforeUninstallingGadget', 'RemoveGadgetMaps');
+		$GLOBALS['app']->Listener->NewListener($this->_Name, 'onAfterEnablingGadget',      'AddGadgetMaps');
+		$GLOBALS['app']->Listener->NewListener($this->_Name, 'onAfterUpdatingGadget',      'UpdateGadgetMaps');
+        
+		$this->LoadMapsFromGadgets();
+        Jaws_Utils::Delete(JAWS_DATA . 'maps', false);
 
-            $result = $this->installSchema('0.3.2.xml', '', '0.3.1.xml');
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
+        // Registry keys.
 
-            // Add all gadgets maps
-            $gadgets  = $GLOBALS['app']->Registry->Get('/gadgets/enabled_items');
-            $cgadgets = $GLOBALS['app']->Registry->Get('/gadgets/core_items');
-            $gadgets  = explode(',', $gadgets);
-            $cgadgets = explode(',', $cgadgets);
-            $final = array_merge($gadgets, $cgadgets);
-            foreach ($final as $gadget) {
-                if (!empty($gadget)) {
-                    $res = $this->AddGadgetMaps($gadget);
-                    if (Jaws_Error::IsError($res)) {
-                        return $res;
-                    }
-                }
-            }
-        }
-
-        if (version_compare($old, '0.4.0', '<')) {
-            $result = $this->installSchema('schema.xml', '', '0.3.2.xml');
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
-
-            // Update all gadgets maps
-            $gadgets  = $GLOBALS['app']->Registry->Get('/gadgets/enabled_items');
-            $cgadgets = $GLOBALS['app']->Registry->Get('/gadgets/core_items');
-            $gadgets  = explode(',', $gadgets);
-            $cgadgets = explode(',', $cgadgets);
-            $final = array_merge($gadgets, $cgadgets);
-            foreach ($final as $gadget) {
-                if (!empty($gadget)) {
-                    $res = $this->UpdateGadgetMaps($gadget);
-                    if (Jaws_Error::IsError($res)) {
-                        return $res;
-                    }
-                }
-            }
-        }
-
-        Jaws_Utils::Delete(JAWS_DATA . 'cache/maps.php');
         return true;
     }
 
     /**
-     * Returns only the map route of a certain map
+     * Load map from each gadget (gadgets/Foo/Map.php)
      *
-     * @access  public
-     * @param   int     $id Map's ID
-     * @return  string  Map route
+     * @access public
      */
-    function GetMap($id)
+    function LoadMapsFromGadgets()
     {
-        $params = array();
-        $params['id'] = $id;
+        $this->_loaded_from_gadgets = false;
+        $gadgets  = $GLOBALS['app']->Registry->Get('/gadgets/enabled_items');
+        $cgadgets = $GLOBALS['app']->Registry->Get('/gadgets/core_items');
 
-        $sql = '
-            SELECT
-                [map], [regexp], [extension], [vars_regexps],
-                [custom_map], [custom_regexp], [custom_extension], [order]
-            FROM [[url_maps]]
-            WHERE [id] = {id}';
+        $gadgets  = explode(',', $gadgets);
+        $cgadgets = explode(',', $cgadgets);
+        $final = array_merge($gadgets, $cgadgets);
+        foreach ($final as $gadget) {
+            if ($gadget == '') {
+                continue;
+            }
 
-        $result = $GLOBALS['db']->queryRow($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return $result;
+            $file = JAWS_PATH . 'gadgets/' . $gadget . '/Map.php';
+            if (file_exists($file)) {
+                include_once $file;
+            }
         }
-
-        return $result;
     }
 
     /**
-     * Returns only the map route of given params
+     * Add all gadget's maps
      *
      * @access  public
-     * @param   string  $gadget Gadget name
-     * @param   string  $action Action name
-     * @param   string  $map    Action map
-     * @return  mixed   Map route or Jaws_Error on error
-     */
-    function GetMapByParams($gadget, $action, $map)
-    {
-        $params = array();
-        $params['gadget'] = $gadget;
-        $params['action'] = $action;
-        $params['map']    = $map;
-
-        $sql = '
-            SELECT
-                [id], [gadget], [map], [regexp], [extension], [vars_regexps],
-                [custom_map], [custom_regexp], [custom_extension]
-            FROM [[url_maps]]
-            WHERE
-                [gadget] = {gadget}
-              AND
-                [action] = {action}
-              AND
-                [map] = {map}';
-
-        $result = $GLOBALS['db']->queryRow($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return $result;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns maps of a certain gadget/action stored in DB
-     *
-     * @access  public
-     * @param   string  $gadget   Gadget's name (FS name)
-     * @param   string  $action   Gadget's action to use
-     * @return  array   List of custom maps
-     */
-    function GetActionMaps($gadget, $action)
-    {
-        $params = array();
-        $params['gadget'] = $gadget;
-        $params['action'] = $action;
-
-        $sql = '
-            SELECT
-                [id], [map], [extension]
-            FROM [[url_maps]]
-            WHERE
-                [gadget] = {gadget}
-              AND
-                [action] = {action}
-            ORDER BY [order] ASC';
-
-        $result = $GLOBALS['db']->queryAll($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return array();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns mapped actions of a certain gadget
-     *
-     * @access  public
-     * @param   string  $gadget  Gadget name
-     * @return  array   List of actions
-     */
-    function GetGadgetActions($gadget)
-    {
-        $params = array();
-        $params['gadget'] = $gadget;
-
-        $sql = '
-            SELECT [gadget], [action]
-            FROM [[url_maps]]
-            WHERE [gadget] = {gadget}
-            GROUP BY [gadget], [action]
-            ORDER BY [gadget], [action]';
-
-        $result = $GLOBALS['db']->queryCol($sql, $params, null, 1);
-        if (Jaws_Error::IsError($result)) {
-            return array();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Adds all of gadget maps
-     *
-     * @access  public
-     * @param   string  $gadget  Gadget name
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @return  boolean True if query was successful and Jaws_Error on error
      */
     function AddGadgetMaps($gadget)
     {
         $file = JAWS_PATH . 'gadgets/' . $gadget . '/Map.php';
         if (file_exists($file)) {
-            // Deprecated: use $GLOBALS to fetch maps of old gadgets
-            $maps = array();
-            $GLOBALS['maps'] = array();
             include_once $file;
-            if(!empty($GLOBALS['maps'])) {
-                $maps = $GLOBALS['maps'];
-            }
-            foreach ($maps as $order => $map) {
-                $vars_regexps = array();
-                $vars_regexps = isset($map[3])? $map[3] : $vars_regexps;
-                if (preg_match_all('#{(\w+)}#si', $map[1], $matches)) {
-                    foreach ($matches[1] as $m) {
-                        if (!isset($vars_regexps[$m])) {
-                            $vars_regexps[$m] = '\w+';
-                        }
-                    }
-                }
-
-                $res = $this->AddMap($gadget,
-                                     $map[0],
-                                     $map[1],
-                                     isset($map[2])? $map[2] : '',
-                                     $vars_regexps,
-                                     $order + 1);
-                if (Jaws_Error::IsError($res)) {
-                    return $res;
-                }
-            }
-
-            unset($GLOBALS['maps']);
+            Jaws_Utils::Delete(JAWS_DATA . 'maps/core.php');
         }
 
         return true;
     }
 
     /**
-     * Updates all of gadget maps
+     * Update all gadget's maps
      *
      * @access  public
-     * @param   string  $gadget  Gadget name
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @return  boolean True if query was successful and Jaws_Error on error
      */
     function UpdateGadgetMaps($gadget)
     {
+        $params = array();
+        $params['gadget'] = $gadget;
+        $params['custom'] = false;
+
+        $sql = '
+            DELETE FROM [[url_maps]]
+            WHERE
+                [gadget] = {gadget}
+              AND
+                [custom] = {custom}';
+
+        $result = $GLOBALS['db']->query($sql, $params);
+        if (Jaws_Error::IsError($result)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+            return false;
+        }
+
         $file = JAWS_PATH . 'gadgets/' . $gadget . '/Map.php';
         if (file_exists($file)) {
-            // Deprecated: use $GLOBALS to fetch maps of old gadgets
-            $maps = array();
-            $GLOBALS['maps'] = array();
             include_once $file;
-            if(!empty($GLOBALS['maps'])) {
-                $maps = $GLOBALS['maps'];
-            }
-
-            $now = $GLOBALS['db']->Date();
-            foreach ($maps as $order => $map) {
-                $eMap = $this->GetMapByParams($gadget, $map[0], $map[1]);
-                if (Jaws_Error::IsError($eMap)) {
-                    return $eMap;
-                }
-
-                $vars_regexps = array();
-                $vars_regexps = isset($map[3])? $map[3] : $vars_regexps;
-                if (preg_match_all('#{(\w+)}#si', $map[1], $matches)) {
-                    foreach ($matches[1] as $m) {
-                        if (!isset($vars_regexps[$m])) {
-                            $vars_regexps[$m] = '\w+';
-                        }
-                    }
-                }
-
-                if (empty($eMap)) {
-                    $res = $this->AddMap($gadget,
-                                         $map[0],
-                                         $map[1],
-                                         isset($map[2])? $map[2] : '',
-                                         $vars_regexps,
-                                         $order + 1,
-                                         $now);
-                    if (Jaws_Error::IsError($res)) {
-                        return $res;
-                    }
-                } else {
-                    $res = $this->UpdateMap($eMap['id'],
-                                            $eMap['custom_map'],
-                                            $eMap['custom_extension'],
-                                            $vars_regexps,
-                                            $order + 1,
-                                            $now);
-                    if (Jaws_Error::IsError($res)) {
-                        return $res;
-                    }
-                }
-            }
-
-            // remove outdated maps
-            $res = $this->RemoveGadgetMaps($gadget, $now);
-            if (Jaws_Error::IsError($res)) {
-                return $res;
-            }
+            Jaws_Utils::Delete(JAWS_DATA . 'maps/core.php');
         }
 
         return true;
     }
 
     /**
-     * Gets regular expression to detect map
+     * Delete all maps related with a gadget
      *
      * @access  public
-     * @param   string  $map            Map to use (foo/bar/{param}/{param2}...)
-     * @param   array   $vars_regexps   Array of regexp validators
-     * @return  string  Regular expression
+     * @return  boolean True if query was successful and Jaws_Error on error
      */
-    function GetMapRegExp($map, $vars_regexps)
-    {
-        $regexp = str_replace('/', '\/', $map);
-        if (!empty($regexp)) {
-            // generate regular expression for optional part
-            while(preg_match('@\[([^\]\[]+)\]@', $regexp)) {
-                $regexp = preg_replace('@\[([^\]\[]+)\]@','(?:$1|)', $regexp);
-            }
-
-            if (is_array($vars_regexps) && !empty($vars_regexps)) {
-                foreach ($vars_regexps as $k => $v) {
-                    $regexp = str_replace('{' . $k . '}', '(' . $v . ')', $regexp);
-                }
-            }
-
-            // Adding delimiter to regular expression
-            $regexp = str_replace('@', '\\@', $regexp);
-            $regexp = '@^' . $regexp . '$@';
-        }
-
-        return $regexp;
-    }
-
-    /**
-     * Adds a new custom map
-     *
-     * @access  public
-     * @param   string  $gadget         Gadget name (FS name)
-     * @param   string  $action         Gadget action to use
-     * @param   string  $map            Map to use (foo/bar/{param}/{param2}...)
-     * @param   string  $extension      Extension of map
-     * @param   array   $vars_regexps   Array of regexp validators
-     * @param   int     $order          Sequence number of the map
-     * @param   string  $time           Create/Update time
-     * @return  mixed   True on success, Jaws_Error otherwise
-     */
-    function AddMap($gadget, $action, $map, $extension = '', $vars_regexps = null, $order = 0, $time = '')
-    {
-        //for compatible with old versions
-        $extension = ($extension == 'index.php')? '' : $extension;
-        if (!empty($extension) && $extension{0} != '.') {
-            $extension = '.'.$extension;
-        }
-
-        if ($this->MapExists($gadget, $action, $map, $extension)) {
-            return true;
-        }
-
-        // map's regular expression
-        $regexp = $this->GetMapRegExp($map, $vars_regexps);
-
-        $params = array();
-        $params['gadget']    = $gadget;
-        $params['action']    = $action;
-        $params['map']       = $map;
-        $params['regexp']    = $regexp;
-        $params['extension'] = $extension;
-        $params['vars_regexps'] = serialize($vars_regexps);
-        $params['order']     = $order;
-        $params['time']      = empty($time)? $GLOBALS['db']->Date() : $time;
-
-        $sql = '
-            INSERT INTO [[url_maps]]
-                ([gadget], [action], [map], [regexp], [extension], [vars_regexps], [order],
-                 [createtime], [updatetime])
-            VALUES
-                ({gadget}, {action}, {map}, {regexp}, {extension}, {vars_regexps}, {order},
-                 {time}, {time})';
-
-        $result = $GLOBALS['db']->query($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return new Jaws_Error(_t('URLMAPPER_ERROR_MAP_NOT_ADDED'), _t('URLMAPPER_NAME'));
-        }
-
-        return true;
-    }
-
-    /**
-     * Updates map route of the map
-     *
-     * @access  public
-     * @param   int     $id             Map ID
-     * @param   string  $map            Map to use (foo/bar/{param}/{param2}...)
-     * @param   string  $extension      Extension of map
-     * @param   array   $vars_regexps   Array of regexp validators
-     * @param   int     $order          Sequence number of the map
-     * @param   string  $time           Create/Update time
-     * @return  mixed   True on success, Jaws_Error otherwise
-     */
-    function UpdateMap($id, $map, $extension, $vars_regexps, $order, $time = '')
-    {
-        if (!empty($extension) && $extension{0} != '.') {
-            $extension = '.'.$extension;
-        }
-
-        if (is_null($vars_regexps)) {
-            $result = $this->GetMap($id);
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
-
-            if (empty($result)) {
-                return Jaws_Error::raiseError(_t('URLMAPPER_NO_MAPS'),
-                                              __FUNCTION__);
-            }
-
-            $vars_regexps = unserialize($result['vars_regexps']);
-        }
-
-        // map's regular expression
-        $regexp = $this->GetMapRegExp($map, $vars_regexps);
-
-        $params = array();
-        $params['id'] = $id;
-        $params['map']       = $map;
-        $params['regexp']    = $regexp;
-        $params['extension'] = $extension;
-        $params['vars_regexps'] = serialize($vars_regexps);
-        $params['order']     = $order;
-        $params['time']      = empty($time)? $GLOBALS['db']->Date() : $time;
-
-        $sql = '
-            UPDATE [[url_maps]] SET
-                [custom_map]       = {map},
-                [custom_regexp]    = {regexp},
-                [custom_extension] = {extension},
-                [vars_regexps]     = {vars_regexps},
-                [order]            = {order},
-                [updatetime]       = {time}
-            WHERE [id] = {id}';
-
-        $result = $GLOBALS['db']->query($sql, $params);
-        if (Jaws_Error::IsError($result)) {
-            return $result;
-        }
-
-        return true;
-    }
-
-    /**
-     * Deletes all maps related to a gadget
-     *
-     * @access  public
-     * @param   string  $gadget Gadget name
-     * @param   string  $time   Time condition
-     * @return  mixed   True on success, Jaws_Error otherwise
-     */
-    function RemoveGadgetMaps($gadget, $time = '')
+    function RemoveGadgetMaps($gadget)
     {
         $params = array();
         $params['gadget'] = $gadget;
-        $params['time']   = $time;
 
         $sql = '
             DELETE FROM [[url_maps]]
             WHERE
                 [gadget] = {gadget}';
 
-        if (!empty($time)) {
-            $sql .= ' AND [updatetime] < {time}';
-        }
-
         $result = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($result)) {
-            return $result;
+            $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+            return false;
         }
 
+        Jaws_Utils::Delete(JAWS_DATA . 'maps/core.php');
+        Jaws_Utils::Delete(JAWS_DATA . 'maps/custom.php');
+        return true;
+    }
+
+    /**
+     * Save settings
+     *
+     * @access  public
+     * @param   boolean  $enabled     Should maps be used?
+     * @param   boolean  $use_aliases Should aliases be used?
+     * @param   boolean  $precedence  custom map precedence over default map
+     * @param   string   $extension   Extension to use
+     * @return  boolean  Success/Failure
+     */
+    function SaveSettings($enabled, $use_aliases, $precedence, $extension)
+    {
+        $xss   = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+
+        $res = $GLOBALS['app']->Registry->Set('/map/enabled',     ($enabled === true)? 'true' : 'false');
+        $res = $res && $GLOBALS['app']->Registry->Set('/map/custom_precedence', ($precedence === true)?  'true' : 'false');
+        $res = $res && $GLOBALS['app']->Registry->Set('/map/extensions',  $xss->parse($extension));
+        $res = $res && $GLOBALS['app']->Registry->Set('/map/use_aliases', ($use_aliases === true)? 'true' : 'false');
+
+        if ($res === false) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_ERROR_SETTINGS_NOT_SAVED'), RESPONSE_ERROR);
+            return new Jaws_Error(_t('URLMAPPER_ERROR_SETTINGS_NOT_SAVED'), _t('URLMAPPER_NAME'));
+        }
+
+        $GLOBALS['app']->Registry->commit('core');
+        $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_SETTINGS_SAVED'), RESPONSE_NOTICE);
         return true;
     }
 
     /**
      * Adds a new alias
      *
-     * @access  public
-     * @param   string  $alias  Alias value
-     * @param   string  $url    Real URL
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @access   public
+     * @param    string   $alias   Alias value
+     * @param    string   $url     Real URL
+     * @return   boolean   Success/Failure
      */
     function AddAlias($alias, $url)
     {
@@ -590,13 +260,13 @@ class UrlMapperAdminModel extends UrlMapperModel
     }
 
     /**
-     * Updates the alias
+     * Updates an alias by its ID
      *
      * @access  public
-     * @param   int     $id     Alias ID
-     * @param   string  $alias  Alias value
-     * @param   string  $url    Real URL
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @param   int      $id      Alias ID
+     * @param   string   $alias   Alias value
+     * @param   string   $url     Real URL
+     * @return  boolean  Success/Failure
      */
     function UpdateAlias($id, $alias, $url)
     {
@@ -651,11 +321,11 @@ class UrlMapperAdminModel extends UrlMapperModel
     }
 
     /**
-     * Deletes the alias
+     * Deletes an alias
      *
-     * @access  public
-     * @param   int     $id  Alias ID
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @access   public
+     * @param    int      $id      Alias ID
+     * @return   boolean  Success/Failure
      */
     function DeleteAlias($id)
     {
@@ -675,29 +345,79 @@ class UrlMapperAdminModel extends UrlMapperModel
     }
 
     /**
-     * Updates settings
+     * Deletes a map
      *
-     * @access  public
-     * @param   bool    $enabled        Should maps be used?
-     * @param   bool    $use_aliases    Should aliases be used?
-     * @param   bool    $precedence     custom map precedence over default map
-     * @param   string  $extension      Extension to use
-     * @return  mixed   True on success, Jaws_Error otherwise
+     * @access   public
+     * @param    int        $id Map's ID
+     * @return   boolean    Success/Failure
      */
-    function SaveSettings($enabled, $use_aliases, $precedence, $extension)
+    function DeleteMap($id)
     {
-        $res = $GLOBALS['app']->Registry->Set('/map/enabled', ($enabled === true)? 'true' : 'false');
-        $res = $res && $GLOBALS['app']->Registry->Set('/map/custom_precedence', ($precedence === true)?  'true' : 'false');
-        $res = $res && $GLOBALS['app']->Registry->Set('/map/extensions',  $extension);
-        $res = $res && $GLOBALS['app']->Registry->Set('/map/use_aliases', ($use_aliases === true)? 'true' : 'false');
+        $params       = array();
+        $params['id'] = $id;
 
-        if ($res === false) {
-            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_ERROR_SETTINGS_NOT_SAVED'), RESPONSE_ERROR);
-            return new Jaws_Error(_t('URLMAPPER_ERROR_SETTINGS_NOT_SAVED'), _t('URLMAPPER_NAME'));
+        $sql = '
+            DELETE FROM [[url_maps]]
+            WHERE [id] = {id}';
+
+        $result = $GLOBALS['db']->query($sql, $params);
+        if (Jaws_Error::IsError($result)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_ERROR_MAP_NOT_DELETED'), RESPONSE_ERROR);
+            return new Jaws_Error(_t('URLMAPPER_ERROR_MAP_NOT_DELETED'), _t('URLMAPPER_NAME'));
         }
 
-        $GLOBALS['app']->Registry->commit('core');
-        $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_SETTINGS_SAVED'), RESPONSE_NOTICE);
+        $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_MAP_DELETED'), RESPONSE_NOTICE);
+        return true;
+    }
+
+    /**
+     * Updates the map route of a map by its ID
+     *
+     * @access   public
+     * @param    int       $id       Map's ID
+     * @param    string    $map      Map to use (foo/bar/{param}/{param2}...)
+     * @return   boolean   Success/Failure
+     */
+    function UpdateMap($id, $map, $regexp, $extension)
+    {
+        if (!empty($extension) && $extension{0} != '.') {
+            $extension = '.'.$extension;
+        }
+
+        $params = array();
+        $params['id'] = $id;
+        $params['map'] = $map;
+        $params['regexp'] = $regexp;
+        $params['extension'] = $extension;
+
+        $sql = '
+            UPDATE [[url_maps]] SET
+                [map] = {map},
+                [regexp] = {regexp},
+                [extension] = {extension}
+            WHERE [id] = {id}';
+
+        $result = $GLOBALS['db']->query($sql, $params);
+        if (Jaws_Error::IsError($result)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_ERROR_MAP_NOT_UPDATED'), RESPONSE_ERROR);
+            return new Jaws_Error(_t('URLMAPPER_ERROR_MAP_NOT_UPDATED'), _t('URLMAPPER_NAME'));
+        }
+
+        $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_MAP_UPDATED', $map), RESPONSE_NOTICE);
+        return true;
+    }
+
+    /**
+     * Updates the custom map file
+     *
+     *  - Deletes the custom map file (if it exists)
+     *
+     * @access   public
+     * @return   boolean   Success/Failure
+     */
+    function UpdateCustomMaps()
+    {
+        Jaws_Utils::Delete(JAWS_DATA. 'maps'. DIRECTORY_SEPARATOR. 'custom.php');
         return true;
     }
 

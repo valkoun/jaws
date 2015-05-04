@@ -8,20 +8,30 @@
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @author     Mohsen Khahani <mohsen@khahani.com>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class MenuAdminHTML extends Jaws_GadgetHTML
 {
     /**
+     * Public constructor
+     *
+     * @access  public
+     */
+    function MenuAdminHTML()
+    {
+        $this->Init('Menu');
+    }
+
+    /**
      * Displays gadget administration section
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string HTML Template content
      */
     function Admin()
     {
+        $this->CheckPermission('default');
         $this->AjaxMe('script.js');
 
         $tpl = new Jaws_Template('gadgets/Menu/templates/');
@@ -49,7 +59,7 @@ class MenuAdminHTML extends Jaws_GadgetHTML
         $cancel_btn->AddEvent(ON_CLICK, 'javascript: stopAction();');
         $tpl->SetVariable('cancel', $cancel_btn->Get());
 
-        $tpl->SetVariable('menu_tree_image', 'gadgets/Menu/images/menu-item.png');
+        $tpl->SetVariable('menu_tree_image', $GLOBALS['app']->GetJawsURL() . '/gadgets/Menu/images/menu-item.png');
         $tpl->SetVariable('menu_tree_title', _t('MENU_TREE_TITLE'));
         $tpl->SetVariable('addMenuTitle',    _t('MENU_ADD_MENU'));
         $tpl->SetVariable('editMenuTitle',   _t('MENU_EDIT_MENU'));
@@ -57,7 +67,7 @@ class MenuAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('addGroupTitle',   _t('MENU_ADD_GROUP'));
         $tpl->SetVariable('editGroupTitle',  _t('MENU_EDIT_GROUP'));
         $tpl->SetVariable('delGroupTitle',   _t('MENU_DELETE_GROUP'));
-        $tpl->SetVariable('menuImageSrc',    'gadgets/Menu/images/menu-item.png');
+        $tpl->SetVariable('menuImageSrc',    $GLOBALS['app']->GetJawsURL() . '/gadgets/Menu/images/menu-item.png');
         $tpl->SetVariable('incompleteFields',   _t('MENU_INCOMPLETE_FIELDS'));
         $tpl->SetVariable('confirmDeleteGroup', _t('MENU_CONFIRM_DELETE_GROUP'));
         $tpl->SetVariable('confirmDeleteMenu',  _t('MENU_CONFIRM_DELETE_MENU'));
@@ -67,16 +77,6 @@ class MenuAdminHTML extends Jaws_GadgetHTML
         return $tpl->Get();
     }
 
-    /**
-     * Retrieves Menu Level
-     *
-     * @access  public
-     * @param   object  $model      Jaws_Model reference
-     * @param   string  $tpl_str    XHTML template content passed by reference
-     * @param   int     $gid        Group ID
-     * @param   int     $pid
-     * @return  string  XHTML template content
-     */
     function GetMenuLevel(&$model, &$tpl_str, $gid, $pid)
     {
         $menus = $model->GetLevelsMenus($pid, $gid);
@@ -89,7 +89,7 @@ class MenuAdminHTML extends Jaws_GadgetHTML
             $tpl->SetBlock('parent/menu');
             $tpl->SetVariable('class_name', 'menu_levels');
             $tpl->SetVariable('mg_id', 'menu_'.$menu['id']);
-            $tpl->SetVariable('icon', 'gadgets/Menu/images/menu-item.png');
+            $tpl->SetVariable('icon', $GLOBALS['app']->GetJawsURL() . '/gadgets/Menu/images/menu-item.png');
             $tpl->SetVariable('title', $menu['title']);
             $tpl->SetVariable('js_edit_func', "editMenu({$menu['id']})");
             $tpl->SetVariable('add_title', _t('MENU_ADD_MENU'));
@@ -106,7 +106,7 @@ class MenuAdminHTML extends Jaws_GadgetHTML
      * Providing a treeview of menus and gadgtes
      *
      * @access  public
-     * @return  string  XHTML Template content
+     * @return  string HTML Template content
      */
     function GetMenusTrees()
     {
@@ -121,7 +121,7 @@ class MenuAdminHTML extends Jaws_GadgetHTML
             $tpl_str = '<!-- BEGIN parent --><!-- BEGIN menu -->'.$tpl->GetCurrentBlockContent().'<!-- END menu --><!-- END parent -->';
             $tpl->SetVariable('class_name', 'menu_groups');
             $tpl->SetVariable('mg_id', 'group_'.$group['id']);
-            $tpl->SetVariable('icon', 'gadgets/Menu/images/menu-group.png');
+            $tpl->SetVariable('icon', $GLOBALS['app']->GetJawsURL() . '/gadgets/Menu/images/menu-group.png');
             $tpl->SetVariable('title', $group['title']);
             $tpl->SetVariable('js_edit_func', "editGroup({$group['id']})");
             $tpl->SetVariable('add_title', _t('MENU_ADD_MENU'));
@@ -139,10 +139,11 @@ class MenuAdminHTML extends Jaws_GadgetHTML
      * Show a form to edit a given group
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string HTML content
      */
     function GetGroupUI()
     {
+        $this->CheckPermission('default');
         $tpl = new Jaws_Template('gadgets/Menu/templates/');
         $tpl->Load('AdminMenu.html');
         $tpl->SetBlock('menus');
@@ -179,10 +180,11 @@ class MenuAdminHTML extends Jaws_GadgetHTML
      * Show a form to edit a given group
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string HTML content
      */
     function GetMenuUI()
     {
+        $this->CheckPermission('default');
         $tpl = new Jaws_Template('gadgets/Menu/templates/');
         $tpl->Load('AdminMenu.html');
         $tpl->SetBlock('menus');
@@ -263,80 +265,47 @@ class MenuAdminHTML extends Jaws_GadgetHTML
         $visibleType->SetDefault('1');
         $tpl->SetVariable('visible', $visibleType->Get());
 
-        $entry =& Piwi::CreateWidget('FileEntry', 'upload_image', '');
-        $entry->SetID('upload_image');
-        $entry->SetSize(1);
-        $entry->SetStyle('width:110px; padding:0;');
-        $entry->AddEvent(ON_CHANGE, 'upload();');
-        $tpl->SetVariable('upload_image', $entry->Get());
-
-        $button =& Piwi::CreateWidget('Button', 'btn_upload', '', STOCK_ADD);
-        $tpl->SetVariable('btn_upload', $button->Get());
-
-        $button =& Piwi::CreateWidget('Button', 'btn_remove', '', STOCK_DELETE);
-        $button->AddEvent(ON_CLICK, 'removeImage()');
-        $tpl->SetVariable('btn_remove', $button->Get());
-
         $tpl->ParseBlock('menus/MenusUI');
         $tpl->ParseBlock('menus');
         return $tpl->Get();
     }
 
     /**
-     * Uploads the image file
+     * Returns a list with all the menus in a TinyMCE struct
      *
      * @access  public
-     * @return  string  javascript script snippet
+     * @return  array  Array with all the available menus and Jaws_Error on error
      */
-    function UploadImage()
-    {
-        $res = Jaws_Utils::UploadFiles($_FILES, Jaws_Utils::upload_tmp_dir(), 'gif,jpg,jpeg,png,bmp,ico');
-        if (Jaws_Error::IsError($res)) {
-            $response = array('type'    => 'error',
-                              'message' => $res->getMessage());
-        } else {
-            $response = array('type'    => 'notice',
-                              'message' => $res['upload_image'][0]);
-        }
+    function TinyMCEMenus()
+    {        
+        $model = $GLOBALS['app']->LoadGadget('Menu', 'Model');
+		$menus = $model->GetMenus(null, 0, false);
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+		
+		if (Jaws_Error::IsError($menus)) {
+            return $menus;
+		} else {
+			$output = '';
+			// for eye candy... code gets new lines
+			$delimiter = "\n"; 
+			$output .= 'var tinyMCELinkList = new Array(';
+			$i = 0;
+			foreach ($menus as $m => $menu) {
+				$output .= ($i > 0 ? ','.$delimiter : '').'["'
+					. $xss->parse($menu['menu_type']).' : '.$xss->parse($menu['title'])
+					. '", "'
+					. ($menu['url_target'] == 0 ? $xss->parse($menu['url']) : $xss->parse($GLOBALS['app']->GetSiteURL().'/'.$menu['url']))
+					. '"]';
+				$i++;
+			}
+			// remove last comma from array item list (breaks some browsers)
+		}
 
-        $response = $GLOBALS['app']->UTF8->json_encode($response);
-        return "<script type='text/javascript'>parent.onUpload($response);</script>";
-    }
+		$output .= ');';
 
-    /**
-     * Returns menu image as stream data
-     *
-     * @access  public
-     * @return  bool    True on successful, False otherwise
-     */
-    function LoadImage()
-    {
-        $request =& Jaws_Request::getInstance();
-        $params = $request->get(array('id', 'file'), 'get');
+		// Make output a real JavaScript file!
+		header('Content-type: text/javascript'); 
 
-        require_once JAWS_PATH . 'include/Jaws/Image.php';
-        $objImage = Jaws_Image::factory();
-        if (!Jaws_Error::IsError($objImage)) {
-            if (is_null($params['file'])) {
-                $model = $GLOBALS['app']->LoadGadget('Menu', 'Model');
-                $result = $model->GetMenuImage($params['id']);
-                if (!Jaws_Error::IsError($result)) {
-                    $result = $objImage->setData($result, true);
-                }
-            } else {
-                $params['file'] = preg_replace("/[^[:alnum:]_\.-]*/i", "", $params['file']);
-                $result = $objImage->load(Jaws_Utils::upload_tmp_dir(). '/'. $params['file'], true);
-            }
-
-            if (!Jaws_Error::IsError($result)) {
-                $result = $objImage->display();
-                if (!Jaws_Error::IsError($result)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
+		echo $output;
+	}
 }

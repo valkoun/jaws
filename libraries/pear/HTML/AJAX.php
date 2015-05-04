@@ -694,8 +694,13 @@ class HTML_AJAX
      */
     function _errorHandler($errno, $errstr, $errfile, $errline)
     {
-        if ($errno & error_reporting()) {
-            $e          = new stdClass();
+        //if ($errno & error_reporting()) {
+        $errors = array(
+			E_USER_ERROR, E_COMPILE_ERROR, E_CORE_ERROR, E_PARSE, E_ERROR
+		);
+		if ($errno && in_array($errno, $errors)) {
+		
+			$e          = new stdClass();
             $e->errNo   = $errno;
             $e->errStr  = $errstr;
             $e->errFile = $errfile;

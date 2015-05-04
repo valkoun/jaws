@@ -1,0 +1,94 @@
+<!-- BEGIN embed_sites -->
+<html>
+<head>
+<base href="{BASE_URL}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style2{.dir}.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{base_script}?gadget=Users&amp;action=Ajax&amp;client=all&amp;stub={stub}"></script>
+<script type="text/javascript" src="{base_script}?gadget=Users&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/Users/resources/{client}script.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/js/admin.js"></script>
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/Layout/resources/style{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+</head>
+<body style="background: url();">
+ <!-- Working Notification -->
+  <div id="working_notification"></div>
+  <script type="text/javascript">
+   var loading_message = 'Loading...';
+   var navigate_away_message = 'There are unsaved changes on this page.';
+  </script>
+ <!-- /Working Notification -->
+<form name="form0" action="{base_script}" method="post" onsubmit="return false;">
+<input type="hidden" id="gadget" name="gadget" value="" />
+<input type="hidden" id="embed_link" name="embed_link" value="{embed_link}" />
+<table id="controls">
+    <tr><th>{gadgets}</th><th>{actions}</tr>
+    <tr><td valign="top">
+        <div id="gadget-list">
+        <!-- BEGIN gadget -->
+        <div class="gadget-item" id="{id}" title="{desc}" onclick="selectSite('{id}');">{gadget}</div>
+        <!-- END gadget -->
+        </div></td>
+        <td valign="top">
+		    <div id="search-entry">
+           {search_entry}&nbsp;{search}
+            </div>
+		    <div id="gadget-actions" style="height: 240px; padding-bottom: 5px;">
+            <ul id="actions-list"></ul>
+            </div>
+			<div id="embed-manual" style="padding: 15px; text-align: left;">
+				<!-- BEGIN gadget_button -->
+				<p>Right click on the image below, select "Copy", then paste it <br />to your Editor of choice.</p>
+				<a href="{embed_script}" target="_blank"><img src="{embed_button}" border="0" /></a>
+				<p><i>OR</i>&nbsp;
+				Right click on the code below, select "Copy" and paste it into <br />your HTML source code.</p>
+				<p><textarea class="code" style="padding:0; font-size: 75%" id="code" name="code" rows="5" onmousedown="if(event.button==2){select_code();};" onclick="select_code();" cols="64" readonly="readonly"><a href="{embed_link}" target="_blank"><img src="{embed_button}" border="0" /></a></textarea></p>
+				<!-- END gadget_button -->
+				Right click on the code below, select "Copy" and paste it into <br />your HTML source code.</p>
+				<p><textarea class="code" style="padding:0; font-size: 75%" id="code" name="code" rows="5" onmousedown="if(event.button==2){select_code();};" onclick="select_code();" cols="64" readonly="readonly">{embed_script}</textarea></p>
+			</div>
+			<div id="layout">
+					<fieldset id="layout_fieldset" style="margin-bottom: 0; padding-bottom: 2px;">
+					<legend id="layout_legend">Position to embed this gadget:</legend>
+					<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			          <tr>
+			            <td style="padding-left: 4px; padding-right: 10px;" align="right"><input type="radio" value="bottom" name="layout" checked /></td>
+			            <td style="padding-left: 10px;"><img alt="Embed in the bottom of this page" title="Embed in the bottom of this page" border="0" src="{JAWS_URL}gadgets/Users/images/splash_align_bottom.jpg" style="cursor: pointer; cursor: hand;" onclick="setCheckedValue(document.forms['form0'].elements['layout'], 'bottom');"></td>
+			            <td style="padding-right: 10px;" align="right"><input type="radio" value="top" name="layout" /></td>
+			            <td style="padding-left: 10px;"><img alt="Embed in the top of this page" title="Embed in the top of this page" border="0" src="{JAWS_URL}gadgets/Users/images/splash_align_top.jpg" style="cursor: pointer; cursor: hand;" onclick="setCheckedValue(document.forms['form0'].elements['layout'], 'top');"></td>
+			          </tr>
+					</table>
+					</fieldset>
+			</div>
+        </td>
+    </tr>
+</table>
+<div id="footer"><div id="buttons">{add_button}&nbsp;{cancel_button}</div></div>
+</form>
+<script type="text/javascript">
+   var noActionsMsg = '{no_actions_msg}';
+   var confirmEmbedDelete = '{confirm_delete_embed}';
+   selectSite('manual');
+	function select_code()
+	{
+	//var text_val=eval(element);
+	document.form0.code.focus();
+	document.form0.code.select();
+	}
+</script>
+</body>
+</html>
+<!-- END embed_sites -->

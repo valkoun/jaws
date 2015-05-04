@@ -1,0 +1,151 @@
+body {
+	background-color: #222;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	font-size: 1em;
+}
+
+.title {
+	padding: 1.5em;
+	padding-bottom: 0;
+	font-family: Verdana, Arial, sans-serif;
+	color: #444;
+}
+
+h1 {
+	font-size: 2.5em;
+	margin: 0.5em 0.5em 0.6em;
+	font-family: Georgia, Garamond, serif;
+	letter-spacing: 0.05em;
+}
+
+.page {
+	width: 50em;
+	background-color: white;
+	border-right: 0.4em solid #F1C80D;
+}
+
+.section {
+	padding: 1em 1.5em;
+	margin: 0 0;
+	float: left;
+	border: solid #CCC;
+	border-width: 1px 0 0;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 0.9em;
+}
+
+.section.odd {
+	background-color: #F0F0F0;
+}
+
+.section .label {
+	width: 10em;
+	float: left;
+}
+
+.section .content {
+	width: 40em;
+	float: right;
+}
+
+a {
+	color: #0D629E;
+}
+
+h3 {
+	margin: 1.4em 0 0.4em;	
+}
+
+p {
+	margin: 0 0 0.4em;
+	line-height: 1.4em;
+}
+
+code {
+	font-family: "Courier New", monospace;
+	font-size: 0.9em;
+}
+
+dt {
+	font-weight: bold;	
+}
+
+dd {
+	margin: 0.2em 1em;
+}
+
+.section ul {
+	margin-left: 0.5em;
+	list-style-type: square;
+}
+
+.section li {
+	margin-left: 1em;
+	padding: 0.15em 0;
+}
+
+.section ul ul li {
+	margin-left: 2em;
+}
+
+.method {
+	padding: 0.5em 0.7em;
+	border-left: 1px solid #888;
+	background-color: #F5F5F5;
+}
+
+.important {
+	color: #B7300F;
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background-color: #CCC;
+	clear: both;
+}
+
+.menu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	list-style: none;
+	width: 49em;
+}
+
+.menu li {
+	float: right;
+	margin-left: 1em;
+}
+
+.menu li a {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 0.8em;
+	display: block;
+	padding: 0.6em 1em;
+	color: black;
+	background-color: #E1E1E1;
+	text-decoration: none;
+}
+
+.menu li a:hover,
+#overview .menu a.overview,
+#packages .menu a.packages,
+#index .menu a.index {
+	padding-top: 0.9em;
+	background-color: #222;
+	color: white;
+	text-decoration: none;
+}
+
+.footer {
+	font-family: Verdana, Arial, sans-serif;
+	padding: 1em 1.8em;
+	font-size: 0.7em;
+	font-style: italic;
+	color: #333;
+}

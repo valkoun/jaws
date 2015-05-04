@@ -1,24 +1,17 @@
 <?php
-require_once JAWS_PATH . 'libraries/piwi/Widget/Container/FieldSet.php';
-
 /**
  * Overwrites the Piwi fieldset and creates one that works for Jaws
  *
  * @category   Widget
  * @package    Core
- * @author     Helgi Ãžormar ÃžorbjÃ¶rnsson <dufuz@php.net>
- * @copyright  2006-2012 Jaws Development Group
+ * @author     Helgi Þormar Þorbjörnsson <dufuz@php.net>
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  */
+require_once JAWS_PATH . 'libraries/piwi/Widget/Container/FieldSet.php';
+
 class Jaws_Widgets_FieldSet extends FieldSet
 {
-    /**
-     * Constructor
-     *
-     * @access  public
-     * @param   string  $legend
-     * @return  void
-     */
     function Jaws_Widgets_FieldSet($legend = '')
     {
         parent::FieldSet($legend);
@@ -38,7 +31,7 @@ class Jaws_Widgets_FieldSet extends FieldSet
 
         if (!empty($this->_legend)) {
             $legend_id = !empty($this->_legendID) ? $this->_legendID : $this->_id.'_legend';
-            $this->_XHTML .= '<legend id="' . $legend_id . '"><span>' . $this->_legend . "</span></legend>\n";
+            $this->_XHTML .= '<legend id="' . $legend_id . '">' . $this->_legend . "</legend>\n";
         }
 
         if ($this->_direction == 'horizontal') {
@@ -107,10 +100,8 @@ class Jaws_Widgets_FieldSet extends FieldSet
     /**
      * Add a widget, just bin widgets!
      *
-     * @access  public
-     * @param   object  $widget     Widget To add
-     * @param   string  $comment
-     * @return  void
+     * @param    object   $widget  Widget To add
+     * @access   public
      */
     function add($widget, $comment = '')
     {

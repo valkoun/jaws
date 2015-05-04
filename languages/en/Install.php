@@ -11,6 +11,7 @@
  */
 
 /* Installer common words */
+define('_EN_INSTALL_NEW_INSTALLATION', "New Installation");
 define('_EN_INSTALL_INTRODUCTION', "Introduction");
 define('_EN_INSTALL_AUTHENTICATION', "Authentication");
 define('_EN_INSTALL_REQUIREMENTS', "Requirements");
@@ -30,7 +31,7 @@ define('_EN_INSTALL_INTRO_LOG', "Log the process (and errors) of the installatio
 define('_EN_INSTALL_INTRO_LOG_ERROR', "Note: If you want to log the process (and errors) of the installation to a file you first need to set write-access permissions to the ({0}) directory and then refresh this page with your browser");
 
 /* Authentication */
-define('_EN_INSTALL_AUTH_PATH_INFO', "To make sure that you are really the owner of this site, please create a file called <strong>{0}</strong> in your Jaws installation directory (<strong>{1}</strong>).");
+define('_EN_INSTALL_AUTH_PATH_INFO', "To make sure that you are really the owner of this site, please create a file called <strong>{0}</strong> in your installation directory (<strong>{1}</strong>).");
 define('_EN_INSTALL_AUTH_UPLOAD', "You can upload the file in the same way you uploaded your Jaws install.");
 define('_EN_INSTALL_AUTH_KEY_INFO', "The file should contain the code shown in the box below, and nothing else.");
 define('_EN_INSTALL_AUTH_ENABLE_SECURITY', "Enable secure installation (Powered by RSA)");
@@ -100,17 +101,23 @@ define('_EN_INSTALL_USER_EMAIL', "E-Mail Address");
 define('_EN_INSTALL_USER_RESPONSE_PASS_MISMATCH', "The password and repeat boxes don't match, please try again.");
 define('_EN_INSTALL_USER_RESPONSE_INCOMPLETE', "You must complete the username, password, and repeat boxes.");
 define('_EN_INSTALL_USER_RESPONSE_CREATE_FAILED', "There was a problem while creating your user.");
+define('_EN_INSTALL_USER_SUBJECT', "Website Created - {0}");
 
 /* Settings */
 define('_EN_INSTALL_SETTINGS_INFO', "You can now set the default settings for your site. You can change any of these later by logging into the Control Panel and selecting Settings.");
 define('_EN_INSTALL_SETTINGS_SITE_NAME', "Site Name");
 define('_EN_INSTALL_SETTINGS_SITE_NAME_INFO', "The name to display for your site.");
-define('_EN_INSTALL_SETTINGS_SLOGAN', "Site Slogan");
+define('_EN_INSTALL_SETTINGS_SLOGAN', "Description");
 define('_EN_INSTALL_SETTINGS_SLOGAN_INFO', "A longer description of the site.");
 define('_EN_INSTALL_SETTINGS_DEFAULT_GADGET', "Default Gadget");
 define('_EN_INSTALL_SETTINGS_DEFAULT_GADGET_INFO', "The gadget to display when someone visits the home page.");
+define('_EN_INSTALL_SETTINGS_DEFAULT_PAGE', "Default Page");
+define('_EN_INSTALL_SETTINGS_DEFAULT_PAGE_INFO', "The default page to display when someone visits the website.");
+define('_EN_INSTALL_SETTINGS_DEFAULT_THEME', "Default Theme");
 define('_EN_INSTALL_SETTINGS_SITE_LANGUAGE', "Site Language");
 define('_EN_INSTALL_SETTINGS_SITE_LANGUAGE_INFO', "The main language to display the site in.");
+define('_EN_INSTALL_SETTINGS_CANT_CREATE_CSS', "There was a problem creating the \"css\" directory. Check that the \"data/files/\" directory is writable.");
+define('_EN_INSTALL_SETTINGS_NO_THEMES', "There are no themes installed.");
 define('_EN_INSTALL_USER_RESPONSE_SITE_NAME_EMPTY', "You need to fill in the site name box.");
 
 /* WriteConfig */
@@ -120,9 +127,12 @@ define('_EN_INSTALL_CONFIG_SOLUTION_PERMISSION', "Make <strong>{0}</strong> writ
 define('_EN_INSTALL_CONFIG_SOLUTION_UPLOAD', "Copy and paste the contents of the box below into a file and save it as <strong>{0}</strong>");
 define('_EN_INSTALL_CONFIG_RESPONSE_WRITE_FAILED', "There was an unknown error writing the configuration file.");
 define('_EN_INSTALL_CONFIG_RESPONSE_MAKE_CONFIG', "You need to either make the config directory writable, or create {0} by hand.");
+define('_EN_INSTALL_CONFIG_GLOBALDATA_RESPONSE_WRITE_FAILED', "There was an unknown error writing the site's data file.");
+define('_EN_INSTALL_CONFIG_RESPONSE_MAKE_GLOBALDATA', "You need to either make the data directory writable, or create {0} by hand.");
+define('_EN_INSTALL_CONFIG_SUBJECT', "Website Created - {0}");
 
 /* Finished */
 define('_EN_INSTALL_FINISH_INFO', "You have now finished setting up your website!");
-define('_EN_INSTALL_FINISH_CHOICES', "You now have two choices, you can either <a href=\"{0}\">view your site</a> or <a href=\"{1}\">login to the control panel</a>.");
+define('_EN_INSTALL_FINISH_CHOICES', "You now have two choices, you can either <a href=\"{0}\">View Your Site</a> or <a href=\"{1}\">Log-in to the Control Panel</a>.");
 define('_EN_INSTALL_FINISH_MOVE_LOG', "Note: If you turned on the logging option at the first stage we suggest you to save it and move it / delete it");
 define('_EN_INSTALL_FINISH_THANKS', "Thank you for using Jaws!");

@@ -6,19 +6,31 @@
  * @package    JMS
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Helgi ormar <dufuz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class JmsAdminHTML extends Jaws_GadgetHTML
 {
     /**
+     * Gadget constructor
+     *
+     * @access public
+     */
+    function JmsAdminHTML()
+    {
+        $this->Init('Jms');
+    }
+
+    /**
      * Main method
      *
      * @access  public
-     * @return  string  XHTML content of main
+     * @return  string  HTML content of main
      */
     function Admin()
     {
+        $this->CheckPermission('ManageJms');
+
         if ($this->GetPermission('ManageGadgets')) {
             return $this->ViewGadgets();
         }
@@ -32,7 +44,7 @@ class JmsAdminHTML extends Jaws_GadgetHTML
      *
      * @access  public
      * @param   string  $action  Selected action
-     * @return  string  XHTML template content of menubar
+     * @return  string  XHTML of menubar
      */
     function Menubar($action)
     {
@@ -58,8 +70,8 @@ class JmsAdminHTML extends Jaws_GadgetHTML
     /**
      * Manages the gadgets settings
      *
-     * @access  public
-     * @return  string  XHTML template content
+     * @param     string  $content  HTML content(if needed)
+     * @access    public
      */
     function ViewGadgets()
     {
@@ -132,11 +144,11 @@ class JmsAdminHTML extends Jaws_GadgetHTML
      * Prepares the HTML for managing plugins
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  HTML content
      */
     function Plugins()
     {
-        $this->CheckPermission('ManagePlugins');
+        $this->CheckPermission('ManageGadgets');
         $this->AjaxMe('script.js');
         $GLOBALS['app']->Layout->AddScriptLink('libraries/xtree/xtree.js');
 
@@ -191,8 +203,8 @@ class JmsAdminHTML extends Jaws_GadgetHTML
         $buttons->Add($uninstallPlugin);
         $buttons->Add($installPlugin);
         $buttons->Add($pluginUsage);
-        $buttons->Add($stopPluginUsage);
         $buttons->Add($savePluginUsage);
+        $buttons->Add($stopPluginUsage);
 
         $tpl->SetVariable('combo_components', $pluginsCombo->get());
         $tpl->SetVariable('only_show', $onlyShow->Get());
@@ -206,16 +218,15 @@ class JmsAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Enable a passed gadget by running
-     * Jaws_GadgetHTML::EnableGadget method, then redirects to admin area
+     * Enable a passed gadget by running Jaws_GadgetHTML::EnableGadget method, then redirects to admin area
      *
-     * @access  public
-     * @return  void
+     * @access       public
      */
     function EnableGadget()
     {
         $this->CheckPermission('ManageGadgets');
 
+        require_once JAWS_PATH . 'include/Jaws/Header.php';
         require_once JAWS_PATH . 'include/Jaws/GadgetHTML.php';
 
         $request =& Jaws_Request::getInstance();
@@ -235,20 +246,19 @@ class JmsAdminHTML extends Jaws_GadgetHTML
                 $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_ENABLED_OK', $gInfo->getName()), RESPONSE_NOTICE);
             }
         }
-        Jaws_Header::Location(BASE_SCRIPT);
+        Jaws_Header::Location(BASE_SCRIPT . '?gadget=ControlPanel&action=DefaultAction');
     }
 
     /**
-     * Update a passed gadget by running
-     * Jaws_GadgetHTML::UpgradeGadget method, then redirects to admin area
+     * Update a passed gadget by running Jaws_GadgetHTML::UpgradeGadget method, then redirects to admin area
      *
-     * @access  public
-     * @return  void
+     * @access       public
      */
     function UpdateGadget()
     {
         $this->CheckPermission('ManageGadgets');
 
+        require_once JAWS_PATH . 'include/Jaws/Header.php';
         require_once JAWS_PATH . 'include/Jaws/GadgetHTML.php';
 
         $request =& Jaws_Request::getInstance();
@@ -267,7 +277,7 @@ class JmsAdminHTML extends Jaws_GadgetHTML
         } else {
             $GLOBALS['app']->Session->PushLastResponse(_t('JMS_GADGETS_UPDATED_NO_NEED', $gadget), RESPONSE_ERROR);
         }
-        Jaws_Header::Location(BASE_SCRIPT);
+        Jaws_Header::Location(BASE_SCRIPT . '?gadget=ControlPanel&action=DefaultAction');
     }
 
     /**
@@ -275,7 +285,7 @@ class JmsAdminHTML extends Jaws_GadgetHTML
      *
      * @access  public
      * @param   string   $gadget  Gadget's name
-     * @return  string   XHTML template of the view
+     * @return  string   XHTML of the view
      */
     function GetGadgetInfo($gadget)
     {
@@ -301,9 +311,26 @@ class JmsAdminHTML extends Jaws_GadgetHTML
                 $tpl->ParseBlock('info/requires/item');
             }
             $tpl->ParseBlock('info/requires');
-        }
 
+            // Provides
+            if (count($info->GetProvides()) > 0) {
+                $tpl->SetBlock('info/provides');
+                $tpl->SetVariable('provides', _t('GLOBAL_GI_GADGET_PROVIDES'));
+                $tpl->SetVariable('description', _t('GLOBAL_GI_GADGET_DESCRIPTION'));
+                $tpl->SetVariable('type', _t('GLOBAL_GI_GADGET_TYPE'));
+                foreach ($info->GetProvides() as $service => $items) {
+                    foreach ($items as $k => $v) {
+                        $tpl->SetBlock('info/provides/item');
+                        $tpl->SetVariable('description', $v['Description']);
+                        $tpl->SetVariable('type', $service);
+                        $tpl->ParseBlock('info/provides/item');
+                    }
+                }
+                $tpl->ParseBlock('info/provides');
+            }
+        }
         $tpl->ParseBlock('info');
+
         return $tpl->Get();
     }
 
@@ -312,7 +339,7 @@ class JmsAdminHTML extends Jaws_GadgetHTML
      *
      * @access  public
      * @param   string   $plugin  Plugin's name
-     * @return  string   XHTML template of the view
+     * @return  string   XHTML of the view
      */
     function GetPluginInfo($plugin)
     {
@@ -346,5 +373,4 @@ class JmsAdminHTML extends Jaws_GadgetHTML
 
         return $tpl->Get();
     }
-
 }

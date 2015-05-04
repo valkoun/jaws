@@ -16,7 +16,7 @@
 // | Authors: Richard Heyes <richard@phpguru.org>                         |
 // +----------------------------------------------------------------------+
 //
-// $Id: Application.php 178289 2005-01-26 09:47:28Z dufuz $
+// $Id: Application.php,v 1.8 2005/01/26 09:47:28 dufuz Exp $
 
 require_once 'Cache.php';
 

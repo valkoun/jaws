@@ -1,0 +1,112 @@
+<!-- BEGIN account_news -->
+<!-- BEGIN news_header -->
+<script type="text/javascript">
+var commentChannel = pusher.subscribe("private-comment_channel_{gadget}");
+commentChannel.bind("new_comment", function(data) {
+	if ($('working_notification')) {
+		$('working_notification').style.display = 'none';
+    }
+	response = usersSync.getcomment(data['id'], data['gadget'], {public});
+	if ($('working_notification')) {
+		$('working_notification').style.display = 'inline';
+    }
+	if (response['id']) {
+		news_items_html = '<div class="news-item news-message" id="news-'+response['poll_id']+'" onmouseout="if ($(\'news-delete-'+response['poll_id']+'\')){$(\'news-delete-'+response['poll_id']+'\').style.visibility = \'hidden\';};" onmouseover="if ($(\'news-delete-'+response['poll_id']+'\')){$(\'news-delete-'+response['poll_id']+'\').style.visibility = \'visible\';};">';
+		news_items_html += '	<div class="news-delete" id="news-delete-'+response['poll_id']+'"><a href="javascript:void(0);" onclick="DeleteComment('+response['id']+', \'update\',\''+response['poll_id']+'\');">X</a></div>';
+		news_items_html += '	<div class="news-image">'+response['image']+'</div>';
+		news_items_html += '	<div class="news-body">';
+		news_items_html += '		<div class="news-title">'+response['title']+'</div>';
+		news_items_html += '		<div class="news-info"><span class="news-name">'+(response['link'] != '' ? '<a href="'+response['link']+'">' : '')+response['name']+(response['link'] != '' ? '</a>' : '')+'<span class="news-preactivity">'+(typeof(response['preactivity']) != "undefined" ? response['preactivity'] : '')+'</span></span>&nbsp;';
+		news_items_html += '		<span class="news-preview" id="news-preview-'+response['poll_id']+'"'+response['preview_style']+'>'+response['preview_comment']+'</span><span class="news-message" id="news-full-'+response['poll_id']+'"'+response['full_style']+'>'+response['comment']+'</span></div>';
+		news_items_html += '		<div class="news-created news-timestamp">'+response['created']+response['activity']+'</div>';
+		news_items_html += '		<div class="news-comments" id="news-comments-'+response['poll_id']+'">';
+		news_items_html += '		</div>';
+		news_items_html += '		<div class="comments-form">';
+		news_items_html += '			<div class="comment-holder" id="comment-holder-'+response['poll_id']+'">';
+		news_items_html += '			<input class="comment-click" id="comment-click-'+response['poll_id']+'" value="Reply to this..." onclick="showCommentForm(\''+response['poll_id']+'\');" />';
+		news_items_html += '			</div>';
+		news_items_html += '			<div class="comment-area" id="comment-area-'+response['poll_id']+'">';
+		news_items_html += '			<textarea class="comment-entry" id="comment-entry-'+response['poll_id']+'" onblur="if (this.value == \'\') {hideCommentForm(\''+response['poll_id']+'\');};"></textarea>';
+		news_items_html += '			</div>';
+		news_items_html += '			<div class="comment-buttons" id="comment-buttons-'+response['poll_id']+'"><button type="button" name="commentButton'+response['poll_id']+'" id="commentButton-'+response['poll_id']+'" value="Ok" style="min-width: 60px;" onclick="javascript: '+response['reply_onclick']+'">Ok</button></div>';
+		news_items_html += '		</div>';
+		news_items_html += '	</div>';
+		news_items_html += '</div>';
+		if ($('news-'+response['gadget']+'-items')) {
+			$('news-'+response['gadget']+'-items').innerHTML = news_items_html + $('news-'+response['gadget']+'-items').innerHTML;
+		}
+		if (typeof(prevPane) == "undefined" || prevPane === null || prevPane == '') {
+			prevPane = response['gadget'];
+		}
+		if ($(prevPane+'-news-items') && (response['gadget'] == prevPane || prevPane == 'Users')) {
+			$(prevPane+'-news-items').innerHTML = news_items_html + $(prevPane+'-news-items').innerHTML;
+		}
+		var replyChannel = pusher.subscribe("private-reply_channel_"+response['poll_id']);
+		replyChannel.bind("new_reply", function(reply_data) {
+			if ($('working_notification')) {
+				$('working_notification').style.display = 'none';
+			}
+			reply = usersSync.getcomment(reply_data['id'], reply_data['gadget'], {public});
+			if ($('working_notification')) {
+				$('working_notification').style.display = 'inline';
+			}
+			if (reply['id']) {
+				if ($('news-'+response['poll_id']) && $('news-'+response['poll_id']).down('.total-comments')) {
+					var comments_total = $('news-'+response['poll_id']).down('.total-comments').innerHTML;
+					$('news-'+response['poll_id']).down('.total-comments').innerHTML = (parseInt(comments_total.replace(" comments", ''), 10)+1) + " comments";
+				}
+				var news_comments_html = '<div class="comment comment-new" id="comment-'+reply['id']+'" onmouseout="if ($(\'comment-delete-'+reply['id']+'\')){$(\'comment-delete-'+reply['id']+'\').style.visibility = \'hidden\';};" onmouseover="if ($(\'comment-delete-'+reply['id']+'\')){$(\'comment-delete-'+reply['id']+'\').style.visibility = \'visible\';};">';
+				news_comments_html += '<div id="comment-delete-'+reply['id']+'" class="comment-delete"><a onclick="DeleteComment('+reply['id']+', \'reply\');" href="javascript:void(0);">X</a></div>';		
+				news_comments_html += reply['image']+'<div class="comment-body"><span class="comment-name">'+(reply['link'] && reply['link'] != '' ? '<a href="'+reply['link']+'" class="comment-name">' : '')+reply['name']+(reply['link'] && reply['link'] != '' ? '</a>' : '')+'</span>&nbsp;<span class="comment-preview" id="comment-preview-'+reply['id']+'"'+reply['preview_style']+'>'+reply['preview_comment']+'</span><span class="comment-message" id="comment-full-'+reply['id']+'"'+reply['full_style']+'>'+reply['comment']+'</span>';
+				news_comments_html += '</div><div class="comment-created news-timestamp">'+reply['created']+'</div>';
+				news_comments_html += '</div>';
+				$('news-comments-'+response['poll_id']).innerHTML = $('news-comments-'+response['poll_id']).innerHTML + news_comments_html;
+			}
+		});
+	}
+});
+</script>
+<div id="{gadget}-accountNews" class="accountNews wide">
+	{header}
+	<div id="{gadget}-update-entry" class="update-entry">
+		<div>{entry_field}</div>
+		<div id="{gadget}-update-actions" class="update-actions" style="clear: both; float: right; text-align: right;{entry_actions_style}">{entry_sharing}{entry_button}</div>
+	</div>
+	<div style="display: block; clear: both; float: none; font-size: 0.0001em;">&nbsp;</div>
+	<div id="{gadget}-news-items" class="news-items">
+<!-- END news_header -->
+<!-- BEGIN no_news -->
+	<div>&nbsp;</div>
+	<div class="simple-response-msg" style="display: block; clear: both; float: none;">{message}</div>
+	<div>&nbsp;</div>
+<!-- END no_news -->
+<!-- BEGIN news_item -->
+	{thread}
+<!-- END news_item -->
+<!-- BEGIN news_footer -->
+	</div>
+</div>
+<script type="text/javascript">
+  confirmCommentDelete = "{confirmCommentDelete}";
+</script>
+<!-- BEGIN news_count -->
+<script type="text/javascript">
+if (typeof(messages_on_layout) == "undefined") {
+	var messages_on_layout = new Array();
+}
+if (typeof(total_messages) == "undefined") {
+	var total_messages = new Array();
+}
+if (typeof(messages_limit) == "undefined") {
+	var messages_limit = new Array();
+}
+messages_on_layout['{gadget}'] = '{items_on_layout}';
+total_messages['{gadget}'] = {count_on_layout};
+messages_limit['{gadget}'] = {limit};
+</script>
+<!-- BEGIN news_more -->
+<div id="{gadget}-more-items" class="more-news-items clearfix"><a href="javascript:void(0);" onclick="showMoreComments('{gadget}', {public}, {id}, {interactive}, '{method}');">Show more messages</a></div>
+<!-- END news_more -->
+<!-- END news_count -->
+<!-- END news_footer -->
+<!-- END account_news -->

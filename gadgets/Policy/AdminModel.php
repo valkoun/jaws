@@ -6,7 +6,7 @@
  * @package    Policy
  * @author     Amir Mohammad Saied <amir@gluegadget.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 require_once JAWS_PATH . 'gadgets/Policy/Model.php';
@@ -27,12 +27,11 @@ class PolicyAdminModel extends PolicyModel
         }
 
         // Registry keys
-        $GLOBALS['app']->Registry->NewKeyEx(array('/gadgets/Policy/block_undefined_ip',    'false'),
-                                            array('/gadgets/Policy/block_undefined_agent', 'false'),
+        $GLOBALS['app']->Registry->NewKeyEx(array('/gadgets/Policy/block_by_ip',     'true'),
+                                            array('/gadgets/Policy/block_by_agent',  'true'),
                                             array('/gadgets/Policy/allow_duplicate', 'no'),
-                                            array('/gadgets/Policy/filter',          'DISABLED'),
-                                            array('/gadgets/Policy/captcha',         'DISABLED'),
-                                            array('/gadgets/Policy/captcha_driver',  'MathCaptcha'),
+                                            array('/gadgets/Policy/filter',          'Akismet'),
+                                            array('/gadgets/Policy/captcha',         'SimpleCaptcha'),
                                             array('/gadgets/Policy/obfuscator',      'DISABLED'),
                                             array('/gadgets/Policy/akismet_key',     ''),
                                             array('/gadgets/Policy/typepad_key',     '')
@@ -46,7 +45,7 @@ class PolicyAdminModel extends PolicyModel
      * @access  public
      * @param   string  $old    Current version (in registry)
      * @param   string  $new    New version (in the $gadgetInfo file)
-     * @return  bool     Success/Failure (Jaws_Error)
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UpdateGadget($old, $new)
     {
@@ -72,34 +71,7 @@ class PolicyAdminModel extends PolicyModel
             $GLOBALS['app']->Registry->DeleteKey('/gadgets/Policy/simple_captcha');
         }
 
-        if (version_compare($old, '0.1.2', '<')) {
-            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/typepad_key', '');
-        }
-
-        if (version_compare($old, '0.1.3', '<')) {
-            $old_captch = $GLOBALS['app']->Registry->Get('/gadgets/Policy/captcha');
-            if ($old_captch !== 'DISABLED') {
-                $GLOBALS['app']->Registry->Set('/gadgets/Policy/captcha', 'ANONYMOUS');
-                $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/captcha_driver', $old_captch);
-            } else {
-                $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/captcha_driver', 'MathCaptcha');
-            }
-
-            $GLOBALS['app']->ACL->NewKey('/ACL/gadgets/Policy/ManageEncryptionKey', 'false');
-        }
-
-        if (version_compare($old, '0.2.0', '<')) {
-            $result = $this->installSchema('schema.xml', '', '0.1.0.xml');
-            if (Jaws_Error::IsError($result)) {
-                return $result;
-            }
-
-            $GLOBALS['app']->Registry->DeleteKey('/gadgets/Policy/block_by_ip');
-            $GLOBALS['app']->Registry->DeleteKey('/gadgets/Policy/block_by_agent');
-            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/block_undefined_ip',    'false');
-            $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/block_undefined_agent', 'false');
-        }
-
+        $GLOBALS['app']->Registry->NewKey('/gadgets/Policy/typepad_key', '');
         return true;
     }
 
@@ -113,15 +85,14 @@ class PolicyAdminModel extends PolicyModel
     function GetIPRange($id)
     {
         $sql = '
-            SELECT [id], [from_ip], [to_ip], [blocked]
+            SELECT [id], [from_ip], [to_ip]
             FROM [[policy_ipblock]]
             WHERE [id] = {id}';
 
-        $params = array();
+        $params       = array();
         $params['id'] = $id;
 
-        $types = array('integer', 'integer', 'integer', 'boolean');
-        $res = $GLOBALS['db']->queryRow($sql, $params, $types);
+        $res = $GLOBALS['db']->queryRow($sql, $params);
         if (Jaws_Error::IsError($res)) {
             return new Jaws_Error($res->getMessage(), 'SQL');
         }
@@ -144,15 +115,14 @@ class PolicyAdminModel extends PolicyModel
     function GetAgent($id)
     {
         $sql = '
-            SELECT [id], [agent], [blocked]
+            SELECT [id], [agent]
             FROM [[policy_agentblock]]
             WHERE [id] = {id}';
 
-        $params = array();
+        $params       = array();
         $params['id'] = $id;
 
-        $types = array('integer', 'text', 'boolean');
-        $res = $GLOBALS['db']->queryRow($sql, $params, $types);
+        $res = $GLOBALS['db']->queryRow($sql, $params);
         if (Jaws_Error::IsError($res)) {
             return new Jaws_Error($res->getMessage(), 'SQL');
         }
@@ -170,6 +140,7 @@ class PolicyAdminModel extends PolicyModel
     {
         $sql = 'SELECT COUNT([id]) as total FROM [[policy_ipblock]]';
         $rs  = $GLOBALS['db']->queryOne($sql);
+
         return $rs;
     }
 
@@ -183,14 +154,16 @@ class PolicyAdminModel extends PolicyModel
     {
         $sql = 'SELECT COUNT([id]) as total FROM [[policy_agentblock]]';
         $rs  = $GLOBALS['db']->queryOne($sql);
+
         return $rs;
     }
 
     /**
-     * Retrive all blocked IPs
+     * Retrieve all blocked IPs
      *
-     * @access  public
      * @param   mixed   $limit  Limit of data to retrieve (false by default, returns all)
+     * @param   int   $offset  Data offset
+     * @access  public
      * @return  array   An array contains all IP and info. and Jaws_Error on error
      */
     function GetBlockedIPs($limit = 0, $offset = null)
@@ -204,12 +177,10 @@ class PolicyAdminModel extends PolicyModel
 
         $sql = '
             SELECT
-                [id], [from_ip], [to_ip], [blocked]
+                [id], [from_ip], [to_ip]
             FROM [[policy_ipblock]]
             ORDER BY [id] DESC';
-
-        $types = array('integer', 'integer', 'integer', 'boolean');
-        $rs = $GLOBALS['db']->queryAll($sql, null, $types);
+        $rs = $GLOBALS['db']->queryAll($sql);
         if (Jaws_Error::IsError($rs)) {
             return new Jaws_Error($rs->getMessage(), 'SQL');
         }
@@ -220,8 +191,8 @@ class PolicyAdminModel extends PolicyModel
     /**
      * Retrieve all blocked Agents
      *
-     * @access  public
      * @param   mixed   $limit  Limit of data to retrieve (false by default, returns all)
+     * @access  public
      * @return  array   An array contains all blocked Agents
      */
     function GetBlockedAgents($limit = 0, $offset = null)
@@ -235,12 +206,10 @@ class PolicyAdminModel extends PolicyModel
 
         $sql = '
             SELECT
-                [id], [agent], [blocked]
+                [id], [agent]
             FROM [[policy_agentblock]]
             ORDER BY [id] DESC';
-
-        $types = array('integer', 'text', 'boolean');
-        $rs = $GLOBALS['db']->queryAll($sql, null, $types);
+        $rs = $GLOBALS['db']->queryAll($sql);
         if (Jaws_Error::IsError($rs)) {
             return new Jaws_Error($rs->getMessage(), 'SQL');
         }
@@ -249,13 +218,15 @@ class PolicyAdminModel extends PolicyModel
     }
 
     /**
-     * Block a new IP range
+     * Block IP addresses by range.
      *
+     * @category  feature
+     * @param   string  $from_ip 	Start range of the IP address(es) to be blocked
+     * @param   string  $to_ip 	End range of the IP address(es) to be blocked
      * @access  public
-     * @param   string  $ip the to be blocked IP address
-     * @return  bool    True on success and Jaws_Error on errors
+     * @return  boolean True on success and Jaws_Error on errors
      */
-    function AddIPRange($from_ip, $to_ip = null, $blocked = true)
+    function AddIPRange($from_ip, $to_ip = null)
     {
         $from_ip = ip2long($from_ip);
         if ($from_ip < 0) {
@@ -269,16 +240,16 @@ class PolicyAdminModel extends PolicyModel
             if ($to_ip < 0) $to_ip = $to_ip + 0xffffffff + 1;
         }
 
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $sql = '
             INSERT INTO [[policy_ipblock]]
-                ([from_ip], [to_ip], [blocked])
+                ([from_ip], [to_ip])
             VALUES
-                ({from_ip}, {to_ip}, {blocked})';
+                ({from_ip}, {to_ip})';
 
         $params = array();
         $params['from_ip'] = $from_ip;
         $params['to_ip']   = $to_ip;
-        $params['blocked'] = (bool)$blocked;
 
         $rs = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($rs)) {
@@ -287,6 +258,7 @@ class PolicyAdminModel extends PolicyModel
         }
 
         $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_IP_ADDED'), RESPONSE_NOTICE);
+
         return true;
     }
 
@@ -297,9 +269,9 @@ class PolicyAdminModel extends PolicyModel
      * @param   int     $id ID of the to-be-blocked IP range addresses
      * @param   string  $from_ip  The to-be-blocked from IP
      * @param   string  $to_ip    The to-be-blocked to IP
-     * @return  bool    True on success and Jaws_Error on errors
+     * @return  boolean True on success and Jaws_Error on errors
      */
-    function EditIPRange($id, $from_ip, $to_ip = null, $blocked = true)
+    function EditIPRange($id, $from_ip, $to_ip = null)
     {
         $from_ip = ip2long($from_ip);
         if ($from_ip < 0) {
@@ -313,18 +285,17 @@ class PolicyAdminModel extends PolicyModel
             if ($to_ip < 0) $to_ip = $to_ip + 0xffffffff + 1;
         }
 
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $sql = '
             UPDATE [[policy_ipblock]] SET
                 [from_ip] = {from_ip},
-                [to_ip]   = {to_ip},
-                [blocked] = {blocked}
+                [to_ip]   = {to_ip}
             WHERE [id] = {id}';
 
         $params = array();
         $params['id']      = $id;
-        $params['from_ip'] = $from_ip;
-        $params['to_ip']   = $to_ip;
-        $params['blocked'] = (bool)$blocked;
+        $params['from_ip'] = $xss->parse($from_ip);
+        $params['to_ip']   = $xss->parse($to_ip);
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
@@ -341,7 +312,7 @@ class PolicyAdminModel extends PolicyModel
      *
      * @access  public
      * @param   int $id ID of the to be unblocked IP Band
-     * @return  bool    True on successfull attempts and Jaws Error otherwise
+     * @return  boolean True on successfull attempts and Jaws Error otherwise
      */
     function DeleteIPRange($id)
     {
@@ -353,29 +324,29 @@ class PolicyAdminModel extends PolicyModel
         }
 
         $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_IP_DELETED'), RESPONSE_NOTICE);
+
         return true;
     }
 
     /**
-     * Block a new Agent
+     * Block specific user agents.
      *
+     * @category  feature
      * @access  public
      * @param   string  The to-be-blocked Agent string
      * @return  True on success and Jaws error on failures
      */
-    function AddAgent($agent, $blocked = true)
+    function AddAgent($agent)
     {
-        $params = array();
-        $params['agent']   = $agent;
-        $params['blocked'] = (bool)$blocked;
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
 
         $sql = '
             INSERT INTO [[policy_agentblock]]
-                ([agent], [blocked])
+                ([agent])
             VALUES
-                ({agent}, {blocked})';
+                ({agent})';
 
-        $res = $GLOBALS['db']->query($sql, $params);
+        $res = $GLOBALS['db']->query($sql, array('agent' => $xss->parse($agent)));
         if (Jaws_Error::IsError($res)) {
             $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_AGENT_NOT_ADDEDD'), RESPONSE_ERROR);
             return new Jaws_Error(_t('POLICY_RESPONSE_AGENT_NOT_ADDEDD', 'AddAgent'), _t('POLICY_NAME'));
@@ -393,18 +364,18 @@ class PolicyAdminModel extends PolicyModel
      * @param   string  $agent  The to-be-blocked Agent string
      * @return  True on success and Jaws error on failures
      */
-    function EditAgent($id, $agent, $blocked = true)
+    function EditAgent($id, $agent)
     {
-        $params = array();
-        $params['id']      = (int)$id;
-        $params['agent']   = $agent;
-        $params['blocked'] = (bool)$blocked;
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
 
         $sql = '
             UPDATE [[policy_agentblock]] SET
-                [agent]   = {agent},
-                [blocked] = {blocked}
+                [agent] = {agent}
             WHERE [id] = {id}';
+
+        $params = array();
+        $params['id']      = $id;
+        $params['agent']   = $xss->parse($agent);
 
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
@@ -421,7 +392,7 @@ class PolicyAdminModel extends PolicyModel
      *
      * @access  public
      * @param   int $id ID of the-to-be-unblocked-agent
-     * @return  bool    true on success and Jaws error on failure
+     * @return  boolean true on success and Jaws error on failure
      */
     function DeleteAgent($id)
     {
@@ -433,86 +404,95 @@ class PolicyAdminModel extends PolicyModel
         }
 
         $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_AGENT_DELETED'), RESPONSE_NOTICE);
+
         return true;
     }
 
     /**
-     * Set IPBlocking block undefined ip
+     * Enable BlockByIP
      *
      * @access  public
-     * @param   bool    $blocked    blocked by default
-     * @return  bool    True on success and Jaws error on failure
+     * @param   boolean $blockByIP     Enable/Disable block by IP
+     * @return  boolean True on success and Jaws error on failure
      */
-    function IPBlockingBlockUndefined($blocked)
+    function EnableBlockByIP($blockByIP)
     {
-        $res = $GLOBALS['app']->Registry->Set('/gadgets/Policy/block_undefined_ip',
-                                              $blocked? 'true' : 'false');
-        if (!Jaws_Error::IsError($res)) {
-            $GLOBALS['app']->Registry->Commit('Policy');
+        $res = $GLOBALS['app']->Registry->Set('/gadgets/Policy/block_by_ip', $blockByIP ? 'true' : 'false');
+        if (Jaws_Error::IsError($res)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_NOT_UPDATED'), RESPONSE_ERROR);
+            return new Jaws_Error(_t('POLICY_RESPONSE_PROPERTIES_NOT_UPDATED'), _t('POLICY_NAME'));
         }
 
-        return $res;
+        $GLOBALS['app']->Registry->Commit('Policy');
+        $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_UPDATED'), RESPONSE_NOTICE);
+
+        return true;
     }
 
     /**
-     * Set AgentBlocking block undefined agent
+     * Enable BlockByAgent
      *
      * @access  public
-     * @param   bool    $blocked    blocked by default
-     * @return  bool    True on success and Jaws error on failure
+     * @param   boolean $blockByAgent   Enable/Disable block by Agent
+     * @return  boolean True on success and Jaws error on failure
      */
-    function AgentBlockingBlockUndefined($blocked)
+    function EnableBlockByAgent($blockByAgent)
     {
-        $res = $GLOBALS['app']->Registry->Set('/gadgets/Policy/block_undefined_agent',
-                                              $blocked? 'true' : 'false');
-        if (!Jaws_Error::IsError($res)) {
-            $GLOBALS['app']->Registry->Commit('Policy');
+        $res = $GLOBALS['app']->Registry->Set('/gadgets/Policy/block_by_agent', $blockByAgent ? 'true' : 'false');
+        if (Jaws_Error::IsError($res)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_NOT_UPDATED'), RESPONSE_ERROR);
+            return new Jaws_Error(_t('POLICY_RESPONSE_PROPERTIES_NOT_UPDATED'), _t('POLICY_NAME'));
         }
 
-        return $res;
+        $GLOBALS['app']->Registry->Commit('Policy');
+        $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_PROPERTIES_UPDATED'), RESPONSE_NOTICE);
+
+        return true;
     }
 
     /**
-     * Update  Encryption Settings
+     * Manage encryption settings.
      *
+     * @category  feature
+     * @param   boolean 	$enabled   Enable/Disable encryption
+     * @param   boolean 	$key_age   Key age
+     * @param   boolean 	$key_len   Key length
      * @access  public
-     * @param   bool    $enabled   Enable/Disable encryption
-     * @param   bool    $key_age   Key age
-     * @param   bool    $key_len   Key length
-     * @return  bool    True on success and Jaws error on failure
+     * @return  boolean 	True on success and Jaws error on failure
      */
     function UpdateEncryptionSettings($enabled, $key_age, $key_len)
     {
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $GLOBALS['app']->Registry->Set('/crypt/enabled', ($enabled? 'true' : 'false'));
-        if ($GLOBALS['app']->Session->GetPermission('Policy', 'ManageEncryptionKey')) {
-            $GLOBALS['app']->Registry->Set('/crypt/key_age', (int)$key_age);
-            if ($GLOBALS['app']->Registry->Get('/crypt/key_len') != $key_len) {
-                $GLOBALS['app']->Registry->Set('/crypt/key_len', (int)$key_len);
-                $GLOBALS['app']->Registry->Set('/crypt/key_start_date', 0);
-            }
+        $GLOBALS['app']->Registry->Set('/crypt/key_age', $xss->parse($key_age));
+        $key_len = $xss->parse($key_len);
+        if ($GLOBALS['app']->Registry->Get('/crypt/key_len') != $key_len) {
+            $GLOBALS['app']->Registry->Set('/crypt/key_start_date', 0);
         }
+        $GLOBALS['app']->Registry->Set('/crypt/key_len', $key_len);
         $GLOBALS['app']->Registry->Commit('core');
         $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_ENCRYPTION_UPDATED'), RESPONSE_NOTICE);
         return true;
+
     }
 
     /**
-     * Update  AntiSpam Settings
+     * Manage anti-spam settings (deny duplicate messages, XSS filtering, captchas, obfuscation).
      *
+     * @category  feature
+     * @param   boolean $allow_duplicate
+     * @param   boolean $filter
+     * @param   boolean $captcha
+     * @param   boolean $obfuscator
      * @access  public
-     * @param   bool    $allow_duplicate
-     * @param   bool    $filter
-     * @param   string  $captcha
-     * @param   string  $captcha_driver
-     * @param   bool    $obfuscator
-     * @return  bool    True on success and Jaws error on failure
+     * @return  boolean True on success and Jaws error on failure
      */
-    function UpdateAntiSpamSettings($allow_duplicate, $filter, $captcha, $captcha_driver, $obfuscator)
+    function UpdateAntiSpamSettings($allow_duplicate, $filter, $captcha, $obfuscator)
     {
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $GLOBALS['app']->Registry->Set('/gadgets/Policy/allow_duplicate', $allow_duplicate);
         $GLOBALS['app']->Registry->Set('/gadgets/Policy/filter',          $filter);
         $GLOBALS['app']->Registry->Set('/gadgets/Policy/captcha',         $captcha);
-        $GLOBALS['app']->Registry->Set('/gadgets/Policy/captcha_driver',  $captcha_driver);
         $GLOBALS['app']->Registry->Set('/gadgets/Policy/obfuscator',      $obfuscator);
         $GLOBALS['app']->Registry->Commit('Policy');
         $GLOBALS['app']->Session->PushLastResponse(_t('POLICY_RESPONSE_ANTISPAM_UPDATED'), RESPONSE_NOTICE);
@@ -520,18 +500,19 @@ class PolicyAdminModel extends PolicyModel
     }
 
     /**
-     * Update Advanced Policies
+     * Advanced policies (password complexity and age, XSS levels, session lockouts and timeouts)
      *
-     * @access  public
+     * @category  feature
      * @param   string  $passwd_complexity
-     * @param   int     $passwd_bad_count
-     * @param   int     $passwd_lockedout_time
-     * @param   int     $passwd_max_age
-     * @param   int     $passwd_min_length
+     * @param   integer $passwd_bad_count
+     * @param   integer $passwd_lockedout_time
+     * @param   integer $passwd_max_age
+     * @param   integer $passwd_min_length
      * @param   string  $xss_parsing_level
-     * @param   int     $session_idle_timeout
-     * @param   int     $session_remember_timeout
-     * @return  bool    True on success and Jaws error on failure
+     * @param   integer $session_idle_timeout
+     * @param   integer $session_remember_timeout
+     * @access  public
+     * @return  boolean True on success and Jaws error on failure
      */
     function UpdateAdvancedPolicies($passwd_complexity, $passwd_bad_count, $passwd_lockedout_time,
                                     $passwd_max_age, $passwd_min_length, $xss_parsing_level,
@@ -553,8 +534,8 @@ class PolicyAdminModel extends PolicyModel
     /**
      * Get filters
      *
-     * @access  public
-     * @return  array Array with the filters names.
+     * @access public
+     * @return array Array with the filters names.
      */
     function GetFilters()
     {
@@ -573,8 +554,8 @@ class PolicyAdminModel extends PolicyModel
     /**
      * Get captchas
      *
-     * @access  public
-     * @return  array Array with the captchas names.
+     * @access public
+     * @return array Array with the captchas names.
      */
     function GetCaptchas()
     {
@@ -593,8 +574,8 @@ class PolicyAdminModel extends PolicyModel
     /**
      * Get filters
      *
-     * @access  public
-     * @return  array Array with the obfuscators names.
+     * @access public
+     * @return array Array with the obfuscators names.
      */
     function GetObfuscators()
     {
@@ -609,5 +590,4 @@ class PolicyAdminModel extends PolicyModel
         sort($result);
         return $result;
     }
-
 }

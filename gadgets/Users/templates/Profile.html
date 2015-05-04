@@ -1,18 +1,131 @@
 <!-- BEGIN profile -->
-<div class="gadget users profile">
+<div class="gadget users profilebox">
   <h2>{title}</h2>
+  <!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+  <form name="profilebox" action="{base_script}" method="post"{form_target}>
+  <input type="hidden" name="gadget" value="Users" />
+  <input type="hidden" name="action" value="UpdateProfile" />
+  <input type="hidden" name="redirect_to" value="{redirect_to}" />
+  {form_style}
   <div class="content">
-    <p><img src="{avatar}" alt="{nickname}" /></p>
-    <p><label>{lbl_fname}: </label>{fname}</p>
-    <p><label>{lbl_lname}: </label>{lname}</p>
-    <p><label>{lbl_nickname}: </label>{nickname}</p>
-    <p><label>{lbl_gender}: </label>{gender}</p>
-    <p><label>{lbl_dob}: </label>{dob}</p>
-    <p><label>{lbl_url}: </label>{url}</p>
-    <hr/>
-    <p><label>{lbl_about}: </label><br/>{about}</p>
-    <p><label>{lbl_occupation}: </label><br/>{occupation}</p>
-    <p><label>{lbl_interests}: </label><br/>{interests}</p>
+    <fieldset>
+		<div id="p_fname">
+		<p><label for="profile_fname">{lbl_fname}:</label>
+			<input name="fname" id="profile_fname" value="{fname}" type="text" />
+		</p>
+		</div>
+		<div id="p_lname">
+		<p><label for="profile_lname">{lbl_lname}:</label>
+			<input name="lname" id="profile_lname" value="{lname}" type="text" />
+		</p>
+		</div>
+		<div id="p_gender">
+		<p><label for="profile_gender">{lbl_gender}:</label>
+		<select name="gender" id="profile_gender">
+		  <option value="0" {male_selected}>{gender_male}</option>
+		  <option value="1" {female_selected}>{gender_female}</option>
+		</select>
+		</p>
+		</div>
+		<div id="p_dob">
+		<p id="profile_dob">
+			<label for="profile_dob_year">{lbl_dob}:</label>
+			{dob_html}
+			<span><small>{dob_sample}</small></span>
+		</p>
+		</div>
+		<div id="p_url">
+		<p><label for="profile_url">{lbl_url}:</label>
+			<input name="url" id="profile_url" value="{url}" type="text" style="direction: ltr;" />
+		</p>
+		</div>
+		<div id="p_company">
+		<p><label for="profile_company">{lbl_company}:</label>
+		   <input name="company" id="profile_company" value="{company}" type="text" />
+		</p>
+		</div>
+		<div id="p_company_type">
+		<p><label for="profile_company_type">{lbl_company_type}:</label>
+			<select name="company_type" id="profile_company_type">
+				{company_type_options}
+			</select>
+		</p>
+		</div>
+		<div id="p_logo">
+		{logo}
+		</div>
+		<div id="p_address">
+		<p><label for="profile_address">{lbl_address}:</label>
+		   <input name="address" id="profile_address" value="{address}" type="text" />
+		</p>
+		</div>
+		<div id="p_address2">
+		<p><label for="profile_address2">{lbl_address2}:</label>
+		   <input name="address2" id="profile_address2" value="{address2}" type="text" />
+		</p>
+		</div>
+		<div id="p_city">
+		<p><label for="profile_city">{lbl_city}:</label>
+		   <input name="city" id="profile_city" value="{city}" type="text" />
+		</p>
+		</div>
+		<div id="p_country">
+		<p><label for="profile_country">{lbl_country}:</label>
+			<select name="country" id="profile_country">
+				{country_options}
+			</select></p>
+		</div>
+		<div id="p_region">
+		<p><label for="profile_region">{lbl_region}:</label>
+		   <select name="region" id="profile_region">
+				{region_options}
+			</select></p>
+		</div>
+		<div id="p_postal">
+		<p><label for="profile_postal">{lbl_postal}:</label>
+		   <input size="10" name="postal" id="profile_postal" value="{postal}" type="text" />
+		</p>
+		</div>
+		<p>&nbsp;</p>
+		<div id="p_phone">
+		<p><label for="profile_phone">{lbl_phone}:</label>
+		   <input name="phone" id="profile_phone" value="{phone}" type="text" />
+		</p>
+		</div>
+		<div id="p_office">
+		<p><label for="profile_office">{lbl_office}:</label>
+		   <input name="office" id="profile_office" value="{office}" type="text" />
+		</p>
+		</div>
+		<div id="p_tollfree">
+		<p><label for="profile_tollfree">{lbl_tollfree}:</label>
+		   <input name="tollfree" id="profile_tollfree" value="{tollfree}" type="text" />
+		</p>
+		</div>
+		<div id="p_fax">
+		<p><label for="profile_fax">{lbl_fax}:</label>
+		   <input name="fax" id="profile_fax" value="{fax}" type="text" />
+		</p>
+		</div>
+		<div id="p_merchant_id">
+		<p><label for="profile_merchant_id">{lbl_merchant_id}:</label>
+		   <input name="merchant_id" id="profile_merchant_id" value="{merchant_id}" type="text" />
+		</p>
+		</div>
+		<p>&nbsp;</p>
+		<div id="p_description">
+		<p><label for="profile_description">{lbl_description}:</label>
+			<textarea rows="7" cols="20" name="description" id="profile_description">{description}</textarea>
+		</p>
+		</div>
+		<div id="p_keywords">
+		<p><label for="profile_keywords">{lbl_keywords}:</label>
+			<textarea rows="7" cols="20" name="keywords" id="profile_keywords">{keywords}</textarea>
+		</p>
+		</div>
+    </fieldset>
   </div>
+  <div class="actions"><button type="submit" value="{update}">{update}</button></div>
+  </form>
 </div>
 <!-- END profile -->

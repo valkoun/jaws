@@ -1,0 +1,4 @@
+source=src
+suffix=.php
+exclude=Darter,Darter_*
+timezone=Europe/Zurich

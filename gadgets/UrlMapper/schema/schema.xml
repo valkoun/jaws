@@ -38,7 +38,7 @@
         <field>
             <name>regexp</name>
             <type>text</type>
-            <length>255</length>
+            <length>120</length>
             <notnull>true</notnull>
         </field>
    
@@ -46,49 +46,18 @@
             <name>extension</name>
             <type>text</type>
             <length>16</length>
+            <notnull>true</notnull>
+            <default></default>
         </field>
 
         <field>
-            <name>vars_regexps</name>
-            <type>text</type>
-        </field>
-
-        <field>
-            <name>custom_map</name>
-            <type>text</type>
-            <length>120</length>
-        </field>
-
-        <field>
-            <name>custom_regexp</name>
-            <type>text</type>
-            <length>255</length>
-        </field>
-   
-        <field>
-            <name>custom_extension</name>
-            <type>text</type>
-            <length>16</length>
-        </field>
-
-        <field>
-            <name>order</name>
-            <type>integer</type>
-            <default>0</default>
-        </field>
-
-        <field>
-            <name>createtime</name>
-            <type>timestamp</type>
-        </field>
-
-        <field>
-            <name>updatetime</name>
-            <type>timestamp</type>
+            <name>custom</name>
+            <type>boolean</type>
+            <default>false</default>
         </field>
 
         <index>
-            <name><variable>table_prefix</variable>url_maps_game</name>
+            <name><variable>table_prefix</variable>url_maps_gam</name>
             <unique>true</unique>
             <field>
                 <name>gadget</name>
@@ -101,16 +70,6 @@
             </field>
             <field>
                 <name>extension</name>
-            </field>
-        </index>
-
-        <index>
-            <name><variable>table_prefix</variable>url_maps_go</name>
-            <field>
-                <name>gadget</name>
-            </field>
-            <field>
-                <name>order</name>
             </field>
         </index>
 

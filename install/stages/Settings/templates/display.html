@@ -1,7 +1,29 @@
 <!-- BEGIN Settings -->
+<style type="text/css">
+.main-item {
+    text-decoration: none;
+    margin: 1px;
+    padding: 4px;
+    color: #000;
+    font-size: small;
+    display: block;
+    border: 1px solid #fff;
+    text-align: center;
+}
+
+.main-item:hover {
+    background-color: #f7f7f7;
+    color: #888a85;
+    border: 1px solid #d3d7cf;
+    border-radius: 4px;
+    cursor: pointer;
+	cursor: hand;
+}
+</style>
 <p>{lbl_info}</p>
 
 <form method="post">
+ <input type="hidden" id="layout" name="layout" value="{layout}" />
  <table>
   <tr>
    <td><label for="site_name">{lbl_site_name}:</label></td>
@@ -34,6 +56,10 @@
   <tr>
    <td></td>
    <td class="form_comment">{site_language_info}</td>
+  </tr>
+  <tr>
+   <td style="vertical-align: top;"><label for="theme">{lbl_default_theme}:</label></td>
+   <td style="vertical-align: middle;">{themes}</td>
   </tr>
  </table>
 

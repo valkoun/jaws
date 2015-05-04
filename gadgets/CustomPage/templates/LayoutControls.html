@@ -1,0 +1,35 @@
+<!-- BEGIN controls -->
+<div id="layout-controls">
+  <div id="layout-controls-items">
+    <form name="controls" id="controls" method="post" action="{base_script}">
+    <input type="hidden" name="gadget" value="CustomPage" />
+    <input type="hidden" name="action" value="ChangeTheme" />
+    <input type="hidden" id="page_linkid" name="page_linkid" value="{linkid}" />
+    <input type="hidden" id="page_gadget" name="page_gadget" value="{page_gadget}" />
+    <input type="hidden" id="page_action" name="page_action" value="{page_action}" />
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td width="100%"><span id="layout-title"><img alt="{title-gadget}" style="vertical-align: middle;" src="{icon-gadget}" />
+          <a href="{admin_script}?gadget=ControlPanel&action=DefaultAction">{title-cp}</a> &rarr; <a href="{admin_script}?gadget={title-gadget}">{title-name}</a>
+          <!-- BEGIN documentation -->
+          <a href="{url}" target="_blank"><img src="{src}" alt="{alt}" title="{alt}" style="vertical-align: top; height: 16px; width: 16px;"/></a>
+          <!-- END documentation -->
+          </span></td>
+        <td width="0%">&nbsp;</td>
+        <td id="theme-combo" align="right" width="0%">{theme}: {theme_combo}&nbsp;</td>
+        <td id="theme-mode-combo" align="right" width="0%">{mode} {mode_combo}</td>
+        <td id="preview-page-btn" align="right" width="0%">&nbsp;{preview_page}&nbsp;</td>
+        <td id="edit-page-btn" align="right" width="0%">{edit_page}&nbsp;</td>
+        <td id="delete-page-btn" align="right" width="0%">{delete_page}&nbsp;</td>
+        <td id="add-gadget-btn" align="right" width="0%">{add_gadget}</td>
+      </tr>
+      </table>
+    </form>
+  </div>
+  <script type="text/javascript">
+  Event.observe(window, "load",function(){if ($('theme-mode-combo').innerHTML == '') {
+    $('theme-mode-combo').style.display = 'none';
+  }});
+  </script>
+</div>
+<!-- END controls -->

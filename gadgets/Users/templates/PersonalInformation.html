@@ -1,0 +1,123 @@
+<!-- BEGIN PersonalInformation -->
+<table id="tbl_pinfo" width="100%" border="0" cellpadding="0" cellspacing="5">
+  <tr>
+    <td width="100px"><label for="fname">{lbl_fname}:</label></td>
+    <td><input name="fname" id="fname" value="{fname}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="lname">{lbl_lname}:</label></td>
+    <td><input name="lname" id="lname" value="{lname}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="gender">{lbl_gender}:</label></td>
+    <td>
+      <select name="gender" id="gender">
+      <option value="0" {male_selected}>{gender_male}</option>
+      <option value="1" {female_selected}>{gender_female}</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td><label for="dob_year">{lbl_dob}:</label></td>
+    <td id="personal_dob">
+      {dob_html}
+      <br/>
+      <span>{dob_sample}</span>
+    </td>
+  </tr>
+  <tr>
+    <td><label for="url">{lbl_url}:</label></td>
+    <td><input name="url" id="url" value="{url}" type="text" style="direction: ltr;"/></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><label for="company">{lbl_company}:</label></td>
+    <td><input name="company" id="company" value="{company}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="company_type">{lbl_company_type}:</label></td>
+    <td>
+		<select name="company_type" id="company_type">
+			{company_type_options}
+		</select>
+	</td>
+  </tr>
+  <tr>
+    <td><label for="address">{lbl_logo}:</label></td>
+    <td>
+		{logo}
+	</td>
+  </tr>
+  <tr>
+    <td><label for="address">{lbl_address}:</label></td>
+    <td><input name="address" id="address" value="{address}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="address2">{lbl_address2}:</label></td>
+    <td><input name="address2" id="address2" value="{address2}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="city">{lbl_city}:</label></td>
+    <td><input name="city" id="city" value="{city}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="country">{lbl_country}:</label></td>
+    <td>
+		<select name="country" id="country">
+			{country_options}
+		</select>
+	</td>
+  </tr>
+  <tr>
+    <td><label for="region">{lbl_region}:</label></td>
+    <td>
+		<select name="region" id="region">
+			{region_options}
+		</select>
+	</td>
+  </tr>
+  <tr>
+    <td><label for="postal">{lbl_postal}:</label></td>
+    <td><input size="10" name="postal" id="postal" value="{postal}" type="text" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><label for="phone">{lbl_phone}:</label></td>
+    <td><input name="phone" id="phone" value="{phone}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="office">{lbl_office}:</label></td>
+    <td><input name="office" id="office" value="{office}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="tollfree">{lbl_tollfree}:</label></td>
+    <td><input name="tollfree" id="tollfree" value="{tollfree}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="fax">{lbl_fax}:</label></td>
+    <td><input name="fax" id="fax" value="{fax}" type="text" /></td>
+  </tr>
+  <tr>
+    <td><label for="merchant_id">{lbl_merchant_id}:</label></td>
+    <td><input name="merchant_id" id="merchant_id" value="{merchant_id}" type="text" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><label for="description">{lbl_description}:</label></td>
+    <td><textarea rows="7" cols="20" name="description" id="description">{description}</textarea></td>
+  </tr>
+  <tr>
+    <td><label for="keywords">{lbl_keywords}:</label></td>
+    <td><textarea rows="7" cols="20" name="keywords" id="keywords">{keywords}</textarea></td>
+  </tr>
+</table>
+<!-- END PersonalInformation -->

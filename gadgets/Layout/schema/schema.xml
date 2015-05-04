@@ -15,7 +15,7 @@
          <field>
              <name>section</name>
              <type>text</type>
-             <length>32</length>
+             <length>20</length>
              <notnull>true</notnull>
              <default>main</default>
          </field>
@@ -23,24 +23,13 @@
          <field>
              <name>gadget</name>
              <type>text</type>
-             <length>32</length>
+             <length>255</length>
          </field>
 
          <field>
              <name>gadget_action</name>
              <type>text</type>
-             <length>120</length>
-         </field>
-
-         <field>
-             <name>action_params</name>
-             <type>text</type>
-         </field>
-
-         <field>
-             <name>action_filename</name>
-             <type>text</type>
-             <length>64</length>
+             <length>255</length>
          </field>
 
          <field>

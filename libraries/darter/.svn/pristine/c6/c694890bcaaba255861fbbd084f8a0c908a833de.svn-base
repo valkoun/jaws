@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">
+<head>
+<title>Collection (anomey 2.1)</title>
+<link rel="stylesheet" type="text/css" href="stylesheets/screen.css" />
+</head>
+<body>
+
+<div class="page">
+<p class="title">anomey 2.1</p>
+
+<h1>Class Collection</h1>
+
+<div class="section class odd">
+<h2 class="label">Information</h2>
+
+<dl class="content">
+	<dt>Author</dt>
+	<dd>Hans Muster</dd>
+	<dt>Package</dt>
+	<dd><a href="">util</a></dd>
+</dl>
+</div>
+
+<div class="section inheritance">
+<h2 class="label">Inheritance</h2>
+
+<ul class="content">
+	<li>ArrayAccess
+	<ul>
+		<li>ArrayObject
+		<ul>
+			<li>Collection</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+</ul>
+</div>
+
+<div class="section interfaces odd">
+<h2 class="label">Interfaces</h2>
+
+<ul class="content">
+	<li>Countable</li>
+	<li>IteratorAggregate</li>
+	<li><a href="">SomeCoolInterface</a></li>
+</ul>
+</div>
+
+<div class="section description">
+<h2 class="label">Description</h2>
+
+<p class="content">Lorem ipsum dolor sit amet, consectetuer
+adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
+dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex
+ea commodo consequat.</p>
+</div>
+
+<div class="section fields odd">
+<h2 class="label">Fields</h2>
+
+<dl class="content">
+	<dt><code>const DEFAULT = 42</code></dt>
+	<dd>The default value for the integer.</dd>
+	<dt><code>public $name = ''</code></dt>
+	<dd>The name of the object or the collection.</dd>
+</dl>
+</div>
+
+<div class="section methods">
+<h2 class="label">Methods</h2>
+
+<div class="content">
+<ul>
+	<li><code><a href="">ArrayObject::getFoo</a>(string $value,
+	array $access)</code></li>
+	<li title="Returns the name of the object or the collection."><code><a
+		href="">getName</a>(string $value)</code></li>
+</ul>
+
+<h3>getName</h3>
+
+<div class="method">
+<p><code>public string getName(string $value)</code></p>
+
+<p>Returns the name of the object or the collection.</p>
+
+<dl>
+	<dt>Parameters</dt>
+	<dd><code>$value</code> - the value</dd>
+	<dt>Returns</dt>
+	<dd>the name</dd>
+</dl>
+</div>
+
+</div>
+</div>
+
+<hr />
+
+<ul class="menu">
+	<li><a href="">Overview</a></li>
+	<li><a href="">Classes</a></li>
+	<li><a href="">Packages</a></li>
+</ul>
+
+<p class="footer">This <acronym
+	title="Application Programming Interface">API</acronym> documentation
+has been generated 2006-11-24 12:45 with <a
+	href="http://code.google.com/p/darter">darter</a>. Copyright 1998-2006 by The Foobar.</p>
+</div>
+
+</body>
+</html>

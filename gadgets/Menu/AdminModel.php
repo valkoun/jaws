@@ -8,7 +8,7 @@
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 require_once JAWS_PATH . 'gadgets/Menu/Model.php';
@@ -19,7 +19,7 @@ class MenuAdminModel extends MenuModel
      * Install the gadget
      *
      * @access  public
-     * @return  mixed   True on success or Jaws_Error on failure
+     * @return  boolean  Success with true and failure with Jaws_Error
      */
     function InstallGadget()
     {
@@ -28,13 +28,27 @@ class MenuAdminModel extends MenuModel
             return $result;
         }
 
-        $result = $this->installSchema('insert.xml', '', 'schema.xml', true);
-        if (Jaws_Error::IsError($result)) {
-            return $result;
-        }
+        if (file_exists(JAWS_PATH . 'gadgets/'.$this->_Name.'/schema/insert.xml')) {
+			$result = $this->installSchema('insert.xml', '', 'schema.xml', true);
+			if (Jaws_Error::IsError($result)) {
+				return $result;
+			}
+		}
 
-        // Install listener for removing menu's item related to uninstalled gadget
-        $GLOBALS['app']->Listener->NewListener($this->_Name, 'onBeforeUninstallingGadget', 'RemoveMenusByType');
+		// Install listener for updating page items related to gadgets
+		$GLOBALS['app']->loadClass('Shouter', 'Jaws_EventShouter');
+        //$GLOBALS['app']->Shouter->NewShouter('Core', 'onAddMenuItem');             // trigger an action when we add a menu
+        $GLOBALS['app']->Shouter->NewShouter('Core', 'onUpdateMenuItem');          // trigger an action when we update a menu
+        $GLOBALS['app']->Shouter->NewShouter('Core', 'onDeleteMenuItem');          // trigger an action when we delete a menu
+        $GLOBALS['app']->Shouter->NewShouter('Core', 'onAfterInsertMenuItem');             // trigger an action after we add a menu
+        $GLOBALS['app']->Shouter->NewShouter('Core', 'onAfterUpdateMenuItem');          // trigger an action after we update a menu
+        $GLOBALS['app']->Shouter->NewShouter('Core', 'onAfterDeleteMenuItem');          // trigger an action after we delete a menu
+		
+		$GLOBALS['app']->loadClass('Listener', 'Jaws_EventListener');
+		//$GLOBALS['app']->Listener->NewListener($this->_Name, 'onAddMenuItem', 'InsertMenuByURL');
+		$GLOBALS['app']->Listener->NewListener('Menu', 'onUpdateMenuItem', 'UpdateMenuByURL');
+		$GLOBALS['app']->Listener->NewListener('Menu', 'onDeleteMenuItem', 'DeleteMenuByURL');
+		$GLOBALS['app']->Listener->NewListener('Menu', 'onBeforeUninstallingGadget', 'RemoveMenusByType');
 
         // Registry keys.
         $GLOBALS['app']->Registry->NewKey('/gadgets/Menu/default_group_id', '1');
@@ -46,7 +60,7 @@ class MenuAdminModel extends MenuModel
      * Uninstalls the gadget
      *
      * @access  public
-     * @return  mixed     True on success or Jaws_Error on failure
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UninstallGadget()
     {
@@ -62,6 +76,18 @@ class MenuAdminModel extends MenuModel
             }
         }
 
+        $GLOBALS['app']->loadClass('Listener', 'Jaws_EventListener');
+        $GLOBALS['app']->Listener->DeleteListener('Menu', 'UpdateMenuByURL');
+        $GLOBALS['app']->Listener->DeleteListener('Menu', 'DeleteMenuByURL');
+        $GLOBALS['app']->Listener->DeleteListener('Menu', 'RemoveMenusByType');
+		
+		$GLOBALS['app']->loadClass('Shouter', 'Jaws_EventShouter');
+        $GLOBALS['app']->Shouter->DeleteShouter('Core', 'onUpdateMenuItem');
+        $GLOBALS['app']->Shouter->DeleteShouter('Core', 'onDeleteMenuItem');
+        $GLOBALS['app']->Shouter->DeleteShouter('Core', 'onAfterInsertMenuItem');
+        $GLOBALS['app']->Shouter->DeleteShouter('Core', 'onAfterUpdateMenuItem');
+        $GLOBALS['app']->Shouter->DeleteShouter('Core', 'onAfterDeleteMenuItem');
+
         // Registry keys
         $GLOBALS['app']->Registry->DeleteKey('/gadgets/Menu/default_group_id');
 
@@ -74,17 +100,17 @@ class MenuAdminModel extends MenuModel
      * @access  public
      * @param   string  $old    Current version (in registry)
      * @param   string  $new    New version (in the $gadgetInfo file)
-     * @return  mixed   True on success or Jaws_Error on failure
+     * @return  boolean  Success/Failure (Jaws_Error)
      */
     function UpdateGadget($old, $new)
     {
         if (version_compare($old, '0.7.0', '<')) {
-            $result = $this->installSchema('0.7.0.xml', '', "$old.xml");
+            $result = $this->installSchema('schema.xml', '', "$old.xml");
             if (Jaws_Error::IsError($result)) {
                 return $result;
             }
 
-            $result = $this->installSchema('insert.xml', '', '0.7.0.xml', true);
+            $result = $this->installSchema('insert.xml', '', 'schema.xml', true);
             if (Jaws_Error::IsError($result)) {
                 return $result;
             }
@@ -138,18 +164,12 @@ class MenuAdminModel extends MenuModel
             $GLOBALS['app']->Registry->NewKey('/gadgets/Menu/default_group_id', '1');
         }
 
-        if (version_compare($old, '0.7.1', '<')) {
-            //remove old event listener
-            $GLOBALS['app']->loadClass('Listener', 'Jaws_EventListener');
-            $GLOBALS['app']->Listener->DeleteListener($this->_Name);
-            // Install listener for removing menu's item related to uninstalled gadget
-            $GLOBALS['app']->Listener->NewListener($this->_Name, 'onBeforeUninstallingGadget', 'RemoveMenusByType');
-        }
+        //remove old event listener
+        $GLOBALS['app']->loadClass('Listener', 'Jaws_EventListener');
+        $GLOBALS['app']->Listener->DeleteListener($this->_Name);
 
-        $result = $this->installSchema('schema.xml', '', "0.7.0.xml");
-        if (Jaws_Error::IsError($result)) {
-            return $result;
-        }
+        // Install listener for removing menu's item related to uninstalled gadget
+        $GLOBALS['app']->Listener->NewListener($this->_Name, 'onBeforeUninstallingGadget', 'RemoveMenusByType');
 
         $GLOBALS['app']->Session->PopLastResponse(); // emptying all responses message
         return true;
@@ -157,12 +177,9 @@ class MenuAdminModel extends MenuModel
 
     /**
     * Insert a group
-    *
     * @access  public
-    * @param   string   $title
-    * @param   string   $title_view
-    * @param   bool     $visible        is visible
-    * @return  bool     True on success or False on failure
+    *
+    * @return  boolean Success/Failure (Jaws_Error)
     */
     function InsertGroup($title, $title_view, $visible)
     {
@@ -184,90 +201,76 @@ class MenuAdminModel extends MenuModel
             VALUES
                 ({title}, {title_view}, {visible})';
 
-        $params = array();
-        $params['title']      = $title;
-        $params['title_view'] = $title_view;
-        $params['visible']    = $visible;
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        $params                = array();
+        $params['title']       = $xss->parse($title);
+        $params['title_view']  = $title_view;
+        $params['visible']     = $visible;
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
             $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
             return false;
         }
         $gid = $GLOBALS['db']->lastInsertID('menus_groups', 'id');
-        $GLOBALS['app']->Session->PushLastResponse(_t('MENU_NOTICE_GROUP_CREATED'), RESPONSE_NOTICE, $gid);
+        $GLOBALS['app']->Session->PushLastResponse($gid.'%%' . _t('MENU_NOTICE_GROUP_CREATED'), RESPONSE_NOTICE);
 
         return true;
     }
 
     /**
     * Insert a menu
-    *
     * @access  public
-    * @param    int     $pid
-    * @param    int     $gid        group ID
-    * @param    string  $type
-    * @param    string  $title
-    * @param    string  $url
-    * @param    string  $url_target
-    * @param    string  $rank
-    * @param    bool    $visible    is visible
-    * @param    string  $image
-    * @return   bool    True on success or False on failure
+    *
+    * @return  boolean Success/Failure (Jaws_Error)
     */
-    function InsertMenu($pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $image)
+    function InsertMenu($pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $auto = false)
     {
+		$GLOBALS['app']->Translate->LoadTranslation('Menu', JAWS_GADGET);
         $sql = '
             INSERT INTO [[menus]]
-                ([pid], [gid], [menu_type], [title], [url], [url_target], [rank], [visible], [image])
+                ([pid], [gid], [menu_type], [title], [url], [url_target], [rank], [visible])
             VALUES
-                ({pid}, {gid}, {type}, {title}, {url}, {url_target}, {rank}, {visible}, {image})';
+                ({pid}, {gid}, {type}, {title}, {url}, {url_target}, {rank}, {visible})';
 
-        $params = array();
-        $params['pid']        = $pid;
-        $params['gid']        = $gid;
-        $params['type']       = $type;
-        $params['title']      = $title;
-        $params['url']        = $url;
-        $params['url_target'] = $url_target;
-        $params['rank']       = $rank;
-        $params['visible']    = $visible;
-        if (empty($image)) {
-            $params['image']  = null;
-        } else {
-            $image = preg_replace("/[^[:alnum:]_\.-]*/i", "", $image);
-            $filename = Jaws_Utils::upload_tmp_dir(). '/'. $image;
-            $params['image']  = array('type'=> 'blob', 'value' => 'File://' . $filename);
-        }
-
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        $params                = array();
+        $params['pid']         = $pid;
+        $params['gid']         = $gid;
+        $params['type']        = $type;
+        $params['title']       = $xss->parse($title);
+        $params['url']         = $xss->parse($url);
+        $params['url_target']  = $url_target;
+        $params['rank']        = (int)$rank;
+        $params['visible']     = $visible;
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
             $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
             return false;
         }
-
-        if (isset($filename)) {
-            Jaws_Utils::Delete($filename);
-        }
-
         $mid = $GLOBALS['db']->lastInsertID('menus', 'id');
         $this->MoveMenu($mid, $gid, $gid, $pid, $pid, $rank, null);
-        $GLOBALS['app']->Session->PushLastResponse($mid.'%%' . _t('MENU_NOTICE_MENU_CREATED'), RESPONSE_NOTICE);
-
-        return true;
+		//echo "MoveMenu(".$mid.", ".$gid.", ".$gid.", ".$pid.", ".$pid.", ".(int)$rank.", null)";
+		//exit;
+		if ($auto != true) {
+			$GLOBALS['app']->Session->PushLastResponse($mid.'%%' . _t('MENU_NOTICE_MENU_CREATED'), RESPONSE_NOTICE);
+        }
+		$GLOBALS['app']->loadClass('Shouter', 'Jaws_EventShouter');
+		$res = $GLOBALS['app']->Shouter->Shout('onAfterInsertMenuItem', $mid);
+		if (Jaws_Error::IsError($res) || !$res) {
+			return $res;
+		}
+		return true;
     }
 
     /**
     * Update a group
-    *
     * @access  public
-    * @param    int     $gid            group ID
-    * @param    string  $title
-    * @param    string  $title_view
-    * @param    bool    $visible        is visible
-    * @return   bool    True on success or False on failure
+    *
+    * @return  boolean Success/Failure (Jaws_Error)
     */
     function UpdateGroup($gid, $title, $title_view, $visible)
     {
+		$GLOBALS['app']->Translate->LoadTranslation('Menu', JAWS_GADGET);
         $sql = '
             SELECT
                 COUNT([id])
@@ -293,11 +296,12 @@ class MenuAdminModel extends MenuModel
                 [visible]     = {visible}
             WHERE [id] = {gid}';
 
-        $params = array();
-        $params['gid']        = $gid;
-        $params['title']      = $title;
-        $params['title_view'] = $title_view;
-        $params['visible']    = $visible;
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        $params                = array();
+        $params['gid']         = $gid;
+        $params['title']       = $xss->parse($title);
+        $params['title_view']  = $title_view;
+        $params['visible'] = $visible;
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
             $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
@@ -310,39 +314,18 @@ class MenuAdminModel extends MenuModel
 
     /**
     * Update a menu
-    *
     * @access  public
-    * @param    int     $mid        menu ID
-    * @param    int     $pid
-    * @param    int     $gid        group ID
-    * @param    string  $type
-    * @param    string  $title
-    * @param    string  $url
-    * @param    string  $url_target
-    * @param    string  $rank
-    * @param    bool    $visible    is visible
-    * @param    string  $image
-    * @return   bool    True on success or False on failure
+    *
+    * @return  boolean Success/Failure (Jaws_Error)
     */
-    function UpdateMenu($mid, $pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $image)
+    function UpdateMenu($mid, $pid, $gid, $type, $title, $url, $url_target, $rank, $visible)
     {
+		$GLOBALS['app']->Translate->LoadTranslation('Menu', JAWS_GADGET);
         $oldMenu = $this->GetMenu($mid);
         if (Jaws_Error::IsError($oldMenu)) {
             $GLOBALS['app']->Session->PushLastResponse(_t('MENU_ERROR_GET_MENUS'), RESPONSE_ERROR);
             return false;
         }
-
-        $params = array();
-        $params['mid']        = $mid;
-        $params['pid']        = $pid;
-        $params['gid']        = $gid;
-        $params['type']       = $type;
-        $params['title']      = $title;
-        $params['url']        = $url;
-        $params['url_target'] = $url_target;
-        $params['rank']       = $rank;
-        $params['visible']    = $visible;
-
         $sql = '
             UPDATE [[menus]] SET
                 [pid]         = {pid},
@@ -352,31 +335,33 @@ class MenuAdminModel extends MenuModel
                 [url]         = {url},
                 [url_target]  = {url_target},
                 [rank]        = {rank},
-                [visible]     = {visible}';
-        if ($image !== 'true') {
-            $sql.= ', [image] = {image}';
-            if (empty($image)) {
-                $params['image'] = null;
-            } else {
-                $image = preg_replace("/[^[:alnum:]_\.-]*/i", "", $image);
-                $filename = Jaws_Utils::upload_tmp_dir(). '/'. $image;
-                $params['image'] = array('type'=> 'blob', 'value' => 'File://' . $filename);
-            }
-        }
-        $sql .= ' WHERE [id] = {mid}';
+                [visible]     = {visible}
+            WHERE [id] = {mid}';
 
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        $params                = array();
+        $params['mid']         = $mid;
+        $params['pid']         = $pid;
+        $params['gid']         = $gid;
+        $params['type']        = $type;
+        $params['title']       = $xss->parse($title);
+        $params['url']         = $xss->parse($url);
+        $params['url_target']  = $url_target;
+        $params['rank']        = $rank;
+        $params['visible']     = $visible;
         $res = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($res)) {
             $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
             return false;
         }
-
-        if (isset($filename)) {
-            Jaws_Utils::Delete($filename);
-        }
-
         $this->MoveMenu($mid, $gid, $oldMenu['gid'], $pid, $oldMenu['pid'], $rank, $oldMenu['rank']);
         $GLOBALS['app']->Session->PushLastResponse(_t('MENU_NOTICE_MENU_UPDATED'), RESPONSE_NOTICE);
+		
+		$GLOBALS['app']->loadClass('Shouter', 'Jaws_EventShouter');
+		$res = $GLOBALS['app']->Shouter->Shout('onAfterUpdateMenuItem', $mid);
+		if (Jaws_Error::IsError($res) || !$res) {
+			return $res;
+		}
         return true;
     }
 
@@ -384,11 +369,11 @@ class MenuAdminModel extends MenuModel
      * Delete a group
      *
      * @access  public
-     * @param   int     $gid    group ID
-     * @return  bool    True if query was successful and Jaws_Error on error
+     * @return  boolean True if query was successful and Jaws_Error on error
      */
     function DeleteGroup($gid)
     {
+		$GLOBALS['app']->Translate->LoadTranslation('Menu', JAWS_GADGET);
         if ($gid == 1) {
             $GLOBALS['app']->Session->PushLastResponse(_t('MENU_ERROR_GROUP_NOT_DELETABLE'), RESPONSE_ERROR);
             return false;
@@ -427,8 +412,7 @@ class MenuAdminModel extends MenuModel
      * Delete a menu
      *
      * @access  public
-     * @param   int     $mid    menu ID
-     * @return  bool    True if query was successful and Jaws_Error on error
+     * @return  boolean True if query was successful and Jaws_Error on error
      */
     function DeleteMenu($mid)
     {
@@ -459,17 +443,22 @@ class MenuAdminModel extends MenuModel
                 $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
                 return false;
             }
-        }
-
-        return true;
+		}
+		
+		$GLOBALS['app']->loadClass('Shouter', 'Jaws_EventShouter');
+		$res = $GLOBALS['app']->Shouter->Shout('onAfterDeleteMenuItem', $mid);
+		if (Jaws_Error::IsError($res) || !$res) {
+			return $res;
+		}
+        
+		return true;
     }
 
     /**
      * Delete a all menu related with a gadget (type = %gadget%)
      *
      * @access  public
-     * @param   string  $type
-     * @return  bool    True if query was successful and Jaws_Error on error
+     * @return  boolean True if query was successful and Jaws_Error on error
      */
     function RemoveMenusByType($type)
     {
@@ -484,7 +473,7 @@ class MenuAdminModel extends MenuModel
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -492,14 +481,7 @@ class MenuAdminModel extends MenuModel
      * function for change gid, pid and rank of menus
      *
      * @access  public
-     * @param   int     $mid        menu ID
-     * @param   int     $new_gid    new group ID
-     * @param   int     $old_gid    old group ID
-     * @param   int     $new_pid
-     * @param   int     $old_pid
-     * @param   string  $new_rank
-     * @param   string  $old_rank
-     * @return  bool    True on success or False on failure
+     * @return  array   Response (notice or error)
      */
     function MoveMenu($mid, $new_gid, $old_gid, $new_pid, $old_pid, $new_rank, $old_rank)
     {
@@ -658,12 +640,7 @@ class MenuAdminModel extends MenuModel
      * function for get menus tree
      *
      * @access  public
-     * @param   int     $pid
-     * @param   int     $gid            Group ID
-     * @param   string  $excluded_mid
-     * @param   string  $result         Result reference
-     * @param   array   $menu_str
-     * @return  bool    True on success or False on failure
+     * @return  array   Response (notice or error)
      */
     function GetParentMenus($pid, $gid, $excluded_mid, &$result, $menu_str = '')
     {
@@ -677,5 +654,84 @@ class MenuAdminModel extends MenuModel
         }
         return true;
     }
+	
+    /**
+     * Updates a menu by URL
+     *
+     * @access  public
+     * @param string $param An array in format: "URL,title,parent,type,visible"
+     * @return  boolean True if query was successful and Jaws_Error on error
+     */
+    function UpdateMenuByURL($param)
+    {		
+		if (!empty($param['url']) && !empty($param['old_url']) && !empty($param['title']) && !empty($param['parent']) && !empty($param['type']) && !empty($param['visible'])) {
 
+			$pid = 0;
+			// get parent menus
+			if ($param['parent'] != '0') {
+				$sql  = 'SELECT [id] FROM [[menus]] WHERE [url] = {parent}';
+		        $parentMenu = $GLOBALS['db']->queryRow($sql, array('parent' => $param['parent']));
+		        if (Jaws_Error::IsError($parentMenu)) {
+		            $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+		            return false;
+		        } else {
+					$pid = $parentMenu['id'];
+				}
+			}
+			
+			$sql  = 'SELECT [id], [rank] FROM [[menus]] WHERE [url] = {url}';
+	        $oid = $GLOBALS['db']->queryRow($sql, array('url' => $param['old_url']));
+			//$GLOBALS['app']->Session->PushLastResponse('old: '.$param['old_url'].' new: '.$param['url'], RESPONSE_ERROR);
+	        if (Jaws_Error::IsError($oid)) {
+	            $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+	            return false;
+	        } else {
+				if (!empty($oid['id'])) {
+					if (!$this->UpdateMenu($oid['id'], $pid, 1, $param['type'], $param['title'], $param['url'], 0, $oid['rank'], $param['visible'])) {
+						$GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+		                return false;
+		            } else {
+						$GLOBALS['app']->Session->PushLastResponse('old: '.$param['old_url'].' new: '.$param['url'], RESPONSE_NOTICE);
+					}
+				} else {
+		            $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+		            return false;
+				}
+			}
+        }
+		return true;
+    }
+    /**
+     * Deletes a menu by URL
+     *
+     * @access  public
+     * @param string $param URL
+     * @return  boolean True if query was successful and Jaws_Error on error
+     */
+    function DeleteMenuByURL($param)
+    {
+		if (!empty($param)) {
+			$url = $param; //URL of item we are adding
+		} else {
+			$GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+			return false;
+		}
+		
+		$sql  = 'SELECT [id] FROM [[menus]] WHERE [url] = {url}';
+        $oid = $GLOBALS['db']->queryRow($sql, array('url' => $url));
+        if (Jaws_Error::IsError($oid)) {
+            $GLOBALS['app']->Session->PushLastResponse(_t('GLOBAL_ERROR_QUERY_FAILED'), RESPONSE_ERROR);
+            return false;
+        } else {
+			if (!empty($oid['id'])) {
+				if (!$this->DeleteMenu($oid['id'])) {
+	                return false;
+	            }
+			} else {
+				$GLOBALS['app']->Session->PushLastResponse('There is no menu item with URL: '.$param, RESPONSE_NOTICE);			
+			}
+		}
+
+        return true;
+    }
 }

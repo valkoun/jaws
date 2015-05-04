@@ -6,7 +6,7 @@
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_String
@@ -15,9 +15,9 @@ class Jaws_String
      * Return the string with the valid HTML tags
      * Of course this doesn't strip out id="" class="" and similar
      *
-     * @param   string  $string  Input string with lot of HTML tags
-     * @return  string  Clean string, with just some allowed tags
-     * @access  public
+     * @param  string  $string  Input string with lot of HTML tags
+     * @return string  Clean string, with just some allowed tags
+     * @access public
      */
     function WithHTML($string)
     {
@@ -74,9 +74,9 @@ class Jaws_String
                 $part = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $part);
                 $part = str_replace('</blockquote></p>', '</p></blockquote>', $part);
                 // under certain strange conditions it could create a P of entirely whitespace
-                $part = preg_replace('|<p>[\s,\t,\xa0]*</p>\n*|u', '', $part);
-                $part = preg_replace('!<p>\s*(</?' . $block . '[^>]*>)!', "<p>$1", $part);
-                $part = preg_replace('!(</?' . $block . '[^>]*>)\s*</p>!', "$1</p>", $part);
+                $part = preg_replace('|<p>\s*</p>\n?|', '', $part);
+                $part = preg_replace('!<p>\s*(</?' . $block . '[^>]*>)!', "$1", $part);
+                $part = preg_replace('!(</?' . $block . '[^>]*>)\s*</p>!', "$1", $part);
                 // make line breaks
                 $part = preg_replace('|(?<!<br />)\n|', "<br />\n", $part);
                 $part = preg_replace('!(</?' . $block . '[^>]*>)\s*<br />!', "$1", $part);

@@ -15,7 +15,7 @@
 // | Authors: Ulf Wendel <ulf.wendel@phpdoc.de>                           |
 // +----------------------------------------------------------------------+
 //
-// $Id: Error.php 174777 2004-12-15 09:09:33Z dufuz $
+// $Id: Error.php,v 1.4 2004/12/15 09:09:33 dufuz Exp $
 
 require_once 'PEAR.php';
 

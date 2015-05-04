@@ -1,0 +1,179 @@
+<!-- BEGIN calendar -->
+<div class="gadget calendar">
+<!-- BEGIN content -->
+	<div id="calendar-calendar-{id}" class="content">
+		{content}
+	</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+  <h2>{title}</h2>
+  <div id="calendar-calendar-{id}" class="content">
+    {content}
+  </div>
+<!-- END not_found -->
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Calendar_iframe_{id}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END calendar -->
+
+<!-- BEGIN detail -->
+<div class="gadget calendar_detail">
+  <h2><a href="{link}">{title}</a></h2>
+  <div id="calendar-detail-{id}" class="content">
+    <!-- BEGIN item -->
+		<div class="calendar_item">
+		<h1><b>Event</b>:&nbsp; {event}&nbsp;</h1>
+		<table border="0" cellpadding="4" cellspacing="0" width="100%">
+		<tbody>
+			<tr>
+				<td width="100%" align="left"><i>{sm_description}</i>
+				&nbsp;<br />
+				<b>Time</b>:&nbsp; {time_str}
+				&nbsp;<br />
+				<b>When</b>:&nbsp; {date_str}
+				&nbsp;<br />
+				{host}
+				<br />
+				&nbsp;<br /><b>Details</b>:&nbsp; {description}
+				<br />
+				</td>
+				<td width="0" valign="top">
+				  {image}
+			  </td>
+			</tr>
+		</tbody>
+		</table>
+		</div>
+		<hr />
+    <!-- END item -->
+  </div>
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Calendar_iframe_{id}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END detail -->
+
+<!-- BEGIN index -->
+<div class="gadget custom_index">
+  <h2>{title}</h2>
+  <div id="calendar-index-{id}" class="content">
+    <ul class="custom_indexList">
+    <!-- BEGIN item -->
+      <li class="custom_indexItem"><a class="custom_indexTitle" href="{link}">{title}</a><br /><span class="custom_indexDesc" align=\"justify\">{desc}</span><br /><span class="custom_indexDateStr">{update_string}<span class="custom_indexDate">{updated}</span></span></li>
+    <!-- END item -->
+    <!-- BEGIN no_items -->
+      {content}
+    <!-- END no_items -->
+    </ul>
+  </div>
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Calendar_iframe_{id}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<div id="layout-calendar-head" class="gadget layout_head">
+<h2 id="layout_{actionName}_title">{layout_title}</h2>
+</div>
+<!--	{base_url} -->
+<div id="layout-calendar-body" class="gadget layout_body">
+<!-- BEGIN calendarlayout -->
+	{element}
+<!-- END calendarlayout -->
+<!-- BEGIN reservationform -->
+			  <FORM METHOD="POST" ACTION="{action}" ID="calendar_reservation_form" NAME="calendar_reservation_form">
+              <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+                <TR>
+				  <TD WIDTH="0%">
+					{content}
+					<p style="text-align: right;">
+					<input TYPE="submit" value="Search" style="font-size: 1.0em;"{onclick}>&nbsp;
+					</p>
+					</TD>
+				</TR>
+              </TABLE>
+            </FORM>
+<!-- END reservationform -->
+</div>
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Calendar_iframe_{id}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END layout -->

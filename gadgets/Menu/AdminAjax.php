@@ -7,19 +7,31 @@
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class MenuAdminAjax extends Jaws_Ajax
 {
     /**
+     * Constructor
+     *
+     * @param   MenuModel   $model  The model to use for performing actions.
+     * @return  Null
+     * @access  public
+     */
+    function MenuAdminAjax(&$model)
+    {
+        $this->_Model =& $model;
+    }
+
+    /**
      * Get all menus and groups data
      *
      * @access  public
-     * @return  mixed   Data array or False on error
+     * @return  array   Data
      */
-    function GetMenusTrees()
-    {
+    function GetMenusTrees() {
+        $this->CheckSession('Menu', 'default');
         $gadget = $GLOBALS['app']->LoadGadget('Menu', 'AdminHTML');
         $data = $gadget->GetMenusTrees();
         unset($gadget);
@@ -33,10 +45,11 @@ class MenuAdminAjax extends Jaws_Ajax
      * Returns the group form
      *
      * @access  public
-     * @return  string  XHTML template of groupForm
+     * @return  string  XHTML of groupForm
      */
     function GetGroupUI()
     {
+        $this->CheckSession('Menu', 'default');
         $gadget = $GLOBALS['app']->LoadGadget('Menu', 'AdminHTML');
         return $gadget->GetGroupUI();
     }
@@ -45,10 +58,11 @@ class MenuAdminAjax extends Jaws_Ajax
      * Returns the menu form
      *
      * @access  public
-     * @return  string  XHTML template of groupForm
+     * @return  string  XHTML of groupForm
      */
     function GetMenuUI()
     {
+        $this->CheckSession('Menu', 'default');
         $gadget = $GLOBALS['app']->LoadGadget('Menu', 'AdminHTML');
         return $gadget->GetMenuUI();
     }
@@ -58,10 +72,11 @@ class MenuAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   int     $gid    Group ID
-     * @return  mixed   Group information array or False on error
+     * @return  array   Group information
      */
     function GetGroups($gid)
     {
+        $this->CheckSession('Menu', 'default');
         $groupInfo = $this->_Model->GetGroups($gid);
         if (Jaws_Error::IsError($groupInfo)) {
             return false; //we need to handle errors on ajax
@@ -75,10 +90,11 @@ class MenuAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   int     $mid    Menu ID
-     * @return  mixed   Menu data array or False on error
+     * @return  array   Menu data
      */
     function GetMenu($mid)
     {
+        $this->CheckSession('Menu', 'default');
         $menuInfo = $this->_Model->GetMenu($mid);
         if (Jaws_Error::IsError($menuInfo)) {
             return false; //we need to handle errors on ajax
@@ -91,10 +107,7 @@ class MenuAdminAjax extends Jaws_Ajax
      * Insert group
      *
      * @access  public
-     * @param   string  $title          menu title
-     * @param   string  $title_view
-     * @param   bool    $visible        is visible
-     * @return  array   Response array (notice or error)
+     * @return  boolean True on success and Jaws_Error on failure
      */
     function InsertGroup($title, $title_view, $visible)
     {
@@ -108,21 +121,12 @@ class MenuAdminAjax extends Jaws_Ajax
      * Insert menu
      *
      * @access  public
-     * @param   int     $pid
-     * @param   int     $gid            group ID
-     * @param   string  $type
-     * @param   string  $title
-     * @param   string  $url
-     * @param   string  $url_target
-     * @param   string  $rank
-     * @param   bool    $visible        is visible
-     * @param   string  $image
-     * @return  array   Response array (notice or error)
+     * @return  boolean True on success and Jaws_Error on failure
      */
-    function InsertMenu($pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $image)
+    function InsertMenu($pid, $gid, $type, $title, $url, $url_target, $rank, $visible)
     {
         $this->CheckSession('Menu', 'ManageMenus');
-        $this->_Model->InsertMenu($pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $image);
+        $this->_Model->InsertMenu($pid, $gid, $type, $title, $url, $url_target, $rank, $visible);
 
         return $GLOBALS['app']->Session->PopLastResponse();
     }
@@ -131,11 +135,7 @@ class MenuAdminAjax extends Jaws_Ajax
      * Update group
      *
      * @access  public
-     * @param   int     $gid            group ID
-     * @param   string  $title
-     * @param   string  $title_view
-     * @param   bool    $visible        is visible
-     * @return  array   Response array (notice or error)
+     * @return  boolean True on success and Jaws_Error on failure
      */
     function UpdateGroup($gid, $title, $title_view, $visible)
     {
@@ -149,22 +149,12 @@ class MenuAdminAjax extends Jaws_Ajax
      * Update menu
      *
      * @access  public
-     * @param   int     $mid            menu ID
-     * @param   int     $pid
-     * @param   int     $gid            group ID
-     * @param   string  $type
-     * @param   string  $title
-     * @param   string  $url
-     * @param   string  $url_target
-     * @param   string  $rank
-     * @param   bool    $visible        is visible
-     * @param   string  $image
-     * @return  array   Response array (notice or error)
+     * @return  boolean True on success and Jaws_Error on failure
      */
-    function UpdateMenu($mid, $pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $image)
+    function UpdateMenu($mid, $pid, $gid, $type, $title, $url, $url_target, $rank, $visible)
     {
         $this->CheckSession('Menu', 'ManageMenus');
-        $this->_Model->UpdateMenu($mid, $pid, $gid, $type, $title, $url, $url_target, $rank, $visible, $image);
+        $this->_Model->UpdateMenu($mid, $pid, $gid, $type, $title, $url, $url_target, $rank, $visible);
 
         return $GLOBALS['app']->Session->PopLastResponse();
     }
@@ -174,7 +164,7 @@ class MenuAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   int     $gid   group ID
-     * @return  array   Response array (notice or error)
+     * @return  array   Response (notice or error)
      */
     function DeleteGroup($gid)
     {
@@ -189,7 +179,7 @@ class MenuAdminAjax extends Jaws_Ajax
      *
      * @access  public
      * @param   int     $mid   menu ID
-     * @return  array   Response array (notice or error)
+     * @return  array   Response (notice or error)
      */
     function DeleteMenu($mid)
     {
@@ -206,12 +196,12 @@ class MenuAdminAjax extends Jaws_Ajax
      * Get menu data
      *
      * @access  public
-     * @param   int     $gid    group ID
      * @param   int     $mid    Menu ID
-     * @return  array   Menu data array
+     * @return  array   Menu data
      */
     function GetParentMenus($gid, $mid)
     {
+        $this->CheckSession('Menu', 'default');
         $result[] = array('pid'=> 0,
                           'title'=>'\\');
         $this->_Model->GetParentMenus(0, $gid, $mid, $result);
@@ -223,14 +213,7 @@ class MenuAdminAjax extends Jaws_Ajax
      * function for change gid, pid and rank of menus
      *
      * @access  public
-     * @param   int     $mid        menu ID
-     * @param   int     $new_gid    new group id
-     * @param   int     $old_gid    old group id
-     * @param   int     $new_pid
-     * @param   int     $old_pid
-     * @param   string  $new_rank
-     * @param   string  $old_rank
-     * @return  array   Response array (notice or error)
+     * @return  array   Response (notice or error)
      */
     function MoveMenu($mid, $new_gid, $old_gid, $new_pid, $old_pid, $new_rank, $old_rank)
     {
@@ -244,15 +227,15 @@ class MenuAdminAjax extends Jaws_Ajax
      * Get a list of URLs of a gadget
      *
      * @access  public
-     * @param   string  $request  Gadget's name
-     * @return  array   URLs array on success or empty array on failure
+     * @param   string  $gadget  Gadget's name
      */
     function GetPublicURList($request)
     {
+        $this->CheckSession('Menu', 'default');
         if ($request == 'url') {
             $urls[] = array('url'   => '',
                             'title' => _t('MENU_REFERENCES_FREE_LINK'));
-            $urls[] = array('url'   => 'javascript:void(0);',
+            $urls[] = array('url'   => 'javascript: void(0);',
                             'title' => _t('MENU_REFERENCES_NO_LINK'));
             return $urls;
         } elseif (Jaws_Gadget::IsGadgetUpdated($request)) {

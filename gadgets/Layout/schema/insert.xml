@@ -20,10 +20,6 @@
             <value>[REQUESTEDACTION]</value>
         </field>
         <field>
-            <name>action_params</name>
-            <value></value>
-        </field>
-        <field>
             <name>display_when</name>
             <value>*</value>
         </field>

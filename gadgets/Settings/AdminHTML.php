@@ -6,41 +6,43 @@
  * @package    Settings
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class SettingsAdminHTML extends Jaws_GadgetHTML
 {
     /**
-     * Displays gadget administration section
+     * Gadget constructor
      *
-     * @access  public
-     * @return  string  XHTML template content
+     * @access public
      */
-    function Admin()
+    function SettingsAdminHTML()
     {
-        if ($this->GetPermission('BasicSettings')) {
-            return $this->BasicSettings();
-        } elseif ($this->GetPermission('AdvancedSettings')) {
-            return $this->AdvancedSettings();
-        } elseif ($this->GetPermission('MetaSettings')) {
-            return $this->MetaSettings();
-        } elseif ($this->GetPermission('MailSettings')) {
-            return $this->MailSettings();
-        } elseif ($this->GetPermission('FTPSettings')) {
-            return $this->FTPSettings();
-        }
-
-        $this->CheckPermission('ProxySettings');
-        return $this->ProxySettings();
+        $this->Init('Settings');
     }
 
     /**
-     * Builds the settings sidebar
+     * Calls default action(MainMenu)
+     *
+     * @access public
+     * @return template content
+     */
+    function DefaultAction()
+    {
+        return $this->View();
+    }
+
+    function Admin()
+    {
+        return $this->BasicSettings();
+    }
+
+    /**
+     * Builds the settings Sidebar
      *
      * @access  private
-     * @param   string  $action Current action
-     * @return  string  XHTML sidebar
+     * @param   string  $action  Current action
+     * @return  string  XHTML of sidebar
      */
     function SideBar($action)
     {
@@ -52,59 +54,42 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         require_once JAWS_PATH . 'include/Jaws/Widgets/Sidebar.php';
         $sidebar = new Jaws_Widgets_Sidebar('settings');
 
-        if ($this->GetPermission('BasicSettings')) {
-            $sidebar->AddOption('Basic', _t('SETTINGS_BASIC_SETTINGS'),
-                                BASE_SCRIPT . '?gadget=Settings&amp;action=Admin');
-        }
-
-        if ($this->GetPermission('AdvancedSettings')) {
-            $sidebar->AddOption('Advanced', _t('SETTINGS_ADVANCED_SETTINGS'),
-                                BASE_SCRIPT . '?gadget=Settings&amp;action=AdvancedSettings');
-        }
-
-        if ($this->GetPermission('MetaSettings')) {
-            $sidebar->AddOption('Meta', _t('SETTINGS_META_SETTINGS'),
-                                BASE_SCRIPT . '?gadget=Settings&amp;action=MetaSettings');
-        }
-
-        if ($this->GetPermission('MailSettings')) {
-            $sidebar->AddOption('Mail', _t('SETTINGS_MAIL_SETTINGS'),
-                                BASE_SCRIPT . '?gadget=Settings&amp;action=MailSettings');
-        }
-
-        if ($this->GetPermission('FTPSettings')) {
-            $sidebar->AddOption('FTP', _t('SETTINGS_FTP_SETTINGS'),
-                                BASE_SCRIPT . '?gadget=Settings&amp;action=FTPSettings');
-        }
-
-        if ($this->GetPermission('ProxySettings')) {
-            $sidebar->AddOption('Proxy', _t('SETTINGS_PROXY_SETTINGS'),
-                                BASE_SCRIPT . '?gadget=Settings&amp;action=ProxySettings');
-        }
+        $sidebar->AddOption('Basic', _t('SETTINGS_BASIC_SETTINGS'),
+                            BASE_SCRIPT . '?gadget=Settings&amp;action=Admin');
+        $sidebar->AddOption('Advanced', _t('SETTINGS_ADVANCED_SETTINGS'),
+                            BASE_SCRIPT . '?gadget=Settings&amp;action=AdvancedSettings');
+        $sidebar->AddOption('Meta', _t('SETTINGS_META_SETTINGS'),
+                            BASE_SCRIPT . '?gadget=Settings&amp;action=MetaSettings');
+        $sidebar->AddOption('Mail', _t('SETTINGS_MAIL_SETTINGS'),
+                            BASE_SCRIPT . '?gadget=Settings&amp;action=MailSettings');
+        $sidebar->AddOption('FTP', _t('SETTINGS_FTP_SETTINGS'),
+                            BASE_SCRIPT . '?gadget=Settings&amp;action=FTPSettings');
+        $sidebar->AddOption('Proxy', _t('SETTINGS_PROXY_SETTINGS'),
+                            BASE_SCRIPT . '?gadget=Settings&amp;action=ProxySettings');
 
         $sidebar->Activate($action);
+
         return $sidebar->Get();
     }
 
     /**
-     * Displays general/basic settings form
+     * Display general/basic settings form
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function BasicSettings()
     {
-        $this->CheckPermission('BasicSettings');
+        $this->CheckPermission('ManageSettings');
         $this->AjaxMe('script.js');
 
-        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $tpl = new Jaws_Template('gadgets/Settings/templates/');
         $tpl->Load('Settings.html');
         $tpl->SetBlock('settings');
         $tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('sidebar', $this->SideBar('Basic'));
         $saveButton =& Piwi::CreateWidget('Button', 'save', _t('GLOBAL_SAVE'), STOCK_SAVE);
-        $saveButton->AddEvent(ON_CLICK, 'javascript: submitBasicForm();');
+        $saveButton->AddEvent(ON_CLICK, 'javascript: submitBasicForm(this.form);');
         $tpl->SetVariable('saveButton', $saveButton->Get());
 
         // site status
@@ -121,9 +106,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
 
         // Site name
         $tpl->SetBlock('settings/item');
-        $sitename =& Piwi::CreateWidget('Entry',
-                                        'site_name',
-                                        $xss->defilter($GLOBALS['app']->Registry->Get('/config/site_name')));
+        $sitename =& Piwi::CreateWidget('Entry', 'site_name', $GLOBALS['app']->Registry->Get('/config/site_name'));
         $sitename->setSize(40);
         $sitename->setID('site_name');
         $tpl->SetVariable('field-name', 'site_name');
@@ -133,9 +116,8 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
 
         // Site slogan
         $tpl->SetBlock('settings/item');
-        $sitedesc =& Piwi::CreateWidget('Entry',
-                                        'site_slogan',
-                                        $xss->defilter($GLOBALS['app']->Registry->Get('/config/site_slogan')));
+        $sitedesc =& Piwi::CreateWidget('Entry', 'site_slogan',
+                                        $GLOBALS['app']->Registry->Get('/config/site_slogan'));
         $sitedesc->setSize(40);
         $sitedesc->setID('site_slogan');
         $tpl->SetVariable('field-name', 'site_slogan');
@@ -143,7 +125,29 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('field', $sitedesc->Get());
         $tpl->ParseBlock('settings/item');
 
-        // site language
+		// Site URL
+        $tpl->SetBlock('settings/item');
+        $site_url_entry =& Piwi::CreateWidget('Entry', 'site_url', $GLOBALS['app']->Registry->Get('/config/site_url'));
+        $site_url_entry->setID('site_url');
+        $site_url_entry->setStyle('direction: ltr');
+        $site_url_entry->setSize(40);
+        $tpl->SetVariable('field-name', 'site_url');
+        $tpl->SetVariable('label', _t('SETTINGS_SITE_URL'));
+        $tpl->SetVariable('field', $site_url_entry->Get());
+        $tpl->ParseBlock('settings/item');
+
+        // Site SSL URL
+        $tpl->SetBlock('settings/item');
+        $site_ssl_url_entry =& Piwi::CreateWidget('Entry', 'site_ssl_url', $GLOBALS['app']->Registry->Get('/config/site_ssl_url'));
+        $site_ssl_url_entry->setID('site_ssl_url');
+        $site_ssl_url_entry->setStyle('direction: ltr');
+        $site_ssl_url_entry->setSize(40);
+        $tpl->SetVariable('field-name', 'site_ssl_url');
+        $tpl->SetVariable('label', _t('SETTINGS_SITE_SSL_URL'));
+        $tpl->SetVariable('field', $site_ssl_url_entry->Get());
+        $tpl->ParseBlock('settings/item');
+        
+		// site language
         $lang =& Piwi::CreateWidget('Combo', 'site_language');
         $lang->setID('site_language');
         $tpl->SetBlock('settings/item');
@@ -170,9 +174,10 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('field', $lang->Get());
         $tpl->ParseBlock('settings/item');
 
-        // Main gadget
+        /*
+		// Main gadget
         $jms = $GLOBALS['app']->LoadGadget('Jms', 'AdminModel');
-        $installedgadgets = $jms->GetGadgetsList(null, true, true, null, true);
+        $installedgadgets = $jms->GetGadgetsList(null, true, true, true);
         $gdt =& Piwi::CreateWidget('Combo', 'main_gadget');
         $gdt->setID('main_gadget');
 
@@ -186,12 +191,70 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('label', _t('SETTINGS_MAIN_GADGET'));
         $tpl->SetVariable('field', $gdt->Get());
         $tpl->ParseBlock('settings/item');
+		*/
+		
+        // Home Page via Menu gadget
+        //$jms = $GLOBALS['app']->LoadGadget('Jms', 'AdminModel');
+        //$installedgadgets = $jms->GetGadgetsList(null, true, true, true);
+        $gdt =& Piwi::CreateWidget('Combo', 'home_page');
+        $gdt->setID('home_page');
+
+        $tpl->SetBlock('settings/item');
+        //$gdt->AddOption(_t('GLOBAL_NOGADGET'),'');
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
+        $homepage = $GLOBALS['app']->Registry->Get('/config/home_page');
+        $site_url = $GLOBALS['app']->GetSiteURL('', false, 'http');
+        $site_ssl_url = $GLOBALS['app']->GetSiteURL('', false, 'https');
+        
+		$menuModel = $GLOBALS['app']->LoadGadget('Menu', 'Model');
+        $menus = $menuModel->GetMenus(null, 0, false);
+		$menu_urls = array();
+        if ($menus) {
+			foreach ($menus as $menu => $m) {
+				if ($m['visible'] == 0) {
+					$gdt->AddOption("<i>".$xss->parse($m['menu_type'])." : ".$xss->parse($m['title'])."</i>", $xss->parse($m['url']));
+				} else {
+					$gdt->AddOption($xss->parse($m['menu_type'])." : ".$xss->parse($m['title']), $xss->parse($m['url']));
+				}
+				$menu_urls[] = strtolower($m['url']);
+				if (substr(strtolower($m['url']), 0, 5) == 'index' || substr(strtolower($m['url']), 0, 5) == 'admin') {
+					$menu_urls[] = strtolower($site_url.'/'.$m['url']);
+					if (substr(strtolower($site_ssl_url), 0, 5) == 'https') {
+						$menu_urls[] = strtolower($site_ssl_url.'/'.$m['url']);
+					}
+				}
+			}
+		}
+		$home_page = $homepage;
+		if (!in_array(strtolower($home_page), $menu_urls)) {
+			$home_page = $site_url.'/'.$homepage;
+			if (!in_array(strtolower($home_page), $menu_urls)) {
+				if (substr(strtolower($site_ssl_url), 0, 5) == 'https') {
+					$home_page = $site_ssl_url.'/'.$homepage;
+				}
+				if (!in_array(strtolower($home_page), $menu_urls)) {
+					$home_page = $GLOBALS['app']->Map->Parse($homepage);
+					if (!in_array(strtolower($home_page), $menu_urls)) {
+						$home_page = $GLOBALS['app']->Map->Parse($site_url.'/'.$homepage);
+						if (!in_array(strtolower($home_page), $menu_urls)) {
+							if (substr(strtolower($site_ssl_url), 0, 5) == 'https') {
+								$home_page = $GLOBALS['app']->Map->Parse($site_ssl_url.'/'.$homepage);
+							}
+						}
+					}
+				}
+			}
+		}
+		$gdt->SetDefault($home_page);
+        $tpl->SetVariable('field-name', 'home_page');
+        $tpl->SetVariable('label', _t('SETTINGS_HOME_PAGE'));
+        $tpl->SetVariable('field', $gdt->Get());
+        $tpl->ParseBlock('settings/item');
 
         // Site comment
         $tpl->SetBlock('settings/item');
-        $sitecomment =& Piwi::CreateWidget('TextArea',
-                                           'site_comment',
-                                           $xss->defilter($GLOBALS['app']->Registry->Get('/config/site_comment')));
+        $sitecomment =& Piwi::CreateWidget('TextArea', 'site_comment',
+                                           $GLOBALS['app']->Registry->Get('/config/site_comment'));
         $sitecomment->SetRows(4);
         $sitecomment->SetStyle('width: 252px;');
         $sitecomment->setID('site_comment');
@@ -205,14 +268,14 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Displays advanced settings
+     * Display advanced settings
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function AdvancedSettings()
     {
-        $this->CheckPermission('AdvancedSettings');
+        $this->CheckPermission('ManageSettings');
         $this->AjaxMe('script.js');
 
         $tpl = new Jaws_Template('gadgets/Settings/templates/');
@@ -221,14 +284,13 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('sidebar', $this->SideBar('Advanced'));
         $saveButton =& Piwi::CreateWidget('Button', 'save', _t('GLOBAL_SAVE'), STOCK_SAVE);
-        $saveButton->AddEvent(ON_CLICK, 'javascript: submitAdvancedForm();');
+        $saveButton->AddEvent(ON_CLICK, 'javascript: submitAdvancedForm(this.form);');
         $tpl->SetVariable('saveButton', $saveButton->Get());
 
         $model = $GLOBALS['app']->LoadGadget('Settings', 'AdminModel');
         // Date Format
         $date_format =& Piwi::CreateWidget('Combo', 'date_format');
         $date_format->setID('date_format');
-        $date_format->SetStyle('width: 250px;');
         $dtfmts = $model->GetDateFormatList();
         foreach ($dtfmts as $k => $v) {
             $date_format->AddOption($v, $k);
@@ -267,7 +329,6 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         foreach ($languages as $k => $v) {
             $lang->AddOption($v, $k);
         }
-        $lang->SetStyle('width: 250px;');
         $lang->SetDefault($GLOBALS['app']->Registry->Get('/config/calendar_language'));
         $tpl->SetVariable('field-name', 'calendar_language');
         $tpl->SetVariable('label', _t('SETTINGS_CALENDAR_LANGUAGE'));
@@ -295,7 +356,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $gravatar->AddOption(_t('SETTINGS_GRAVATAR_PG'), 'PG');
         $gravatar->AddOption(_t('SETTINGS_GRAVATAR_R'), 'R');
         $gravatar->AddOption(_t('SETTINGS_GRAVATAR_X'), 'X');
-        $gravatar->SetStyle('width: 250px;');
+        $gravatar->SetStyle('width: 320px;');
         $gravatar->SetDefault($GLOBALS['app']->Registry->Get('/config/gravatar_rating'));
         $gravatar->SetEnabled($use_gravatar == 'yes');
         $tpl->SetBlock('settings/item');
@@ -350,7 +411,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         foreach ($editors as $k => $v) {
             $editorCombo->AddOption($v, $k);
         }
-        $editorCombo->SetStyle('width: 250px;');
+        $editorCombo->SetStyle('width: 320px;');
         $editorCombo->SetDefault($GLOBALS['app']->Registry->Get('/config/editor'));
         $tpl->SetBlock('settings/item');
         $tpl->SetVariable('field-name', 'editor');
@@ -365,7 +426,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         foreach($timezones as $k => $v) {
             $timezone->AddOption($v, $k);
         }
-        $timezone->SetStyle('direction: ltr; width: 250px;');
+        $timezone->SetStyle('direction: ltr; width: 320px;');
         $timezone->SetDefault($GLOBALS['app']->Registry->Get('/config/timezone'));
         $tpl->SetBlock('settings/item');
         $tpl->SetVariable('field-name', 'timezone');
@@ -379,41 +440,31 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Displays meta settings form
+     * Display meta settings form
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function MetaSettings()
     {
-        $this->CheckPermission('MetaSettings');
+        $this->CheckPermission('ManageSettings');
         $this->AjaxMe('script.js');
 
-        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         $tpl = new Jaws_Template('gadgets/Settings/templates/');
         $tpl->Load('Settings.html');
         $tpl->SetBlock('settings');
         $tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('sidebar', $this->SideBar('Meta'));
-        $tpl->SetVariable('custom_meta', _t('SETTINGS_META_CUSTOM'));
-
-        // Add Button
-        $addButton =& Piwi::CreateWidget('Button', 'add', _t('SETTINGS_META_ADD_CUSTOM'), STOCK_ADD);
-        $addButton->AddEvent(ON_CLICK, 'javascript:addCustomMeta();');
-        $tpl->SetVariable('addButton', $addButton->Get());
-
-        // Save Button
         $saveButton =& Piwi::CreateWidget('Button', 'save', _t('GLOBAL_SAVE'), STOCK_SAVE);
-        $saveButton->AddEvent(ON_CLICK, 'javascript:submitMetaForm();');
+        $saveButton->AddEvent(ON_CLICK, 'javascript: submitMetaForm(this.form);');
         $tpl->SetVariable('saveButton', $saveButton->Get());
 
         // Site description
         $tpl->SetBlock('settings/item');
-        $sitedesc =& Piwi::CreateWidget('TextArea',
-                                        'site_description',
-                                        $xss->defilter($GLOBALS['app']->Registry->Get('/config/site_description')));
+        $sitedesc =& Piwi::CreateWidget('TextArea', 'site_description',
+                                        $GLOBALS['app']->Registry->Get('/config/site_description'));
         $sitedesc->SetRows(5);
-        $sitedesc->setStyle('width: 24em;');
+        $sitedesc->SetStyle('width: 252px;');
         $sitedesc->setID('site_description');
         $tpl->SetVariable('field-name', 'site_description');
         $tpl->SetVariable('label', _t('SETTINGS_SITE_DESCRIPTION'));
@@ -424,8 +475,9 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetBlock('settings/item');
         $sitekeys =& Piwi::CreateWidget('Entry', 'site_keywords',
                                         $GLOBALS['app']->Registry->Get('/config/site_keywords'));
+        $sitekeys->setSize(40);
         $sitekeys->setID('site_keywords');
-        $sitekeys->setStyle('direction: ltr; width: 24em;');
+        $sitekeys->setStyle('direction: ltr');
         $tpl->SetVariable('field-name', 'site_keywords');
         $tpl->SetVariable('label', _t('SETTINGS_SITE_KEYWORDS'));
         $tpl->SetVariable('field', $sitekeys->Get());
@@ -435,7 +487,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetBlock('settings/item');
         $author =& Piwi::CreateWidget('Entry', 'site_author', $GLOBALS['app']->Registry->Get('/config/site_author'));
         $author->setID('site_author');
-        $author->setStyle('width: 24em;');
+        $author->setSize(40);
         $tpl->SetVariable('field-name', 'site_author');
         $tpl->SetVariable('label',_t('SETTINGS_SITE_AUTHOR'));
         $tpl->SetVariable('field',$author->Get());
@@ -445,7 +497,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetBlock('settings/item');
         $license =& Piwi::CreateWidget('Entry', 'site_license', $GLOBALS['app']->Registry->Get('/config/site_license'));
         $license->setID('site_license');
-        $license->setStyle('width: 24em;');
+        $license->setSize(40);
         $tpl->SetVariable('field-name', 'site_license');
         $tpl->SetVariable('label', _t('SETTINGS_SITE_LICENSE'));
         $tpl->SetVariable('field', $license->Get());
@@ -455,43 +507,25 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetBlock('settings/item');
         $copyright =& Piwi::CreateWidget('Entry', 'copyright', $GLOBALS['app']->Registry->Get('/config/copyright'));
         $copyright->setID('copyright');
-        $copyright->setStyle('width: 24em;');
+        $copyright->setSize(40);
         $tpl->SetVariable('field-name', 'copyright');
         $tpl->SetVariable('label', _t('SETTINGS_COPYRIGHT'));
         $tpl->SetVariable('field', $copyright->Get());
         $tpl->ParseBlock('settings/item');
-
-        // Custom META
-        $Metas = @unserialize($GLOBALS['app']->Registry->Get('/config/custom_meta'));
-        if (!empty($Metas)) {
-            foreach ($Metas as $meta) {
-                $tpl->SetBlock('settings/custom');
-                $tpl->SetVariable('label', _t('SETTINGS_META_CUSTOM'));
-                // name
-                $nMeta =& Piwi::CreateWidget('Entry', 'meta_name', $meta[0]);
-                $nMeta->setClass('meta-name');
-                $tpl->SetVariable('name', $nMeta->Get());
-                // value
-                $vMeta =& Piwi::CreateWidget('Entry', 'meta_value', $meta[1]);
-                $vMeta->setClass('meta-value');
-                $tpl->SetVariable('value', $vMeta->Get());
-                $tpl->ParseBlock('settings/custom');
-            }
-        }
-
         $tpl->ParseBlock('settings');
+
         return $tpl->Get();
     }
 
     /**
-     * Displays general/mailserver settings form
+     * Display general/mailserver settings form
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function MailSettings()
     {
-        $this->CheckPermission('MailSettings');
+        $this->CheckPermission('ManageSettings');
         $this->AjaxMe('script.js');
 
         $tpl = new Jaws_Template('gadgets/Settings/templates/');
@@ -500,7 +534,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('sidebar', $this->SideBar('Mail'));
         $saveButton =& Piwi::CreateWidget('Button', 'save', _t('GLOBAL_SAVE'), STOCK_SAVE);
-        $saveButton->AddEvent(ON_CLICK, 'javascript: submitMailSettingsForm();');
+        $saveButton->AddEvent(ON_CLICK, 'javascript: submitMailSettingsForm(this.form);');
         $tpl->SetVariable('saveButton', $saveButton->Get());
 
         // Mailer
@@ -521,23 +555,23 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
 
         // Site email
         $tpl->SetBlock('settings/item');
-        $siteEmail =& Piwi::CreateWidget('Entry', 'gate_email', $GLOBALS['app']->Registry->Get('/network/gate_email'));
-        $siteEmail->setID('gate_email');
+        $siteEmail =& Piwi::CreateWidget('Entry', 'site_email', $GLOBALS['app']->Registry->Get('/network/site_email'));
+        $siteEmail->setID('site_email');
         $siteEmail->setSize(24);
         $siteEmail->setStyle('direction: ltr');
-        $tpl->SetVariable('field-name', 'gate_email');
-        $tpl->SetVariable('label', _t('SETTINGS_MAIL_GATE_EMAIL'));
+        $tpl->SetVariable('field-name', 'site_email');
+        $tpl->SetVariable('label', _t('SETTINGS_MAIL_SITE_EMAIL'));
         $tpl->SetVariable('field', $siteEmail->Get());
         $tpl->SetVariable('style', 'padding-bottom: 0px;');
         $tpl->ParseBlock('settings/item');
 
         // Email title
         $tpl->SetBlock('settings/item');
-        $emailName =& Piwi::CreateWidget('Entry', 'gate_title', $GLOBALS['app']->Registry->Get('/network/gate_title'));
-        $emailName->setID('gate_title');
+        $emailName =& Piwi::CreateWidget('Entry', 'email_name', $GLOBALS['app']->Registry->Get('/network/email_name'));
+        $emailName->setID('email_name');
         $emailName->setSize(24);
-        $tpl->SetVariable('field-name', 'gate_title');
-        $tpl->SetVariable('label', _t('SETTINGS_MAIL_GATE_TITLE'));
+        $tpl->SetVariable('field-name', 'email_name');
+        $tpl->SetVariable('label', _t('SETTINGS_MAIL_EMAIL_NAME'));
         $tpl->SetVariable('field', $emailName->Get());
         $tpl->ParseBlock('settings/item');
 
@@ -631,11 +665,11 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
      * Display general/ftpserver settings form
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function FTPSettings()
     {
-        $this->CheckPermission('FTPSettings');
+        $this->CheckPermission('ManageSettings');
         $this->AjaxMe('script.js');
 
         $tpl = new Jaws_Template('gadgets/Settings/templates/');
@@ -644,7 +678,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('sidebar', $this->SideBar('FTP'));
         $saveButton =& Piwi::CreateWidget('Button', 'save', _t('GLOBAL_SAVE'), STOCK_SAVE);
-        $saveButton->AddEvent(ON_CLICK, 'javascript: submitFTPSettingsForm();');
+        $saveButton->AddEvent(ON_CLICK, 'javascript: submitFTPSettingsForm(this.form);');
         $tpl->SetVariable('saveButton', $saveButton->Get());
 
         // Use Enabled?
@@ -733,14 +767,14 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
     }
 
     /**
-     * Displays general/proxy settings form
+     * Display general/proxy settings form
      *
      * @access  public
-     * @return  string  XHTML template content
+     * @return  string  Template content
      */
     function ProxySettings()
     {
-        $this->CheckPermission('ProxySettings');
+        $this->CheckPermission('ManageSettings');
         $this->AjaxMe('script.js');
 
         $tpl = new Jaws_Template('gadgets/Settings/templates/');
@@ -749,7 +783,7 @@ class SettingsAdminHTML extends Jaws_GadgetHTML
         $tpl->SetVariable('base_script', BASE_SCRIPT);
         $tpl->SetVariable('sidebar', $this->SideBar('Proxy'));
         $saveButton =& Piwi::CreateWidget('Button', 'save', _t('GLOBAL_SAVE'), STOCK_SAVE);
-        $saveButton->AddEvent(ON_CLICK, 'javascript: submitProxySettingsForm();');
+        $saveButton->AddEvent(ON_CLICK, 'javascript: submitProxySettingsForm(this.form);');
         $tpl->SetVariable('saveButton', $saveButton->Get());
 
         // Use Enabled?

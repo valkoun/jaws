@@ -4,8 +4,12 @@
     border: 1px solid #d3d7cf;
 }
 
+#jaws-sidebar-settings ul {
+	background: url("../../ControlPanel/images/right_menu_bg.png") repeat-x scroll left top #FFFFFF;
+}
+
 #settings {
-    width: 560px;
+    width: 640px;
     float: right;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -30,6 +34,7 @@ div.fields label {
     display: block;
     text-align: right;
     float: left;
+    font-size: 100%;
     font-weight: bold;
     cursor: pointer;
     width: 15em;
@@ -37,18 +42,4 @@ div.fields label {
 
 div.fields select {
     max-width: 320px;
-}
-
-.meta-name {
-    width: 6em;
-}
-.meta-value {
-    width: 17em;
-    margin-left: 0.4em;
-}
-.add-button {
-    margin-top: 5px;
-}
-.add-button input, .add-button button {
-    margin-left: 15.6em;
 }

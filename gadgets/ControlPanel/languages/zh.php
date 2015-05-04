@@ -20,7 +20,6 @@ define('_ZH_CONTROLPANEL_GENERAL_VIEWSITE', "查看站点");
 define('_ZH_CONTROLPANEL_GADGETS', "组件");
 define('_ZH_CONTROLPANEL_LOGIN_BAD_AUTH', "你输入了错误的用户名和/或密码.");
 define('_ZH_CONTROLPANEL_LOGIN_LOST_PASSWORD', "忘记密码?");
-define('_ZH_CONTROLPANEL_AUTH_METHOD', "验证方法");
 define('_ZH_CONTROLPANEL_LOGIN_BACK_TO_SITE', "返回站点");
 define('_ZH_CONTROLPANEL_LOGIN_TITLE', "登录");
 define('_ZH_CONTROLPANEL_LOGGED_IN_AS', "登录为");

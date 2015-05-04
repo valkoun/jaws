@@ -1,0 +1,69 @@
+<!-- BEGIN private -->
+<div style="float: left; min-width: 270px;">
+	<h3 class="accountNews-title">{title}</h3>
+</div>
+<div style="float: right; min-width: 270px;">
+	<div style="text-align: center; float: right;" class="gadget menu news-sort-menu" id="news-sort-menu-updates-{gadget}">
+		<div class="content">
+			<ul style="text-align: left;">
+				<li id="news-sort-update-{gadget}-1" class="menu_li_item menu_first">
+					<a href="javascript:void(0);" target="_self" class="menu_a update-title update-title-selected">
+					Most Recent <!--[if gt IE 6]><!-->
+					</a><!--<![endif]-->
+					<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+				<li id="news-sort-update-sep-{gadget}-1" class="menu_li_item">
+				&nbsp;&nbsp;&#149;&nbsp;&nbsp;
+				</li>
+				<li id="news-sort-update-{gadget}-2" class="menu_li_item menu_super">
+					<a href="javascript:void(0);" target="_self" class="menu_a update-title">
+					Embedding <!--[if gt IE 6]><!-->
+					</a><!--<![endif]--> 
+					<!--[if lte IE 6]><table><tr><td><![endif]-->
+					<ul class="ul_sub_menu">
+						<li id="news-sort-update-{gadget}-3" class="menu_li_item menu_first">
+							<a href="javascript:void(0);" target="_self" class="sub_menu_a" onclick="showEmbedWindow('{site_url}/index.php?gadget={gadget}&amp;action=account_ShowEmbedWindow&amp;linkid=all&amp;uid={OwnerID}&amp;mode=month', 'Embed Events Calendar');">Events {gadget}<!--[if gt IE 6]><!--></a><!--<![endif]-->
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<li id="news-sort-update-{gadget}-4" class="menu_li_item">
+							<a href="javascript:void(0);" target="_self" class="sub_menu_a" onclick="showEmbedWindow('{site_url}/index.php?gadget={gadget}&amp;action=account_ShowEmbedWindow&amp;linkid=all&amp;uid={OwnerID}&amp;mode=all_availability', 'Embed Availability Calendar');">All Availability<!--[if gt IE 6]><!--></a><!--<![endif]-->
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<li id="news-sort-update-{gadget}-5" class="menu_li_item">
+							<a href="javascript:void(0);" target="_self" class="sub_menu_a" onclick="showEmbedWindow('{site_url}/index.php?gadget={gadget}&amp;action=account_ShowEmbedWindow&amp;linkid=all&amp;uid={OwnerID}&amp;mode=reservation', 'Embed Reservation Form');">Reservation Form<!--[if gt IE 6]><!--></a><!--<![endif]-->
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+						<li id="news-sort-update-{gadget}-6" class="menu_li_item menu_last">
+							<a href="javascript:void(0);" target="_self" class="sub_menu_a" onclick="showEmbedWindow('{site_url}/index.php?gadget={gadget}&amp;action=account_ShowEmbedWindow&amp;linkid=all&amp;uid={OwnerID}&amp;mode=list', 'Embed Calendar Index');">List of All Calendars<!--[if gt IE 6]><!--></a><!--<![endif]-->
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+					</ul><!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+				<li id="news-sort-update-sep-{gadget}-2" class="menu_li_item">
+				&nbsp;&nbsp;&#149;&nbsp;&nbsp;
+				</li>
+				<li id="news-sort-update-{gadget}-7" class="menu_li_item menu_super menu_last">
+					<a href="javascript:void(0);" target="_self" class="menu_a update-title">
+					Show <!--[if gt IE 6]><!-->
+					</a><!--<![endif]--> 
+					<!--[if lte IE 6]><table><tr><td><![endif]-->
+					<ul class="ul_sub_menu">
+						<li id="news-sort-update-{gadget}-8" class="menu_li_item menu_first menu_last">
+							<a href="javascript:void(0);" target="_self" class="sub_menu_a">More Options<!--[if gt IE 6]><!--></a><!--<![endif]-->
+							<!--[if lte IE 6]><table><tr><td><![endif]--><!--[if lte IE 6]></td></tr></table></a><![endif]-->  
+						</li>
+					</ul><!--[if lte IE 6]></td></tr></table></a><![endif]-->
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- END private -->
+<!-- BEGIN public -->
+<div style="float: left; min-width: 270px;">
+	<h3 class="accountNews-title">{title}</h3>
+</div>
+<div style="float: right; min-width: 270px;">
+	&nbsp;
+</div>
+<!-- END public -->

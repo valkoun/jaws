@@ -1,0 +1,890 @@
+<!-- BEGIN googlecart -->
+<script type="text/javascript">
+	var post_cart_error = "{post_cart_error}";
+	var total_weight = 0;
+	var total_price = 0;
+	var total_qty = 1;
+	var paymentmethod = "{paymentmethod}";
+	var shipfreight = "{shipfreight}";
+	var customer_middlename = "";
+	var customer_suffix = "";
+	var customer_shipfirstname = "{customer_shipfirstname}";
+	var customer_shiplastname = "{customer_shiplastname}";
+	var customer_shipaddress = "{customer_shipaddress}";
+	var customer_shipcity = "{customer_shipcity}";
+	var customer_shipregion = "{customer_shipregion}";
+	var customer_shippostal = "{customer_shippostal}";
+	var customer_shipcountry = "{customer_shipcountry}";
+	var customer_shipaddress2 = "{customer_shipaddress2}";
+	var customer_firstname = "{customer_firstname}";
+	var customer_lastname = "{customer_lastname}";
+	var customer_address = "{customer_address}";
+	var customer_address2 = "{customer_address2}";
+	var customer_city = "{customer_city}";
+	var customer_region = "{customer_region}";
+	var customer_postal = "{customer_postal}";
+	var customer_country = "{customer_shipcountry}";
+	var customer_phone = "{customer_phone}";
+
+	var cc_creditcardtype = "{cc_creditcardtype}";
+	var cc_acct = "{cc_acct}";
+	var cc_expdate_month = "{cc_expdate_month}";
+	var cc_expdate_year = "{cc_expdate_year}";
+	var cc_cvv2 = "{cc_cvv2}";
+	var sales_code = "{sales_code}";
+	
+	<!-- BEGIN list -->
+	function showList() {
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{site_url}/images/loading.gif");
+			$("googlecart-checkout-button").style.height = "16px";
+			$("googlecart-checkout-button").style.width = "16px";
+		}
+		if ($("shipping_form")) {
+			$("shipping_form").parentNode.removeChild($("shipping_form"));	
+		}
+		if ($("credit_card_form")) {
+			$("credit_card_form").parentNode.removeChild($("credit_card_form"));	
+		}
+		if ($("paymentmethod_select")) {
+			$("paymentmethod_select").parentNode.removeChild($("paymentmethod_select"));
+			paymentmethod = "";
+		}
+		$$(".itemRow").each(function(element){
+			element.style.display = "";
+		});
+		if ($("googlecart-checkout-button")) {
+			/*$("googlecart-checkout-button").style.display = "none";*/
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+		}
+		return false;
+	}
+	<!-- END list -->
+
+	<!-- BEGIN shipping -->
+	function showShipping(credit_card) {
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{site_url}/images/loading.gif");
+			$("googlecart-checkout-button").style.height = "16px";
+			$("googlecart-checkout-button").style.width = "16px";
+		}
+		if (credit_card !== true) {
+			credit_card = false;
+		}
+		total_weight = 0;
+		total_price = 0;
+		var items = new Object();
+		simpleCart.each(function( item , x ){
+			if (item.get("weight") && parseFloat(item.get("weight")) > 0) {
+				total_weight = parseFloat(parseFloat(item.get("weight"))+total_weight);
+				total_price = parseFloat(item.get("price")+total_price);
+				/*break;*/
+			}
+			items[x] = item;
+		});
+		total_qty = simplecart.quantity();
+		if (total_weight > 0) {
+			$$(".simpleCart_items").each(function(element) {
+				var shipping_form = "";
+				shipping_form = shipping_form + "<p><span class=\"googlecart-form-header\">Shipping Information</span>";
+				shipping_form = shipping_form + "<span class=\"googlecart-form-header-actions\" onclick=\"showList();\"><<&nbsp;Go Back</span></p>";
+				shipping_form = shipping_form + "<p id=\"shipping_details\"><span class=\"googlecart-form-details\">We can currently only ship to U.S. addresses.</span></p>";
+				shipping_form = shipping_form + "<p>&nbsp;</p><p><span class=\"googlecart-form-label\">First Name:&nbsp;</span>";
+				shipping_form = shipping_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_shipfirstname\" name=\"customer_shipfirstname\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Last Name:&nbsp;</span>";
+				shipping_form = shipping_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_shiplastname\" name=\"customer_shiplastname\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Address:&nbsp;</span>";
+				shipping_form = shipping_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_shipaddress\" name=\"customer_shipaddress\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Address 2:&nbsp;</span>";
+				shipping_form = shipping_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_shipaddress2\" name=\"customer_shipaddress2\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">City:&nbsp;</span>";
+				shipping_form = shipping_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_shipcity\" name=\"customer_shipcity\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">State:&nbsp;</span>";
+				shipping_form = shipping_form + "<select id=\"customer_shipregion\" name=\"customer_shipregion\">";
+				shipping_form = shipping_form + "<option value=\"\">Select your State...</option><option value=\"AL\">Alabama</option>";
+				shipping_form = shipping_form + "<option value=\"AK\">Alaska</option><option value=\"AZ\">Arizona</option>";
+				shipping_form = shipping_form + "<option value=\"AR\">Arkansas</option>";
+				shipping_form = shipping_form + "<option value=\"CA\">California</option><option value=\"CO\">Colorado</option>";
+				shipping_form = shipping_form + "<option value=\"CT\">Connecticut</option><option value=\"DE\">Delaware</option>";
+				shipping_form = shipping_form + "<option value=\"FL\">Florida</option><option value=\"GA\">Georgia</option>";
+				shipping_form = shipping_form + "<option value=\"HI\">Hawaii</option><option value=\"ID\">Idaho</option>";
+				shipping_form = shipping_form + "<option value=\"IL\">Illinois</option><option value=\"IN\">Indiana</option>";
+				shipping_form = shipping_form + "<option value=\"IA\">Iowa</option><option value=\"KS\">Kansas</option>";
+				shipping_form = shipping_form + "<option value=\"KY\">Kentucky</option><option value=\"LA\">Louisiana</option>";
+				shipping_form = shipping_form + "<option value=\"ME\">Maine</option><option value=\"MD\">Maryland</option>";
+				shipping_form = shipping_form + "<option value=\"MA\">Massachusetts</option><option value=\"MI\">Michigan</option>";
+				shipping_form = shipping_form + "<option value=\"MN\">Minnesota</option><option value=\"MS\">Mississippi</option>";
+				shipping_form = shipping_form + "<option value=\"MO\">Missouri</option><option value=\"MT\">Montana</option>";
+				shipping_form = shipping_form + "<option value=\"NE\">Nebraska</option><option value=\"NV\">Nevada</option>";
+				shipping_form = shipping_form + "<option value=\"NH\">New Hampshire</option><option value=\"NJ\">New Jersey</option>";
+				shipping_form = shipping_form + "<option value=\"NM\">New Mexico</option><option value=\"NY\">New York</option>";
+				shipping_form = shipping_form + "<option value=\"NC\">North Carolina</option><option value=\"ND\">North Dakota</option>";
+				shipping_form = shipping_form + "<option value=\"OH\">Ohio</option><option value=\"OK\">Oklahoma</option>";
+				shipping_form = shipping_form + "<option value=\"OR\">Oregon</option><option value=\"PA\">Pennsylvania</option>";
+				shipping_form = shipping_form + "<option value=\"RI\">Rhode Island</option><option value=\"SC\">South Carolina</option>";
+				shipping_form = shipping_form + "<option value=\"SD\">South Dakota</option><option value=\"TN\">Tennessee</option>";
+				shipping_form = shipping_form + "<option value=\"TX\">Texas</option><option value=\"UT\">Utah</option>";
+				shipping_form = shipping_form + "<option value=\"VT\">Vermont</option><option value=\"VA\">Virginia</option>";
+				shipping_form = shipping_form + "<option value=\"WA\">Washington</option><option value=\"DC\">Washington D.C.</option>";
+				shipping_form = shipping_form + "<option value=\"WV\">West Virginia</option><option value=\"WI\">Wisconsin</option>";
+				shipping_form = shipping_form + "<option value=\"WY\">Wyoming</option></select></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Zip:&nbsp;</span>";
+				shipping_form = shipping_form + "<input type=\"text\" id=\"customer_shippostal\" name=\"customer_shippostal\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Phone:&nbsp;</span>";
+				shipping_form = shipping_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_phone1\" name=\"customer_phone\" value=\"\" /></p>";
+				shipping_form = shipping_form + "<p><input type=\"hidden\" id=\"customer_shipcountry\" name=\"customer_shipcountry\" value=\"US\" /></p>";
+
+				<!-- BEGIN show -->
+				shipping_form = shipping_form + "<p>&nbsp;</p><p id=\"shipfreight_holder\" style=\"font-size:0.75em;\">Estimated Shipping:";
+				shipping_form = shipping_form + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id=\"shipfreight_click\" name=\"shipfreight_click\" ";
+				shipping_form = shipping_form + "style=\"font-size: 1em;\" onclick=\"getShippingSelect(total_weight, total_price, total_qty, ";
+				shipping_form = shipping_form + "$('customer_shippostal').value, $('customer_shipregion').value, ";
+				shipping_form = shipping_form + "$('customer_shipcountry').value);\"> <option value=\"\">Select Method...</option></select></p>";
+				<!-- END show -->
+				
+				<!-- BEGIN hide -->
+				shipping_form = shipping_form + "<p>&nbsp;</p><p id=\"shipfreight_holder\" style=\"font-size:0.75em;\">";
+				shipping_form = shipping_form + "<input type=\"hidden\" id=\"shipfreight\" name=\"shipfreight\" value=\"0\" /></p>";
+				shipping_form = shipping_form + "<p style=\"float: right;\"><a href=\"javascript:simpleCart.checkout();\">Checkout</a></p>";
+				<!-- END hide -->
+
+				element.innerHTML += "<div id=\"shipping_form\">" + shipping_form + "</div>";
+			});
+			if ($("googlecart-checkout-button")) {
+				$("googlecart-checkout-button").style.display = "";
+			}
+			if ($("credit_card_form")) {
+				$("credit_card_form").style.display = "none";
+			}
+			$$(".itemRow").each(function(element){
+				element.style.display = "none";
+			});
+			$$(".simpleCart_items").each(function(element){
+				element.setStyle({display: "block"});
+			});
+		} else {
+			postCart(items, total_weight, paymentmethod, "{urlencoded_full_url}");
+		}
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+		}
+		return false;
+	}
+	<!-- END shipping -->
+
+	<!-- BEGIN credit_card -->
+	function showCreditCard() {
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{site_url}/images/loading.gif");
+			$("googlecart-checkout-button").style.height = "16px";
+			$("googlecart-checkout-button").style.width = "16px";
+		}
+		var credit_card_form = "";
+		var paymentselector = "";
+		var paymenthide = "";
+		var customfields = "";
+		var coupon_code = "";
+		if (!$("paymentmethod_select")) {
+			$$(".simpleCart_items").each(function(element) {
+				credit_card_form = credit_card_form + "<p>";
+				credit_card_form = credit_card_form + "<span class=\"googlecart-form-header\">Billing Information</span>";
+				credit_card_form = credit_card_form + "<span class=\"googlecart-form-header-actions\" onclick=\"showList();\"><<&nbsp;Go Back</span>";
+				credit_card_form = credit_card_form + "</p>";
+			<!-- BEGIN card_info -->
+				credit_card_form = credit_card_form + "<p id=\"credit_card_details\">";
+				credit_card_form = credit_card_form + "<span class=\"googlecart-form-details\">We can currently only accept Visa, MasterCard, Discover or American Express.</span>";
+				credit_card_form = credit_card_form + "</p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">First Name:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_firstname\" name=\"customer_firstname\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Middle Name:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_middlename\" name=\"customer_middlename\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Last Name:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_lastname\" name=\"customer_lastname\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Suffix:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_suffix\" name=\"customer_suffix\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Phone:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_phone2\" name=\"customer_phone\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Address:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_address\" name=\"customer_address\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Address 2:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_address2\" name=\"customer_address2\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">City:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_city\" name=\"customer_city\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">State:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<select id=\"customer_region\" name=\"customer_region\">";
+				credit_card_form = credit_card_form + "<option value=\"\">Select your State...</option><option value=\"AL\">Alabama</option>";
+				credit_card_form = credit_card_form + "<option value=\"AK\">Alaska</option><option value=\"AZ\">Arizona</option>";
+				credit_card_form = credit_card_form + "<option value=\"AR\">Arkansas</option>";
+				credit_card_form = credit_card_form + "<option value=\"CA\">California</option><option value=\"CO\">Colorado</option>";
+				credit_card_form = credit_card_form + "<option value=\"CT\">Connecticut</option><option value=\"DE\">Delaware</option>";
+				credit_card_form = credit_card_form + "<option value=\"FL\">Florida</option><option value=\"GA\">Georgia</option>";
+				credit_card_form = credit_card_form + "<option value=\"HI\">Hawaii</option><option value=\"ID\">Idaho</option>";
+				credit_card_form = credit_card_form + "<option value=\"IL\">Illinois</option><option value=\"IN\">Indiana</option>";
+				credit_card_form = credit_card_form + "<option value=\"IA\">Iowa</option><option value=\"KS\">Kansas</option>";
+				credit_card_form = credit_card_form + "<option value=\"KY\">Kentucky</option><option value=\"LA\">Louisiana</option>";
+				credit_card_form = credit_card_form + "<option value=\"ME\">Maine</option><option value=\"MD\">Maryland</option>";
+				credit_card_form = credit_card_form + "<option value=\"MA\">Massachusetts</option><option value=\"MI\">Michigan</option>";
+				credit_card_form = credit_card_form + "<option value=\"MN\">Minnesota</option><option value=\"MS\">Mississippi</option>";
+				credit_card_form = credit_card_form + "<option value=\"MO\">Missouri</option><option value=\"MT\">Montana</option>";
+				credit_card_form = credit_card_form + "<option value=\"NE\">Nebraska</option><option value=\"NV\">Nevada</option>";
+				credit_card_form = credit_card_form + "<option value=\"NH\">New Hampshire</option><option value=\"NJ\">New Jersey</option>";
+				credit_card_form = credit_card_form + "<option value=\"NM\">New Mexico</option><option value=\"NY\">New York</option>";
+				credit_card_form = credit_card_form + "<option value=\"NC\">North Carolina</option><option value=\"ND\">North Dakota</option>";
+				credit_card_form = credit_card_form + "<option value=\"OH\">Ohio</option><option value=\"OK\">Oklahoma</option>";
+				credit_card_form = credit_card_form + "<option value=\"OR\">Oregon</option><option value=\"PA\">Pennsylvania</option>";
+				credit_card_form = credit_card_form + "<option value=\"RI\">Rhode Island</option><option value=\"SC\">South Carolina</option>";
+				credit_card_form = credit_card_form + "<option value=\"SD\">South Dakota</option><option value=\"TN\">Tennessee</option>";
+				credit_card_form = credit_card_form + "<option value=\"TX\">Texas</option><option value=\"UT\">Utah</option>";
+				credit_card_form = credit_card_form + "<option value=\"VT\">Vermont</option><option value=\"VA\">Virginia</option>";
+				credit_card_form = credit_card_form + "<option value=\"WA\">Washington</option><option value=\"DC\">Washington D.C.</option>";
+				credit_card_form = credit_card_form + "<option value=\"WV\">West Virginia</option><option value=\"WI\">Wisconsin</option>";
+				credit_card_form = credit_card_form + "<option value=\"WY\">Wyoming</option></select></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Zip:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customer_postal\" name=\"customer_postal\" value=\"\" /></p>";
+				credit_card_form = credit_card_form + "<p><input type=\"hidden\" id=\"customer_country\" name=\"customer_country\" value=\"US\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Card Type:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<select id=\"cc_creditcardtype\" name=\"cc_creditcardtype\">"; 
+				credit_card_form = credit_card_form + "<option value=\"\">Select...</option> <option value=\"Visa\">Visa</option> ";
+				credit_card_form = credit_card_form + "<option value=\"MasterCard\">MasterCard</option> <option value=\"Discover\">Discover</option> ";
+				credit_card_form = credit_card_form + "<option value=\"Amex\">American Express</option> </select></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Card Number:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"cc_acct\" name=\"cc_acct\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Expiration Month:&nbsp;</span>";
+				credit_card_form = credit_card_form + "<select id=\"cc_expdate_month\" name=\"cc_expdate_month\">"; 
+				credit_card_form = credit_card_form + "<option value=\"01\">01</option><option value=\"02\">02</option><option value=\"03\">03</option>";
+				credit_card_form = credit_card_form + "<option value=\"04\">04</option><option value=\"05\">05</option><option value=\"06\">06</option>";
+				credit_card_form = credit_card_form + "<option value=\"07\">07</option><option value=\"08\">08</option><option value=\"09\">09</option>";
+				credit_card_form = credit_card_form + "<option value=\"10\">10</option><option value=\"11\">11</option><option value=\"12\">12</option>";
+				credit_card_form = credit_card_form + "</select>&nbsp;&nbsp;Year:&nbsp;<select id=\"cc_expdate_year\" name=\"cc_expdate_year\">";
+			
+				<!-- BEGIN year_select -->
+				credit_card_form = credit_card_form + "<option value=\"{year}\"{year_select}>{year}</option>";
+				<!-- END year_select -->
+
+				credit_card_form = credit_card_form + "</select></p>";
+				credit_card_form = credit_card_form + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">CVV (Security Digits):&nbsp;</span>";
+				credit_card_form = credit_card_form + "<input class=\"googlecart-form-input\" type=\"text\" id=\"cc_cvv2\" name=\"cc_cvv2\" /></p>";
+				credit_card_form = credit_card_form + "<p style=\"float: right;\"><a href=\"javascript:simpleCart.checkout();\">Checkout</a></p>";
+				credit_card_form = "<div style=\"display: none;\" id=\"credit_card_info\">" + credit_card_form + "</div>";
+				
+				paymentselector = "<p>";
+				paymentselector += "<span class=\"googlecart-form-header\">Billing Information</span>";
+				paymentselector += "<span class=\"googlecart-form-header-actions\" onclick=\"showList();\"><<&nbsp;Go Back</span>";
+				paymentselector += "</p>";
+				paymentselector += "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">Payment Method:&nbsp;</span>";
+				paymentselector += "<select id=\"googlecart-paymentmethod\" name=\"googlecart-paymentmethod\" onChange=\"";
+				paymentselector += "if (this.value == 'CreditCard'){$('paymentmethod_select').style.display = 'none';$('credit_card_info').style.display = '';}else{";
+				paymentselector += "$('cc_creditcardtype').value = ''; $('cc_acct').value = ''; $('cc_expdate_month').value = '01'; ";
+				paymentselector += "$('cc_expdate_year').value = '{date_year}'; $('cc_cvv2').value = ''; $('credit_card_info').style.display = 'none';}\"> ";
+				paymentselector += "<option value=''>Select...</option> ";
+				<!-- BEGIN paymentselector -->
+				paymentselector += "<option value=\"{option_value}\">{option_name}</option>";
+				<!-- END paymentselector -->
+				paymentselector += "<option value=\"CreditCard\">Credit Card</option> </select></p>";
+				paymentselector = "<div id=\"paymentmethod_select\">" + paymentselector + "</div>";
+				
+			<!-- END card_info -->
+			
+			<!-- BEGIN paymenthide -->
+				paymenthide = paymenthide + "<input type=\"hidden\" id=\"googlecart-paymentmethod\" name=\"googlecart-paymentmethod\" value=\"{paymentmethod}\" /></p>";
+				paymenthide = "<div id=\"paymentmethod_select\">" + paymenthide + "</div>";
+			<!-- END paymenthide -->
+			
+			<!-- BEGIN customfields -->
+				<!-- BEGIN customfield -->
+				customfields = customfields + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><span class=\"googlecart-form-label\">{custom_name}:&nbsp;</span>";
+				customfields = customfields + "<input class=\"googlecart-form-input\" type=\"text\" id=\"customcheckoutfields_{custom_safe_name}\" name=\"customcheckoutfields[]\" value=\"{custom_value}\" /></p>";
+				<!-- END customfield -->
+				customfields = "<div id=\"customfields\">" + customfields + "</div>";
+			<!-- END customfields -->
+				
+			<!-- BEGIN coupon_code -->
+				coupon_code = coupon_code + "<p style=\"font-size:0.05em;\">&nbsp;</p><p><nobr><span class=\"googlecart-form-label\">Promo code:&nbsp;</span>";
+				coupon_code = coupon_code + "<input style=\"max-width: 110px;\" onChange=\"applySalesCode(this.value);\" class=\"googlecart-form-input\" type=\"text\" id=\"coupon_code\" name=\"coupon_code\" value=\"\" />&nbsp;";
+				coupon_code = coupon_code + "<span id=\"sales_code_status\">&nbsp;</span></nobr></p>";
+				coupon_code = "<div id=\"coupon_code_form\">" + coupon_code + "</div>";
+			<!-- END coupon_code -->
+			
+				element.innerHTML += "<div id=\"credit_card_form\">" + paymentselector + paymenthide + credit_card_form + customfields + coupon_code + "</div>";
+			});
+		}
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").style.display = "";
+		}
+		if ($("shipping_form")) {
+			$("shipping_form").style.display = "none";
+		}
+		$$(".itemRow").each(function(element){
+			element.style.display = "none";
+		});
+		$$(".simpleCart_items").each(function(element){
+			element.setStyle({display: "block"});
+		});
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+		}
+		return false;
+	}
+	<!-- END credit_card -->
+
+	function googlecartWidgetLoaded() {
+		if ($("ecommerce-cart-dock-holder")) {
+			if (simpleCart.quantity() == 0) {
+				$("ecommerce-cart-dock-holder").setStyle({display: "none"});
+			} else {		
+				$("ecommerce-cart-dock-holder").setStyle({display: "block"});
+				$$(".simpleCart_items").each(function(element){
+					element.setStyle({display: "block"});
+				});
+			}	
+		}	
+		$$(".simpleCart_items")[0].setStyle({
+			position: "fixed", 
+			right: "20px", 
+			maxHeight: (document.viewport.getHeight()-(27))+"px"
+		});
+		$$(".googlecart-widget-disclaimer").each(function(element) {
+			element.innerHTML = "{tax_shipping_text}";
+		});
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+		}
+
+		<!-- BEGIN fake_gateway -->
+		$$(".googlecart-widget-checkout").each(function(element) { 
+			if (!$("googlecart-shipping-button")) { 
+				element.innerHTML = element.innerHTML + "<img onclick=\"googlecart.checkout()\" id=\"googlecart-shipping-button\" src=\"{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif\" style=\"cursor: pointer; cursor: hand; width: 124px; height: 23px;\">";
+			}
+		});
+		<!-- END fake_gateway -->
+	
+		return true;
+	}
+	
+	function googlecartWidgetUpdated() {
+		if ($("ecommerce-cart-dock-holder")) {
+			if (simpleCart.quantity() == 0) {
+				$("ecommerce-cart-dock-holder").setStyle({display: "none"});
+			} else {		
+				$("ecommerce-cart-dock-holder").setStyle({display: "block"});
+				$$(".simpleCart_items").each(function(element){
+					element.setStyle({display: "block"});
+				});
+			}	
+		}	
+		return true;
+	}
+	
+	function googlecartCustomCheckout(data) {
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{site_url}/images/loading.gif");
+			$("googlecart-checkout-button").style.height = "16px";
+			$("googlecart-checkout-button").style.width = "16px";
+		}
+		if ($("googlecart-paymentmethod")) {
+			paymentmethod = $("googlecart-paymentmethod").value;
+		}
+		total_weight = 0;
+		var alerts = new Array();
+		var items = new Object();
+		simpleCart.each(function( item , x ){
+			if (item.get("weight") && parseFloat(item.get("weight")) > 0) {
+				total_weight = parseFloat(parseFloat(item.get("weight"))+total_weight);
+				total_price = parseFloat(item.get("price")+total_price);
+				/*break;*/
+			}
+			items[x] = item;
+		});
+		var return_cc_error = false;
+		var return_shipping_error = false;
+		if ($("googlecart-paymentmethod") && $("googlecart-paymentmethod").value == "CreditCard") {
+			if ($("customer_firstname").value != "") {
+				$("customer_firstname").style.border = "";
+			} else {
+				alerts.push("Please enter your First Name");
+				$("customer_firstname").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("customer_lastname").value != "") {
+				$("customer_lastname").style.border = "";
+			} else {
+				alerts.push("Please enter your Last Name");
+				$("customer_lastname").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("customer_address").value != "") {
+				$("customer_address").style.border = "";
+			} else {
+				alerts.push("Please enter your Billing Address");
+				$("customer_address").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("customer_city").value != "") {
+				$("customer_city").style.border = "";
+			} else {
+				alerts.push("Please enter your Billing City");
+				$("customer_city").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("customer_region").value != "") {
+				$("customer_region").style.border = "";
+			} else {
+				alerts.push("Please select your Billing State");
+				$("customer_region").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("customer_postal").value != "") {
+				$("customer_postal").style.border = "";
+			} else {
+				alerts.push("Please enter your Billing Zip");
+				$("customer_postal").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("customer_country").value != "") {
+				$("customer_country").style.border = "";
+			} else {
+				alerts.push("Please enter your Billing Country");
+				$("customer_country").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("cc_acct").value != "") {
+				$("cc_acct").style.border = "";
+			} else {
+				alerts.push("Please enter a credit card number.");
+				$("cc_acct").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+			if ($("cc_creditcardtype").value != "") {
+				$("cc_creditcardtype").style.border = "";
+			} else {
+				alerts.push("Please select a credit card type.");
+				$("cc_creditcardtype").style.border = "#FF0000 2pt solid";
+				return_cc_error = true;
+			}
+		}
+		if (
+			total_weight > 0 && $("customer_shipfirstname") && $("customer_shiplastname") && 
+			$("customer_shipaddress") && $("customer_shipcity") && $("customer_shipregion") && 
+			$("customer_shippostal") && $("customer_shipcountry") && 
+			($("shipfreight") || $("shipfreight_click"))
+		) {
+			if ($("customer_shipaddress").value != "") {
+				$("customer_shipaddress").style.border = "";
+			} else {
+				alerts.push("Please enter your Shipping Address");
+				$("customer_shipaddress").style.border = "#FF0000 2pt solid";
+				return_shipping_error = true;
+			}
+			if ($("customer_shipcity").value != "") {
+				$("customer_shipcity").style.border = "";
+			} else {
+				alerts.push("Please enter your Shipping City");
+				$("customer_shipcity").style.border = "#FF0000 2pt solid";
+				return_shipping_error = true;
+			}
+			if ($("customer_shipregion").value != "") {
+				$("customer_shipregion").style.border = "";
+			} else {
+				alerts.push("Please select your Shipping State");
+				$("customer_shipregion").style.border = "#FF0000 2pt solid";
+				return_shipping_error = true;
+			}
+			if ($("customer_shippostal").value != "") {
+				$("customer_shippostal").style.border = "";
+			} else {
+				alerts.push("Please enter your Shipping Zip");
+				$("customer_shippostal").style.border = "#FF0000 2pt solid";
+				return_shipping_error = true;
+			}
+			if ($("customer_shipcountry").value != "") {
+				$("customer_shipcountry").style.border = "";
+			} else {
+				alerts.push("Please enter your Shipping Country");
+				$("customer_shipcountry").style.border = "#FF0000 2pt solid";
+				return_shipping_error = true;
+			}
+			if ($("shipfreight_click")) {
+				if ($("shipfreight_click").value != "") {
+					$("shipfreight_click").style.border = "";
+				} else {
+					alerts.push("Please select a Shipping Method");
+					$("shipfreight_click").style.border = "#FF0000 2pt solid";
+					return_shipping_error = true;
+				}
+			} else if ($("shipfreight")) {
+				if ($("shipfreight").value != "") {
+					$("shipfreight").style.border = "";
+				} else {
+					alerts.push("Please select a Shipping Method");
+					$("shipfreight").style.border = "#FF0000 2pt solid";
+					return_shipping_error = true;
+				}
+			}
+			if (return_shipping_error === true) {
+				if ($("googlecart-widget-list")) {
+					$("googlecart-widget-list").style.display = "none";
+				}
+				if ($("credit_card_form")) {
+					$("credit_card_form").style.display = "none";
+				}
+				if ($("shipping_form")) {
+					$("shipping_form").style.display = "";
+				}
+				if ($("googlecart-checkout-button")) {
+					$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+					$("googlecart-checkout-button").style.width = "124px";
+					$("googlecart-checkout-button").style.height = "23px";
+				}
+				$("shipping_details").innerHTML = "<span style=\"color: #FF0000; font-weight: bold;\">"+alerts.join("\n<br />")+"</span>";
+				alert(alerts.join("\n"));
+				return false;
+			}
+			if (return_cc_error === true) {
+				if ($("shipping_form")) {
+					$("shipping_form").style.display = "none";
+				}
+				if ($("googlecart-widget-list")) {
+					$("googlecart-widget-list").style.display = "none";
+				}
+				if ($("credit_card_form")) {
+					$("credit_card_form").style.display = "";
+				}
+				if ($("googlecart-checkout-button")) {
+					$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+					$("googlecart-checkout-button").style.width = "124px";
+					$("googlecart-checkout-button").style.height = "23px";
+				}
+				$("credit_card_details").innerHTML = "<span style=\"color: #FF0000; font-weight: bold;\">"+alerts.join("\n<br />")+"</span>";
+				alert(alerts.join("\n"));
+				return false;
+			}
+		} else {
+			if (return_cc_error === true) {
+				if ($("shipping_form")) {
+					$("shipping_form").style.display = "none";
+				}
+				if ($("googlecart-widget-list")) {
+					$("googlecart-widget-list").style.display = "none";
+				}
+				if ($("credit_card_form")) {
+					$("credit_card_form").style.display = "";
+				}
+				if ($("googlecart-checkout-button")) {
+					$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+					$("googlecart-checkout-button").style.width = "124px";
+					$("googlecart-checkout-button").style.height = "23px";
+				}
+				$("credit_card_details").innerHTML = "<span style=\"color: #FF0000; font-weight: bold;\">"+alerts.join("\n<br />")+"</span>";
+				alert(alerts.join("\n"));
+				return false;
+			}
+		}
+		
+		return postCart(
+			data, total_weight, paymentmethod, "{urlencoded_full_url}"
+		);
+		
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+		}
+		return false;
+	}
+	
+	function googlecartBeforeAdd(item) {
+		/*
+		var items = [];
+		simpleCart.each(function( itm , x ){
+		});
+		var_dump(item.fields());
+		var_dump(item.options());
+		var item_qty = item.quantity();
+		var setup_fee = 0;
+		var add_setup = 0;
+		if (item.get("setupfee") && item.get("setupfee").length > (-1)) {
+			setup_fee = item.get("setupfee");
+			setup_fee = setup_fee.substr(setup_fee.indexOf("$")+1, setup_fee.length);
+			add_setup = parseFloat(parseFloat(setup_fee)/item_qty);
+		}
+		item.set("price", (parseFloat(item.get("price")+add_setup)));
+		*/
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+		}
+		return true;
+	}
+	
+	function googlecartAfterAdd(item, is_new) {
+		/*
+		var items = [];
+		simpleCart.each(function( itm , x ){
+		});
+		var_dump(item.fields());
+		var_dump(item.options());
+		*/
+		var item_qty = item.quantity();
+		var setup_fee = 0;
+		var add_setup = 0;
+		if (item.get("setupfee") && item.get("setupfee").length > (-1)) {
+			setup_fee = item.get("setupfee");
+			setup_fee = setup_fee.substring(setup_fee.indexOf("$")+1, setup_fee.length);
+			add_setup = parseFloat(parseFloat(setup_fee)/item_qty);
+		}
+		item.set("price", (parseFloat(item.get("price")+add_setup)));
+		$$(".googlecart-widget-quantity-box").each(function(element) {
+			element.setAttribute("disabled","disabled");
+			element.style.borderWidth = 0;
+		});
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+		}
+		return true;
+	}
+	
+	function googlecartBeforeRemove(item) {
+		/*
+		var item_qty = item.quantity;
+		var setup_fee = 0;
+		var add_setup = 0;
+		if (item.get("setupfee") && item.get("setupfee").length > (-1)) {
+			setup_fee = item.get("setupfee");
+			setup_fee = setup_fee.substr(setup_fee.indexOf("$")+1, setup_fee.length);
+			add_setup = parseFloat(parseFloat(setup_fee)/item_qty);
+		}
+		item.set("price", (parseFloat(item.get("price")+add_setup)));
+		*/
+		if ($("googlecart-checkout-button")) {
+			$("googlecart-checkout-button").style.width = "124px";
+			$("googlecart-checkout-button").style.height = "23px";
+			$("googlecart-checkout-button").setAttribute("src", "{JAWS_URL}/gadgets/Ecommerce/images/button-checkout-now.gif");
+		}
+		return true;
+	}
+function var_dump() {
+  //  discuss at: http://phpjs.org/functions/var_dump/
+  // original by: Brett Zamir (http://brett-zamir.me)
+  // improved by: Zahlii
+  // improved by: Brett Zamir (http://brett-zamir.me)
+  //  depends on: echo
+  //        note: For returning a string, use var_export() with the second argument set to true
+  //        test: skip
+  //   example 1: var_dump(1);
+  //   returns 1: 'int(1)'
+
+  var output = '',
+    pad_char = ' ',
+    pad_val = 4,
+    lgth = 0,
+    i = 0;
+
+  var _getFuncName = function(fn) {
+    var name = (/\W*function\s+([\w\$]+)\s*\(/)
+      .exec(fn);
+    if (!name) {
+      return '(Anonymous)';
+    }
+    return name[1];
+  };
+
+  var _repeat_char = function(len, pad_char) {
+    var str = '';
+    for (var i = 0; i < len; i++) {
+      str += pad_char;
+    }
+    return str;
+  };
+  var _getInnerVal = function(val, thick_pad) {
+    var ret = '';
+    if (val === null) {
+      ret = 'NULL';
+    } else if (typeof val === 'boolean') {
+      ret = 'bool(' + val + ')';
+    } else if (typeof val === 'string') {
+      ret = 'string(' + val.length + ') "' + val + '"';
+    } else if (typeof val === 'number') {
+      if (parseFloat(val) == parseInt(val, 10)) {
+        ret = 'int(' + val + ')';
+      } else {
+        ret = 'float(' + val + ')';
+      }
+    }
+    // The remaining are not PHP behavior because these values only exist in this exact form in JavaScript
+    else if (typeof val === 'undefined') {
+      ret = 'undefined';
+    } else if (typeof val === 'function') {
+      var funcLines = val.toString()
+        .split('\n');
+      ret = '';
+      for (var i = 0, fll = funcLines.length; i < fll; i++) {
+        ret += (i !== 0 ? '\n' + thick_pad : '') + funcLines[i];
+      }
+    } else if (val instanceof Date) {
+      ret = 'Date(' + val + ')';
+    } else if (val instanceof RegExp) {
+      ret = 'RegExp(' + val + ')';
+    } else if (val.nodeName) { // Different than PHP's DOMElement
+      switch (val.nodeType) {
+        case 1:
+          if (typeof val.namespaceURI === 'undefined' || val.namespaceURI === 'http://www.w3.org/1999/xhtml') { // Undefined namespace could be plain XML, but namespaceURI not widely supported
+            ret = 'HTMLElement("' + val.nodeName + '")';
+          } else {
+            ret = 'XML Element("' + val.nodeName + '")';
+          }
+          break;
+        case 2:
+          ret = 'ATTRIBUTE_NODE(' + val.nodeName + ')';
+          break;
+        case 3:
+          ret = 'TEXT_NODE(' + val.nodeValue + ')';
+          break;
+        case 4:
+          ret = 'CDATA_SECTION_NODE(' + val.nodeValue + ')';
+          break;
+        case 5:
+          ret = 'ENTITY_REFERENCE_NODE';
+          break;
+        case 6:
+          ret = 'ENTITY_NODE';
+          break;
+        case 7:
+          ret = 'PROCESSING_INSTRUCTION_NODE(' + val.nodeName + ':' + val.nodeValue + ')';
+          break;
+        case 8:
+          ret = 'COMMENT_NODE(' + val.nodeValue + ')';
+          break;
+        case 9:
+          ret = 'DOCUMENT_NODE';
+          break;
+        case 10:
+          ret = 'DOCUMENT_TYPE_NODE';
+          break;
+        case 11:
+          ret = 'DOCUMENT_FRAGMENT_NODE';
+          break;
+        case 12:
+          ret = 'NOTATION_NODE';
+          break;
+      }
+    }
+    return ret;
+  };
+
+  var _formatArray = function(obj, cur_depth, pad_val, pad_char) {
+    var someProp = '';
+    if (cur_depth > 0) {
+      cur_depth++;
+    }
+
+    var base_pad = _repeat_char(pad_val * (cur_depth - 1), pad_char);
+    var thick_pad = _repeat_char(pad_val * (cur_depth + 1), pad_char);
+    var str = '';
+    var val = '';
+
+    if (typeof obj === 'object' && obj !== null) {
+      if (obj.constructor && _getFuncName(obj.constructor) === 'PHPJS_Resource') {
+        return obj.var_dump();
+      }
+      lgth = 0;
+      for (someProp in obj) {
+        lgth++;
+      }
+      str += 'array(' + lgth + ') {\n';
+      for (var key in obj) {
+        var objVal = obj[key];
+        if (typeof objVal === 'object' && objVal !== null && !(objVal instanceof Date) && !(objVal instanceof RegExp) && !
+          objVal.nodeName) {
+          str += thick_pad + '[' + key + '] =>\n' + thick_pad + _formatArray(objVal, cur_depth + 1, pad_val,
+            pad_char);
+        } else {
+          val = _getInnerVal(objVal, thick_pad);
+          str += thick_pad + '[' + key + '] =>\n' + thick_pad + val + '\n';
+        }
+      }
+      str += base_pad + '}\n';
+    } else {
+      str = _getInnerVal(obj, thick_pad);
+    }
+    return str;
+  };
+
+  output = _formatArray(arguments[0], 0, pad_val, pad_char);
+  for (i = 1; i < arguments.length; i++) {
+    output += '\n' + _formatArray(arguments[i], 0, pad_val, pad_char);
+  }
+
+  var isNode = typeof module !== 'undefined' && module.exports;
+  if (isNode) {
+    return console.log(output);
+  }
+
+  var d = this.window.document;
+
+  /*
+  if (d.body) {
+    this.echo(output);
+  } else {
+    try {
+      d = XULDocument; // We're in XUL, so appending as plain text won't work
+      this.echo('<pre xmlns="http://www.w3.org/1999/xhtml" style="white-space:pre;">' + output + '</pre>');
+    } catch (e) {
+      this.echo(output); // Outputting as plain text may work in some plain XML
+    }
+  }
+  */
+  console.log(output);
+}
+
+function urldecode(str) {
+  //       discuss at: http://phpjs.org/functions/urldecode/
+  //      original by: Philip Peterson
+  //      improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //      improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //      improved by: Brett Zamir (http://brett-zamir.me)
+  //      improved by: Lars Fischer
+  //      improved by: Orlando
+  //      improved by: Brett Zamir (http://brett-zamir.me)
+  //      improved by: Brett Zamir (http://brett-zamir.me)
+  //         input by: AJ
+  //         input by: travc
+  //         input by: Brett Zamir (http://brett-zamir.me)
+  //         input by: Ratheous
+  //         input by: e-mike
+  //         input by: lovio
+  //      bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+  //      bugfixed by: Rob
+  // reimplemented by: Brett Zamir (http://brett-zamir.me)
+  //             note: info on what encoding functions to use from: http://xkr.us/articles/javascript/encode-compare/
+  //             note: Please be aware that this function expects to decode from UTF-8 encoded strings, as found on
+  //             note: pages served as UTF-8
+  //        example 1: urldecode('Kevin+van+Zonneveld%21');
+  //        returns 1: 'Kevin van Zonneveld!'
+  //        example 2: urldecode('http%3A%2F%2Fkevin.vanzonneveld.net%2F');
+  //        returns 2: 'http://kevin.vanzonneveld.net/'
+  //        example 3: urldecode('http%3A%2F%2Fwww.google.nl%2Fsearch%3Fq%3Dphp.js%26ie%3Dutf-8%26oe%3Dutf-8%26aq%3Dt%26rls%3Dcom.ubuntu%3Aen-US%3Aunofficial%26client%3Dfirefox-a');
+  //        returns 3: 'http://www.google.nl/search?q=php.js&ie=utf-8&oe=utf-8&aq=t&rls=com.ubuntu:en-US:unofficial&client=firefox-a'
+  //        example 4: urldecode('%E5%A5%BD%3_4');
+  //        returns 4: '\u597d%3_4'
+
+  return decodeURIComponent((str + '')
+    .replace(/%(?![\da-f]{2})/gi, function() {
+      // PHP tolerates poorly formed escape sequences
+      return '%25';
+    })
+    .replace(/\+/g, '%20'));
+}
+</script>
+<!-- END googlecart -->

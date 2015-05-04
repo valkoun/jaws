@@ -1,0 +1,22 @@
+<!-- BEGIN Repositories -->
+{menubar}
+<div id="main" align="center">
+<table>
+  <tr>
+    <td valign="top" align="center" width="100%">
+      <div align="center">
+      <div id="datagrid" style="width: 100%;">
+      {grid}
+      </div>
+      </div>
+      <script type="text/javascript">
+      Event.observe(window, "load",function(){initDataGrid('repositories_datagrid', new tmsadminajax);});
+      </script>
+    </td>    
+    <td valign="top">
+      {repository_form}   
+    </td>
+  </tr>
+</table>
+</div>
+<!-- END Repositories -->

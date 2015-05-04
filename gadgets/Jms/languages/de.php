@@ -3,13 +3,13 @@
  * Meta Data
  *
  * "Project-Id-Version: Jms"
- * "Last-Translator: Christian Schmitt <christian@idkfa.de>, C.Tuemer <info@exceptionz.net>"
+ * "Last-Translator:  Christian Schmitt <christian@idkfa.de>"
  * "Language-Team: DE"
  * "MIME-Version: 1.0"
  * "Content-Type: text/plain; charset=UTF-8"
  * "Content-Transfer-Encoding: 8bit"
  */
-
+  
 define('_DE_JMS_NAME', "Komponenten");
 define('_DE_JMS_DESCRIPTION', "Verwaltung der Komponenten von Jaws");
 define('_DE_JMS_INSTALLED_COMPONENTS', "Installiert");
@@ -22,8 +22,6 @@ define('_DE_JMS_VERSION', "Version");
 define('_DE_JMS_INSTALL', "Installieren");
 define('_DE_JMS_UNINSTALL', "Deinstallieren");
 define('_DE_JMS_PURGE', "Reinigen");
-define('_DE_JMS_UNINSTALLED', "deinstalliert");
-define('_DE_JMS_PURGED', "gereinigt");
 define('_DE_JMS_UPDATE', "Aktualisieren");
 define('_DE_JMS_ONLY_SHOW', "Zeige nur:");
 define('_DE_JMS_ACL_MANAGEJMS', "Komponentenverwaltung benutzen");
@@ -54,7 +52,6 @@ define('_DE_JMS_PLUGINS_DISABLE_FAILURE', "Konnte Plugin nicht deaktivieren");
 define('_DE_JMS_PLUGINS_DISABLE_OK', "Plugin erfolgreich gelöscht");
 define('_DE_JMS_PLUGINS_PLUGIN_DOESNT_EXISTS', "Das Plugin {0} exsistiert nicht");
 define('_DE_JMS_PLUGINS_PLUGIN_CANT_HAVE_NAME_CORE', "Das Plugin kann keinen Corenamen haben. Die sind für Jaws reserviert.");
-define('_DE_JMS_PLUGINS_UNINSTALL_CONFIRM', "Wollen Sie dieses Plugin deinstallieren?");
 define('_DE_JMS_GADGETS', "Gadgets");
 define('_DE_JMS_GADGETS_INSTALLED_GADGETS', "Installierte Gadgets");
 define('_DE_JMS_GADGETS_NOTINSTALLED_GADGETS', "Nicht installierte Gadgets");
@@ -73,8 +70,6 @@ define('_DE_JMS_GADGETS_DISABLE_FAILURE', "Gadget {0} konnte nicht gelöscht wer
 define('_DE_JMS_GADGETS_UPDATED_OK', "Gadget {0} wurde aktualisiert");
 define('_DE_JMS_GADGETS_UPDATED_FAILURE', "Gadget {0} konnte nicht aktualisiert werden");
 define('_DE_JMS_GADGETS_UPDATED_NO_NEED', "Gadget {0} muss nicht aktualisiert werden");
-define('_DE_JMS_GADGETS_REQUIRES_X_GADGET', "{0} benötigt folgende Gadgets: {1}");
-define('_DE_JMS_GADGETS_REQUIRES_X_DEPENDENCY', "{0} kann nicht {2}, da die Gadgets {1} davon abhängig sind");
 define('_DE_JMS_SIDEBAR_ENABLE', "Aktivieren");
 define('_DE_JMS_SIDEBAR_DISABLE', "Deaktivieren");
 define('_DE_JMS_SIDEBAR_DISABLED_GADGETS', "Deaktivierte Gadgets");

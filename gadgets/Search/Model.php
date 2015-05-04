@@ -6,34 +6,30 @@
  * @package    Search
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class SearchModel extends Jaws_Model
 {
-    /**
-     * Search options
-     *
-     * @var     array
-     * @access  private
-     */
     var $_SearchTerms = array();
 
     /**
-     * Returns the search results
+     * Return the search results
      *
      * @access  public
-     * @param   array   $options    Search options
-     * @return  array   Search results
+     * @return  string  Array with the search result
+     * @TODO  Prioritized gadgets to registry key
      */
     function Search($options)
     {
-        $result = array();
+		$result = array();
         $result['_totalItems'] = 0;
 
         $this->_SearchTerms = $options;
         $gadgetList = $this->GetSearchableGadgets();
+		unset($gadgetList['Search']);
         $gSearchable = $GLOBALS['app']->Registry->Get('/gadgets/Search/searchable_gadgets');
+		$gSearchable = str_replace('Search', '', $gSearchable);
         $gadgets = ($gSearchable=='*')? array_keys($gadgetList) : explode(', ', $gSearchable);
         if (array_key_exists('gadgets',  $options) &&
             !empty($options['gadgets']) &&
@@ -41,12 +37,26 @@ class SearchModel extends Jaws_Model
         {
             $gadgets = array($options['gadgets']);
         }
-
+		// Prioritize gadget results
+		$prioritized = array();
+		$gadget_priority = array('Users', 'Store', 'Properties', 'CustomPage', 'Blog');
+		foreach ($gadget_priority as $priority) {
+			if (in_array($priority, $gadgets)) {
+				$prioritized[] = $priority;
+			}
+		}
+		$prioritized = array_unique(array_merge($prioritized, $gadgets));
+		$gadgets = $prioritized;
         if (is_array($gadgets) && count($gadgets) > 0) {
-            $GLOBALS['db']->dbc->loadModule('Function', null, true);
+            /*
+			if ($options['response'] == 'li') {
+				$gadgets = array($gadgets[(int)$options['num']]);
+			}
+			*/
+			$GLOBALS['db']->dbc->loadModule('Function', null, true);
             foreach ($gadgets as $gadget) {
-                $gadget = trim($gadget);
-                if ($gadget == 'Search' || empty($gadget)) {
+				$gadget = trim($gadget);
+                if (empty($gadget)) {
                     continue;
                 }
 
@@ -134,17 +144,20 @@ class SearchModel extends Jaws_Model
                 if (is_array($preparedSQLs) && count($preparedSQLs) == 1) {
                     $preparedSQLs = $preparedSQLs[0];
                 }
-
-                $gResult = $gHook->Hook($preparedSQLs);
+				
+                $gResult = $gHook->Hook($preparedSQLs, ($options['response'] == 'li' && isset($options['limit']) && (int)$options['limit'] > 0 ? $options['limit']+1 : null));
                 //FIXME: should test only IsError but most gadgets only return false...
-                if (!Jaws_Error::IsError($gResult) || !$gResult) {
-                    if (is_array($gResult) && !empty($gResult)) {
-                        $result[$gadget] = $gResult;
-                        $result['_totalItems'] += count($gResult);
+				if (!Jaws_Error::IsError($gResult) && $gResult !== false) {
+                    if (is_array($gResult) && !empty($gResult) && !count($gResult) <= 0) {
+						$result[$gadget] = $gResult;
+                        $result['_totalItems'] = ((int)$result['_totalItems'] + count($gResult));
                     } else {
                         unset($result[$gadget]);
                     }
                 }
+				if ($options['response'] == 'li' && $result['_totalItems'] > (int)$options['limit']) {
+					break;
+				}
             }
 
             reset($result);
@@ -154,11 +167,10 @@ class SearchModel extends Jaws_Model
     }
 
     /**
-     * Prepares result title by joining search phrases
+     * Join search phrase for provide string for showing in result title
      *
      * @access  public
-     * @param   array   $options    Search options
-     * @return  string  Search result title 
+     * @return  string  
      */
     function implodeSearch($options = null)
     {
@@ -196,8 +208,7 @@ class SearchModel extends Jaws_Model
      * any matches and all other words
      *
      * @access  public
-     * @param   string  $phrase     Phrase to parse
-     * @param   array   $searchable List of searchable gadgets
+     * @param   string  $phrase   Phrase to parse
      * @return  array   An array with the following indexes (and results):
      *                     - all, exact, least and exclude
      */
@@ -211,7 +222,10 @@ class SearchModel extends Jaws_Model
                             'exact'   => '', 
                             'least'   => '', 
                             'exclude' => '',
-                            'date'    => '');
+                            'date'    => '',
+                            'response'    => '',
+                            'num'    => '',
+                            'limit'    => '');
         $size = $GLOBALS['app']->UTF8->strlen($phrase);
         $lastKey = '';
         $tmpWord = '';
@@ -265,6 +279,7 @@ class SearchModel extends Jaws_Model
 
         $options['all'] = '';
         $min_key_len = $GLOBALS['app']->Registry->Get('/gadgets/Search/min_key_len');
+        $xss = $GLOBALS['app']->loadClass('XSS', 'Jaws_XSS');
         foreach(array_keys($newOptions) as $option) {
             if (!empty($newOptions[$option])) {
                 $options[$option] = trim(isset($options[$option])?
@@ -273,13 +288,13 @@ class SearchModel extends Jaws_Model
             }
 
             $content = (isset($options[$option])) ? $options[$option] : '';
-            $content = $content;
+            $content = $xss->parse($content);
             $content = $GLOBALS['app']->UTF8->strtolower($GLOBALS['app']->UTF8->trim($content));
             if ($GLOBALS['app']->UTF8->strlen($content) >= $min_key_len) {
                 $searchable = true;
             }
 
-            $options[$option] = '';
+            $options[$option] = ($option == 'limit' || $option == 'response' || $option == 'num' ? $options[$option] : '');
             switch($option) {
             case 'exclude':
             case 'least':
@@ -305,15 +320,15 @@ class SearchModel extends Jaws_Model
     }
 
     /**
-     * Gets searchable gadgets
+     * Get searchable gadgets
      *
      * @access  public
-     * @return  array   List of searchable gadgets
+     * @return  array
      */
     function GetSearchableGadgets()
     {
         $jms = $GLOBALS['app']->LoadGadget('Jms', 'AdminModel');
-        $gadgetList = $jms->GetGadgetsList(false, true, true);
+        $gadgetList = $jms->GetGadgetsList(null, true, true);
         $gadgets = array();
         foreach ($gadgetList as $key => $gadget) {
             if (is_file(JAWS_PATH . 'gadgets/' . $gadget['realname'] . '/hooks/Search.php'))
@@ -323,13 +338,13 @@ class SearchModel extends Jaws_Model
     }
 
     /**
-     * Gets entry pager numbered links
+     * Get entry pager numbered links
      *
      * @access  public
-     * @param   int     $page       Active page number
-     * @param   int     $page_size  Number of results per page
-     * @param   int     $total      Number of all results
-     * @return  array   Array of page numbers
+     * @param   int     $page      Current page number
+     * @param   int     $page_size Search result count per page
+     * @param   int     $total     Total search result count
+     * @return  array   array with numbers of pages
      */
     function GetEntryPagerNumbered($page, $page_size, $total)
     {

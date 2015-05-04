@@ -1,0 +1,155 @@
+<!-- BEGIN filebrowser -->
+	  <style>
+body {
+    background: #fff;
+}
+#header, #footer, #control-panel-title {
+	display: none;
+}
+.tableform { width: 100%; }
+#location {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+#location a {
+    text-decoration: none;
+    padding-left: .2em;
+}
+.main-item-notfixed {
+    text-decoration: none;
+    margin: 1px;
+    padding: 4px;
+    color: #000;
+    font-size: small;
+    display: block;
+    border: 1px solid #fff;
+    text-align: center;
+	height:;
+	width:;
+}
+
+.main-item-notfixed:hover {
+    background-color: #f7f7f7;
+    color: #888a85;
+    border: 1px solid #d3d7cf;
+    border-radius: 4px;
+    cursor: pointer;
+	cursor: hand;
+}
+</style>
+
+<script>
+
+var currentRename = -1;
+var previousValue = '';
+var currentType = '';
+var oldname = '';
+
+function renameFile(type, id) {
+    currentType = type;
+    if (currentRename != -1) {
+        $('file_link' + currentRename).style.display = 'block';
+        $('file_entry_box' + currentRename).style.display = 'none';
+        $('file_entry' + currentRename).value = previousValue;
+    }
+    $('file_link' + id).style.display = 'none';
+    $('file_entry_box' + id).style.borderWidth = '0px';
+    $('file_entry_box' + id).style.width = '90%';
+    $('file_entry_box' + id).style.display = 'block';
+    $('file_entry' + id).disabled = false;
+    $('file_entry' + id).focus();
+    currentRename = id;
+    previousValue = $('file_entry' + id).value;
+}
+
+function cancelRename() {
+    document.getElementById('file_link' + currentRename).style.display = 'block';
+    document.getElementById('file_entry_box' + currentRename).style.display = 'none';
+    document.getElementById('file_entry' + currentRename).value = previousValue;
+    currentRename = -1;
+    previousValue = '';
+}
+
+function saveRename() {
+    if (currentType == 'file') {
+        document.formGrid.action.value = '{client}RenameFile';
+    } else if (currentType == 'dir') {
+        document.formGrid.action.value = 'RenameDir';
+    } else {
+        alert('error');
+        return false;
+    }
+    document.formGrid.file.value = document.getElementById('file_entry' + currentRename).value;
+    document.formGrid.oldname.value = previousValue;
+    document.formGrid.submit();
+}
+
+function deleteFile(file) {
+    if (confirm('{confirm_delete_file}')) {
+        document.formGrid.action.value = '{client}DeleteFile';
+        document.formGrid.file.value = file;
+        document.formGrid.submit();
+    }
+}
+
+function deleteDir(dir) {
+    if (confirm('{confirm_delete_dir}')) {
+        document.formGrid.action.value = 'DeleteDir';
+        document.formGrid.file.value = dir;
+        document.formGrid.submit();
+    }
+}
+
+function insertFile(pick,location,formnum) {
+  if (window.opener && !window.opener.closed) {
+	//window.opener.document.forms[formnum].location.value = pick;
+	if (window.opener.document.forms[formnum].elements[location]) {
+      window.opener.document.forms[formnum].elements[location].value = pick;
+      //window.opener.document.forms[formnum].elements[location].focus();
+	} else if (window.opener.document.getElementById(location)) {
+		window.opener.document.getElementById(location).value = pick;
+		//window.opener.document.getElementById(location).focus();
+	} else {
+      if (window.opener.document.forms[formnum].elements[location.toLowerCase()]) {
+		window.opener.document.forms[formnum].elements[location.toLowerCase()].value = pick;
+		//window.opener.document.forms[formnum].elements[location.toLowerCase()].focus();
+	  } else {
+		window.opener.document.getElementById(location.toLowerCase()).value = pick;
+		//window.opener.document.getElementById(location.toLowerCase()).focus();
+	  }
+	}
+  }
+  window.close();
+}
+</script>
+<div style="margin-top: 30px;">
+<table>
+<tr><td valign="top" style="width: 0%;">
+<div id="location">{location}: {location_link}</div>
+<form name="formGrid" method="post" action="{base_script}">
+<input type="hidden" name="gadget" value="FileBrowser"/>
+<input type="hidden" name="action" value="{client}RenameFile"/>
+<input type="hidden" name="path" value="{path}"/>
+<input type="hidden" name="display" value="{display}"/>
+<input type="hidden" name="where" value="{where}"/>
+<input type="hidden" name="form" value="{form}"/>
+<input type="hidden" name="file" value=""/>
+<input type="hidden" name="oldname" value=""/>
+{grid}
+</form>
+</td>
+<td valign="top">
+{upload_form}
+<br/>
+{createdir_form}
+<!-- BEGIN warning -->
+<div class="{class}">
+{message}
+</div>
+<!-- END warning -->
+</td>
+</tr>
+</table>
+</div>
+<!-- END filebrowser -->

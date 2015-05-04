@@ -5,7 +5,7 @@
  * @category   Gadget
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 require_once JAWS_PATH . 'include/Jaws/Gadget.php';
@@ -63,7 +63,7 @@ class Jaws_GadgetREST extends Jaws_Gadget
      *
      * @access  public
      * @param   string  $gadget Gadget's Name
-     * @return  bool    Returns true if the gadget is valid, otherwise will finish the execution
+     * @return  boolean Returns true if the gadget is valid, otherwise will finish the execution
      */
     function IsValid($gadget)
     {
@@ -71,7 +71,7 @@ class Jaws_GadgetREST extends Jaws_Gadget
         // Hack until we decide if $gadget.php will be a proxy file
         $filepath = JAWS_PATH . 'gadgets/'.$gadget.'/REST.php';
         if (!file_exists($filepath)) {
-            Jaws_Error::Fatal('Gadget file doesn\'t exists');
+            Jaws_Error::Fatal('Gadget file doesn\'t exists', __FILE__, __LINE__);
         }
 
         parent::IsValid($gadget);

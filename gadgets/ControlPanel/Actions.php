@@ -5,12 +5,18 @@
  * @category   GadgetActions
  * @package    ControlPanel
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 $actions = array();
 
-$actions['DefaultAction']  = array('AdminAction');
-$actions['Logout']         = array('AdminAction');
+$actions['DefaultAction']  		= array('AdminAction');
+$actions['Logout']         		= array('AdminAction');
+$actions['DatabaseBackup']		= array('AdminAction');
+$actions['Statistics'] 			= array('AdminAction');
 
-$actions['Backup']         = array('StandaloneAdminAction');
+$actions['DBBackup']       		= array('StandaloneAdminAction');
+$actions['RestoreBackup'] 		= array('StandaloneAdminAction');
+$actions['ShowTip']       		= array('StandaloneAdminAction');
+$actions['CreatePDFsOfAllURLs']	= array('StandaloneAdminAction');
+$actions['CreatePDFOfURL']      = array('StandaloneAdminAction');

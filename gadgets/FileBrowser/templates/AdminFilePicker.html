@@ -1,0 +1,125 @@
+<!-- BEGIN filepicker -->
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<base href="{BASE_URL}" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}libraries/piwi/piwidata/css/default.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/FileBrowser/resources/style{.dir}.css" />
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/prototype.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/scriptaculous.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/effects.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/prototype/controls.js"></script>
+<script type="text/javascript" src="{JAWS_URL}include/Jaws/Ajax/Response.js"></script>
+<script type="text/javascript" src="{base_script}?gadget=FileBrowser&amp;action=Ajax&amp;client=all&amp;stub={stub}"></script>
+<script type="text/javascript" src="{base_script}?gadget=FileBrowser&amp;action=AjaxCommonFiles"></script>
+<script type="text/javascript" src="{JAWS_URL}gadgets/FileBrowser/resources/{script}.js"></script>
+<script type="text/javascript" src="{JAWS_URL}libraries/js/admin.js"></script>
+<script type="text/javascript" src="{JAWS_DATA}tinymce/tiny_mce_popup.js"></script>
+<!--[if lt IE 7]>
+<link rel="stylesheet" media="screen" type="text/css" href="{JAWS_URL}gadgets/ControlPanel/resources/public{.dir}.ie.css" />
+<script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script>
+<style type="text/css">
+img {filter: expression(this.onpropertychange ? '!important' : fixpngTransparency(this));}
+</style>
+<![endif]-->
+<style type="text/css">
+#workarea {font-size: smaller;}
+</style>
+<script type="text/javascript">
+var FileBrowserDialogue = {
+    init : function () {
+        // Here goes your code for setting your custom things onLoad.
+    },
+    insertFile : function (fname) {
+		var URL = '{JAWS_DATA}files'+($('path').value == '/' ? $('path').value : $('path').value+'/')+fname;
+        var win = tinyMCEPopup.getWindowArg("window");
+
+        // insert information now
+        win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = URL;
+
+        // are we an image browser
+        if (typeof(win.ImageDialog) != "undefined")
+        {
+            // we are, so update image dimensions and preview if necessary
+            if (win.ImageDialog.getImageData) win.ImageDialog.getImageData();
+            if (win.ImageDialog.showPreviewImage) win.ImageDialog.showPreviewImage(URL);
+        }
+
+        // close popup window
+        tinyMCEPopup.close();
+    }
+}
+
+tinyMCEPopup.onInit.add(FileBrowserDialogue.init, FileBrowserDialogue);
+</script>
+</head>
+<body style="background: none transparent;">
+<div id="workarea">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td id="loc" colspan="2">{location}: <span id="location">{location_link}</span></td>
+  </tr>
+  <tr>
+    <td id="datagrid_box" valign="top">{grid}</td>
+    <td style="padding: 0 4px; vertical-align: top; width: 230px;">
+      <form id="fb_form" name="fb_form" method="post" action="{form_action}" enctype="multipart/form-data">
+        <input type="hidden" name="gadget" value="FileBrowser" />
+        <input type="hidden" name="action" value="UploadFile" />
+        <input type="hidden" name="path" id="path" value="{path}"/>
+        <input type="hidden" name="oldname" id="oldname" value="{path}"/>
+        <input type="hidden" name="picker" id="picker" value="true"/>
+        <ul id="tabs">
+          <li><span id="fileTab" onclick="switchTab('file');">{lbl_file}</span></li>
+          <li><span id="dirTab"  onclick="switchTab('dir');">{lbl_directory}</span></li>
+        </ul>
+        <div id="f_work_area">{fui}</div>
+        <div id="d_work_area" >{dui}</div>
+      </form>
+    </td>
+  </tr>
+</table>
+</div>
+<script type="text/javascript">
+  stopAction('file');
+  var confirmFileDelete = "{confirmFileDelete}";
+  var confirmDirDelete  = "{confirmDirDelete}";
+  var datagrid_name = '{datagrid_name}';
+  Event.observe(window, 'load', function(){
+	initDataGrid(datagrid_name, new filebrowseradminajax, 'getFiles');
+	// Insert datagrid into a scrollable DIV
+	div = document.createElement('div');
+	div.style.height = '350px';
+	div.style.maxHeight = '350px';
+	div.style.overflow = 'scroll';
+	div.appendChild($(datagrid_name));
+	$('datagrid_box').appendChild(div);
+	//$(datagrid_name).parentNode.removeChild($(datagrid_name));
+  });
+</script>
+</body>
+</html>
+<!-- END filepicker -->
+<!-- BEGIN file_ui -->
+<table id="file_box" border="0" cellpadding="0" cellspacing="0">
+  <tr><td>{upload_switch}</td></tr>
+  <tr id="edit_entry" style="display: none;"><td><label for="filename">{lbl_filename}:</label><br />{filename}</td></tr>
+  <tr id="file_entry"><td><label for="uploadfile">{lbl_filename}:</label><br />{uploadfile}</td></tr>
+  <tr><td><label for="file_title">{lbl_title}:</label><br />{title}</td></tr>
+  <tr><td><label for="file_description">{lbl_description}:</label><br />{description}</td></tr>
+  <tr><td><label for="file_fast_url">{lbl_fast_url}:</label><br />{fast_url}</td></tr>
+  <tr><td class="buttons">{btn_cancel}{btn_save}</td></tr>
+</table>
+<!-- END file_ui -->
+<!-- BEGIN dir_ui -->
+<table id="dir_box" border="0" cellpadding="0" cellspacing="0">
+  <tr><td><label for="dirname">{lbl_dirname}:</label><br />{dirname}</td></tr>
+  <tr><td><label for="dir_title">{lbl_title}:</label><br />{title}</td></tr>
+  <tr><td><label for="dir_description">{lbl_description}:</label><br />{description}</td></tr>
+  <tr><td><label for="dir_fast_url">{lbl_fast_url}:</label><br />{fast_url}</td></tr>
+  <tr><td class="buttons">{btn_cancel}{btn_save}</td></tr>
+</table>
+<!-- END dir_ui -->

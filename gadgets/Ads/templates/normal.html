@@ -1,0 +1,518 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+		var msgbox=$('msgbox_{msg-id}');if((msgbox.className!='error-message')&&(msgbox.className!='warning-message')&&(window.hideResponseBox)){hideResponseBox(msgbox);};
+	</script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+
+<!-- BEGIN ads -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget ads">
+	<div class="content">
+<!--[if IE]>
+ <style type="text/css">
+  #left {word-wrap: break-word;}
+ </style>
+<![endif]-->
+              <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="hdr_bkgnd">
+      			  <tr>
+					<TD align="left"><img border="0" src="images/spacer.gif"></TD>
+					<TD width="100%"><img border="0" src="images/spacer.gif"></TD>
+					<TD><img border="0" src="images/spacer.gif"></TD>
+                  </TR>
+                  <TR>
+					<TD><img border="0" src="images/spacer.gif" height="5" width="5" align="top"></TD>
+
+					<TD width="100%">
+					{BREADCRUMB}
+					</td>
+					<TD><img border="0" src="images/spacer.gif"></TD>
+                </TR>
+				<TR>
+					<TD colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></TD>
+				</TR>
+			  </TABLE>
+{PAGE_CYCLE}
+			<div>&nbsp;</div>
+				<style type="text/css">
+					#layout_CategoryMap_{id}__title { display: none; }
+					#layout_CategoryMap_{id}__title { display: none; }
+				</style>
+			  <div>{CATEGORY_MAP}</div>
+			  <div>&nbsp;</div>
+            <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="color_bkgnd">
+              <TR>
+                <TD WIDTH="0%" VALIGN="top"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+                <TD WIDTH="100%" VALIGN="top">
+<!-- BEGIN ad -->                          
+{ad_header}
+                            <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%" CLASS="color_bkgnd">
+                              <TR>
+                                <TD WIDTH="100%">
+                                  <DIV ALIGN="center" class="ad_listing_bkgnd" id="ad_listing_{id}" onclick="location.href = '{ad_link}';">
+{AD}
+                                  </DIV>
+                                </TD>
+                              </TR>
+                            </TABLE>
+                                  </DIV>
+                                </TD>
+                              </TR>
+                            </TABLE>
+                            </CENTER>
+                          </DIV>
+						  <DIV>&nbsp;</DIV>
+						  <DIV class="ad_separator"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="100%" HEIGHT="1"></DIV>
+						  <DIV>&nbsp;</DIV>
+<!-- END ad -->
+{NO_ADS}
+                       
+                          <TABLE BORDER="0" CELLPADDING="5" CELLSPACING="0" WIDTH="98%">
+                            <TR>
+                              <TD WIDTH="100%"></TD>
+                            </TR>
+                          </TABLE>
+
+						</TD>
+					</TR>
+				</TABLE>
+				<div>&nbsp;</div>
+				{PAGE_CYCLE2}
+
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget ads">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Ads_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END ads -->
+
+<!-- BEGIN ad_detail -->
+<!-- BEGIN content -->
+<div id="{pagetype}-page-{id}" class="gadget ads">
+	<div class="content">
+	  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="hdr_bkgnd">
+		  <tr>
+			<TD align="left"><img border="0" src="images/spacer.gif"></TD>
+			<TD width="100%"><img border="0" src="images/spacer.gif"></TD>
+			<TD><img border="0" src="images/spacer.gif"></TD>
+		  </TR>
+		  <TR>
+			<TD><img border="0" src="images/spacer.gif" height="5" width="5" align="top"></TD>
+
+			<TD width="100%">
+			{BREADCRUMB}
+			</td>
+			<TD><img border="0" src="images/spacer.gif"></TD>
+		</TR>
+		<TR>
+			<TD colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></TD>
+		</TR>
+	  </TABLE>
+
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" height="28">
+			<tr>
+				<td width="100%" height="1" align="left">
+					<div align="left">
+						<table border="0" cellspacing="0" width="100%" cellpadding="0" height="1" class="color_bkgnd">
+<!-- BEGIN preview_mode -->
+							<tr>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" colspan="3">&nbsp;</td>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+							<tr>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="100%" valign="top" colspan="3" bgcolor="#ffffcc">
+									<span style="font-size: 1.8em; color: #FF0000;">&nbsp;&nbsp;<img border="0" src="images/icon_err_red.gif">&nbsp;Previewing Your Ad:</span><br />&nbsp;
+									<span style="color: #FF0000;">This Listing has not yet been approved by {HTTP_REFERER}<br />&nbsp;</span>
+								</td>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+<!-- END preview_mode -->
+							<tr>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+								<td width="0%" valign="top" style="padding: 5px;">
+									<nobr><h1>{title}</h1></nobr>
+								</td>
+								<td width="100%" style="padding: 5px;">&nbsp;</td>
+								<td width="0%" style="padding: 5px;"><nobr>[ID: {id}]</nobr></td>
+								<td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd">
+		  <tr>
+		   <td width="0%" valign="top"><img border="0" src="images/spacer.gif" width="1" height="1"></td>
+		   <td width="100%">
+			 <div align="center">
+			   <table border="0" cellpadding="5" cellspacing="0" width="100%">
+				<tr>
+				  <td width="100%">
+						{ad_header}
+								<table border="0" cellpadding="3" cellspacing="0" width="100%" class="color_bkgnd">
+									<tr>
+										<td width="100%">
+											<div align="center" class="ad_listing_bkgnd">
+												<table border="0" cellpadding="0" cellspacing="0" width="100%" class="color_bkgnd">
+
+													<tr>
+														<td class="color_bkgnd" colspan="3"><img border="0" src="images/spacer.gif" height="1" width="1"></td>
+													</tr>
+													<tr>
+														<td colspan="3"><img border="0" src="images/spacer.gif" height="3" width="1"></td>
+													</tr>
+													<tr>
+														<td valign="top" colspan="3">
+<!-- Ad Navigation -->
+															<div id="adnav_container">
+																<div id="adnav_save{saveDisabled}" class="adnav{saveDisabled}" onclick="if (document.getElementById('adnav_save').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('save')) {var target = document.getElementById('save'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_save_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_save.png)';};" title="Inquire About This Property"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Inquire About This Property</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="adnav_map" class="adnav" onclick="if (document.getElementById('adnav_map').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('save')) {document.getElementById('save').style.display = 'none';}; if (document.getElementById('media_map')) {var target = document.getElementById('media_map'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_map_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_map.png)';};" title="View Map and Directions"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Map / Directions</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="adnav_print" class="adnav" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_print_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_print.png)';};" title="Printable Version"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a href="{HTTP_REFERER}/index.php?gadget=Ads&action=PrintAdDetails&id={id}" target="_blank">Printable Version</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<div id="adnav_email{emailDisabled}" class="adnav{emailDisabled}" onclick="if (document.getElementById('adnav_email').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('save')) {document.getElementById('save').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('email')) {var target = document.getElementById('email'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_email_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_email.png)';};" title="E-mail To A Friend"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>E-mail To A Friend</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<!--
+																<div id="adnav_calendar{calendarDisabled}" class="adnav{calendarDisabled}" onclick="{CALENDAR_CLICK}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_calendar_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_calendar.png)';};"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>{CALENDAR_CLICK_TEXT}</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																-->
+																<div id="adnav_inquire{inquireDisabled}" class="adnav{inquireDisabled}" onclick="if (document.getElementById('adnav_inquire').className.indexOf('disabled') == -1) {if (document.getElementById('tour')) {document.getElementById('tour').style.display = 'none';}; if (document.getElementById('media_map')) {document.getElementById('media_map').style.display = 'none';}; if (document.getElementById('calendar')) {document.getElementById('calendar').style.display = 'none';}; if (document.getElementById('email')) {document.getElementById('email').style.display = 'none';}; if (document.getElementById('inquire')) {var target = document.getElementById('inquire'); if (target.style.display == 'none') {target.style.display = '';} else {target.style.display = 'none';};};};" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_inquire_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_inquire.png)';};" title="Inquire About This Property"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Inquire About This Property</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																<!--
+																<div id="adnav_tour{tourDisabled}" class="adnav{tourDisabled}" onclick="{PROPERTY_TOUR_CLICK}" onmouseover="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_tour_over.png)';};" onmouseout="if (this.className.indexOf('disabled') == -1) {this.style.backgroundImage='url({JAWS_URL}gadgets/Ads/images/btn_ad_tour.png)';};" title="Virtual Tour"><p><img border="0" src="{HTTP_REFERER}/images/blank.gif" align="left" height="51" width="50"><a>Virtual Tour</a></p></div><div style="background: url({JAWS_URL}gadgets/Ads/images/btn_ad_separator.png) no-repeat; float: left; width: 2px; height: 75px;"></div>
+																-->
+																<div style="float: none; clear: both; font-size: 0.01em;">&nbsp;</div>
+															</div>
+															<div id="ad_details_container">
+<!-- Ad Save to Watchlist -->
+																<div align="left" id="save" class="ad_media" style="display: none;">
+																	<a name="save">&nbsp;</a>
+																	<div>{AD_SAVE}</div>
+																</div>
+<!-- Ad Map and Directions -->
+																<div align="left" id="media_map" class="ad_media" style="visibility: hidden;">
+																	<style type="text/css">
+																		#layout_AdMap_{id}__title { display: none; }
+																		{AD_MAP_STYLE}
+																	</style>
+																	<a name="map">&nbsp;</a>
+																	{AD_MAP}
+																	<div>&nbsp;</div>
+																	<div id="map_directions">Personalized directions coming soon!</div>
+																</div>
+																<script type="text/javascript">
+																// <![CDATA[
+																  Event.observe(window, "load", function() {$('media_map').style.display = 'none'; $('media_map').style.visibility = 'visible';});
+																// ]]>
+																</script>
+<!-- Ad Calendar 
+																<div align="left" id="calendar" class="ad_media" style="visibility: hidden;">
+																	<a name="calendar">&nbsp;</a>
+																	<div>{AD_CALENDAR}</div>
+																	<style type="text/css">
+																		#layout_AdCalendar__title { display: none; }
+																		{AD_CALENDAR_STYLE}
+																	</style>
+																</div>
+																<script type="text/javascript">
+																// <![CDATA[
+																  Event.observe(window, "load", function() {$('calendar').style.display = 'none'; $('calendar').style.visibility = 'visible';});
+																// ]]>
+																</script>
+-->
+<!-- Ads E-mail To A Friend -->
+																<div align="left" id="email" class="ad_media" style="display: none;">
+																	<a name="email">&nbsp;</a>
+																	<div>{AD_EMAIL_FORM}</div>
+																</div>
+<!-- Ads Inquiry -->
+																<div align="left" id="inquire" class="ad_media" style="display: none;">
+																	<a name="inquire">&nbsp;</a>
+																	<div>{AD_INQUIRY_FORM}</div>
+																</div>
+
+																<div>&nbsp;</div>
+																<div align="left" id="images" class="ad_media">
+<!-- BEGIN image -->
+																	<div class="ad_details_image">
+																		{AD}
+																	</div>
+<!-- END image -->
+<!-- BEGIN no_image -->
+																	<div class="ad_details_no_image">
+																	  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td width="50%"><img border="0" src="images/spacer.gif" height="120" width="1"></td>
+																			<td width="0%" valign="top" style="vertical-align: top; text-align: center;"><b>No Image</b></td>
+																			<td width="50%">&nbsp;</td>
+																		</tr>
+																	  </table>
+																	</div>
+<!-- END no_image -->
+<!-- BEGIN description -->
+																	<div class="ad_details_footer">
+																		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+																			<tr>
+																				<td width="70%" valign="top">
+																					<div class="ad_details_description">{description}</div>
+																				</td>
+																				<td width="30%" valign="top">&nbsp;</td>
+																					<div class="ad_details_barcode">{barcode}</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>	
+<!-- END description -->
+																</div>
+																<div>&nbsp;</div>
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+</table>
+				
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="100%" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td width="0%" valign="top">&nbsp;</td>
+		<td width="0%"><img border="0" src="images/spacer.gif" width="2" height="20"></td>
+		<td width="100%" valign="top">
+			<table width="100%" cellspacing="0" cellpadding="5">
+<!-- BEGIN keyword -->
+				<tr>
+					<td height="18" width="100%" class="ad_bkgnd_primary">
+						<A NAME="keyword"><b>&nbsp;Keywords</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" style="padding: 10px">
+						{keyword}
+					</td>
+				</tr>
+<!-- END keyword -->
+
+<!-- BEGIN contact -->
+				<tr>
+					<td height="18" width="100%" class="ad_bkgnd_primary">
+						<A NAME="contact"><b>&nbsp;For More Information</b></a>
+					</td>
+				</tr>
+				<tr>
+					<td height="9" width="100%" style="padding: 10px">
+						{broker_logo}
+						<p style="line-height: 18px;">{agent}{broker}
+						<br />&nbsp;
+						{agent_phone}
+						{agent_email}
+						{agent_website}
+						</p>
+					</td>
+				</tr>
+
+				<tr>
+					<td height="9" width="100%">&nbsp;</td>
+				</tr>
+<!-- END contact -->
+
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="100%">&nbsp;</td>
+	</tr>
+</table>
+		</DIV>
+	</TD>
+	 <TD WIDTH="0%" VALIGN="top"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="1" HEIGHT="1"></TD>
+</tr>
+</table>
+<DIV style="background: #EEEEEE; margin-bottom: 10px;"><IMG BORDER="0" SRC="images/spacer.gif" WIDTH="100%" HEIGHT="1"></DIV>
+
+	</div>
+</div>
+<!-- END content -->
+<!-- BEGIN not_found -->
+<div id="{pagetype}-page-{id}" class="gadget ads">
+  <h2>{title}</h2>
+  <div class="content">
+    {content}
+  </div>
+</div>
+<!-- END not_found -->
+<!-- BEGIN stats -->
+{stats}
+<!-- END stats -->
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height=Math.max(document.body.offsetHeight,document.body.scrollHeight);var fr{id}=document.createElement("IFRAME");fr{id}.setAttribute("src","{referer}?height="+height+"&object=Ads_iframe_{id}");fr{id}.setAttribute("name","inneriframe{id}");fr{id}.setAttribute("id","inneriframe{id}");fr{id}.style.width=1+"px";fr{id}.style.height=1+"px";fr{id}.style.display="none";document.body.appendChild(fr{id});
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END ad_detail -->
+
+<!-- BEGIN index -->
+<div class="gadget ads_index">
+  <h2><a href="{link}">{title}</a></h2>
+  <div class="content">
+    <ul>
+    <!-- BEGIN item -->
+      <li><a href="{link}">{title}</a></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<!--
+<div id="layout-ads-head" class="gadget layout_head">
+<h2 id="layout_{actionName}_title">{layout_title}</h2>
+</div>
+-->
+<!-- start_{type}ad --><div class="gadget layout_body">
+<!-- BEGIN ad -->
+<!-- BEGIN swf -->
+<div id="ads-{id}" style="{div_dimensions}">&nbsp;This content requires Adobe's Flash Player. <a target="_blank" href="http://www.adobe.com/go/EN_US-H-GET-FLASH">Click here to download and install it</a>.<br />
+<a target="_blank" href="http://www.adobe.com/go/EN_US-H-GET-FLASH"><img alt="Click Here to Get Adobe Flash Player" border="0" src="{JAWS_URL}gadgets/Ads/images/get_adobe_flash_player.gif" /></a></div>
+<script>
+	{gallery_dimensions}
+	var so{id} = new SWFObject("{image}", "admovie{id}", aWidth{id}, aHeight{id}, "8");
+	so{id}.addParam("quality", "high");
+	so{id}.addParam("wmode", "transparent");
+	so{id}.write("ads-{id}");
+</script>
+<!-- END swf -->
+<!-- BEGIN html -->
+<div id="ads-{id}" style="{div_dimensions}">{ad_content}</div>
+<!-- END html -->
+<!-- BEGIN image -->
+<div id="ads-{id}" style="background: {ad_image}; {div_dimensions}"><a href="index.php?gadget=Ads&action=AddClick&id={id}&redirect={ad_link_encoded}"{ad_target} title="{ad_title}"><img alt="{ad_title}" border="0" src="images/blank.gif" {image_dimensions} /></a></div>
+<!-- END image -->
+<!-- END ad -->
+<!-- BEGIN default_728 -->
+<div class="ads-{id}-728" style="{div_dimensions}"><a href="{ad_link}" title="{ad_title}"><img alt="{ad_title}" border="0" src="{spacer_image}" {image_dimensions} /></a></div>
+<!-- END default_728 -->
+<!-- BEGIN default_468 -->
+<div class="ads-{id}-468" style="{div_dimensions}"><a href="{ad_link}" title="{ad_title}"><img alt="{ad_title}" border="0" src="{spacer_image}" {image_dimensions} /></a></div>
+<!-- END default_468 -->
+<!-- BEGIN default_125 -->
+<div class="ads-{id}-125" style="{div_dimensions}"><a href="{ad_link}" title="{ad_title}"><img alt="{ad_title}" border="0" src="{spacer_image}" {image_dimensions} /></a></div>
+<!-- END default_125 -->
+<!-- BEGIN default_225 -->
+<div class="ads-{id}-225" style="{div_dimensions}"><a href="{ad_link}" title="{ad_title}"><img alt="{ad_title}" border="0" src="{spacer_image}" {image_dimensions} /></a></div>
+<!-- END default_225 -->
+<!-- BEGIN 728 -->
+<!-- start_728 -->
+<div class="ads-{id}-728">
+<!-- BEGIN item -->
+{layout_content}
+<!-- END item -->
+<div style="font-size: 0.1em; float: none; clear: both;">&nbsp;</div>
+</div>
+<!-- end_728 -->
+<!-- END 728 -->
+<!-- BEGIN 468 -->
+<!-- start_468 -->
+<div class="ads-{id}-468">
+<!-- BEGIN item -->
+{layout_content}
+<!-- END item -->
+<div style="font-size: 0.1em; float: none; clear: both;">&nbsp;</div>
+</div>
+<!-- end_468 -->
+<!-- END 468 -->
+<!-- BEGIN 125 -->
+<!-- start_{id}_125 -->
+<div class="ads-{id}-125" id="ads-{id}_{num}-125">
+<!-- BEGIN item -->
+{layout_content}
+<!-- END item -->
+<div style="font-size: 0.1em; float: none; clear: both;">&nbsp;</div>
+</div>
+<!-- end_{id}_125 -->
+<!-- END 125 -->
+<!-- BEGIN 225 -->
+<!-- start_{id}_225 -->
+<div class="ads-{id}-225" id="ads-{id}_{num}-225">
+<!-- BEGIN item -->
+{layout_content}
+<!-- END item -->
+<div style="font-size: 0.1em; float: none; clear: both;">&nbsp;</div>
+</div>
+<!-- end_{id}_225 -->
+<!-- END 225 -->
+
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Ads_iframe_{id}&resize={bool_resize}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+</div><!-- end_{type}ad -->
+<!-- END layout -->

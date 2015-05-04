@@ -1,0 +1,216 @@
+<!-- BEGIN msgbox-wrapper -->
+   <div id="msgbox-wrapper">
+   <!-- BEGIN msgbox -->
+   <div id="msgbox_{msg-id}" class="{msg-css}">{msg-txt}</div>
+    <script type="text/javascript">
+        var msgbox = $('msgbox_{msg-id}');
+        if((msgbox.className != 'error-message') && (msgbox.className != 'warning-message') && (window.hideResponseBox)) {
+            hideResponseBox(msgbox);
+        }
+    </script>
+   <!-- END msgbox -->
+   </div>
+<!-- END msgbox-wrapper -->
+
+<!-- BEGIN websiteparents_admin -->
+{menubar}
+<div>
+<form action="{base_script}" name="Admin" onsubmit="searchWebsiteParent(); return false;" method="post">
+<input type="hidden" name="gadget" value="Websites" />
+<input type="hidden" name="action" value="{account}Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <nobr><label for="status">{status}</label>{status_field}&nbsp;{search_field}&nbsp;{search}</nobr>
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_websiteparent}</td>
+		</tr>
+	</table>
+</div>
+</form>
+</div>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getWebsiteParentData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('websiteparents_datagrid', new websitesadminajax); -->
+<!-- </script> -->
+<!-- END websiteparents_admin -->
+
+<!-- BEGIN websites_admin -->
+{menubar}
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+<tr>	
+	<td colspan="2" width="100%" align="right">
+	<nobr>
+	{EDIT_BUTTON}
+	{DELETE_BUTTON}
+	<!--
+	&nbsp;<input id="embedButton" type="button" value="Embed This" onclick="if ( document.getElementById('embedInfo').style.display == 'none' ) { document.getElementById('embedInfo').style.display = 'block'; } else { document.getElementById('embedInfo').style.display = 'none';};">
+	-->
+	{CLOSE_BUTTON}
+	</nobr>
+	</td>
+</tr>
+</table>
+<div id="view_content">
+<div>
+<form action="{base_script}" name="Admin" method="post">
+<input type="hidden" name="gadget" value="Websites" />
+<input type="hidden" name="action" value="{account}Admin" />
+<input type="hidden" name="status" value="" id="websites_status" />
+<input type="hidden" name="search" value="" id="websites_search" />
+<input type="hidden" id="websites_id" name="id" value="{pid}" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+      <script type="text/javascript">
+Event.observe(window, "load",function(){getWebsiteData();});
+      </script>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_website}</td>
+		</tr>
+	</table>
+</div>
+</form>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+</div>
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('websites_datagrid', new websitesadminajax); -->
+<!-- </script> -->
+</div>
+{content}
+<!-- END websites_admin -->
+
+<!-- BEGIN savedwebsites_admin -->
+{menubar}
+<div>
+<form action="{base_script}" name="Admin" onsubmit="searchSavedWebsites(); return false;" method="post">
+<input type="hidden" name="gadget" value="Websites" />
+<input type="hidden" name="action" value="{account}Admin" />
+<input type="hidden" name="status" id="savedwebsites_status" value="" />
+<input type="hidden" name="search" id="savedwebsites_search" value="" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<!--
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_savedwebsite}</td>
+		</tr>
+	</table>
+</div>
+-->
+</form>
+</div>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getSavedWebsitesData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('savedwebsites_datagrid', new websitesadminajax); -->
+<!-- </script> -->
+<!-- END savedwebsites_admin -->
+
+<!-- BEGIN brands_admin -->
+{menubar}
+<form action="{base_script}" name="Admin" onsubmit="searchBrand(); return false;" method="post">
+<input type="hidden" name="gadget" value="Websites" />
+<input type="hidden" name="action" value="Admin" />
+<div id="workarea">
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options">
+      <label for="status">{status}:</label>{status_field}&nbsp;{search_field}&nbsp;{search}
+    </td>
+  </tr>
+  <tr>
+	<td>
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<div style="text-align: right;" align="right">
+	<table style="text-align: right; empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="100%">&nbsp;</td>
+			<td width="0%">{add_brands}</td>
+		</tr>
+	</table>
+</div>
+</form>
+      <script type="text/javascript">
+	  Event.observe(window, "load",function(){getBrandData();});
+      </script>
+<!-- {menubar} -->
+<!-- <div id="datagrid"> -->
+<!--     {grid} -->
+<!-- </div> -->
+<!-- <div id="datagridTools"> -->
+<!--     {tools} -->
+<!-- </div> -->
+<!-- <script type="text/javascript"> -->
+<!--     initDataGrid('brands_datagrid', new websitesadminajax); -->
+<!-- </script> -->
+<!-- END brands_admin -->
+
+<!-- BEGIN gadget_page -->
+{menubar}
+<div style="float: left; vertical-align: top;">
+	{left_menu}
+</div>
+<div {workarea-style}id="workarea">
+		{content}
+</div>
+<div style="clear: all;">&nbsp;</div>
+<!-- END gadget_page -->

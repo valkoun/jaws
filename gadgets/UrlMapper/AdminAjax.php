@@ -6,38 +6,47 @@
  * @package    UrlMapper
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class UrlMapperAdminAjax extends Jaws_Ajax
 {
     /**
-     * Returns mapped actions of a certain gadget
+     * Returns the (normal) actions of a certain gadget
      *
      * @access  public
      * @param   string  $gadget  Gadget name
-     * @return  mixed   Array of actions or false on error
+     * @return  array   Array with actions
      */
     function GetGadgetActions($gadget)
     {
-        $actions = $this->_Model->GetGadgetActions($gadget);
-        if (Jaws_Error::IsError($actions)) {
-            return false;
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        //Get the actions
+        $actions  = $GLOBALS['app']->GetGadgetActions($gadget);
+        $ractions = (isset($actions['NormalAction'])) ? $actions['NormalAction'] : array();
+        if (isset($actions['StandaloneAction'])) {
+            $ractions = $ractions + $actions['StandaloneAction'];
         }
-
-        return $actions;
+        //Clean the actions, we only want normal actions
+        $mapActions = array();
+        foreach($ractions as $key => $action) {
+            if ($action['mode'] == 'NormalAction' || $action['mode'] == 'StandaloneAction') {
+                $mapActions[$key] = $action['name'];
+            }
+        }
+        return $mapActions;
     }
 
     /**
-     * Returns total maps of a certain action in a certain gadget
+     * Returns the total maps of a certain action in a certain gadget
      *
      * @access  public
      * @param   string  $gadget  Gadget name so we get sure we don't return the same action
      *                           maps of another gadget
      * @param   string  $action  Action name
-     * @return  array   The maps of the action
+     * @return  array   Maps that an action has
      */
-    function GetActionMaps($gadget, $action)
+    function GetMapsOfAction($gadget, $action)
     {
         //Now get the custom maps
         $gHTML = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminHTML');
@@ -45,24 +54,64 @@ class UrlMapperAdminAjax extends Jaws_Ajax
     }
 
     /**
+     * Adds a new map
+     *
+     * @access  public
+     * @param   string   $gadget   Gadget's name
+     * @param   string   $action   Gadget's action
+     * @param   string   $map      Map to use
+     * @param   string   $regexp   Regular expression
+     * @return  boolean  Success/Failure
+     */
+    function AddMap($gadget, $action, $map, $regexp, $extension)
+    {
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        $res = $model->AddMap($gadget, $action, $map, $regexp, $extension);
+        if (!Jaws_Error::IsError($res)) {
+            $model->UpdateCustomMaps();
+            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_MAP_ADDED', $map), RESPONSE_NOTICE);
+        } else {
+            $GLOBALS['app']->Session->PushLastResponse($res->getMessage(), RESPONSE_ERROR);
+        }
+
+        return $GLOBALS['app']->Session->PopLastResponse();
+    }
+
+    /**
      * Updates a map
      *
      * @access  public
-     * @param   int     $id         Map ID
-     * @param   string  $map        Map string
-     * @param   string  $extension  Map extension
-     * @param   int     $order      Sequence number of the map
-     * @return  array   Response array (notice or error)
+     * @param   int      $id       Map's ID
+     * @param   string   $map      New map
+     * @return  boolean  Success/Failure
      */
-    function UpdateMap($id, $map, $extension, $order)
+    function UpdateMap($id, $map, $regexp, $extension)
     {
-        $res = $this->_Model->UpdateMap($id, $map, $extension, null, $order);
-        if (Jaws_Error::IsError($res)) {
-            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_ERROR_MAP_NOT_UPDATED'), RESPONSE_ERROR);
-        } else {
-            $GLOBALS['app']->Session->PushLastResponse(_t('URLMAPPER_MAP_UPDATED', $map), RESPONSE_NOTICE);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        $res = $model->UpdateMap($id, $map, $regexp, $extension);
+        if (!Jaws_Error::IsError($res)) {
+            $model->UpdateCustomMaps();
         }
+        return $GLOBALS['app']->Session->PopLastResponse();
+    }
 
+    /**
+     * Deletes a map
+     *
+     * @access  public
+     * @param   int     $id Map's ID
+     * @return  boolean Success/Failure
+     */
+    function DeleteMap($id)
+    {
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        $res = $model->DeleteMap($id);
+        if (!Jaws_Error::IsError($res)) {
+            $model->UpdateCustomMaps();
+        }
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -75,25 +124,29 @@ class UrlMapperAdminAjax extends Jaws_Ajax
      */
     function GetMap($id)
     {
-        return $this->_Model->GetMap($id);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        return $model->GetMapRoute($id);
     }
 
     /**
      * Updates the map settings
      *
      * @access  public
-     * @param   string  $enabled     Should maps be used? (true/false)
-     * @param   bool    $use_aliases Should aliases be used?
-     * @param   string  $precedence  custom map precedence over default map (true/false)
-     * @param   string  $extension   Extension to use
-     * @return  array   Response array (notice or error)
+     * @param   string   $enabled     Should maps be used? (true/false)
+     * @param   boolean  $use_aliases Should aliases be used?
+     * @param   string   $precedence  custom map precedence over default map (true/false)
+     * @param   string   $extension   Extension to use
+     * @return  boolean  Success/Failure
      */
     function UpdateSettings($enabled, $use_aliases, $precedence, $extension)
     {
-        $this->_Model->SaveSettings($enabled == 'true',
-                                    $use_aliases == 'true',
-                                    $precedence == 'true',
-                                    $extension);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        $model->SaveSettings($enabled == 'true',
+                             $use_aliases == 'true',
+                             $precedence == 'true',
+                             $extension);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
@@ -101,11 +154,13 @@ class UrlMapperAdminAjax extends Jaws_Ajax
      * Returns all aliases
      *
      * @access  public
-     * @return  mixed   List of aliases or false if no aliases found
+     * @return  array    List of aliases
      */
     function GetAliases()
     {
-        $aliases = $this->_Model->GetAliases();
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model   = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        $aliases = $model->GetAliases();
         if (count($aliases) > 0) {
             return $aliases;
         }
@@ -116,53 +171,61 @@ class UrlMapperAdminAjax extends Jaws_Ajax
      * Returns basic information of certain alias
      *
      * @access  public
-     * @param   int     $id     Alias ID
-     * @return  array   Alias information
+     * @param   int      $id      Alias ID
+     * @return  array    Alias information
      */
     function GetAlias($id)
     {
-        return $this->_Model->GetAlias($id);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper', 'AdminModel');
+        return $model->GetAlias($id);
     }
 
     /**
      * Adds a new alias
      *
      * @access  public
-     * @param   string  $alias  Alias value
-     * @param   string  $url    Real URL
-     * @return  array   Response array (notice or error)
+     * @param   string   $alias   Alias value
+     * @param   string   $url     Real URL
+     * @return  boolean  Success/Failure
      */
     function AddAlias($alias, $url)
     {
-        $this->_Model->AddAlias($alias, $url);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper',  'AdminModel');
+        $model->AddAlias($alias, $url);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Updates the alias
+     * Updates an alias by its ID
      *
      * @access  public
-     * @param   int     $id     Alias ID
-     * @param   string  $alias  Alias value
-     * @param   string  $url    Real URL
-     * @return  array   Response array (notice or error)
+     * @param   int      $id      Alias ID
+     * @param   string   $alias   Alias value
+     * @param   string   $url     Real URL
+     * @return  boolean  Success/Failure
      */
     function UpdateAlias($id, $alias, $url)
     {
-        $this->_Model->UpdateAlias($id, $alias, $url);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper',  'AdminModel');
+        $model->UpdateAlias($id, $alias, $url);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 
     /**
-     * Deletes the alias
+     * Deletes an alias by its ID
      *
      * @access  public
-     * @param   int     $id     Alias ID
-     * @return  array   Response array (notice or error)
+     * @param   int      $id      Alias ID
+     * @return  boolean  Success/Failure
      */
     function DeleteAlias($id)
     {
-        $this->_Model->DeleteAlias($id);
+        $this->CheckSession('UrlMapper', 'ManageUrlMapper');
+        $model = $GLOBALS['app']->LoadGadget('UrlMapper',  'AdminModel');
+        $model->DeleteAlias($id);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
 

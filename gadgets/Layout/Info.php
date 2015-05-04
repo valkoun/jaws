@@ -6,35 +6,29 @@
  * @package    Layout
  * @author     Jonathan Hernandez <ion@suavizado.com>
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2004-2012 Jaws Development Group
+ * @copyright  2004-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class LayoutInfo extends Jaws_GadgetInfo
 {
     /**
-     * Gadget version
+     * Sets info about Layout gadget
      *
-     * @var     string
-     * @access  private
+     * @access public
      */
-    var $_Version = '0.5.0';
+    function LayoutInfo()
+    {
+        parent::Init('Layout');
+        $this->GadgetName(_t('LAYOUT_NAME'));
+        $this->GadgetDescription(_t('LAYOUT_DESCRIPTION'));
+        $this->GadgetVersion('0.4.1');
+        $this->Doc('gadget/Layout');
+        $this->SetAttribute('core_gadget', true);
 
-    /**
-     * Is this gadget core gadget?
-     *
-     * @var    boolean
-     * @access  private
-     */
-    var $_IsCore = true;
-
-    /**
-     * Gadget ACLs
-     *
-     * @var     array
-     * @access  private
-     */
-    var $_ACLs = array(
-        'ManageThemes',
-    );
-
+        $acls = array(
+            'ManageLayout',
+            'ManageThemes',
+        );
+        $this->PopulateACLs($acls);
+    }
 }

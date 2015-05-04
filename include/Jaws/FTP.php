@@ -1,11 +1,12 @@
 <?php
 /**
- * Class that deals like a wrapper between Jaws and pear/Net_FTP
+ * FTP support. A wrapper between Jaws and pear/Net_FTP
  *
  * @category   FTP
+ * @category   developer_feature
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_FTP
@@ -79,7 +80,7 @@ class Jaws_FTP
      * This function loads the ftp settings from
      * the registry.
      *
-     * @access  protected
+     * @access protected
      */
     function LoadFTPSettings()
     {
@@ -114,8 +115,7 @@ class Jaws_FTP
         $this->_ftp->setPort($this->_port);
         $res = $this->_ftp->connect();
         if (PEAR::isError($res)) {
-            return new Jaws_Error('Error while connecting to server '.$this->_hostname.' on '.$this->_port.'.',
-                                  __FUNCTION__);
+            return new Jaws_Error('Error while connecting to server '.$this->_hostname.' on '.$this->_port.'.');
         }
 
         return true;
@@ -131,8 +131,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->disconnect();
         if (PEAR::isError($res)) {
-            return new Jaws_Error('Error while disconnecting from server '.$this->_hostname.'.'
-                                  __FUNCTION__);
+            return new Jaws_Error('Error while disconnecting from server '.$this->_hostname.'.');
         }
 
         return true;
@@ -159,8 +158,7 @@ class Jaws_FTP
         $this->_ftp->setPassword($this->_password);
         $res = $this->_ftp->login();
         if (PEAR::isError($res)) {
-            return new Jaws_Error('Error while login into server.',
-                                  __FUNCTION__);
+            return new Jaws_Error('Error while login into server.');
         }
 
         return true;
@@ -177,8 +175,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->cd($dir);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;
@@ -194,8 +191,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->pwd();
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return $res;
@@ -213,8 +209,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->mkdir($dir, $recursive);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;
@@ -225,15 +220,14 @@ class Jaws_FTP
      *
      * @access  public
      * @param   mixed   $target        The file or array of files to set permissions for
-     * @param   int     $permissions   The mode to set the file permissions to
+     * @param   integer $permissions   The mode to set the file permissions to
      * @return  mixed                  True if successful, otherwise Jaws_Error
      */
     function chmod($target, $permissions)
     {
         $res = $this->_ftp->chmod($target, $permissions);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return $res;
@@ -251,8 +245,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->rename($remote_from, $remote_to);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;
@@ -270,8 +263,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->rm($path, $recursive);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;
@@ -291,8 +283,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->get($remote_file, $local_file, $overwrite, $mode);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;
@@ -312,8 +303,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->put($local_file, $remote_file, $overwrite, $mode);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;
@@ -330,8 +320,7 @@ class Jaws_FTP
     {
         $res = $this->_ftp->setMode($mode);
         if (PEAR::isError($res)) {
-            return new Jaws_Error($res->getMessage(),
-                                  __FUNCTION__);
+            return new Jaws_Error($res->getMessage());
         }
 
         return true;

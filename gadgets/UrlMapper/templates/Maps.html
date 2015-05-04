@@ -1,6 +1,5 @@
 <!-- BEGIN UrlMapper -->
 {menubar}
-<div id="main">
 <table style="width: 100%; border: 0px solid #ccc; padding: 0px; border-spacing: 0.1px;">
   <!-- big work area -->
   <tr>
@@ -19,25 +18,25 @@
     </td>
     <td style="width: 230px;" valign="top">
       <fieldset id="map_area">
-      <legend><span id="legend_title">{legend_title}</span></legend>
-        {map_order}
-        <label for="map_route">{lbl_map_route}:</label><br/>{map_route}<br />
-        <label for="map_ext">{lbl_map_ext}:</label><br/>{map_ext}<br />
-        <label for="custom_map_route">{lbl_custom_map_route}:</label><br/>{custom_map_route}<br />
-        <label for="custom_map_ext">{lbl_custom_map_ext}:</label><br/>{custom_map_ext}<br />
+      <legend id="legend_title">{legend_title}</legend>
+        <label for="map_route">{map_route}:</label><br/>{map_route_entry}<br />
+        <label for="map_regexp">{map_regexp}:</label><br/>{map_regexp_entry}<br />
+        <label for="map_ext">{map_ext}:</label><br/>{map_ext_entry}<br />
         <div id="buttons">{btn_cancel}{btn_save}</div>
       </fieldset>
     </td>
   </tr>
 </table>
-</div>
 <script type="text/javascript">
   var addMap_title     = "{addMap_title}";
   var editMap_title    = "{editMap_title}";
   var confirmMapDelete = "{confirmMapDelete}";
-  JawsDataGrid.name = 'maps_datagrid';
+  fillActionCombo();
+
   $('legend_title').innerHTML   = addMap_title;
   $('maps_datagrid').objectName = urlmapperSync;
-  rebuildActionCombo();
+  JawsDataGrid.name = 'maps_datagrid';
+  resetGrid('maps_datagrid', '');
+  enableMapEditingArea(false);
 </script>
 <!-- END UrlMapper -->

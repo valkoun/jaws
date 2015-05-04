@@ -1,0 +1,179 @@
+<!-- BEGIN advancedfilter -->
+<div id="{actionName}" class="users users-{actionName}">
+<div id="{actionName}-head" class="layout_head">
+<h2 id="{actionName}-title">{layout_title}</h2>
+</div>
+<div id="{actionName}-body" class="layout_body">
+	  <form method="POST" action="{action}" id="{actionName}_form" name="{actionName}_form" onsubmit="if(document.getElementById('Users_q').value=='{searchkeyword_value}')document.getElementById('Users_q').value='';">
+		<input type="hidden" value="{searchgid}" id="Users_gid" name="Users_gid" />
+		<div id="{actionName}-search">
+			<input name="Users_q" id="Users_q" value="{searchkeyword_value}" onfocus="this.style.color='#000000';if(this.value==this.defaultValue){this.value='';};" onblur="if(this.value==''){this.value='{searchkeyword_value}';this.style.color='#888888';};">
+		</div>
+		<div id="{actionName}-search-actions" class="actions">
+			<input type="submit" value="GO" id="Users_searchsubmit" />&nbsp;
+		</div>
+		<div id="Users_search_choices" class="autocomplete"></div>
+		<div id="{actionName}-filters" class="filters">
+			<!-- BEGIN filter -->
+			<div id="{filter_name}-filter" class="filter">
+				<div class="filter-item">
+					<input type="checkbox" id="Users_f-{filter_name}" class="filter-input" name="Users_f[]" value="{filter_value}"{checked}{onclick} />
+				</div>
+				<div class="filter-label">
+					<label for="Users_f-{filter_name}" id="{filter_name}-label" class="label">{filter_label}</label>
+				</div>
+				<div id="{filter_name}-subfilters" class="subfilters"{substyle}>
+					<!-- BEGIN subfilter -->
+					<div id="{subfilter_name}-filter" class="subfilter filter">
+						<div class="filter-item subfilter-item">
+							<input type="checkbox" id="Users_f-{subfilter_name}" class="filter-input subfilter-input" name="Users_f[]" value="{subfilter_value}"{subchecked} />
+						</div>
+						<div class="filter-label subfilter-label">
+							<label for="Users_f-{subfilter_name}" id="{subfilter_name}-label" class="label">{subfilter_label}</label>
+						</div>
+					</div>
+					<!-- END subfilter -->
+				</div>
+			</div>
+			<!-- END filter -->
+		</div>
+		<div id="{actionName}-hoods" style="display: none;">
+			<select size="1" name="Users_h" id="Users_h" onchange="javascript: if(document.getElementById('Users_q').value=='{searchkeyword_value}'){document.getElementById('Users_q').value='';} var searchfilters = ''; var filters = document.getElementsByName('Users_f[]'); for (var f=0;f<filters.length;f++){if(filters[f].checked){searchfilters = (searchfilters != '' ? searchfilters+','+filters[f].value : filters[f].value);}}; location.href = 'index.php?gadget=Users&action=UserDirectory&Users_gid=' + document.getElementById('Users_gid').value + '&Users_f=' + searchfilters + '&Users_h=' + document.getElementById('Users_h').value + '&Users_q=' + document.getElementById('Users_q').value;">
+				<option {hood_default} value="">Select Neighborhood...</option>
+				<option value="">All Neighborhoods</option>
+				{hood_options}
+			</select>&nbsp;&nbsp;
+		</div>
+		<div id="{actionName}-actions" class="actions">
+			<input type="submit" value="GO" id="Users_searchsubmit2" />&nbsp;
+		</div>
+	  <div id="Users_saveSearch" style="display: none; padding: 15px; text-align: left;">
+			<h2 style="color: #666666;">Save This Search</h2>
+			Right click on the link below, select "Copy" to get the Permanent Link to this Search.</p>
+			<p><textarea class="code" style="padding:0; font-size: 90%" id="code" name="code" rows="3" onmousedown="if(event.button==2){Users_select_code();};" onclick="Users_select_code();" cols="64" readonly="readonly">{permalink}</textarea></p>
+	  </div>
+	</form>
+</div>
+	<script type="text/javascript">
+		var Users_save_html = $('Users_saveSearch').innerHTML;
+		function Users_select_code()
+		{
+		//var text_val=eval(element);
+		document.{actionName}_form.code.focus();
+		document.{actionName}_form.code.select();
+		}
+
+		/*
+		function Users_GetStateId(element, entry) {
+			Users_AutoCompleteHost = '{site_url}/index.php?gadget=Users&action=AutoComplete';
+			Users_AutoCompleteURL = "&element=Users_q&methodcount=1&initial1gadget=Users&initial1method=SearchKeyWithUsers&initial1paramcount=4&initial1param1=true&initial1param2=name&initial1param3=ASC&initial1param4=name";
+			return entry+"&methodcount=1&initial1gadget=Users&initial1method=SearchKeyWithUsers&initial1paramcount=4&initial1param1=true&initial1param2=name&initial1param3=ASC&initial1param4=name";
+		}
+			
+		function Users_ShowNoMatches(text, li) {
+			value = li.innerHTML;
+			if(value.indexOf("No matches") != -1){
+				text.value = "{searchkeyword_value}";
+				$('Users_search_choices').style.display = '';
+			}
+		}
+		
+		var Users_AutoCompleteHost = '';
+		var Users_AutoCompleteURL = '';
+		var Users_ShowingChoices = false;
+		var Users_ComboBox = Class.create();
+
+		Users_ComboBox.Autocompleter = Ajax.Autocompleter;
+
+		// Overload onBlur
+		Users_ComboBox.Autocompleter.prototype.onBlur = function(event) {
+			if (Element.getStyle(this.update, 'display') == 'none') { return; }
+			// Dont hide the div on "blur" if the user clicks scrollbar
+			if(event&&Element.getStyle(this.update, 'height') != ''){
+				if( Position.within( this.update , Event.pointerX(event) , Event.pointerY(event) ) ){ 
+					Event.observe(this.update, "blur", this.onBlur.bindAsEventListener(this),true); 
+					// make sure blur is still around on
+					return; 
+				}
+			}
+			// needed to make click events working
+			setTimeout(this.hide.bind(this), 250);
+			this.hasFocus = false;
+			this.active = false; 
+		}
+
+		Users_ComboBox.Autocompleter.prototype.markPrevious = function() {
+			if(this.index > 0) this.index--
+			else this.index = this.entryCount-1;
+			this.getEntry(this.index).scrollIntoView(false);
+		}
+			
+		Users_ComboBox.prototype = {
+			initialize: function(textBox, resultsElement, array, options) {
+			this.textBox = $(textBox);
+					
+			//Cache for allChoicesHtml
+			this.allChoicesHtml = null
+			
+			this.results = $(resultsElement);
+			
+			this.array = array;
+			
+			this.results.style.display 	= 'none';
+			
+			this.events = {
+				showChoices: 	this.showChoices.bindAsEventListener(this),
+				hideChoices: 	this.hideChoices.bindAsEventListener(this),
+				click:			this.click.bindAsEventListener(this),
+				keyDown:		this.keyDown.bindAsEventListener(this)
+			}
+			
+			this.autocompleter = new Users_ComboBox.Autocompleter(this.textBox, this.results, this.array, options);
+			
+			Event.observe(this.textBox, 'click', this.events.click);
+			Event.observe(this.textBox, 'keydown', this.events.keyDown);
+			},
+			
+			keyDown: function(e) {
+				if (e.keyCode == Event.KEY_DOWN && this.choicesVisible() ) {
+					this.showChoices();
+				}			
+			},
+			
+			// returns boolean indicating whether the choices are displayed
+			choicesVisible: function() { return (Element.getStyle(this.autocompleter.update, 'display') == 'none'); },
+			
+			click: function() {
+				if (this.choicesVisible() ) {
+					this.showChoices();
+				} else {
+					this.hideChoices();
+				}
+			},
+				
+			showChoices: function() {
+				this.textBox.focus();
+				this.autocompleter.changed = false;
+				this.autocompleter.hasFocus = true;
+				//this.getAllChoices();
+			},
+			
+			hideChoices: function() {
+				this.autocompleter.onBlur();
+			}
+		}
+		Event.observe(window, 'load', function(e){
+			var UComboBox = new Users_ComboBox('Users_q', 'Users_search_choices', "{site_url}/index.php?gadget=Users&action=AutoComplete", {paramName: "query", minChars: 1, callback: Users_GetStateId, afterUpdateElement: Users_ShowNoMatches});
+		});
+		*/
+		/*
+		new Ajax.Autocompleter("q", "Users_search_choices", "index.php?gadget=Maps&action=AutoCompleteRegions", {
+		  paramName: "query", 
+		  minChars: 1,
+		  callback: Users_GetStateId
+		});
+		*/
+		
+	</script>
+</div>
+<!-- END advancedfilter -->

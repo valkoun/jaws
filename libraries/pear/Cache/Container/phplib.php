@@ -16,7 +16,7 @@
 // |          Sebastian Bergmann <sb@sebastian-bergmann.de>               |
 // +----------------------------------------------------------------------+
 //
-// $Id: phplib.php 174777 2004-12-15 09:09:33Z dufuz $
+// $Id: phplib.php,v 1.5 2004/12/15 09:09:30 dufuz Exp $
 
 require_once 'Cache/Container.php';
 
@@ -50,7 +50,7 @@ require_once 'Cache/Container.php';
 *
 * 
 * @author   Ulf Wendel  <ulf.wendel@phpdoc.de>, Sebastian Bergmann <sb@sebastian-bergmann.de>
-* @version  $Id: phplib.php 174777 2004-12-15 09:09:33Z dufuz $
+* @version  $Id: phplib.php,v 1.5 2004/12/15 09:09:30 dufuz Exp $
 * @package  Cache
 * @see      save()
 */

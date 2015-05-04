@@ -19,7 +19,6 @@ define('_NB_SEARCH_LAYOUT_SIMPLEBOX', "Enkel søkeboks");
 define('_NB_SEARCH_LAYOUT_SIMPLEBOX_DESCRIPTION', "Tilbyr en søkeboks med valgbare moduler.");
 define('_NB_SEARCH_LAYOUT_ADVANCEDBOX', "Avansert søkeboks");
 define('_NB_SEARCH_LAYOUT_ADVANCEDBOX_DESCRIPTION', "Tilbyr en avansert søkeboks");
-define('_NB_SEARCH_RESULTS', "Søkeresultat");
 define('_NB_SEARCH_RESULTS_SUBTITLE', "{0} elementer som inneholder [{0}] er funnet");
 define('_NB_SEARCH_RESULTS_IN_GADGETS', "{0} elementer funnet for [{1}] i {2}");
 define('_NB_SEARCH_NO_RESULTS', "Ingen elementer som inneholder [{0}] ble funnet");

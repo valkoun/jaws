@@ -1,13 +1,14 @@
 <?php
 /**
- * Class to manage dates
+ * Date API, for formatting and conversion. Supports user timezone preferences. 
  *
  * @category   JawsType
+ * @category   developer_feature
  * @package    Core
  * @author     Pablo Fischer <pablo@pablo.com.mx>
  * @author     Amir Mohammad Saied <amir@php.net>
  * @autho      Ali Fazelzadeh <afz@php.net>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_Date
@@ -15,29 +16,29 @@ class Jaws_Date
     /**
      * Has all months in an array
      *
-     * @var     array
-     * @access  private
+     * @var    array
+     * @access private
      */
     var $_Months = array();
 
     /**
      * Has all days in an array
      *
-     * @var     array
-     * @access  private
+     * @var    array
+     * @access private
      */
     var $_Days = array();
 
     /**
      * Has the current timezone in ISO8601 form
      *
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $_ISO8601Timezone;
 
     /**
-     * @access  private
+     * @access private
      */
     var $_GregorianDaysInMonthes = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
@@ -51,8 +52,9 @@ class Jaws_Date
     {
         $CalendarType = ucfirst(strtolower($CalendarType));
         if (!file_exists(JAWS_PATH . 'include/Jaws/Date/'. $CalendarType .'.php')) {
-            $GLOBALS['log']->Log(JAWS_LOG_DEBUG,
-                                 'Loading calendar '.$CalendarType.' failed, Attempting to load default calendar');
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_DEBUG, 'Loading calendar '.$CalendarType.' failed, Attempting to load default calendar');
+            }
             $CalendarType = 'Gregorian';
         }
 
@@ -135,8 +137,8 @@ class Jaws_Date
     /**
      * Format the input date.
      *
-     * @param   string  $date   Date string
-     * @param   string  $format Format to use
+     * @param  string  $date   Date string
+     * @param  string  $format Format to use
      * @return The original date with a new format
      */
     function Format()
@@ -146,7 +148,7 @@ class Jaws_Date
    /**
     * Output the date in since format
     *
-    * @param   string  $date   Date String
+    * @param    string  $date   Date String
     * @return   string  since formatted
     */
     function SinceFormat($date)
@@ -171,8 +173,8 @@ class Jaws_Date
      * Return the month number in string
      *
      * @param  int    $m  Numeric month(1..12)
-     * @return  string     The month in string not in number
-     * @access  public
+     * @return string     The month in string not in number
+     * @access public
      */
     function MonthString($m)
     {
@@ -207,8 +209,8 @@ class Jaws_Date
      * Return the month number in string
      *
      * @param  int    $m  Numeric month(1..12)
-     * @return  string     The month in string not in number
-     * @access  public
+     * @return string     The month in string not in number
+     * @access public
      */
     function MonthShortString($m = '')
     {
@@ -301,8 +303,8 @@ class Jaws_Date
      * Based on http://php.net/manual/en/function.checkdate.php#54948 (Zoe Blade)
      *
      * @params string $date Date to valid
-     * @return  bool    True if successful
-     * @access  public
+     * @return boolean True if successful
+     * @access public
      */
     function ValidDBDate($date)
     {
@@ -318,8 +320,8 @@ class Jaws_Date
      * ISO8601 to db date (without timezone)
      *
      * @params string $isodate Date to convert
-     * @return  string Date formatted as YYYY-MM-DD HH:mm:ss
-     * @access  public
+     * @return string Date formatted as YYYY-MM-DD HH:mm:ss
+     * @access public
      */
     function ISOToDBDate($isodate)
     {
@@ -336,7 +338,7 @@ class Jaws_Date
      *
      * @param   int     $year  Gregorian year
      * @access  private
-     * @return  bool    True/False
+     * @return  boolean True/False
      */
     function _IsLeapYear($year)
     {
@@ -350,7 +352,7 @@ class Jaws_Date
      * @param   int     $month  Gregorian month
      * @param   int     $day    Gregorian day
      * @access  public
-     * @return  bool    True/False
+     * @return  boolean True/False
      */
     function GregorianTotalDays($year, $month, $day)
     {
@@ -376,7 +378,7 @@ class Jaws_Date
      * @access  protected
      * @return  array   Converted time
      */
-    function ToGregorian($days, $offset = 0, $hour = 0, $minute = 0, $second = 0, $format = '')
+    function ToGregorian($days, $offset = 0)
     {
         $days--;
         $year = $offset;
@@ -411,25 +413,21 @@ class Jaws_Date
             $month++;
         }
 
-        $dt = mktime($hour, $minute, $second, $month + 1, $days, $year);
-        return !empty($format)? date($format, $dt) :
-                                array('timestamp' => $dt,
-                                      'year'      => $year,
-                                      'month'     => $month + 1,
-                                      'day'       => $days,
-                                      'hour'      => $hour,
-                                      'minute'    => $minute,
-                                      'second'    => $second,
-                                      'monthDays' => $this->_GregorianDaysInMonthes[$month] + ($month==1 ? $isLeap : 0),
-                                      'yearDay'   => $year_days
-                                    );
+        return array('timestamp' => mktime(0, 0, 0, $month + 1, $days, $year),
+                     'year'      => $year,
+                     'month'     => $month + 1,
+                     'day'       => $days,
+                     'monthDays' => $this->_GregorianDaysInMonthes[$month]+
+                                    ($month==1 ? $isLeap : 0),
+                     'yearDay'   => $year_days
+                    );
     }
 
     /**
      * Convenience function to translate calendar strings.
      *
-     * @param   string    string The string to translate.
-     * @access  public
+     * @param string    string The string to translate.
+     * @access public
      */
     function _t_cal($string)
     {

@@ -110,7 +110,7 @@ div.menu_levels {
 }
 
 #menus_edit {
-    height: 390px;
+    height: 360px;
     border: 1px solid #d3d7cf;
 }
 
@@ -121,50 +121,4 @@ div.menu_levels {
 
 #tbl_group td, #tbl_menu td {
     padding: 8px 10px 0px 0px;
-}
-
-.buttons {padding-left:4px;}
-#ifrm_upload {
-    display:none;
-}
-td#menu_image {
-padding:0px;
-vertical-align: bottom;
-text-align: center;
-width:128px;
-}
-#menu_image img {
-background-color:white;
-border:1px solid #a9a9a9;
-padding:2px;
-max-width:120px;
-max-height:90px;
-}
-td#image-action {
-padding: 2px 0;
-text-align: center;
-}
-#image-action .actions {
-position:relative;
-width:55px;
-margin:0px auto;
-direction:ltr;
-}
-#image-action .actions button {
-width:24px;
-height:24px;
-margin:0;
-}
-#image-action .wrapper {
-position:absolute;
-top:0;
-width:24px;
-height:24px;
-overflow:hidden;
-}
-#image-action .wrapper input {
-margin:0;
-font-size:30px;
-opacity:0;
-filter:alpha(opacity=0);
 }

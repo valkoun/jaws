@@ -12,7 +12,7 @@
  * @category   Captcha
  * @package    Policy
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 require_once('reCAPTCHA/recaptchalib.php');
@@ -38,11 +38,9 @@ class reCAPTCHA
         $res = array();
         $publickey = $GLOBALS['app']->Registry->Get('/gadgets/Policy/reCAPTCHA_public_key');
         $reCAPTCHA = recaptcha_get_html($publickey, $this->_error);
-        $res['label'] = _t('GLOBAL_CAPTCHA_CODE');
         $res['captcha'] =& Piwi::CreateWidget('StaticEntry', $reCAPTCHA);
         $res['captcha']->setTitle(_t('GLOBAL_CAPTCHA'));
         $res['entry'] = null;
-        $res['description'] = _t('GLOBAL_CAPTCHA_CODE_DESC');
         return $res;
     }
 

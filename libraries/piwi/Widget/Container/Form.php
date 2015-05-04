@@ -31,15 +31,6 @@ class Form extends Container
     var $_method;
 
     /**
-     * Form target
-     *
-     * @var    string 
-     * @access private
-     * @see    setTarget
-     */
-    var $_target;
-
-    /**
      * Table Class
      *
      * @var      string $_tableClass
@@ -113,6 +104,7 @@ class Form extends Container
     {
         $this->_action         = $action;
         $this->_method         = strtolower($method);
+        $this->_name           = 'form';
         $this->_hiddenItems    = array();
         $this->_shouldValidate = false;
         $this->_customValidate = false;
@@ -128,17 +120,6 @@ class Form extends Container
         }
 
         parent::init();
-    }
-
-    /**
-     * Set the form target 
-     *
-     * @access   public
-     * @param    string $target Form target
-     */
-    function setTarget($target)
-    {
-        $this->_target = $target;
     }
 
     /**
@@ -317,10 +298,6 @@ class Form extends Container
     function buildXHTML()
     {
         $this->_XHTML = "<form ";
-        if (!empty($this->_name)) {
-            $this->_XHTML .= "name=\"".$this->_name."\" ";
-        }
-
         if (!empty($this->_encodingType)) {
             $this->_XHTML .= "enctype=\"".$this->_encodingType."\" ";
         }
@@ -331,15 +308,11 @@ class Form extends Container
             $this->_XHTML .= "action=\"".$this->_action."\" ";
         }
 
-        if (!empty($this->_target)) {
-            $this->_XHTML.= " target=\"{$this->_target}\" ";
-        }
-
         $this->_XHTML .= "method=\"".$this->_method."\"";
         $this->_XHTML .= $this->buildBasicXHTML();
 
         if ($this->_shouldValidate) {
-            $this->_XHTML .= " onsubmit=\"return ValidateForm_".$this->_id."(this);\"";
+            $this->_XHTML .= "onsubmit=\"return ValidateForm_".$this->_id."(this);\"";
         }
 
         $this->_XHTML .= ">\n";

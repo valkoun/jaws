@@ -5,7 +5,7 @@
  * @category   Application
  * @package    UpgradeStage
  * @author     Jon Wood <jon@substance-it.co.uk>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Upgrader_Introduction extends JawsUpgraderStage
@@ -18,7 +18,7 @@ class Upgrader_Introduction extends JawsUpgraderStage
      */
     function Display()
     {
-        $tpl = new Jaws_Template('stages/Introduction/templates/');
+        $tpl = new Jaws_Template(UPGRADE_PATH . 'stages/Introduction/templates/');
         $tpl->Load('display.html', false, false);
         $tpl->SetBlock('Introduction');
         $tpl->SetVariable('welcome',    _t('UPGRADE_INTRO_WELCOME'));
@@ -27,8 +27,8 @@ class Upgrader_Introduction extends JawsUpgraderStage
         $tpl->SetVariable('ftp_info',   _t('UPGRADE_INTRO_FTP'));
         $tpl->SetVariable('language',   _t('GLOBAL_LANGUAGE'));
         $tpl->SetVariable('next',       _t('GLOBAL_NEXT'));
-        if (is_writable(JAWS_PATH . 'data/logs') && is_dir(JAWS_PATH . 'data/logs')) {
-            $tpl->SetVariable('log_use', _t('UPGRADE_INTRO_LOG', 'data/logs/upgrade.txt'));
+        if (is_writable(JAWS_DATA . 'logs') && is_dir(JAWS_DATA . 'logs')) {
+            $tpl->SetVariable('log_use', _t('UPGRADE_INTRO_LOG', 'data/logs/upgrade.log'));
             $tpl->SetBlock('Introduction/logcheckbox');
             $tpl->ParseBlock('Introduction/logcheckbox');
         } else {

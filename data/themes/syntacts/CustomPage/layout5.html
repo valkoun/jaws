@@ -1,0 +1,111 @@
+<!-- BEGIN layout --><!DOCTYPE html>
+<html lang="{site-languages}">
+<head>
+	<meta charset="utf-8"/>
+	<title>{site-title}</title>
+
+	<!-- Mobile viewport optimisation -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta name="author" content="{site-author}" />
+	<meta name="keywords" content="{site-keywords}" />
+	<meta name="description" content="{site-description}" />
+	<meta http-equiv="content-language" content="{site-languages}" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<base href="{BASE_URL}" />
+  
+	<link rel="stylesheet" type="text/css" href="{THEME}style{.dir}.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{THEME}blog{.dir}.css" media="screen" />
+	<!--[if lte IE 7]>
+	<link href="{JAWS_URL}libraries/yaml401-120306/yaml/core/iehacks.css" rel="stylesheet" type="text/css" />
+	<![endif]-->
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+<!-- BEGIN head -->
+	{ELEMENT}
+<!-- END head -->
+</head>
+<body class="{syntacts-body}">
+{edit-page-button}
+<!--
+<ul class="ym-skiplinks">
+	<li><a class="ym-skip" href="#nav">Skip to navigation (Press Enter)</a></li>
+	<li><a class="ym-skip" href="#main">Skip to main content (Press Enter)</a></li>
+</ul>
+-->
+<div class="ym-wrapper">
+	<div class="ym-wbox">
+		<div id="first_header">
+				<!-- BEGIN first_header -->{ELEMENT}<!-- END first_header -->
+		</div>
+		<header>
+				<div id="top_header">
+					<h1><a href="{site-url}">{site-name}</a></h1>
+					<p>{site-slogan}</p>
+				</div>
+		</header>
+		<div id="header">
+			<!-- BEGIN header -->{ELEMENT}<!-- END header -->
+		</div>
+		<div id="main-section">
+			<section class="ym-column linearize-level-1">
+				<article class="ym-col1 content">
+					<div id="main" class="ym-cbox ym-cbox-left ym-clearfix">
+						{PAGE_TITLE}
+						<div id="custom-page-{PAGE_ID}" class="gadget custom_page">
+							<div class="content">
+								<div class="ym-clearfix"></div>
+								<div class="custom_page-section" id="custom_page-section0">
+								<!-- BEGIN section0 -->{ELEMENT}<!-- END section0 -->
+								</div>
+								<div class="ym-clearfix"></div>
+								<div class="ym-grid">
+									<div class="ym-g66 ym-gl">
+										<div class="custom_page-section ym-gbox" id="custom_page-section1">
+										<!-- BEGIN section1 -->{ELEMENT}<!-- END section1 -->
+										</div>
+										<div class="ym-clearfix"></div>
+										<div class="custom_page-section ym-gbox" id="custom_page-section3">
+										<!-- BEGIN section3 -->{ELEMENT}<!-- END section3 -->
+										</div>
+									</div>
+									<div class="ym-g33 ym-gr">
+										<div class="custom_page-section ym-gbox" id="custom_page-section2">
+										<!-- BEGIN section2 -->{ELEMENT}<!-- END section2 -->
+										</div>
+									</div>
+								</div>
+								<div class="ym-clearfix"></div>
+								<div id="custom_page-separator" width="100%">&nbsp;</div>
+							</div>
+						</div>
+						<!-- BEGIN main -->{ELEMENT}<!-- END main -->
+					</div>
+				</article>
+				<aside class="ym-col3">
+					<div id="bar2" class="ym-cbox ym-cbox-right ym-clearfix">
+						<!-- BEGIN bar2 narrow="yes" -->{ELEMENT}<!-- END bar2 -->
+					</div>
+				</aside>
+			</section>
+		</div>
+		<div id="footer">
+			<!-- BEGIN footer -->{ELEMENT}<!-- END footer -->
+		</div>
+		<footer>
+			<div id="sub_footer">
+			  <span id="sub-footer-site"><p><strong>{site-name}</strong><br />{site-slogan}</p></span>
+			  <span id="sub-footer-copyright"><p>Copyright &#169; {site-copyright}. All Rights Reserved.</p></span>
+			  <span id="sub-footer-powered"><p>Powered by <a href="{powered-link}" rel="external">{powered-by}</a> - Layout based on <a target="_blank" href="http://www.yaml.de" rel="external">YAML</a></p></span>
+			</div>
+		</footer>
+
+	</div>
+</div>
+<!-- full skip link functionality in webkit browsers -->
+<script src="{JAWS_URL}libraries/yaml401-120306/yaml/core/js/yaml-focusfix.js"></script>
+{STATISTICS}
+</body>
+</html><!-- END layout -->

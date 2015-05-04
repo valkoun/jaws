@@ -76,7 +76,7 @@ class MDB2_Driver_Datatype_mssql extends MDB2_Driver_Datatype_Common
         }
         switch ($type) {
         case 'boolean':
-            return ($value === 0)? false : !empty($value);
+            return $value == '1';
         case 'date':
             if (strlen($value) > 10) {
                 $value = substr($value,0,10);
@@ -483,7 +483,6 @@ class MDB2_Driver_Datatype_mssql extends MDB2_Driver_Datatype_Common
             break;
         case 'image':
         case 'varbinary':
-        case 'timestamp':
             $type[] = 'blob';
             $length = null;
             break;

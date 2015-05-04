@@ -20,7 +20,6 @@ define('_RO_CONTROLPANEL_GENERAL_VIEWSITE', "Vizualizeaza site");
 define('_RO_CONTROLPANEL_GADGETS', "Gadget-uri");
 define('_RO_CONTROLPANEL_LOGIN_BAD_AUTH', "Ai introdus nume utilizator sau parola gresita.");
 define('_RO_CONTROLPANEL_LOGIN_LOST_PASSWORD', "Ai uitat parola?");
-define('_RO_CONTROLPANEL_AUTH_METHOD', "Metoda autentificare");
 define('_RO_CONTROLPANEL_LOGIN_BACK_TO_SITE', "Inapoi la site");
 define('_RO_CONTROLPANEL_LOGIN_TITLE', "Autentificare");
 define('_RO_CONTROLPANEL_LOGGED_IN_AS', "Inregistrat ca");

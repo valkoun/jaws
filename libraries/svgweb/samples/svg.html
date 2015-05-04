@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="svg.render.forceflash" content="true" />
+  <script src="../src/svg.js"></script>
+</head>
+<body>
+<div id="mySVG_overlay" style="min-height: 380px; min-width: 292px; background: url(athletic_maroon_overlay.png) transparent 0 0 no-repeat; position: absolute; z-index: 3;">&nbsp;</div>
+<div id="mySVGDiv" style="position: absolute; z-index: 1; padding-top: 30px; padding-left: 28px; min-height: 380px; background: url(http://timage4.prepsportswear.com/GetImage.iaspx?type=1&p=52&pc=athletic_maroon&dc1=white&scale=73&SchoolID=341546&d=830&useid=1&up_ss=m&up_pp=Enter+Name%7c69%7c2000&ver=0&r=0&outputformat=png) transparent 0 0 no-repeat;">
+<!-- 
+<img src="file:///C:/all_projects/christclothinginc.com/0001_dark.svg" width="200" />
+-->
+</div>
+<script>
+    var currentSVGObject;
+    function showSVG() {
+		currentSVGObject = document.createElement('object', true);
+		currentSVGObject.setAttribute('type', 'image/svg+xml');
+		currentSVGObject.setAttribute('data', 'svg-files/0001_dark.svg');
+		currentSVGObject.setAttribute('svgName', 'svg');   
+		
+		// remove any old SVG OBJECTs that might be around
+		var container = document.getElementById('mySVGDiv');
+		
+		// append new SVG object
+		currentSVGObject = svgweb.appendChild(currentSVGObject, container);
+    }
+
+    window.onsvgload = function() {
+      showSVG();
+    }
+</script>
+</body>
+</html>

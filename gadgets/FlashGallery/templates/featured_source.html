@@ -1,0 +1,43 @@
+<div id="envFeatured" style="background-image: url(/11365/img/agents/11365/custom_img/custom_css/index_flash.gif); width: 699px; background-repeat: no-repeat; height: 336px">&nbsp;</div>
+<script>
+            var gWidth = "950";
+			var gHeight = "300";
+			var so = new SWFObject("/11365/img/agents/11365/custom_img/custom_css/featured.swf", "featuredmovie", gWidth, gHeight, "8");
+            //"xml_path" declares location of featured properties' xml file
+            so.addVariable("xml_path", "/11365/dsp_agent_page.php/60317?command=dspXML");
+            
+			//"no_image" declares image url that is displayed if no main_image_url for property, must be a JPG
+            so.addVariable("no_image", "/19/img/agents/19/custom_img/common_files/no_image.jpg");
+            
+			//"loop_items": if "yes" items are looped in order, else they are "random" 
+            so.addVariable("loop_items", "yes");
+			
+            //"numPause" is the time (in seconds) to display each property
+            so.addVariable("numPause", "10");
+
+			//"single" declares a single property ID to feature
+            so.addVariable("single", "");            
+			
+			//"lock_label": if "yes" property info label is locked, if "no" it moves with mouse cursor
+            so.addVariable("lock_label", "yes");
+
+			//if "lock_label" is "yes", declare location of property info label here
+			//options: "top", "top left", "top right", "left", "center", "right", "bottom", "bottom left", "bottom right"
+			//if "manual", you can specify label_x and label_y below
+            so.addVariable("label_pos", "bottom right");
+			
+			//or you can specify the label position manually
+            so.addVariable("label_x", "0");
+            so.addVariable("label_y", "0");			
+            
+			//height and width to re-size property images to
+            so.addVariable("image_height", gHeight);
+            so.addVariable("image_width", gWidth);
+            
+			//pixel offsets for property images (to accommodate overlay.PNG frame) 
+            so.addVariable("image_x", "0");
+            so.addVariable("image_y", "0");
+			so.addParam("quality", "high");
+            so.addParam("wmode", "transparent");
+            so.write("envFeatured");
+</script>

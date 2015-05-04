@@ -1,0 +1,21 @@
+<!-- BEGIN weather -->
+<div id="main" align="center">
+<table>
+  <tr>
+    <td valign="top" align="center" width="100%">
+      <div id="datagrid" style="width: 100%;">
+      {grid}
+      </div>
+      <script type="text/javascript">
+      initDataGrid('weather_datagrid', new weatheradminajax);
+      </script>
+    </td>
+    <td valign="top">
+      {city_form}
+      <div id="instructions" class="control-panel-message">{instructions}</div>
+      {config_form}
+    </td>
+  </tr>
+</table>
+</div>
+<!-- END weather -->

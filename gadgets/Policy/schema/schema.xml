@@ -28,12 +28,6 @@
             <notnull>true</notnull>
         </field>
 
-        <field>
-            <name>blocked</name>
-            <type>boolean</type>
-            <default>true</default>
-        </field>
-
     </declaration>
  </table>
 
@@ -54,12 +48,6 @@
             <length>252</length>
             <notnull>true</notnull>
             <unique>true</unique>
-        </field>
-
-        <field>
-            <name>blocked</name>
-            <type>boolean</type>
-            <default>true</default>
         </field>
 
         <index>

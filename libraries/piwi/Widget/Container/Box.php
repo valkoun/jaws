@@ -13,15 +13,6 @@ require_once PIWI_PATH . '/Widget/Container/Container.php';
 class Box extends Container
 {
     /**
-     * Width of the table
-     *
-     * @var     string
-     * @access  private
-     * @see     setWidth(), getWidth()
-     */
-    var $_width = '';
-
-    /**
      * Creates the box
      *
      * @access public
@@ -29,27 +20,6 @@ class Box extends Container
     function Box()
     {
         $this->setDirection('');
-    }
-
-    /**
-     * Set the width
-     *
-     * @param  straing $width
-     * @access public
-     */
-    function setWidth($width)
-    {
-        $this->_width = $width;
-    }
-
-    /**
-     * Get the width
-     *
-     * @access public
-     */
-    function getWidth()
-    {
-        return $this->_width;
     }
 
     /**
@@ -75,5 +45,5 @@ class Box extends Container
         $total = count($this->_items);
         $this->_items[$total + 1] = $widget;
     }
-
 }
+?>

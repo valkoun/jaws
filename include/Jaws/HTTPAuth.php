@@ -5,7 +5,7 @@
  * @category   Auth
  * @package    Core
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Jaws_HTTPAuth
@@ -13,16 +13,16 @@ class Jaws_HTTPAuth
     /**
      * Username
      *
-     * @access  private
-     * @var     string
+     * @access private
+     * @var    string
      */
     var $username = '';
 
     /**
      * Password
      *
-     * @access  private
-     * @var     string
+     * @access private
+     * @var    string
      */
     var $password = '';
 

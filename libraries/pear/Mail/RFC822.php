@@ -40,7 +40,7 @@
  * @author      Chuck Hagenbuch <chuck@horde.org
  * @copyright   2001-2010 Richard Heyes
  * @license     http://opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: RFC822.php 307491 2011-01-14 19:34:55Z alec $
+ * @version     CVS: $Id: RFC822.php 294749 2010-02-08 08:22:25Z clockwerx $
  * @link        http://pear.php.net/package/Mail/
  */
 
@@ -63,7 +63,7 @@
  *
  * @author  Richard Heyes <richard@phpguru.org>
  * @author  Chuck Hagenbuch <chuck@horde.org>
- * @version $Revision: 307491 $
+ * @version $Revision: 294749 $
  * @license BSD
  * @package Mail
  */
@@ -483,6 +483,14 @@ class Mail_RFC822 {
             $addresses[] = $address['address'];
         }
 
+        // Check that $addresses is set, if address like this:
+        // Groupname:;
+        // Then errors were appearing.
+        if (!count($addresses)){
+            $this->error = 'Empty group.';
+            return false;
+        }
+
         // Trim the whitespace from all of the address strings.
         array_map('trim', $addresses);
 
@@ -880,7 +888,7 @@ class Mail_RFC822 {
         $words = array();
 
         // Split the local_part into words.
-        while (count($parts) > 0) {
+        while (count($parts) > 0){
             $words[] = $this->_splitCheck($parts, '.');
             for ($i = 0; $i < $this->index + 1; $i++) {
                 array_shift($parts);
@@ -889,10 +897,6 @@ class Mail_RFC822 {
 
         // Validate each word.
         foreach ($words as $word) {
-            // word cannot be empty (#17317)
-            if ($word === '') {
-                return false;
-            }
             // If this word contains an unquoted space, it is invalid. (6.2.4)
             if (strpos($word, ' ') && $word[0] !== '"')
             {

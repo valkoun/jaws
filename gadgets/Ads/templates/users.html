@@ -1,0 +1,37 @@
+<!-- BEGIN pane -->
+<div class="pane">
+	<div class="paneHeader">
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tbody>
+		<tr>
+			<td class="paneTitle" width="100%"><div>&nbsp;{title}</div></td>
+			<td class="paneButtons" width="0%" style="text-align: right;"><div>{gadget_pane_buttons}</div></td>
+		</tr>
+		</tbody>
+	</table>
+	</div>
+	<div style="font-size: 0.0001em;"><img border="0" src="images/blank.gif" height="1" width="1" /></div>
+	<div id="{pane_id}_pane" class="paneBody">
+<!-- BEGIN pane_item -->
+		<div width="100%" id="{pane_id}_{pane}" style="clear: both;">
+			<!--
+			<div class="paneSubHeader">
+				<table style="empty-cells: hide;" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td width="100%"><img border="0" align="middle" src="{icon}" height="36" width="36" />&nbsp;&nbsp;{pane_name}</td>
+						<td width="0%" style="text-align: right;">{add_button}</td>
+					</tr>
+				</table>
+			</div>
+			-->
+			<div>{gadget_pane}</div>
+		</div>
+<!-- END pane_item -->
+	</div>
+</div>
+<!-- END pane -->
+<!-- BEGIN UserAdsSubscriptions -->
+<div id="UserAdsSubscriptions" class="paneHolder">
+{element}
+</div>
+<!-- END UserAdsSubscriptions -->

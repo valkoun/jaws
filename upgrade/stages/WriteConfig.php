@@ -6,7 +6,7 @@
  * @package    UpgradeStage
  * @author     Jon Wood <jon@substance-it.co.uk>
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class Upgrader_WriteConfig extends JawsUpgraderStage
@@ -24,6 +24,7 @@ class Upgrader_WriteConfig extends JawsUpgraderStage
         $tpl->Load('JawsConfig.php', false, false);
 
         $tpl->SetBlock('JawsConfig');
+		$tpl->SetVariable('jaws_path',  "DIRECTORY_SEPARATOR");
         $tpl->SetVariable('db_driver',  $_SESSION['upgrade']['Database']['driver']);
         $tpl->SetVariable('db_host',    $_SESSION['upgrade']['Database']['host']);
         $tpl->setVariable('db_port',    $_SESSION['upgrade']['Database']['port']);
@@ -33,7 +34,19 @@ class Upgrader_WriteConfig extends JawsUpgraderStage
         $tpl->SetVariable('db_name',    $_SESSION['upgrade']['Database']['name']);
         $tpl->SetVariable('db_path',    addslashes($_SESSION['upgrade']['Database']['path']));
         $tpl->SetVariable('db_prefix',  $_SESSION['upgrade']['Database']['prefix']);
-        $tpl->SetVariable('log_level',  defined('LOG_ACTIVATED')? LOG_ACTIVATED : (int)DEBUG_ACTIVATED);
+		$tpl->SetBlock('JawsConfig/jaws_urls');
+		$tpl->SetVariable('jaws_ssl_url', $GLOBALS['app']->GetJawsURL());
+		$tpl->SetVariable('jaws_url', $GLOBALS['app']->GetJawsURL());
+        $tpl->ParseBlock('JawsConfig/jaws_urls');
+        
+		require_once JAWS_PATH . 'include/Jaws/DB.php';
+		$GLOBALS['db'] = Jaws_DB::getInstance($_SESSION['upgrade']['Database']);
+
+		require_once JAWS_PATH . 'include/Jaws.php';
+		$GLOBALS['app'] = new Jaws();
+		$GLOBALS['app']->create();
+		$GLOBALS['app']->OverwriteDefaults(array('language' => $_SESSION['upgrade']['language']));
+		
         $tpl->ParseBlock('JawsConfig');
 
         return $tpl->Get();
@@ -47,10 +60,10 @@ class Upgrader_WriteConfig extends JawsUpgraderStage
      */
     function Display()
     {
+        log_upgrade("Preparing configuration file");
         $tpl = new Jaws_Template(UPGRADE_PATH . 'stages/WriteConfig/templates/');
         $tpl->Load('display.html', false, false);
 
-        _log(JAWS_LOG_DEBUG,"Preparing configuaration file");
         $tpl->SetBlock('WriteConfig');
 
         $config_path = JAWS_PATH .'config'.DIRECTORY_SEPARATOR;
@@ -73,7 +86,7 @@ class Upgrader_WriteConfig extends JawsUpgraderStage
             $GLOBALS['app']->create();
             $GLOBALS['app']->OverwriteDefaults(array('language' => $_SESSION['upgrade']['language']));
 
-            _log(JAWS_LOG_DEBUG,"Setting ".JAWS_VERSION." as the current installed version");
+            log_upgrade("Setting ".JAWS_VERSION." as the current installed version");
             $GLOBALS['app']->Registry->deleteCacheFile('core');
             $GLOBALS['app']->Registry->Set('/version', JAWS_VERSION);
             $GLOBALS['app']->Registry->commit('core');
@@ -93,30 +106,31 @@ class Upgrader_WriteConfig extends JawsUpgraderStage
     {
         //config string
         $configString = $this->BuildConfig();
-
+		$config_dir = str_replace('/data', '', JAWS_DATA) . 'config/';
+		
         // following what the web page says (choice 1) and assume that the user has created it already
-        if (file_exists(JAWS_PATH . 'config/JawsConfig.php')) {
+        if (file_exists($config_dir . 'JawsConfig.php')) {
             $configMD5    = md5($configString);
-            $existsConfig = file_get_contents(JAWS_PATH . 'config/JawsConfig.php');
+            $existsConfig = file_get_contents($config_dir . 'JawsConfig.php');
             $existsMD5    = md5($existsConfig);
             if ($configMD5 == $existsMD5) {
-                _log(JAWS_LOG_DEBUG,"Previous and new configuration files have the same content, everything is ok");
+                log_upgrade("Previous and new configuration files have the same content, everything is ok");
                 return true;
             }
-            _log(JAWS_LOG_DEBUG,"Previous and new configuration files have different content, trying to update content");
+            log_upgrade("Previous and new configuration files have different content, trying to update content");
         }
 
         // create/overwrite a new one if the dir is writeable
-        if (Jaws_Utils::is_writable(JAWS_PATH . 'config/')) {
-            $result = file_put_contents(JAWS_PATH . 'config/JawsConfig.php', $configString);
+        if (Jaws_Utils::is_writable($config_dir)) {
+            $result = file_put_contents($config_dir . 'JawsConfig.php', $configString);
             if ($result) {
-                _log(JAWS_LOG_DEBUG,"Configuration file has been created/updated");
+                log_upgrade("Configuration file has been created/updated");
                 return true;
             }
-            _log(JAWS_LOG_DEBUG,"Configuration file couldn't be updated");
-            return new Jaws_Error(_t('UPGRADE_CONFIG_RESPONSE_WRITE_FAILED'), 0, JAWS_ERROR_ERROR);
+            log_upgrade("Configuration file couldn't be updated");
+            return new Jaws_Error(_t('INSTALL_CONFIG_RESPONSE_WRITE_FAILED'), 0, JAWS_ERROR_ERROR);
         }        
 
-        return new Jaws_Error(_t('UPGRADE_CONFIG_RESPONSE_MAKE_CONFIG', 'JawsConfig.php'), 0, JAWS_ERROR_WARNING);
+        return new Jaws_Error(_t('INSTALL_CONFIG_RESPONSE_MAKE_CONFIG', 'JawsConfig.php'), 0, JAWS_ERROR_WARNING);
     }
 }

@@ -1,0 +1,49 @@
+<!-- BEGIN index -->
+<div class="gadget ecommerce_index">
+  <h2><a href="{link}">{title}</a></h2>
+  <div class="content">
+    <ul>
+    <!-- BEGIN item -->
+      <li><a href="{link}">{title}</a></li>
+    <!-- END item -->
+    </ul>
+  </div>
+</div>
+<!-- END index -->
+
+<!-- BEGIN layout -->
+<!-- BEGIN cartbutton -->
+{layout_content}
+<!-- END cartbutton -->
+
+<!-- BEGIN smallcartbutton -->
+{layout_content}
+<!-- END smallcartbutton -->
+
+<!-- BEGIN cartlink -->
+{layout_content}
+<!-- END cartlink -->
+
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Ecommerce_iframe_{id}&resize={bool_resize}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+<!-- END layout -->

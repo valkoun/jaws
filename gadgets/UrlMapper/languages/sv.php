@@ -24,7 +24,6 @@ define('_SV_URLMAPPER_MAPS_ADD_TITLE', "Lägg till karta");
 define('_SV_URLMAPPER_MAPS_EDIT_TITLE', "Redigera karta");
 define('_SV_URLMAPPER_MAPS_ROUTE', "Kartrutt");
 define('_SV_URLMAPPER_MAPS_REGEXP', "Reguljära uttryck");
-define('_SV_URLMAPPER_MAPS_EXTENSION', "Tillägg");
 define('_SV_URLMAPPER_MAPS_PARAM_NAME', "Namn");
 define('_SV_URLMAPPER_MAPS_PARAM_TYPE', "Typ");
 define('_SV_URLMAPPER_MAPS_PARAM_LENGTH', "Längd");

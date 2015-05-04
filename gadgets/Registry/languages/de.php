@@ -3,13 +3,13 @@
  * Meta Data
  *
  * "Project-Id-Version: Registry"
- * "Last-Translator: Christian Schmitt <christian@idkfa.de>"
+ * "Last-Translator:  Christian Schmitt <christian@idkfa.de>"
  * "Language-Team: DE"
  * "MIME-Version: 1.0"
  * "Content-Type: text/plain; charset=UTF-8"
  * "Content-Transfer-Encoding: 8bit"
  */
-
+  
 define('_DE_REGISTRY_NAME', "Registry");
 define('_DE_REGISTRY_DESCRIPTION', "Die Jaws Registrierung");
 define('_DE_REGISTRY_ACL_MANAGEREGISTRY', "Registry bearbeiten");

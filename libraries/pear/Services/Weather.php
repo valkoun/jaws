@@ -13,7 +13,7 @@
  * PHP versions 4 and 5
  *
  * <LICENSE>
- * Copyright (c) 2005-2011, Alexander Wirtz
+ * Copyright (c) 2005-2009, Alexander Wirtz
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,9 +44,9 @@
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     CVS: $Id: Weather.php 313794 2011-07-27 18:17:50Z eru $
+ * @version     CVS: $Id: Weather.php 277074 2009-03-12 23:16:41Z eru $
  * @link        http://pear.php.net/package/Services_Weather
  * @filesource
  */
@@ -71,7 +71,6 @@ define("SERVICES_WEATHER_ERROR_HTTP_PROXY_INVALID",       15);
 define("SERVICES_WEATHER_ERROR_SUNFUNCS_DATE_INVALID",    16);
 define("SERVICES_WEATHER_ERROR_SUNFUNCS_RETFORM_INVALID", 17);
 define("SERVICES_WEATHER_ERROR_METAR_SOURCE_INVALID",     18);
-define("SERVICES_WEATHER_ERROR_MOONFUNCS_DATE_INVALID",   19);
 // }}}
 
 // {{{ error codes defined by weather.com
@@ -91,9 +90,9 @@ define("SERVICES_WEATHER_ERROR_INVALID_LICENSE_KEY",    102);
  * @category    Web Services
  * @package     Services_Weather
  * @author      Alexander Wirtz <alex@pc4p.net>
- * @copyright   2005-2011 Alexander Wirtz
+ * @copyright   2005-2009 Alexander Wirtz
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version     Release: 1.4.6
+ * @version     Release: 1.4.5
  * @link        http://pear.php.net/package/Services_Weather
  */
 class Services_Weather {
@@ -164,7 +163,7 @@ class Services_Weather {
 
         // Create service and return
         $error = null;
-        @$obj = new $classname($options, $error);
+        @$obj = &new $classname($options, $error);
 
         if (Services_Weather::isError($error)) {
             return $error;

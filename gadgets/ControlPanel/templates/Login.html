@@ -1,4 +1,4 @@
-<!-- BEGIN layout --><?xml version="1.0" encoding="utf-8" ?>
+<!-- BEGIN login --><?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <base href="{BASE_URL}" />
 <!-- BEGIN head -->{ELEMENT}<!-- END head -->
-  <link rel="icon" type="image/png" href="images/jaws.png" />
+<!--[if lt IE 7]><script src="{JAWS_URL}gadgets/ControlPanel/resources/ie-bug-fix.js" type="text/javascript"></script><![endif]-->
 
   <script type="text/javascript">
   function focusOnLoad(focusObject)
@@ -38,16 +38,16 @@
     <div id="login" style="width: 100%;" align="center">
       <!-- BEGIN message --><center><div class="warning-message">{message}</div></center><!-- END message -->
       <center>{form}</center>
-     <div class="login-footer"><a href="{base_url}">{back}</a></div>
+     <div class="login-footer"><a href="index.php">{back}</a></div>
     </div>
    </div>
    <hr />
    <div id="footer" style="margin-top: 100px;">
     <p><strong>{site-name}</strong><br />
     {site-slogan}</p>
-    <p>Powered by the <a href="http://www.jaws-project.com" rel="external">Jaws Project</a></p>
+    <p>Powered by <a href="{site-reseller-link}" rel="external">{site-reseller}</a></p>
    </div>
   </div>
  </body>
 </html>
-<!-- END layout -->
+<!-- END login -->

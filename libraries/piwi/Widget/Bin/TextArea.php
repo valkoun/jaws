@@ -187,23 +187,16 @@ class TextArea extends Bin
         }
 
         //hide the value until we build the basic XHTML
-        $value = str_replace(array('\\', "\r\n", "\n", "\r", '"', '</script>'),
-                             array('\\\\', '\n', '\n', '\n', '\"', '\x3C/script\x3E'),
-                             $this->_value);
-        $this->_value = '';
+        $value = $this->_value;
 
+        $this->_value = '';
         $this->_XHTML .= $this->buildBasicXHTML();
         $this->_XHTML .= $this->buildJSEvents();
 
+        $this->_value = $value;
         $this->_XHTML .= '>';
+        $this->_XHTML .= $this->_value;
         $this->_XHTML .= "</textarea>\n";
-        $this->_XHTML .=  "<script type=\"text/javascript\">\n";
-        $this->_XHTML .= "textarea = document.getElementById('{$this->_id}');\n";
-        $this->_XHTML .= "if (textarea == null) {\n";
-        $this->_XHTML .= "textarea = document.getElementsByName('{$this->_name}')[0];\n";
-        $this->_XHTML .= "}\n";
-        $this->_XHTML .= "textarea.value = \"".$value."\";\n";
-        $this->_XHTML .= "</script>\n";
     }
-
 }
+?>

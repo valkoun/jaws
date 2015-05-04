@@ -5,7 +5,7 @@
  * @category   Ajax
  * @package    Registry
  * @author     Pablo Fischer <pablo@pablo.com.mx>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 
@@ -19,6 +19,7 @@ class RegistryAdminAjax extends Jaws_Ajax
      */
     function GetAllRegistry()
     {
+        $this->CheckSession('Registry', 'ManageRegistry');
         $GLOBALS['app']->Registry->LoadAllFiles();
         $simpleArray = $GLOBALS['app']->Registry->GetSimpleArray();
         ksort($simpleArray);
@@ -35,6 +36,7 @@ class RegistryAdminAjax extends Jaws_Ajax
      */
     function GetRegistryKey($key)
     {
+        $this->CheckSession('Registry', 'ManageRegistry');
         if (preg_match("#^/(gadgets|plugins\/parse_text)/(.*?)/(.*?)#i", $key, $matches)) {
             $GLOBALS['app']->Registry->LoadFile($matches[2]);
         }
@@ -51,6 +53,7 @@ class RegistryAdminAjax extends Jaws_Ajax
      */
     function SetRegistryKey($key, $value)
     {
+        $this->CheckSession('Registry', 'ManageRegistry');
         if (preg_match("#^/(gadgets|plugins\/parse_text)/(.*?)/(.*?)#i", $key, $matches)) {
             $GLOBALS['app']->Registry->LoadFile($matches[2]);
             $GLOBALS['app']->Registry->Set($key, $value);
@@ -71,6 +74,7 @@ class RegistryAdminAjax extends Jaws_Ajax
      */
     function GetAllACL()
     {
+        $this->CheckSession('Registry', 'ManageRegistry');
         $GLOBALS['app']->ACL->LoadAllFiles();
         $simpleArray = $GLOBALS['app']->ACL->GetSimpleArray();
         ksort($simpleArray);
@@ -87,11 +91,19 @@ class RegistryAdminAjax extends Jaws_Ajax
      */
     function GetACLKey($key)
     {
+        $this->CheckSession('Registry', 'ManageRegistry');
         if (preg_match("#^/ACL/gadgets/(.*?)/(.*?)#i", $key, $matches)) {
             $GLOBALS['app']->ACL->LoadFile($matches[1]);
         }
-
-        return $GLOBALS['app']->ACL->Get($key);
+        switch($key) {
+        case '/priority':
+        case '/last_update':
+            return $GLOBALS['app']->ACL->GetFromTable($key);
+            break;
+        default:
+            return $GLOBALS['app']->ACL->Get($key);
+            break;
+        }
     }
 
     /**
@@ -104,6 +116,7 @@ class RegistryAdminAjax extends Jaws_Ajax
      */
     function SetACLKey($key, $value)
     {
+        $this->CheckSession('Registry', 'ManageRegistry');
         if (preg_match("#^/ACL/gadgets/(.*?)/(.*?)#i", $key, $matches)) {
             $GLOBALS['app']->ACL->LoadFile($matches[1]);
             $GLOBALS['app']->ACL->Set($key, $value);
@@ -115,5 +128,5 @@ class RegistryAdminAjax extends Jaws_Ajax
         $GLOBALS['app']->Session->PushLastResponse(_t('REGISTRY_KEY_SAVED'), RESPONSE_NOTICE);
         return $GLOBALS['app']->Session->PopLastResponse();
     }
-
 }
+?>

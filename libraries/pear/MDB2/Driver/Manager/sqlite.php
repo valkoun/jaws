@@ -964,11 +964,11 @@ class MDB2_Driver_Manager_sqlite extends MDB2_Driver_Manager_Common
         }
 
         $table = $db->quoteIdentifier($table, true);
-        $name  = $db->quoteIdentifier($db->getIndexName($name), true);
+        $name  = $db->getIndexName($name);
         $query = "CREATE INDEX $name ON $table";
         $fields = array();
         foreach ($definition['fields'] as $field_name => $field) {
-            $field_string = $db->quoteIdentifier($field_name, true);
+            $field_string = $field_name;
             if (!empty($field['sorting'])) {
                 switch ($field['sorting']) {
                 case 'ascending':

@@ -24,7 +24,7 @@ define('_FA_SEARCH_RESULTS_SUBTITLE', "{0} مورد شامل عبارت '<span c
 define('_FA_SEARCH_RESULTS_IN_GADGETS', "{0} مورد در بخش <b>{2}</b>");
 define('_FA_SEARCH_NO_RESULTS', "هیچ موردی شامل عبارت '<span class=\"result_title\">{0}</span>' پیدا نشد.");
 define('_FA_SEARCH_IN_GADGETS', "جستجو در این ابزارها");
-define('_FA_SEARCH_SAVED', "تغییرات دلخواه شما ثبت شدند");
+define('_FA_SEARCH_SAVED', "تغییرات مورد نظر ثبت شدند");
 define('_FA_SEARCH_BUTTON', "جستجو");
 define('_FA_SEARCH_SEARCH_IN', "جستجو در");
 define('_FA_SEARCH_USE_WITH', "استفاده شده در");

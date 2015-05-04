@@ -1,0 +1,28 @@
+<!-- BEGIN datagrid -->
+<!--
+<style>#pagerTableStatusOf_pages_datagrid {visibility: hidden;}</style>
+-->
+<div>
+<table style="width: 100%;">
+  <tr>
+    <td id="filter_options" width="100%">
+      <label>{label}:</label>&nbsp;{status_field}&nbsp;{search_field}&nbsp;{search}
+    </td>
+	<td width="0%" align="right">{add_item}</td>
+  </tr>
+  <tr>
+	<td colspan="2">
+      <div style="width: 100%;" id="datagrid">{entries}</div>
+    </td>
+  </tr>
+</table>
+</div>
+<script type="text/javascript">
+	{on_load_function}
+</script>
+<!-- BEGIN tools -->
+<div id="datagridTools">
+    {tools_label}&nbsp;{tools}
+</div>
+<!-- END tools -->
+<!-- END datagrid -->

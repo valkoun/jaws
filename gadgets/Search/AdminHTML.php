@@ -2,14 +2,24 @@
 /**
  * Search Gadget Admin
  *
- * @category   Gadget Admin
+ * @category   GadgetAdmin
  * @package    Search
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2005-2012 Jaws Development Group
+ * @copyright  2005-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/gpl.html
  */
 class SearchAdminHTML extends Jaws_GadgetHTML
 {
+    /**
+     * Constructor
+     *
+     * @access  public
+     */
+    function SearchAdminHTML()
+    {
+        $this->Init('Search');
+    }
+
     /**
      * Displays gadget administration section
      *
@@ -18,6 +28,7 @@ class SearchAdminHTML extends Jaws_GadgetHTML
      */
     function Admin()
     {
+        $this->CheckPermission('default');
         $this->AjaxMe('script.js');
 
         $tpl = new Jaws_Template('gadgets/Search/templates/');

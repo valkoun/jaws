@@ -4,8 +4,8 @@
  *
  * @category   Widget
  * @package    Core
- * @author     Helgi Ãžormar ÃžorbjÃ¶rnsson <dufuz@php.net>
- * @copyright  2007-2012 Jaws Development Group
+ * @author     Helgi Þormar Þorbjörnsson <dufuz@php.net>
+ * @copyright  2007-2010 Jaws Development Group
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  */
 class Jaws_Widgets_XHTMLMenu
@@ -13,7 +13,7 @@ class Jaws_Widgets_XHTMLMenu
     /**
      * @access  private
      * @var     array
-     * @see     addOption()
+     * @see     function  addOption
      */
     var $_options = array();
     var $_Name;
@@ -21,12 +21,6 @@ class Jaws_Widgets_XHTMLMenu
     var $_style;
     var $_selected = array();
 
-    /**
-     * @param   string  $name
-     * @param   string  $id
-     * @param   string  $style
-     * @return  void
-     */
     function Jaws_Widgets_XHTMLMenu($name = '', $id = 'nav', $style = '')
     {
         $this->_Name  = $name;
@@ -37,15 +31,13 @@ class Jaws_Widgets_XHTMLMenu
     /**
      * Add a new option
      *
-     * @access  public
-     * @param   string  $action         Action
-     * @param   string  $name           Title to print
-     * @param   string  $url            Url to point
-     * @param   string  $icon           Icon/Stock to use
-     * @param   bool    $selected       If the option is marked as selected
-     * @param   string  $accesskey      Access key
-     * @param   bool    $icon_bypass
-     * @return  void
+     * @access   public
+     * @param    string  ACtion
+     * @param    string  Title to print
+     * @param    string  Url to point
+     * @param    string  Icon/Stock to use
+     * @param    boolean If the option is marked as selected
+     * @param    strings Access key
      */
     function addOption($action, $name, $url = '', $icon = '', $selected = false, $accesskey = '', $icon_bypass = false)
     {
@@ -60,13 +52,6 @@ class Jaws_Widgets_XHTMLMenu
         );
     }
 
-    /**
-     * Add sub option to the menu
-     *
-     * @param   $action
-     * @param   $subs
-     * @return  void
-     */
     function addSubOption($action, $subs)
     {
         $action = strtolower($action);
@@ -78,8 +63,6 @@ class Jaws_Widgets_XHTMLMenu
      *
      * @access  public
      * @param   string  $name  Actions's name to activate
-     * @param   string  $action
-     * @return  void
      */
     function activate($name, $action = '')
     {
@@ -104,13 +87,7 @@ class Jaws_Widgets_XHTMLMenu
      *     Under sub:
      *      - items ... Can contain any of above
      *
-     * @access  protected
-     * @param   string  $action
-     * @param   array   $option
-     * @param   string  $name
-     * @param   int     $level
-     * @param   string  $parent
-     * @return  string
+     * @access protected
      */
     function _process($action, $option, $name, $level, $parent = '')
     {
@@ -180,8 +157,7 @@ class Jaws_Widgets_XHTMLMenu
     /**
      * Build the menubar with its options
      *
-     * @access  public
-     * @return  string
+     * @access public
      */
     function get()
     {

@@ -1,0 +1,299 @@
+a.ecommerce-cart-button {
+height:31px;
+width:114px;
+}
+
+.ecommerce-cart-button:visited, 
+.ecommerce-cart-button:hover, 
+.ecommerce-cart-button {
+-moz-background-clip:border;
+-moz-background-inline-policy:continuous;
+-moz-background-origin:padding;
+background:transparent url(../images/addtocart.png) no-repeat scroll center top;
+height:31px;
+width:114px;
+cursor:pointer;
+cursor:hand;
+display: block;
+}
+
+.addtocart-options {
+	background: #F8F8F8; 
+	padding: 5px; 
+	border: 1pt solid #DDDDDD;
+}
+
+.product-price {
+	color:green;
+	font-size:1.8em;
+}
+
+.addtocart-holder .product, .list-addtocart-holder .list-product {
+	text-align: left; 
+	width: 230px; 
+	line-height: 19px;
+}
+
+.homepage .googlecart-widget *, 
+.not-homepage .googlecart-widget * {
+	font-size: 94%;
+}
+
+.homepage .googlecart-widget, 
+.not-homepage .googlecart-widget, 
+.homepage .ecommerce-cart-dock-holder, 
+.not-homepage .ecommerce-cart-dock-holder {
+	width: 270px;
+	min-width: 270px;
+	position: fixed; 
+	top: 12px; 
+	right: 20px;
+}
+
+.logged .googlecart-widget, 
+.logged .ecommerce-cart-dock-holder {
+	top: 47px; 
+}
+
+.homepage .ecommerce-cart-dock, 
+.not-homepage .ecommerce-cart-dock { 
+	background-image: url(../images/cart_sprite.png);
+	background-repeat: no-repeat;
+	padding: 4px 4px 4px 30px;
+	cursor: pointer; 
+	cursor: hand;
+	font-size: 90%;
+}
+
+.homepage #ecommerce-cart-dock, 
+.not-homepage #ecommerce-cart-dock { 
+	background-image: url(../images/cart_sprite.png);
+	background-repeat: no-repeat;
+	background-position: 3px 2px;
+}
+
+.homepage .ecommerce-cart-dock .simpleCart_checkout, 
+.not-homepage .ecommerce-cart-dock .simpleCart_checkout {
+	float: right;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items {
+	width: 300px;
+	min-width: 300px;
+	padding: 5px;
+	overflow-y:scroll;
+	top: 47px;
+}
+
+.logged .ecommerce-cart-dock-holder .simpleCart_items {
+	top: 82px;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow {
+	border-top: 1px solid #CCCCCC;
+	clear: both;
+    display: block;
+    float: none;
+	font-size: 90%;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .headerRow, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .headerRow, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow div, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow div {
+	display: none;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-name, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-name, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-price, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-price, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-quantity, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-quantity, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-description, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-description, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-image, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-image, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-total, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-total, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-productid, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-productid, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-decrement, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-decrement, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-increment, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-increment {
+	display: block;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-productid, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-productid {
+	visibility:hidden;
+	float:none;
+	clear:both;
+	height:10px;
+	min-height:10px;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-price,
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-price, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-quantity, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-quantity, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-total, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-total, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-decrement, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-decrement, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-increment, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-increment {
+	float:left; 
+	padding: 5px 7px 10px 0; 
+	line-height: 20px;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-decrement a, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-decrement a, 
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-increment a, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-increment a {
+	background: none repeat scroll 0 0 #e5e5e5;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 0 4px;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove {
+	float: right;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove a, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-remove a {
+    border: 0px;
+    padding: 0 4px;
+	font-size: 9px;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-description, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-description {
+	overflow: hidden;
+	float: right;
+	max-width: 190px;
+	max-height: 60px;
+	font-size: smaller;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-total, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-total {
+    padding-right: 2px;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-image, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-image {
+	clear: both; 
+	float: left;
+}
+
+.homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-image img, 
+.not-homepage .ecommerce-cart-dock-holder .simpleCart_items .itemRow .item-image img {
+	max-width: 80px;
+	max-height: 80px;
+}
+
+.googlecart-form-header {
+	font-size:0.9em;
+	font-weight:bold; 
+	margin-right:0.5em;
+}
+
+.googlecart-form-header-actions {
+	font-size: 0.75em; 
+	font-weight: bold; 
+	text-decoration: underline; 
+	cursor: pointer; 
+	cursor: hand;
+}
+
+.googlecart-form-details {
+	font-size: 0.7em;
+}
+
+.googlecart-form-label {
+    display: inline-block;
+    font-size: 0.75em;
+    min-width: 95px;
+    width: 95px;
+}
+
+.googlecart-form-input {
+	font-size: 1em;
+	width: 150px;
+}
+
+#filter_options {
+    float: left;
+    vertical-align: top;
+}
+
+#editor {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.editor-preview {
+    width: 100%;
+    display: none;
+}
+
+#previewContent br {
+    display: block;
+}
+
+#advanced_form {
+    display: none;
+}
+
+#display_form {
+    display: none;
+}
+
+/* New menu */
+#left_menu {
+    background: #fff url(../images/right_menu_bg.png) top left repeat-x;
+    border: 1px solid #babdb6;
+    margin: 0.5em;
+    width: 10em;
+    font-size: 85%;
+}
+
+#left_menu ul {
+    list-style: none;
+    padding: 0.5em;
+    margin: 0;
+}
+
+#left_menu ul li {
+    padding: 0.3em 0;
+    margin: 0 0 0.3em 0;
+    border-bottom: 1px solid #babdb6;
+    text-align: left;
+}
+
+#left_menu ul li:last-child {
+    border-bottom: 0;
+}
+
+#left_menu ul li a {
+    width: 100%;
+    display: block;
+    color: #666;
+    text-decoration: none;
+}
+
+#left_menu ul li a:hover {
+    color: #000;
+}
+/* Ends */

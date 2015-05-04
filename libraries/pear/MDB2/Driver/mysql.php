@@ -57,18 +57,9 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
 {
     // {{{ properties
 
-    var $string_quoting = array(
-        'start' => "'",
-        'end' => "'",
-        'escape' => '\\',
-        'escape_pattern' => '\\',
-    );
+    var $string_quoting = array('start' => "'", 'end' => "'", 'escape' => '\\', 'escape_pattern' => '\\');
 
-    var $identifier_quoting = array(
-        'start' => '`',
-        'end' => '`',
-        'escape' => '`',
-    );
+    var $identifier_quoting = array('start' => '`', 'end' => '`', 'escape' => '`');
 
     var $sql_comments = array(
         array('start' => '-- ', 'end' => "\n", 'escape' => false),
@@ -126,7 +117,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
 
     // }}}
     // {{{ _reCheckSupportedOptions()
-
+    
     /**
      * If the user changes certain options, other capabilities may depend
      * on the new settings, so we need to check them (again).
@@ -722,7 +713,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
     // }}}
     // {{{ standaloneQuery()
 
-    /**
+   /**
      * execute a query as DBA
      *
      * @param string $query the SQL query
@@ -958,7 +949,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
             $this->supported['triggers'] = false;
             $this->start_transaction = false;
             $this->varchar_max_length = 255;
-
+            
             $server_info = $this->getServerVersion();
             if (is_array($server_info)) {
                 $server_version = $server_info['major'].'.'.$server_info['minor'].'.'.$server_info['patch'];
@@ -982,7 +973,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
                 }
 
                 if (!version_compare($server_version, '5.0.3', '<')) {
-                    $this->varchar_max_length = ($this->dsn['charset'] == 'utf8')? 21844 : 65532;
+                    $this->varchar_max_length = 65532;
                 }
 
                 if (!version_compare($server_version, '5.0.2', '<')) {
@@ -996,7 +987,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
     // {{{ function _skipUserDefinedVariable($query, $position)
 
     /**
-     * Utility method, used by prepare() to avoid misinterpreting MySQL user
+     * Utility method, used by prepare() to avoid misinterpreting MySQL user 
      * defined variables (SELECT @x:=5) for placeholders.
      * Check if the placeholder is a false positive, i.e. if it is an user defined
      * variable instead. If so, skip it and advance the position, otherwise
@@ -1091,7 +1082,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
             if (is_null($placeholder_type)) {
                 $placeholder_type_guess = $query[$p_position];
             }
-
+            
             $new_pos = $this->_skipDelimitedStrings($query, $position, $p_position);
             if (PEAR::isError($new_pos)) {
                 return $new_pos;
@@ -1100,7 +1091,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
                 $position = $new_pos;
                 continue; //evaluate again starting from the new position
             }
-
+            
             //make sure this is not part of an user defined variable
             $new_pos = $this->_skipUserDefinedVariable($query, $position);
             if ($new_pos != $position) {
@@ -1326,8 +1317,7 @@ class MDB2_Driver_mysql extends MDB2_Driver_Common
     function lastInsertID($table = null, $field = null)
     {
         // not using mysql_insert_id() due to http://pear.php.net/bugs/bug.php?id=8051
-        // not casting to integer to handle BIGINT http://pear.php.net/bugs/bug.php?id=17650
-        return $this->queryOne('SELECT LAST_INSERT_ID()');
+        return $this->queryOne('SELECT LAST_INSERT_ID()', 'integer');
     }
 
     // }}}
@@ -1586,7 +1576,7 @@ class MDB2_BufferedResult_mysql extends MDB2_Result_mysql
         }
         return $rows;
     }
-
+    
     // }}}
 }
 

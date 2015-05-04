@@ -19,7 +19,6 @@ define('_TR_SEARCH_LAYOUT_SIMPLEBOX', "Basit arama kutusu");
 define('_TR_SEARCH_LAYOUT_SIMPLEBOX_DESCRIPTION', "Seçilebilir araçlar olmadan bir arama kutusu sağlar.");
 define('_TR_SEARCH_LAYOUT_ADVANCEDBOX', "Gelişmiş Arama");
 define('_TR_SEARCH_LAYOUT_ADVANCEDBOX_DESCRIPTION', "Gelişmiş bir Arama kutusu Sağlar");
-define('_TR_SEARCH_RESULTS', "Arama sonuçları");
 define('_TR_SEARCH_RESULTS_SUBTITLE', "<strong>{1}</strong> kapsamında {0} öğe bulundu");
 define('_TR_SEARCH_RESULTS_IN_GADGETS', "{0} öğe bulundu [{1}] ,{2} kapsamında");
 define('_TR_SEARCH_NO_RESULTS', "<strong>{0}</strong> kapsamında öğe bulunamadı");

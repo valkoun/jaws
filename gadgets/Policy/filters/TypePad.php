@@ -5,64 +5,64 @@
  * @category   AntiSpam
  * @package    Policy
  * @author     Ali Fazelzadeh <afz@php.net>
- * @copyright  2009-2012 Jaws Development Group
+ * @copyright  2009-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class TypePad 
 {
     /**
      * The TypePad API server name
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $apiServer = 'api.antispam.typepad.com';
 
     /**
      * The port to use to connect to the TypePad API server
      * @var    integer
-     * @access  private
+     * @access private
      */
     var $apiPort = 80;
 
     /**
      * The TypePad API version to use
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $apiVersion = '1.1';
 
     /**
      * The API key to use to access TypePad services
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $apiKey = '';
 
     /**
      * The HTTP user-agent to use
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $userAgent = '';
 
     /**
      * Whether or not the API key is valid
      * @var    boolean
-     * @access  private
+     * @access private
      */
     var $apiKeyIsValid = null;
 
     /**
      * The URL of the this website
-     * @var     string
-     * @access  private
+     * @var    string
+     * @access private
      */
     var $siteURL = '';
 
     /**
      * Whitelist of allowed $_SERVER variables to send to TypePad
      * @var array
-     * @access  private
+     * @access private
      */
     var $_allowedServerVars = array(
         'SCRIPT_URI',
@@ -115,9 +115,11 @@ class TypePad
         $jaws_version    = $GLOBALS['app']->Registry->Get('/version');
         $this->userAgent = "Jaws/{$jaws_version} | TypePad/{$this->apiVersion}";
         if (!$this->apiKeyIsValid = $this->IsApiKeyValid()) {
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR,
-                                 'Invalid TypePad Key, please check your Registry: '.
-                                 '/gadgets/Policy/typepad_key');
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR,
+                                     'Invalid TypePad Key, please check your Registry: '.
+                                     '/gadgets/Policy/typepad_key');
+            }
         }
     }
 

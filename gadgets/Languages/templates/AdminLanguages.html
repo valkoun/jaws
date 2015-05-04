@@ -1,4 +1,5 @@
 <!-- BEGIN Languages -->
+{menubar}
 <div id="main" style="width: 100%;">
   <div id="lang_box">
     <div class="titles">{language}:</div>
@@ -47,8 +48,14 @@
     var confirmSaveData     = "{confirmSaveData}";
     var add_language_title  = "{add_language_title}";
     var save_language_title = "{save_language_title}";
-    change_lang_option();
+    Event.observe(window, "load",function(){change_lang_option();});
     $('component').selectedIndex = -1;
   </script>
 </div>
 <!-- END Languages -->
+<!-- BEGIN Settings -->
+{menubar}
+<div id="main" align="center">
+{form}
+</div>
+<!-- END Settings -->

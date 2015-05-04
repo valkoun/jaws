@@ -7,10 +7,24 @@
   <input type="hidden" name="action" value="UpdatePreferences" />
   <div class="content">
     <fieldset>
-      <p><label for="user_language">{language}:</label>{user_language}</p>
+      <div id="preferences_language">
+	  <p><label for="user_language">{language}:</label>{user_language}</p>
+	  </div>
+      <div id="preferences_theme">
       <p><label for="user_theme">{theme}:</label>{user_theme}</p>
+	  </div>
+      <div id="preferences_editor">
       <p><label for="user_editor">{editor}:</label>{user_editor}</p>
+	  </div>
+      <div id="preferences_timezone">
       <p><label for="user_timezone">{timezone}:</label>{user_timezone}</p>
+	  </div>
+      <div id="preferences_notification">
+      <p><label for="user_notification">{notification}:</label>{user_notification}</p>
+	  </div>
+      <div id="preferences_allow_comments">
+      <p><label for="user_allow_comments">{allow_comments}:</label>{user_allow_comments}</p>
+	  </div>
     </fieldset>
   </div>
   <div class="actions"><button type="submit" value="{update}">{update}</button></div>

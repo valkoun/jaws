@@ -1,0 +1,50 @@
+<!-- BEGIN mail -->
+<div>
+	<table border="0" width="100%" style="border: 1pt solid;">
+<!-- BEGIN header -->
+		<tr>
+			<td style="border-bottom: 1pt dotted" valign="top">
+				<span style="font-family: Arial; font-size: 1.8em;"><b>{subject}</b><br />&nbsp;</span>
+			</td>
+		</tr>
+<!-- END header -->
+		<tr>
+			<td style="border-bottom: 1pt dotted; background: #E8EBE7;" valign="top">
+				<span style="font-family: Arial;"><b>{title}</b></span>
+			</td>
+		</tr>
+<!-- BEGIN body -->
+		<tr>
+			<td align="left" valign="top" style="text-align: left;">
+<!-- BEGIN table -->
+				<table border="0" width="100%">
+<!-- BEGIN row -->
+					<tr>
+						<td{td_attr} style="border-bottom: 1pt dotted;">
+							<span style="font-family: Arial;"><b>{name}</b></span>
+						</td>
+<!-- BEGIN answer -->
+						<td width="60%" style="border-bottom: 1pt dotted;">
+							<span style="font-family: Arial;">{value}</span>
+						</td>
+<!-- END answer -->
+					</tr>
+<!-- END row -->
+				</table>
+<!-- END table -->
+<!-- BEGIN message -->
+				{content}
+<!-- END message -->
+			</td>
+		</tr>
+<!-- BEGIN footer -->
+		<tr>
+			<td width="100%" align="right" valign="top" style="text-align: right;">
+				{footer}
+			</td>
+		</tr>
+<!-- END footer -->
+<!-- END body -->
+	</table>
+</div>
+<!-- END mail -->

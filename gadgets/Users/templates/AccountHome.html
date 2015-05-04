@@ -1,0 +1,55 @@
+<!-- BEGIN account_home -->
+  <!-- Working Notification -->  <div id="working_notification"></div>
+   <script type="text/javascript">
+    var loading_message = 'Loading...';
+    var navigate_away_message = 'You have unsaved changes in this page';
+   </script>
+  <!-- /Working Notification -->  
+   <script type="text/javascript">
+   //showWorkingNotification();
+   </script>
+<div id="msgbox-wrapper"></div>
+<div class="gadget users accountHome">
+	<div id="pane-list" class="pane-list">
+	<!-- BEGIN pane -->
+	<div class="{class}" id="{id}" title="{desc}" onclick="selectPane('{id}');"><img src="{icon}" width="24" height="24" alt="icon"/>{gadget}{count}</div>
+	<script type="text/javascript">
+		paneArray['{id}'] = new Array();
+		paneArray['{id}']['gadgetrealname'] = '{gadgetrealname}';
+		paneArray['{id}']['method'] = '{method}';
+		paneArray['{id}']['params'] = '{params}';
+	</script>
+	<!-- END pane -->
+	</div>
+	<div id="pane-content" class="pane-content" style="visibility: hidden;">
+	<!-- BEGIN response --><div class="simple-response-msg">{msg}</div><!-- END response -->
+	<!-- BEGIN pane_content -->
+	<div id="pane-{id}" class="pane" style="{style}"></div>
+	<!-- END pane_content -->
+	</div>
+</div>
+<script type="text/javascript">
+	Event.observe(window, "load",function(){
+		var default_pane = '{first}';
+		var available_panes = new Array({available_panes});
+		if (window.location.hash.indexOf('#pane=') > -1) {
+			default_pane = window.location.hash.replace('#pane=','');
+		}
+		var length = available_panes.length;
+		for(var i = 0; i < length; i++) {
+			if (available_panes[i] == default_pane) {
+				selectPane(default_pane);
+			}
+		}
+		$('pane-content').style.visibility = 'visible';
+	});
+</script>
+<script type="text/javascript">
+  var rpxJsHost = (("https:" == document.location.protocol) ? "https://" : "http://static.");
+  document.write(unescape("%3Cscript src='" + rpxJsHost + "rpxnow.com/js/lib/rpx.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+  RPXNOW.init({appId: 'nhjhogjcjndnlhaabffd',
+	xdReceiver: '/rpx_xdcomm.html'});
+</script>
+<!-- END account_home -->

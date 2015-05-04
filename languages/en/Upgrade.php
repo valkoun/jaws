@@ -23,11 +23,11 @@ define('_EN_UPGRADE_FINISHED', "Finished");
 
 /* Introduction */
 define('_EN_UPGRADE_INTRO_WELCOME', "Welcome to the Jaws upgrader.");
-define('_EN_UPGRADE_INTRO_UPGRADER', "Using the upgrader you can upgrade and old installation to the current one. Just please make sure you have the following things available");
+define('_EN_UPGRADE_INTRO_UPGRADER', "Using the upgrader you can upgrade an old installation to the current one. Just please make sure you have the following things available");
 define('_EN_UPGRADE_INTRO_DATABASE', "Database details - hostname, username, password, database name.");
 define('_EN_UPGRADE_INTRO_FTP', "A way of uploading files, probably FTP.");
 define('_EN_UPGRADE_INTRO_LOG', "Log the upgrade process (and errors) to a file ({0})");
-define('_EN_UPGRADE_INTRO_LOG_ERROR', "Note: If you want to log the upgrade process (and errors) of the installation to a file you first need to set write-access permissions to the ({0}) directory and then refresh this page with your browser");
+define('_EN_UPGRADE_INTRO_LOG_ERROR', "Note: If you want to log the upgrade process (and errors) to a file you first need to set write-access permissions to the ({0}) directory and then refresh this page with your browser");
 
 /* Authentication */
 define('_EN_UPGRADE_AUTH_PATH_INFO', "To make sure that you are really the owner of this site, please create a file called <strong>{0}</strong> in your Jaws upgrade directory (<strong>{1}</strong>).");
@@ -93,19 +93,19 @@ define('_EN_UPGRADE_REPORT_MESSAGE', "If the upgrade found that your installed J
 
 /* Version */
 define('_EN_UPGRADE_VER_INFO', "Upgrading from {0} to {1} will");
-define('_EN_UPGRADE_VER_NOTES', "<strong>Note:</strong>&nbsp;Once you finish upgrading your Jaws version, other gadgets (like Blog, Phoo, etc) will require to be upgraded. You can do this task by logging in the Control Panel.");
-define('_EN_UPGRADE_VER_RESPONSE_GADGET_FAILED', "here was a problem installing core gadget {0}");
+define('_EN_UPGRADE_VER_NOTES', "<strong>Note:</strong>&nbsp;Once you finish upgrading your Jaws version, other gadgets (like Blog, Gallery, etc) will require to be upgraded. You can do this task by logging in the Control Panel.");
+define('_EN_UPGRADE_VER_RESPONSE_GADGET_FAILED', "There was a problem upgrading core gadget {0}");
 
 /* WriteConfig */
 define('_EN_UPGRADE_CONFIG_INFO', "You now need to save your configuration file.");
 define('_EN_UPGRADE_CONFIG_SOLUTION', "You can do this in two ways");
-define('_EN_UPGRADE_CONFIG_SOLUTION_PERMISSION', "Make <strong>{0}</strong> writable, and hit next, which will allow the installer to save the configuration itself.");
+define('_EN_UPGRADE_CONFIG_SOLUTION_PERMISSION', "Make <strong>{0}</strong> writable, and hit next, which will allow the upgrader to save the configuration itself.");
 define('_EN_UPGRADE_CONFIG_SOLUTION_UPLOAD', "Copy and paste the contents of the box below into a file and save it as <strong>{0}</strong>");
 define('_EN_UPGRADE_CONFIG_RESPONSE_WRITE_FAILED', "There was an unknown error writing the configuration file.");
 define('_EN_UPGRADE_CONFIG_RESPONSE_MAKE_CONFIG', "You need to either make the config directory writable, or create {0} by hand.");
 
 /* Finished */
 define('_EN_UPGRADE_FINISH_INFO', "You have now finished setting up your website!");
-define('_EN_UPGRADE_FINISH_CHOICES', "You now have two choices, you can either <a href=\"{0}\">view your site</a> or <a href=\"{1}\">login to the control panel</a>.");
+define('_EN_UPGRADE_FINISH_CHOICES', "You now have two choices, you can either <a href=\"{0}\">View Your Site</a> or <a href=\"{1}\">Login to the Control Panel</a>.");
 define('_EN_UPGRADE_FINISH_MOVE_LOG', "Note: If you turned on the logging option at the first stage we suggest you to save it and move it / delete it");
 define('_EN_UPGRADE_FINISH_THANKS', "Thank you for using Jaws!");

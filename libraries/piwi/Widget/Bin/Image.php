@@ -171,10 +171,9 @@ class Image extends Bin
     function buildXHTML()
     {
         $this->_XHTML  = '<img';
+        $this->_XHTML .= " id=\"".$this->getID()."\"";
         $this->_XHTML .= " src=\"".$this->_src."\"";
-        if (!empty($this->_border)) {
-            $this->_XHTML .= " border=\"".$this->_border."\"";
-        }
+        $this->_XHTML .= " border=\"".$this->_border."\"";
         $this->_XHTML .= " alt=\"".$this->_alt."\"";
 
         if (!is_null($this->_height)) {
@@ -185,9 +184,8 @@ class Image extends Bin
             $this->_XHTML .= " width=\"".$this->_width."\"";
         }
 
-        $this->_XHTML .= $this->buildBasicXHTML();
         $this->_XHTML .= $this->buildJSEvents();
         $this->_XHTML .= ' />';
     }
-
 }
+?>

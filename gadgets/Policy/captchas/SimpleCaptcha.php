@@ -5,7 +5,7 @@
  * @category   Captcha
  * @package    Policy
  * @author     Jonathan Hernandez <ion@suavizado.com>
- * @copyright  2006-2012 Jaws Development Group
+ * @copyright  2006-2010 Jaws Development Group
  * @license    http://www.gnu.org/copyleft/lesser.html
  */
 class SimpleCaptcha
@@ -47,16 +47,13 @@ class SimpleCaptcha
         $img = $this->HexEncode($GLOBALS['app']->Map->GetURLFor('Policy', 'Captcha',
                                                                 array('key' => $prefix . $key), false));
 
-        $res['label'] = _t('GLOBAL_CAPTCHA_CODE');
         $res['captcha'] =& Piwi::CreateWidget('Image', '', '');
         $res['captcha']->SetTitle(_t('GLOBAL_CAPTCHA_CODE'));
         $res['captcha']->SetID('captcha_img_'.rand());
         $res['captcha']->SetSrc($img);
         $res['entry'] =& Piwi::CreateWidget('Entry', $prefix . $key, '');
         $res['entry']->SetID('captcha_'.rand());
-        $res['entry']->SetStyle('direction: ltr;');
-        $res['entry']->SetTitle(_t('GLOBAL_CAPTCHA_CASE_INSENSITIVE'));
-        $res['description'] = _t('GLOBAL_CAPTCHA_CODE_DESC');
+        $res['entry']->SetTitle(_t('GLOBAL_CAPTCHA_SENSITIVE'));
         return $res;
     }
 
@@ -81,7 +78,7 @@ class SimpleCaptcha
      * Check if a captcha key is valid
      *
      * @access  public
-     * @param   bool     Valid/Not Valid
+     * @param   boolean  Valid/Not Valid
      */
     function Check()
     {
@@ -157,6 +154,9 @@ class SimpleCaptcha
             WHERE [key] = {key}";
         $result = $GLOBALS['db']->queryOne($sql, $params);
         if (Jaws_Error::IsError($result) || empty($result)) {
+			if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, (empty($result) ? "Captcha is empty" : $result->getMessage()));
+            }
             $result = false;
         }
 
@@ -187,7 +187,9 @@ class SimpleCaptcha
         $result = $GLOBALS['db']->query($sql, $params);
         if (Jaws_Error::IsError($result)) {
             $key = '';
-            $GLOBALS['log']->Log(JAWS_LOG_ERROR, $result->getMessage());
+            if (isset($GLOBALS['log'])) {
+                $GLOBALS['log']->Log(JAWS_LOG_ERR, $result->getMessage());
+            }
         }
 
         return $key;
@@ -233,7 +235,6 @@ class SimpleCaptcha
 
         $bg = dirname(__FILE__) . '/SimpleCaptcha/bg.png';
         $im = imagecreatefrompng($bg);
-        imagecolortransparent($im, imagecolorallocate($im, 255, 255, 255));
         $value = $this->GetValue($key);
         // Write it in a random position..
         $text_length = strlen($value);

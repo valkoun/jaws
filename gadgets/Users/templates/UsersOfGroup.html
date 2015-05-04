@@ -1,0 +1,49 @@
+<!-- BEGIN layout -->
+<!-- start_usersofgroup_{id} -->
+<div class="gadget layout_head usersofgroup_head" id="layout-users-head-{id}">
+<h2 id="layout_{actionName}_title">{layout_title}</h2>
+</div>
+<div class="gadget layout_body">
+<!-- BEGIN users -->
+<div class="usersofgroup" id="usersofgroup-{gid}">
+<!-- BEGIN item -->
+	<div class="userofgroup" id="userofgroup-{uid}">
+<!-- BEGIN image -->
+		<div class="userofgroup_image" style="background: url({image_src}) scroll center center no-repeat;"><a href="{image_href}" title="{image_caption}"><img alt="{image_caption}" border="0" src="{base_url}images/blank.gif" width="200" height="200" /></a></div>
+<!-- END image -->
+<!-- BEGIN no_image -->
+		<div class="userofgroup_no_image" onclick="location.href='{image_href}';">
+		  <b>No Image</b>
+		</div>
+<!-- END no_image -->
+		<div class="userofgroup_title"><a href="{href}" title="{caption}">{title}</a></div>
+	</div>
+<!-- END item -->
+</div>
+<!-- END users -->
+
+<!-- BEGIN embedded -->
+<script>
+function sizeFrame{id}() {
+	var height = Math.max( document.body.offsetHeight, document.body.scrollHeight );	
+	var fr{id} = document.createElement("IFRAME");  
+	fr{id}.setAttribute("src", "{referer}?height="+height+"&object=Users_iframe_{id}&resize={bool_resize}"); 
+	fr{id}.setAttribute("name", "inneriframe{id}");
+	fr{id}.setAttribute("id", "inneriframe{id}");
+	fr{id}.style.width = 1+"px";  
+	fr{id}.style.height = 1+"px";
+	fr{id}.style.display = "none";
+	document.body.appendChild(fr{id});	
+}
+</script>
+<!-- END embedded -->
+<!-- BEGIN not_embedded -->
+<script>
+function sizeFrame{id}() {
+	return true;
+}
+</script>
+<!-- END not_embedded -->
+</div>
+<!-- end_usersofgroup_{id} -->
+<!-- END layout -->
